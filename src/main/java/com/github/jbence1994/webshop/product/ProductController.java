@@ -33,7 +33,7 @@ public class ProductController {
             return ResponseEntity.ok(productMapper.toDto(product));
         } catch (ProductNotFoundException exception) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.NOT_FOUND)
                     .body(new ErrorDto(exception.getMessage()));
         }
     }
