@@ -24,6 +24,8 @@
 
         <!-- Project dependency versions -->
         <spring-dotenv.version>4.0.0</spring-dotenv.version>
+        <mapstruct-processor.version>1.6.3</mapstruct-processor.version>
+        <mapstruct.version>1.6.2</mapstruct.version>
 
         <!-- Maven plugin versions -->
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
@@ -63,6 +65,18 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>annotationProcessor</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct-processor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -149,6 +163,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct-processor.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
