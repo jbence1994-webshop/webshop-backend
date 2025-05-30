@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 public interface ProductMapper {
     ProductDto toDto(Product product);
 
-    Product toEntity(ProductDto productDto);
+    Product toEntity(CreateProductDto productDto);
 }

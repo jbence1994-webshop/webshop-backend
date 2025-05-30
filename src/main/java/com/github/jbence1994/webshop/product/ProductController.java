@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductDto productDto) {
         var product = productMapper.toEntity(productDto);
         var createdProduct = productService.createProduct(product);
 
