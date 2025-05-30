@@ -41,3 +41,7 @@ mvn clean install
 ```bash
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
+
+- To try application endpoints, open http://localhost:8080/swagger-ui/index.html in your web browser.
+
+- To view api documentation, open http://localhost:8080/v3/api-docs in your web browser.
