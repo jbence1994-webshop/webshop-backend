@@ -25,7 +25,7 @@
         <!-- Project dependency versions -->
         <spring-dotenv.version>4.0.0</spring-dotenv.version>
         <mapstruct-processor.version>1.6.3</mapstruct-processor.version>
-        <mapstruct.version>1.6.2</mapstruct.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
 
         <!-- Maven plugin versions -->
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
