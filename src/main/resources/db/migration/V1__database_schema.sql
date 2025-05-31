@@ -16,8 +16,7 @@ CREATE TABLE IF NOT EXISTS products
 CREATE TABLE IF NOT EXISTS product_photos
 (
     product_id BIGINT      NOT NULL,
-    file_name  VARCHAR(41) NOT NULL,
-    PRIMARY KEY (product_id, file_name),
+    file_name  VARCHAR(41) NOT NULL UNIQUE,
     CONSTRAINT fk_product_photos_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
