@@ -22,7 +22,9 @@ public class ProductController {
 
     @GetMapping
     public List<ProductDto> getProducts() {
-        return productService.getProducts().stream().map(productMapper::toDto).toList();
+        return productService.getProducts().stream()
+                .map(productMapper::toDto)
+                .toList();
     }
 
     @GetMapping("/{id}")
