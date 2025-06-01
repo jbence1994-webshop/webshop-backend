@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +19,13 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
     private String productPhotosUploadDirectoryPath;
 
     @Override
-    public String uploadPhoto(Long productId, Photo photo) {
+    public String uploadProductPhoto(Long id, Photo photo) {
         try {
             if (!hasValidExtension(photo)) {
                 throw new InvalidFileExtensionException(photo.getFileExtension());
             }
 
-            var product = productService.getProduct(productId);
+            var product = productService.getProduct(id);
 
             var fileName = photo.generateFileName();
 
@@ -42,6 +43,11 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
         } catch (IOException exception) {
             throw new ProductPhotoUploadException();
         }
+    }
+
+    @Override
+    public List<ProductPhoto> getProductPhotos(Long id) {
+        return productService.getProduct(id).getPhotos().stream().toList();
     }
 
     private boolean hasValidExtension(Photo photo) {
