@@ -13,19 +13,20 @@ import java.util.List;
 public class ProductPhotoServiceImpl implements ProductPhotoService {
     private final FileExtensionsConfig fileExtensionsConfig;
     private final ProductService productService;
+    private final ProductPhotoQueryService productPhotoQueryService;
     private final FileUtils fileUtils;
 
     @Value("${webshop.photo-upload-directory-path.products}")
     private String productPhotosUploadDirectoryPath;
 
     @Override
-    public String uploadProductPhoto(Long id, Photo photo) {
+    public String uploadProductPhoto(Long productId, Photo photo) {
         try {
             if (!hasValidExtension(photo)) {
                 throw new InvalidFileExtensionException(photo.getFileExtension());
             }
 
-            var product = productService.getProduct(id);
+            var product = productService.getProduct(productId);
 
             var fileName = photo.generateFileName();
 
@@ -46,8 +47,8 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
     }
 
     @Override
-    public List<ProductPhoto> getProductPhotos(Long id) {
-        return productService.getProduct(id).getPhotos().stream().toList();
+    public List<ProductPhoto> getProductPhotos(Long productId) {
+        return productPhotoQueryService.getProductPhotos(productId);
     }
 
     private boolean hasValidExtension(Photo photo) {

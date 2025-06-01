@@ -34,17 +34,12 @@ public class ProductPhotoController {
     ) {
         var photo = photoMapper.toPhoto(file);
 
-        var photoFileName = productPhotoService.uploadProductPhoto(productId, photo);
-
-        var url = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path(productPhotosUploadDirectoryPath + "/")
-                .path(photoFileName)
-                .toUriString();
+        var fileName = productPhotoService.uploadProductPhoto(productId, photo);
+        var url = buildUrl(fileName);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new PhotoResponse(photoFileName, url));
+                .body(new PhotoResponse(fileName, url));
 
     }
 
@@ -54,13 +49,19 @@ public class ProductPhotoController {
 
         return productPhotos.stream()
                 .map(productPhoto -> {
-                    var url = ServletUriComponentsBuilder.fromCurrentContextPath()
-                            .path(productPhotosUploadDirectoryPath + "/")
-                            .path(productPhoto.getFileName())
-                            .toUriString();
+                    var fileName = productPhoto.getFileName();
+                    var url = buildUrl(productPhoto.getFileName());
 
-                    return new PhotoResponse(productPhoto.getFileName(), url);
+                    return new PhotoResponse(fileName, url);
                 })
                 .toList();
+    }
+
+    private String buildUrl(String fileName) {
+        return ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path(productPhotosUploadDirectoryPath + "/")
+                .path(fileName)
+                .toUriString();
     }
 }

@@ -22,6 +22,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public boolean existsById(Long productId) {
+        return productRepository.existsById(productId);
+    }
+
+    @Override
     public Product createProduct(Product product) {
         return productRepository.save(product);
     }
