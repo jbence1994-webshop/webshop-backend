@@ -12,4 +12,4 @@ webshop:
     allowed-file-extensions: jpg,jpeg,png,bmp
 
   photo-upload-directory-path:
-    products: ${PRODUCT_PHOTOS_UPLOADS_DIRECTORY_PATH}
+    products: ${PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH}
