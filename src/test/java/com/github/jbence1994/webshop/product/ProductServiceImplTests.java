@@ -88,8 +88,7 @@ class ProductServiceImplTests {
 
     @Test
     public void updateProductTest_HappyPath() {
-        when(productRepository.save(any()))
-                .thenReturn(product1());
+        when(productRepository.save(any())).thenReturn(product1());
 
         productService.updateProduct(product1());
 
