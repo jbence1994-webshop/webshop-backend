@@ -22,6 +22,17 @@ public final class ProductTestObject {
         );
     }
 
+    public static Product product1WithNullId() {
+        return new Product(
+                null,
+                PRODUCT_1_NAME,
+                BigDecimal.valueOf(49.99),
+                PRODUCT_1_UNIT,
+                PRODUCT_1_DESCRIPTION,
+                Set.of()
+        );
+    }
+
     public static Product product2() {
         return new Product(
                 2L,

@@ -1,10 +1,16 @@
 package com.github.jbence1994.webshop.product;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class CreateProductDto {
     private String name;
     private BigDecimal price;
