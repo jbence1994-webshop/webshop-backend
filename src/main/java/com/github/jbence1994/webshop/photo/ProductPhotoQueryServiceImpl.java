@@ -15,7 +15,7 @@ public class ProductPhotoQueryServiceImpl implements ProductPhotoQueryService {
 
     @Override
     public List<ProductPhoto> getProductPhotos(Long productId) {
-        if (!productService.existsById(productId)) {
+        if (!productService.isProductExistById(productId)) {
             throw new ProductNotFoundException(productId);
         }
 

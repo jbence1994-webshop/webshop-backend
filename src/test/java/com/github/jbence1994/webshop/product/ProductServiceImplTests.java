@@ -59,17 +59,17 @@ class ProductServiceImplTests {
     }
 
     @Test
-    public void existsByIdTest_HappyPath() {
+    public void isProductExistByIdTest_HappyPath() {
         when(productRepository.existsById(any())).thenReturn(true);
 
-        assertTrue(productService.existsById(1L));
+        assertTrue(productService.isProductExistById(1L));
     }
 
     @Test
-    public void existsByIdTest_UnhappyPath() {
+    public void isProductExistByIdTest_UnhappyPath() {
         when(productRepository.existsById(any())).thenReturn(false);
 
-        assertFalse(productService.existsById(1L));
+        assertFalse(productService.isProductExistById(1L));
     }
 
     @Test

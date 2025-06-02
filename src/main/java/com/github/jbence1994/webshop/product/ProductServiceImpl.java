@@ -22,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean existsById(Long productId) {
+    public boolean isProductExistById(Long productId) {
         return productRepository.existsById(productId);
     }
 
