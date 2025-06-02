@@ -16,7 +16,7 @@ public class ProductControllerExceptionHandlerTests {
     private ProductControllerExceptionHandler productControllerExceptionHandler;
 
     @Test
-    void handleProductNotFoundExceptionTest() {
+    public void handleProductNotFoundExceptionTest() {
         var exception = new ProductNotFoundException(1L);
 
         var response = productControllerExceptionHandler.handleProductNotFoundException(exception);
