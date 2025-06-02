@@ -12,3 +12,14 @@ CREATE TABLE IF NOT EXISTS products
     unit        VARCHAR(255)   NOT NULL,
     description TEXT
 );
+
+CREATE TABLE IF NOT EXISTS product_photos
+(
+    id         BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    product_id BIGINT      NOT NULL,
+    file_name  VARCHAR(41) NOT NULL UNIQUE,
+    CONSTRAINT fk_product_photos_products
+        FOREIGN KEY (product_id) REFERENCES products (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);

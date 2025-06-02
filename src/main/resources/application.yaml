@@ -3,3 +3,13 @@ spring:
     name: webshop
   profiles:
     active: default
+  servlet:
+    multipart:
+      max-file-size: 1048576 # 1MB
+
+webshop:
+  file-extensions-config:
+    allowed-file-extensions: jpg,jpeg,png,bmp
+
+  photo-upload-directory-path:
+    products: ${PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH}
