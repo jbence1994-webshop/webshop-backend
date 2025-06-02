@@ -1,8 +1,10 @@
 package com.github.jbence1994.webshop.product;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_DESCRIPTION;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;
@@ -18,7 +20,7 @@ public final class ProductTestObject {
                 BigDecimal.valueOf(49.99),
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
-                Set.of()
+                new HashSet<>()
         );
     }
 
@@ -33,6 +35,19 @@ public final class ProductTestObject {
         );
     }
 
+    public static Product product1WithPhotos() {
+        var product = new Product(
+                1L,
+                PRODUCT_1_NAME,
+                BigDecimal.valueOf(49.99),
+                PRODUCT_1_UNIT,
+                PRODUCT_1_DESCRIPTION,
+                new HashSet<>()
+        );
+        product.addPhoto(FILE_NAME);
+        return product;
+    }
+
     public static Product product2() {
         return new Product(
                 2L,
@@ -40,7 +55,7 @@ public final class ProductTestObject {
                 BigDecimal.valueOf(89.99),
                 PRODUCT_2_UNIT,
                 PRODUCT_2_DESCRIPTION,
-                Set.of()
+                new HashSet<>()
         );
     }
 }
