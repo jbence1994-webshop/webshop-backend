@@ -17,7 +17,6 @@ public class ProductController {
     private final ProductService productService;
     private final ProductMapper productMapper;
 
-    // TODO: Later sorting and pagination can be applied here.
     @GetMapping
     public List<ProductDto> getProducts() {
         return productService.getProducts().stream()
