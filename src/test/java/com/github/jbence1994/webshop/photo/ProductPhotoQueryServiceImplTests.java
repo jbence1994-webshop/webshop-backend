@@ -12,7 +12,6 @@ import java.util.List;
 
 import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -43,6 +42,11 @@ public class ProductPhotoQueryServiceImplTests {
     public void getProductPhotosTest_UnhappyPath() {
         when(productService.isProductExistById(any())).thenReturn(false);
 
-        assertThrows(ProductNotFoundException.class, () -> productPhotoQueryService.getProductPhotos(1L));
+        var result = assertThrows(
+                ProductNotFoundException.class,
+                () -> productPhotoQueryService.getProductPhotos(1L)
+        );
+
+        assertEquals("No product was found with the given ID: #1.", result.getMessage());
     }
 }
