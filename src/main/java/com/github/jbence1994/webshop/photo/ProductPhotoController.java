@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,6 +56,16 @@ public class ProductPhotoController {
                     return new PhotoResponse(fileName, url);
                 })
                 .toList();
+    }
+
+    @DeleteMapping("/{fileName}")
+    public ResponseEntity<Void> deleteProductPhoto(
+            @PathVariable Long productId,
+            @PathVariable String fileName
+    ) {
+        productPhotoService.deleteProductPhoto(productId, fileName);
+
+        return ResponseEntity.noContent().build();
     }
 
     private String buildUrl(String fileName) {

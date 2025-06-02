@@ -20,4 +20,9 @@ public class FileSystemUtils implements FileUtils {
 
         Files.copy(stream, Paths.get(path, fileName));
     }
+
+    @Override
+    public void remove(String path, String fileName) throws IOException {
+        Files.delete(Paths.get(path, fileName));
+    }
 }

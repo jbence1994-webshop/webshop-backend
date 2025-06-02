@@ -37,7 +37,7 @@ public class Product {
 
     private String description;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductPhoto> photos = new HashSet<>();
 
     public void addPhoto(String fileName) {
@@ -46,5 +46,19 @@ public class Product {
         photo.setFileName(fileName);
 
         photos.add(photo);
+    }
+
+    public void removePhoto(String fileName) {
+        var photo = getPhoto(fileName);
+        photo.setProduct(null);
+
+        photos.remove(photo);
+    }
+
+    private ProductPhoto getPhoto(String fileName) {
+        return photos.stream()
+                .filter(photo -> photo.getFileName().equals(fileName))
+                .findFirst()
+                .orElse(null);
     }
 }

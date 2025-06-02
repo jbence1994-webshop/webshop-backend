@@ -37,7 +37,6 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
             );
 
             product.addPhoto(fileName);
-
             productService.updateProduct(product);
 
             return fileName;
@@ -49,6 +48,23 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
     @Override
     public List<ProductPhoto> getProductPhotos(Long productId) {
         return productPhotoQueryService.getProductPhotos(productId);
+    }
+
+    @Override
+    public void deleteProductPhoto(Long productId, String fileName) {
+        try {
+            var product = productService.getProduct(productId);
+
+            fileUtils.remove(
+                    productPhotosUploadDirectoryPath,
+                    fileName
+            );
+
+            product.removePhoto(fileName);
+            productService.updateProduct(product);
+        } catch (IOException exception) {
+            throw new ProductPhotoDeletionException();
+        }
     }
 
     private boolean hasValidExtension(Photo photo) {

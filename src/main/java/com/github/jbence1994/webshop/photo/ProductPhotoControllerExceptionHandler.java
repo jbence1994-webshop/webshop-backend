@@ -24,4 +24,9 @@ public class ProductPhotoControllerExceptionHandler {
     private ResponseEntity<ErrorDto> handleProductPhotoUploadException(ProductPhotoUploadException exception) {
         return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
+
+    @ExceptionHandler(ProductPhotoDeletionException.class)
+    private ResponseEntity<ErrorDto> handleProductPhotoDeletionException(ProductPhotoDeletionException exception) {
+        return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
+    }
 }
