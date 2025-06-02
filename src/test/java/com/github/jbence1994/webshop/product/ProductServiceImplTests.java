@@ -55,7 +55,12 @@ public class ProductServiceImplTests {
     public void getProductTest_UnhappyPath() {
         when(productRepository.findById(any())).thenReturn(Optional.empty());
 
-        assertThrows(ProductNotFoundException.class, () -> productService.getProduct(1L));
+        var result = assertThrows(
+                ProductNotFoundException.class,
+                () -> productService.getProduct(1L)
+        );
+
+        assertEquals("No product was found with the given ID: #1.", result.getMessage());
     }
 
     @Test
