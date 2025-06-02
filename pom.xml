@@ -35,7 +35,7 @@
         <!-- JaCoCo properties -->
         <jacoco.line-coverage>0.06</jacoco.line-coverage>
         <jacoco.branch-coverage>0.00</jacoco.branch-coverage>
-        <jacoco.complexity-coverage>0.10</jacoco.complexity-coverage>
+        <jacoco.complexity-coverage>0.11</jacoco.complexity-coverage>
         <jacoco.method-coverage>0.12</jacoco.method-coverage>
         <jacoco.class-coverage>0.09</jacoco.class-coverage>
 
@@ -177,6 +177,7 @@
                 <version>${jacoco-maven-plugin.version}</version>
                 <configuration>
                     <excludes>
+                        <exclude>com/github/jbence1994/webshop/photo/FileSystemUtils*</exclude>
                         <exclude>com/github/jbence1994/webshop/Application*</exclude>
                     </excludes>
                 </configuration>
