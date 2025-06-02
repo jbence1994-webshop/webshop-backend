@@ -36,7 +36,6 @@ public class ProductPhotoQueryServiceImplTests {
 
         var result = productPhotoQueryService.getProductPhotos(1L);
 
-        assertNotNull(result);
         assertEquals(1, result.size());
     }
 
