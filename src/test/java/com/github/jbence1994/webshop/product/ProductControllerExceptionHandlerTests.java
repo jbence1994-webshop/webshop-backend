@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
-class ProductControllerExceptionHandlerTest {
+public class ProductControllerExceptionHandlerTests {
 
     @InjectMocks
     private ProductControllerExceptionHandler productControllerExceptionHandler;
