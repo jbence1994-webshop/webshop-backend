@@ -29,7 +29,6 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
 
             var fileName = photo.generateFileName();
 
-            var path=productPhotosUploadDirectoryPathConfig.getPath();
             fileUtils.store(
                     productPhotosUploadDirectoryPathConfig.getPath(),
                     fileName,
