@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.photo;
 
+import com.github.jbence1994.webshop.product.ProductQueryService;
 import com.github.jbence1994.webshop.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductPhotoServiceImpl implements ProductPhotoService {
     private final FileExtensionsConfig fileExtensionsConfig;
+    private final ProductQueryService productQueryService;
     private final ProductService productService;
     private final ProductPhotoQueryService productPhotoQueryService;
     private final FileUtils fileUtils;
@@ -26,7 +28,7 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
                 throw new InvalidFileExtensionException(photo.getFileExtension());
             }
 
-            var product = productService.getProduct(productId);
+            var product = productQueryService.getProduct(productId);
 
             var fileName = photo.generateFileName();
 
@@ -53,7 +55,7 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
     @Override
     public void deleteProductPhoto(Long productId, String fileName) {
         try {
-            var product = productService.getProduct(productId);
+            var product = productQueryService.getProduct(productId);
 
             fileUtils.remove(
                     productPhotosUploadDirectoryPath,

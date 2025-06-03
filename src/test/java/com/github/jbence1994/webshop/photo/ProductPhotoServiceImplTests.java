@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.photo;
 
 import com.github.jbence1994.webshop.product.Product;
+import com.github.jbence1994.webshop.product.ProductQueryService;
 import com.github.jbence1994.webshop.product.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,9 @@ public class ProductPhotoServiceImplTests {
     private FileExtensionsConfig fileExtensionsConfig;
 
     @Mock
+    private ProductQueryService productQueryService;
+
+    @Mock
     private ProductService productService;
 
     @Mock
@@ -60,7 +64,7 @@ public class ProductPhotoServiceImplTests {
     public void setUp() {
         when(photo.getFileExtension()).thenReturn(JPG);
         when(fileExtensionsConfig.getAllowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
-        when(productService.getProduct(any())).thenReturn(product);
+        when(productQueryService.getProduct(any())).thenReturn(product);
         when(photo.generateFileName()).thenReturn(PHOTO_FILE_NAME);
         when(photo.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());
