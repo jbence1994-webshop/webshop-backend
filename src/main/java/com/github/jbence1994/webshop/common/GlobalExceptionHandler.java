@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ResponseEntity<ErrorDto> handleMissingServletRequestPartException(MissingServletRequestPartException exception) {
         var fieldName = exception.getRequestPartName();
-        return ResponseEntity.badRequest().body(new ErrorDto(String.format("Required part '%s' is missing", fieldName)));
+        return ResponseEntity.badRequest().body(new ErrorDto(String.format("Required part '%s' is missing.", fieldName)));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

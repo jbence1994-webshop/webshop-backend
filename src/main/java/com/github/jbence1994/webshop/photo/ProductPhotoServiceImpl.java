@@ -22,11 +22,11 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
     @Override
     public String uploadProductPhoto(Long productId, Photo photo) {
         try {
-            var product = productService.getProduct(productId);
-
             if (!hasValidExtension(photo)) {
                 throw new InvalidFileExtensionException(photo.getFileExtension());
             }
+
+            var product = productService.getProduct(productId);
 
             var fileName = photo.generateFileName();
 
