@@ -20,6 +20,7 @@ import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ALLOWED_FIL
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_SIZE;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.TIFF;
 import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
@@ -41,6 +42,9 @@ public class ProductPhotoServiceImplTests {
 
     @Mock
     private FileExtensionsConfig fileExtensionsConfig;
+
+    @Mock
+    private ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
 
     @Mock
     private ProductQueryService productQueryService;
@@ -65,6 +69,7 @@ public class ProductPhotoServiceImplTests {
         when(photo.getFileExtension()).thenReturn(JPG);
         when(fileExtensionsConfig.getAllowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
         when(productQueryService.getProduct(any())).thenReturn(product);
+        when(productPhotosUploadDirectoryPathConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
         when(photo.generateFileName()).thenReturn(PHOTO_FILE_NAME);
         when(photo.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());

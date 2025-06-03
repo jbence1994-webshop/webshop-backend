@@ -1,18 +1,18 @@
 package com.github.jbence1994.webshop.photo;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Component
+@AllArgsConstructor
 public class PhotoUrlBuilder {
-    @Value("${webshop.photo-upload-directory-path.products}")
-    private String productPhotosUploadDirectoryPath;
+    private final ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
 
     public String buildUrl(String fileName) {
         return ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path(productPhotosUploadDirectoryPath + "/")
+                .path(productPhotosUploadDirectoryPathConfig.getPath() + "/")
                 .path(fileName)
                 .toUriString();
     }
