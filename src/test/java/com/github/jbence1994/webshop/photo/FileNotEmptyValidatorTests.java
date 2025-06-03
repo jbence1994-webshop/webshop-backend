@@ -24,7 +24,7 @@ public class FileNotEmptyValidatorTests {
     private FileNotEmptyValidator fileNotEmptyValidator;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         fileNotEmptyValidator.initialize(mock(FileNotEmpty.class));
     }
 

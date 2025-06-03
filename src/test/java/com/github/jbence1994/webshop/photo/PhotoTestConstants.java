@@ -13,10 +13,12 @@ public interface PhotoTestConstants {
     String ORIGINAL_FILE_NAME_JPG = String.format("%s.%s", ORIGINAL_FILE_NAME_WITHOUT_EXTENSION, JPG);
     String ORIGINAL_FILE_NAME_PNG = String.format("%s.%s", ORIGINAL_FILE_NAME_WITHOUT_EXTENSION, PNG);
     String ORIGINAL_FILE_NAME_BMP = String.format("%s.%s", ORIGINAL_FILE_NAME_WITHOUT_EXTENSION, BMP);
+    String ORIGINAL_FILE_NAME_TIFF = String.format("%s.%s", ORIGINAL_FILE_NAME_WITHOUT_EXTENSION, TIFF);
     String CONTENT_TYPE_IMAGE_JPEG = String.format("image/%s", JPEG);
     String CONTENT_TYPE_IMAGE_JPG = String.format("image/%s", JPG);
     String CONTENT_TYPE_IMAGE_PNG = String.format("image/%s", PNG);
     String CONTENT_TYPE_IMAGE_BMP = String.format("image/%s", BMP);
+    String CONTENT_TYPE_IMAGE_TIFF = String.format("image/%s", TIFF);
     Long FILE_SIZE = 13_266L;
     List<String> ALLOWED_FILE_EXTENSIONS = List.of(JPG, JPEG, PNG, BMP);
     String PHOTO_FILE_NAME = "143a0db8-7c91-4573-8ad0-d41738af7580.jpg";

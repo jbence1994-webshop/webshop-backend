@@ -4,11 +4,13 @@ import static com.github.jbence1994.webshop.photo.PhotoTestConstants.CONTENT_TYP
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.CONTENT_TYPE_IMAGE_JPEG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.CONTENT_TYPE_IMAGE_JPG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.CONTENT_TYPE_IMAGE_PNG;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.CONTENT_TYPE_IMAGE_TIFF;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_SIZE;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ORIGINAL_FILE_NAME_BMP;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ORIGINAL_FILE_NAME_JPEG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ORIGINAL_FILE_NAME_JPG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ORIGINAL_FILE_NAME_PNG;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ORIGINAL_FILE_NAME_TIFF;
 
 public final class PhotoTestObject {
     public static Photo jpegPhoto() {
@@ -25,6 +27,10 @@ public final class PhotoTestObject {
 
     public static Photo bmpPhoto() {
         return buildPhoto(ORIGINAL_FILE_NAME_BMP, CONTENT_TYPE_IMAGE_BMP);
+    }
+
+    public static Photo tiffPhoto() {
+        return buildPhoto(ORIGINAL_FILE_NAME_TIFF, CONTENT_TYPE_IMAGE_TIFF);
     }
 
     private static Photo buildPhoto(String originalFilename, String contentType) {
