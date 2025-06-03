@@ -22,6 +22,9 @@ import static org.mockito.Mockito.when;
 class ProductControllerTests {
 
     @Mock
+    private ProductQueryService productQueryService;
+
+    @Mock
     private ProductService productService;
 
     @Mock
@@ -32,7 +35,7 @@ class ProductControllerTests {
 
     @Test
     public void getProductsTest() {
-        when(productService.getProducts(any())).thenReturn(List.of(product1(), product2()));
+        when(productQueryService.getProducts(any())).thenReturn(List.of(product1(), product2()));
 
         var result = productController.getProducts("id");
 
@@ -41,7 +44,7 @@ class ProductControllerTests {
 
     @Test
     public void getProductTest_HappyPath() {
-        when(productService.getProduct(any())).thenReturn(product1());
+        when(productQueryService.getProduct(any())).thenReturn(product1());
         when(productMapper.toDto(any())).thenReturn(productDto1());
 
         var result = productController.getProduct(1L);
@@ -55,7 +58,7 @@ class ProductControllerTests {
 
     @Test
     public void getProductTest_UnhappyPath_ProductNotFoundException() {
-        when(productService.getProduct(any())).thenThrow(new ProductNotFoundException(1L));
+        when(productQueryService.getProduct(any())).thenThrow(new ProductNotFoundException(1L));
 
         var result = assertThrows(
                 ProductNotFoundException.class,

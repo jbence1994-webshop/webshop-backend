@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.photo;
 
 import com.github.jbence1994.webshop.product.ProductNotFoundException;
-import com.github.jbence1994.webshop.product.ProductService;
+import com.github.jbence1994.webshop.product.ProductQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class ProductPhotoQueryServiceImplTests {
 
     @Mock
-    private ProductService productService;
+    private ProductQueryService productQueryService;
 
     @Mock
     private ProductPhotoRepository productPhotoRepository;
@@ -30,7 +30,7 @@ public class ProductPhotoQueryServiceImplTests {
 
     @Test
     public void getProductPhotosTest_HappyPath() {
-        when(productService.isProductExistById(any())).thenReturn(true);
+        when(productQueryService.isProductExistById(any())).thenReturn(true);
         when(productPhotoRepository.findAllByProductId(any())).thenReturn(List.of(productPhoto()));
 
         var result = productPhotoQueryService.getProductPhotos(1L);
@@ -40,7 +40,7 @@ public class ProductPhotoQueryServiceImplTests {
 
     @Test
     public void getProductPhotosTest_UnhappyPath() {
-        when(productService.isProductExistById(any())).thenReturn(false);
+        when(productQueryService.isProductExistById(any())).thenReturn(false);
 
         var result = assertThrows(
                 ProductNotFoundException.class,

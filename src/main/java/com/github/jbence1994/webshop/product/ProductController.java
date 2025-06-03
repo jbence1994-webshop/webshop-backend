@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping("/products")
 @AllArgsConstructor
 public class ProductController {
+    private final ProductQueryService productQueryService;
     private final ProductService productService;
     private final ProductMapper productMapper;
 
@@ -22,14 +23,14 @@ public class ProductController {
     public List<ProductDto> getProducts(
             @RequestParam(required = false, defaultValue = "id", name = "sort") String sortBy
     ) {
-        return productService.getProducts(sortBy).stream()
+        return productQueryService.getProducts(sortBy).stream()
                 .map(productMapper::toDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
     public ProductDto getProduct(@PathVariable Long id) {
-        var product = productService.getProduct(id);
+        var product = productQueryService.getProduct(id);
         return productMapper.toDto(product);
     }
 
