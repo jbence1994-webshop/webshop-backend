@@ -5,7 +5,6 @@ import com.github.jbence1994.webshop.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -29,7 +28,6 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
 
             var fileName = photo.generateFileName();
 
-            var path=productPhotosUploadDirectoryPathConfig.getPath();
             fileUtils.store(
                     productPhotosUploadDirectoryPathConfig.getPath(),
                     fileName,
@@ -40,7 +38,7 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
             productService.updateProduct(product);
 
             return fileName;
-        } catch (IOException exception) {
+        } catch (FileSystemException exception) {
             throw new ProductPhotoUploadException();
         }
     }
@@ -62,7 +60,7 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
 
             product.removePhoto(fileName);
             productService.updateProduct(product);
-        } catch (IOException exception) {
+        } catch (FileSystemException exception) {
             throw new ProductPhotoDeletionException();
         }
     }
