@@ -26,11 +26,11 @@ public class GlobalExceptionHandlerTests {
     void handleMissingServletRequestPartExceptionTest() {
         var exception = new MissingServletRequestPartException("file");
 
-        var response = globalExceptionHandler.handleMissingServletRequestPartException(exception);
+        var result = globalExceptionHandler.handleMissingServletRequestPartException(exception);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Required part 'file' is missing.", response.getBody().error());
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+        assertNotNull(result.getBody());
+        assertEquals("Required part 'file' is missing.", result.getBody().error());
     }
 
     @Test
@@ -40,10 +40,10 @@ public class GlobalExceptionHandlerTests {
         var exception = new ConstraintViolationException(constraintViolations);
         when(constraintViolation.getMessage()).thenReturn("The file must not be empty.");
 
-        var response = globalExceptionHandler.handleConstraintViolationException(exception);
+        var result = globalExceptionHandler.handleConstraintViolationException(exception);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("The file must not be empty.", response.getBody().error());
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+        assertNotNull(result.getBody());
+        assertEquals("The file must not be empty.", result.getBody().error());
     }
 }
