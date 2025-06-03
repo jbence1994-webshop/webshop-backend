@@ -14,20 +14,21 @@ import java.util.List;
 @RequestMapping("/products")
 @AllArgsConstructor
 public class ProductController {
+    private final ProductQueryService productQueryService;
     private final ProductService productService;
     private final ProductMapper productMapper;
 
     // TODO: Later sorting and pagination can be applied here.
     @GetMapping
     public List<ProductDto> getProducts() {
-        return productService.getProducts().stream()
+        return productQueryService.getProducts().stream()
                 .map(productMapper::toDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
     public ProductDto getProduct(@PathVariable Long id) {
-        var product = productService.getProduct(id);
+        var product = productQueryService.getProduct(id);
         return productMapper.toDto(product);
     }
 
