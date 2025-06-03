@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto1;
+import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +31,7 @@ public class ProductPhotoQueryServiceImplTests {
     @Test
     public void getProductPhotosTest_HappyPath() {
         when(productService.isProductExistById(any())).thenReturn(true);
-        when(productPhotoRepository.findAllByProductId(any())).thenReturn(List.of(productPhoto1()));
+        when(productPhotoRepository.findAllByProductId(any())).thenReturn(List.of(productPhoto()));
 
         var result = productPhotoQueryService.getProductPhotos(1L);
 

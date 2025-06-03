@@ -33,11 +33,11 @@
         <flyway-maven-plugin.version>11.8.2</flyway-maven-plugin.version>
 
         <!-- JaCoCo properties -->
-        <jacoco.line-coverage>0.67</jacoco.line-coverage>
+        <jacoco.line-coverage>0.86</jacoco.line-coverage>
         <jacoco.branch-coverage>0.66</jacoco.branch-coverage>
-        <jacoco.complexity-coverage>0.62</jacoco.complexity-coverage>
-        <jacoco.method-coverage>0.61</jacoco.method-coverage>
-        <jacoco.class-coverage>0.66</jacoco.class-coverage>
+        <jacoco.complexity-coverage>0.73</jacoco.complexity-coverage>
+        <jacoco.method-coverage>0.73</jacoco.method-coverage>
+        <jacoco.class-coverage>0.77</jacoco.class-coverage>
 
         <!-- Flags -->
         <flyway.skip>false</flyway.skip>
@@ -180,6 +180,7 @@
                         <exclude>com/github/jbence1994/webshop/**/*Config*</exclude>
                         <exclude>com/github/jbence1994/webshop/**/*MapperImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/photo/FileSystemUtils*</exclude>
+                        <exclude>com/github/jbence1994/webshop/photo/PhotoUrlBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/Application*</exclude>
                     </excludes>
                 </configuration>

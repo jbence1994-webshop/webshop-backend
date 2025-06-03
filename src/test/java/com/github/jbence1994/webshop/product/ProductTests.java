@@ -2,7 +2,7 @@ package com.github.jbence1994.webshop.product;
 
 import org.junit.jupiter.api.Test;
 
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_NAME;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,14 +15,14 @@ public class ProductTests {
 
     @Test
     public void addPhotoTest() {
-        product.addPhoto(FILE_NAME);
+        product.addPhoto(PHOTO_FILE_NAME);
 
         assertEquals(1, product.getPhotos().size());
     }
 
     @Test
     public void removePhotoTest_HappyPath() {
-        productWithPhotos.removePhoto(FILE_NAME);
+        productWithPhotos.removePhoto(PHOTO_FILE_NAME);
 
         assertTrue(productWithPhotos.getPhotos().isEmpty());
     }
@@ -31,7 +31,7 @@ public class ProductTests {
     public void removePhotoTest_UnhappyPath() {
         assertThrows(
                 NullPointerException.class,
-                () -> product.removePhoto(FILE_NAME)
+                () -> product.removePhoto(PHOTO_FILE_NAME)
         );
     }
 }

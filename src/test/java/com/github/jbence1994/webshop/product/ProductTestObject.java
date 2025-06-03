@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_NAME;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_DESCRIPTION;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;
@@ -44,7 +44,7 @@ public final class ProductTestObject {
                 PRODUCT_1_DESCRIPTION,
                 new HashSet<>()
         );
-        product.addPhoto(FILE_NAME);
+        product.addPhoto(PHOTO_FILE_NAME);
         return product;
     }
 

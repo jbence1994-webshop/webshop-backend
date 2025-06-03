@@ -16,10 +16,11 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ALLOWED_FILE_EXTENSIONS;
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_NAME;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_SIZE;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPG;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.TIFF;
-import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto1;
+import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,8 +61,8 @@ public class ProductPhotoServiceImplTests {
         when(photo.getFileExtension()).thenReturn(JPG);
         when(fileExtensionsConfig.getAllowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
         when(productService.getProduct(any())).thenReturn(product);
-        when(photo.generateFileName()).thenReturn(FILE_NAME);
-        when(photo.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[13266]));
+        when(photo.generateFileName()).thenReturn(PHOTO_FILE_NAME);
+        when(photo.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());
 
     }
@@ -73,7 +74,7 @@ public class ProductPhotoServiceImplTests {
 
         var result = productPhotoService.uploadProductPhoto(1L, photo);
 
-        assertEquals(FILE_NAME, result);
+        assertEquals(PHOTO_FILE_NAME, result);
 
         verify(photo, times(1)).generateFileName();
         verify(photo, times(1)).getInputStream();
@@ -120,7 +121,7 @@ public class ProductPhotoServiceImplTests {
 
     @Test
     public void getProductPhotosTest_HappyPath() {
-        when(productPhotoQueryService.getProductPhotos(any())).thenReturn(List.of(productPhoto1()));
+        when(productPhotoQueryService.getProductPhotos(any())).thenReturn(List.of(productPhoto()));
 
         var result = productPhotoService.getProductPhotos(1L);
 
@@ -132,7 +133,7 @@ public class ProductPhotoServiceImplTests {
         doNothing().when(fileUtils).remove(any(), any());
         doNothing().when(product).removePhoto(any());
 
-        productPhotoService.deleteProductPhoto(1L, FILE_NAME);
+        productPhotoService.deleteProductPhoto(1L, PHOTO_FILE_NAME);
 
         verify(fileUtils, times(1)).remove(any(), any());
         verify(product, times(1)).removePhoto(any());
@@ -145,7 +146,7 @@ public class ProductPhotoServiceImplTests {
 
         var result = assertThrows(
                 ProductPhotoDeletionException.class,
-                () -> productPhotoService.deleteProductPhoto(1L, FILE_NAME)
+                () -> productPhotoService.deleteProductPhoto(1L, PHOTO_FILE_NAME)
         );
 
         assertEquals("The photo could not be deleted successfully.", result.getMessage());
