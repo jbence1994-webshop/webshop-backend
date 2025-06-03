@@ -17,8 +17,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products/{productId}/photos")
-@Validated
 @RequiredArgsConstructor
+@Validated
 public class ProductPhotoController {
     private final ProductPhotoService productPhotoService;
     private final PhotoMapper photoMapper;
