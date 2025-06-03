@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_SIZE;
@@ -73,7 +72,7 @@ public class ProductPhotoServiceImplTests {
     }
 
     @Test
-    public void uploadProductPhotoTest_HappyPath() throws IOException {
+    public void uploadProductPhotoTest_HappyPath() {
         doNothing().when(fileUtils).store(any(), any(), any());
         doNothing().when(product).addPhoto(any());
 
@@ -92,8 +91,8 @@ public class ProductPhotoServiceImplTests {
     }
 
     @Test
-    public void uploadProductPhotoTest_UnhappyPath_IOException() throws IOException {
-        doThrow(new IOException("Disk error.")).when(fileUtils).store(any(), any(), any());
+    public void uploadProductPhotoTest_UnhappyPath_FileSystemException() {
+        doThrow(new FileSystemException("Disk error.")).when(fileUtils).store(any(), any(), any());
 
         var result = assertThrows(
                 ProductPhotoUploadException.class,
@@ -122,7 +121,7 @@ public class ProductPhotoServiceImplTests {
     }
 
     @Test
-    public void deleteProductPhotoTest_HappyPath() throws IOException {
+    public void deleteProductPhotoTest_HappyPath() {
         doNothing().when(fileUtils).remove(any(), any());
         doNothing().when(product).removePhoto(any());
 
@@ -134,8 +133,8 @@ public class ProductPhotoServiceImplTests {
     }
 
     @Test
-    public void deleteProductPhotoTest_UnhappyPath_IOException() throws IOException {
-        doThrow(new IOException("Disk error.")).when(fileUtils).remove(any(), any());
+    public void deleteProductPhotoTest_UnhappyPath_FileSystemException() {
+        doThrow(new FileSystemException("Disk error.")).when(fileUtils).remove(any(), any());
 
         var result = assertThrows(
                 ProductPhotoDeletionException.class,
