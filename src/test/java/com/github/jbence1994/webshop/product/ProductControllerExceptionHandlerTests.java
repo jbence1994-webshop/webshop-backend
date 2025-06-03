@@ -17,12 +17,11 @@ public class ProductControllerExceptionHandlerTests {
 
     @Test
     public void handleProductNotFoundExceptionTest() {
-        var exception = new ProductNotFoundException(1L);
+        var result = productControllerExceptionHandler
+                .handleProductNotFoundException(new ProductNotFoundException(1L));
 
-        var response = productControllerExceptionHandler.handleProductNotFoundException(exception);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("No product was found with the given ID: #1.", response.getBody().error());
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+        assertNotNull(result.getBody());
+        assertEquals("No product was found with the given ID: #1.", result.getBody().error());
     }
 }
