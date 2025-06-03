@@ -16,4 +16,13 @@ public final class MultipartFileTestObject {
                 new byte[FILE_SIZE.intValue()]
         );
     }
+
+    public static MultipartFile emptyMultipartFile() {
+        return new MockMultipartFile(
+                ORIGINAL_FILE_NAME_JPEG,
+                ORIGINAL_FILE_NAME_JPEG,
+                CONTENT_TYPE_IMAGE_JPEG,
+                new byte[0]
+        );
+    }
 }
