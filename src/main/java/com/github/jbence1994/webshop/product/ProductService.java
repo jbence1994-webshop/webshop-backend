@@ -7,7 +7,7 @@ public interface ProductService {
 
     Product getProduct(Long id);
 
-    boolean existsById(Long id);
+    boolean isProductExistById(Long id);
 
     Product createProduct(Product product);
 

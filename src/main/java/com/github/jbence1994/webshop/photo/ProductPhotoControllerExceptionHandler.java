@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ProductPhotoControllerExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
-    private ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
+    public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(InvalidFileExtensionException.class)
-    private ResponseEntity<ErrorDto> handleInvalidFileExtensionException(InvalidFileExtensionException exception) {
+    public ResponseEntity<ErrorDto> handleInvalidFileExtensionException(InvalidFileExtensionException exception) {
         return ResponseEntity.badRequest().body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(ProductPhotoUploadException.class)
-    private ResponseEntity<ErrorDto> handleProductPhotoUploadException(ProductPhotoUploadException exception) {
+    public ResponseEntity<ErrorDto> handleProductPhotoUploadException(ProductPhotoUploadException exception) {
         return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(ProductPhotoDeletionException.class)
-    private ResponseEntity<ErrorDto> handleProductPhotoDeletionException(ProductPhotoDeletionException exception) {
+    public ResponseEntity<ErrorDto> handleProductPhotoDeletionException(ProductPhotoDeletionException exception) {
         return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
 }
