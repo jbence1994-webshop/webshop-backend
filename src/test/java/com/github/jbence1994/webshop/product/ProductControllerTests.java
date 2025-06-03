@@ -32,9 +32,11 @@ class ProductControllerTests {
 
     @Test
     public void getProductsTest() {
-        when(productService.getProducts()).thenReturn(List.of(product1(), product2()));
+        var sortBy = "id";
 
-        var result = productController.getProducts();
+        when(productService.getProducts(sortBy)).thenReturn(List.of(product1(), product2()));
+
+        var result = productController.getProducts(sortBy);
 
         assertEquals(2, result.size());
     }

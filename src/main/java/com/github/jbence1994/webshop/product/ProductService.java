@@ -3,7 +3,7 @@ package com.github.jbence1994.webshop.product;
 import java.util.List;
 
 public interface ProductService {
-    List<Product> getProducts();
+    List<Product> getProducts(String sortBy);
 
     Product getProduct(Long id);
 
