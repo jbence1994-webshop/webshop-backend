@@ -2,7 +2,6 @@ package com.github.jbence1994.webshop.photo;
 
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,18 +10,26 @@ import java.nio.file.Paths;
 public class FileSystemUtils implements FileUtils {
 
     @Override
-    public void store(String path, String fileName, InputStream stream) throws IOException {
-        var targetPath = Paths.get(path);
+    public void store(String path, String fileName, InputStream stream) {
+        try {
+            var targetPath = Paths.get(path);
 
-        if (!Files.exists(targetPath)) {
-            Files.createDirectories(targetPath);
+            if (!Files.exists(targetPath)) {
+                Files.createDirectories(targetPath);
+            }
+
+            Files.copy(stream, Paths.get(path, fileName));
+        } catch (Exception exception) {
+            throw new FileSystemException(exception.getMessage());
         }
-
-        Files.copy(stream, Paths.get(path, fileName));
     }
 
     @Override
-    public void remove(String path, String fileName) throws IOException {
-        Files.delete(Paths.get(path, fileName));
+    public void remove(String path, String fileName) {
+        try {
+            Files.delete(Paths.get(path, fileName));
+        } catch (Exception exception) {
+            throw new FileSystemException(exception.getMessage());
+        }
     }
 }
