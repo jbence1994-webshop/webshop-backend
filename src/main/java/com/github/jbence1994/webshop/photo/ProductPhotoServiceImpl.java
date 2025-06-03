@@ -3,7 +3,6 @@ package com.github.jbence1994.webshop.photo;
 import com.github.jbence1994.webshop.product.ProductQueryService;
 import com.github.jbence1994.webshop.product.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,13 +12,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductPhotoServiceImpl implements ProductPhotoService {
     private final FileExtensionsConfig fileExtensionsConfig;
+    private final ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
     private final ProductQueryService productQueryService;
     private final ProductService productService;
     private final ProductPhotoQueryService productPhotoQueryService;
     private final FileUtils fileUtils;
-
-    @Value("${webshop.photo-upload-directory-path.products}")
-    private String productPhotosUploadDirectoryPath;
 
     @Override
     public String uploadProductPhoto(Long productId, Photo photo) {
@@ -32,8 +29,9 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
 
             var fileName = photo.generateFileName();
 
+            var path=productPhotosUploadDirectoryPathConfig.getPath();
             fileUtils.store(
-                    productPhotosUploadDirectoryPath,
+                    productPhotosUploadDirectoryPathConfig.getPath(),
                     fileName,
                     photo.getInputStream()
             );
@@ -58,7 +56,7 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
             var product = productQueryService.getProduct(productId);
 
             fileUtils.remove(
-                    productPhotosUploadDirectoryPath,
+                    productPhotosUploadDirectoryPathConfig.getPath(),
                     fileName
             );
 

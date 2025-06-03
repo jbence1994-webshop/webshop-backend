@@ -1,21 +1,22 @@
 package com.github.jbence1994.webshop.photo;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@AllArgsConstructor
 public class PhotoResourceLocationConfig implements WebMvcConfigurer {
-
-    @Value("${webshop.photo-upload-directory-path.products}")
-    private String productPhotosUploadDirectoryPath;
+    private final ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        var path = productPhotosUploadDirectoryPathConfig.getPath();
+
         registry
-                .addResourceHandler(productPhotosUploadDirectoryPath + "/**")
-                .addResourceLocations("file:" + productPhotosUploadDirectoryPath)
+                .addResourceHandler(path + "/**")
+                .addResourceLocations("file:" + path)
                 .setCachePeriod(3600);
     }
 }
