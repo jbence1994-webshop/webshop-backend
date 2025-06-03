@@ -12,7 +12,7 @@ import java.util.List;
 import static com.github.jbence1994.webshop.photo.MultipartFileTestObject.multipartFile;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_URL;
-import static com.github.jbence1994.webshop.photo.PhotoTestObject.photo;
+import static com.github.jbence1994.webshop.photo.PhotoTestObject.jpegPhoto;
 import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,7 +38,7 @@ public class ProductPhotoControllerTests {
 
     @Test
     public void uploadProductPhotoTest() {
-        when(photoMapper.toPhoto(any())).thenReturn(photo());
+        when(photoMapper.toPhoto(any())).thenReturn(jpegPhoto());
         when(productPhotoService.uploadProductPhoto(any(), any())).thenReturn(PHOTO_FILE_NAME);
         when(photoUrlBuilder.buildUrl(any())).thenReturn(PHOTO_URL);
 
