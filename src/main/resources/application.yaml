@@ -11,5 +11,5 @@ webshop:
   file-extensions-config:
     allowed-file-extensions: jpg,jpeg,png,bmp
 
-  photo-upload-directory-path:
-    products: ${PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH}
+  product-photos-upload-directory-config:
+    path: ${PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH}

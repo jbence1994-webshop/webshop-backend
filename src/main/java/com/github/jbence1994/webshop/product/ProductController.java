@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductDto createProduct(@RequestBody CreateProductDto productDto) {
+    public ProductDto createProduct(@Valid @RequestBody CreateProductDto productDto) {
         var product = productMapper.toEntity(productDto);
         var createdProduct = productService.createProduct(product);
         return productMapper.toDto(createdProduct);

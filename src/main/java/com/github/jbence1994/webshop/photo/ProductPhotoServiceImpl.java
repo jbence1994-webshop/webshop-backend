@@ -10,8 +10,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductPhotoServiceImpl implements ProductPhotoService {
-    private final FileExtensionsConfig fileExtensionsConfig;
-    private final ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
+    private final FileExtensionValidator fileExtensionValidator;
+    private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
     private final ProductQueryService productQueryService;
     private final ProductService productService;
     private final ProductPhotoQueryService productPhotoQueryService;
@@ -20,16 +20,14 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
     @Override
     public String uploadProductPhoto(Long productId, Photo photo) {
         try {
-            if (!hasValidExtension(photo)) {
-                throw new InvalidFileExtensionException(photo.getFileExtension());
-            }
+            fileExtensionValidator.validate(photo);
 
             var product = productQueryService.getProduct(productId);
 
             var fileName = photo.generateFileName();
 
             fileUtils.store(
-                    productPhotosUploadDirectoryPathConfig.getPath(),
+                    productPhotosUploadDirectoryConfig.getPath(),
                     fileName,
                     photo.getInputStream()
             );
@@ -54,7 +52,7 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
             var product = productQueryService.getProduct(productId);
 
             fileUtils.remove(
-                    productPhotosUploadDirectoryPathConfig.getPath(),
+                    productPhotosUploadDirectoryConfig.getPath(),
                     fileName
             );
 
@@ -63,10 +61,5 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
         } catch (FileSystemException exception) {
             throw new ProductPhotoDeletionException();
         }
-    }
-
-    private boolean hasValidExtension(Photo photo) {
-        return fileExtensionsConfig.getAllowedFileExtensions().stream()
-                .anyMatch(extension -> extension.equals(photo.getFileExtension()));
     }
 }

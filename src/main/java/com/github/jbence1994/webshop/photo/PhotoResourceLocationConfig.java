@@ -8,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @AllArgsConstructor
 public class PhotoResourceLocationConfig implements WebMvcConfigurer {
-    private final ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
+    private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        var path = productPhotosUploadDirectoryPathConfig.getPath();
+        var path = productPhotosUploadDirectoryConfig.getPath();
 
         registry
                 .addResourceHandler(path + "/**")
