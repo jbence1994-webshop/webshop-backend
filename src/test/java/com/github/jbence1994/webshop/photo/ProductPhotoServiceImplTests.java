@@ -43,7 +43,7 @@ public class ProductPhotoServiceImplTests {
     private FileExtensionsConfig fileExtensionsConfig;
 
     @Mock
-    private ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
+    private ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
 
     @Mock
     private ProductQueryService productQueryService;
@@ -68,7 +68,7 @@ public class ProductPhotoServiceImplTests {
         when(photo.getFileExtension()).thenReturn(JPG);
         when(fileExtensionsConfig.getAllowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
         when(productQueryService.getProduct(any())).thenReturn(product);
-        when(productPhotosUploadDirectoryPathConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
+        when(productPhotosUploadDirectoryConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
         when(photo.generateFileName()).thenReturn(PHOTO_FILE_NAME);
         when(photo.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());

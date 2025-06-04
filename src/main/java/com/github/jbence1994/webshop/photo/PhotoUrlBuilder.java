@@ -7,12 +7,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Component
 @AllArgsConstructor
 public class PhotoUrlBuilder {
-    private final ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
+    private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
 
     public String buildUrl(String fileName) {
         return ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path(productPhotosUploadDirectoryPathConfig.getPath() + "/")
+                .path(productPhotosUploadDirectoryConfig.getPath() + "/")
                 .path(fileName)
                 .toUriString();
     }
