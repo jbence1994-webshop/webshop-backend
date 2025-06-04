@@ -15,12 +15,9 @@ import org.mockito.quality.Strictness;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ALLOWED_FILE_EXTENSIONS;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_SIZE;
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH;
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.TIFF;
 import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +37,7 @@ import static org.mockito.Mockito.when;
 public class ProductPhotoServiceImplTests {
 
     @Mock
-    private FileExtensionsConfig fileExtensionsConfig;
+    private FileExtensionValidator fileExtensionValidator;
 
     @Mock
     private ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
@@ -65,11 +62,10 @@ public class ProductPhotoServiceImplTests {
 
     @BeforeEach
     public void setUp() {
-        when(photo.getFileExtension()).thenReturn(JPG);
-        when(fileExtensionsConfig.getAllowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
+        doNothing().when(fileExtensionValidator).validate(any());
         when(productQueryService.getProduct(any())).thenReturn(product);
-        when(productPhotosUploadDirectoryConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
         when(photo.generateFileName()).thenReturn(PHOTO_FILE_NAME);
+        when(productPhotosUploadDirectoryConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
         when(photo.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());
 
@@ -84,29 +80,14 @@ public class ProductPhotoServiceImplTests {
 
         assertEquals(PHOTO_FILE_NAME, result);
 
+        verify(fileExtensionValidator, times(1)).validate(any());
+        verify(productQueryService, times(1)).getProduct(any());
         verify(photo, times(1)).generateFileName();
+        verify(productPhotosUploadDirectoryConfig, times(1)).getPath();
         verify(photo, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, times(1)).addPhoto(any());
         verify(productService, times(1)).updateProduct(any());
-    }
-
-    @Test
-    public void uploadProductPhotoTest_UnhappyPath_InvalidFileExtensionException() {
-        when(photo.getFileExtension()).thenReturn(TIFF);
-
-        var result = assertThrows(
-                InvalidFileExtensionException.class,
-                () -> productPhotoService.uploadProductPhoto(1L, photo)
-        );
-
-        assertEquals("Invalid file extension: .tiff", result.getMessage());
-
-        verify(photo, never()).generateFileName();
-        verify(photo, never()).getInputStream();
-        verify(fileUtils, never()).store(any(), any(), any());
-        verify(product, never()).addPhoto(any());
-        verify(productService, never()).updateProduct(any());
     }
 
     @Test
@@ -120,7 +101,10 @@ public class ProductPhotoServiceImplTests {
 
         assertEquals("The photo could not be uploaded successfully.", result.getMessage());
 
+        verify(fileExtensionValidator, times(1)).validate(any());
+        verify(productQueryService, times(1)).getProduct(any());
         verify(photo, times(1)).generateFileName();
+        verify(productPhotosUploadDirectoryConfig, times(1)).getPath();
         verify(photo, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, never()).addPhoto(any());
