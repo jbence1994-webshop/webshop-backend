@@ -22,9 +22,10 @@ public class ProductController {
 
     @GetMapping
     public List<ProductDto> getProducts(
-            @RequestParam(required = false, defaultValue = "id", name = "sort") String sortBy
+            @RequestParam(required = false, defaultValue = "", name = "sort") String sortBy,
+            @RequestParam(required = false, defaultValue = "", name = "order") String orderBy
     ) {
-        return productQueryService.getProducts(sortBy).stream()
+        return productQueryService.getProducts(sortBy, orderBy).stream()
                 .map(productMapper::toDto)
                 .toList();
     }

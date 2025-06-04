@@ -36,11 +36,13 @@ public class ProductQueryServiceImplTests {
 
     private static Stream<Arguments> sortByParams() {
         return Stream.of(
-                Arguments.of("SortBy is null", null),
-                Arguments.of("SortBy is empty", ""),
-                Arguments.of("SortBy is an unknown property", "description"),
-                Arguments.of("SortBy 'id'", "id"),
-                Arguments.of("SortBy 'price'", "price")
+                Arguments.of("SortBy and orderBy are null", null, null),
+                Arguments.of("SortBy and orderBy are empty", "", ""),
+                Arguments.of("SortBy and orderBy are an unknown property", "testValue", "testValue"),
+                Arguments.of("SortBy 'id', orderBy 'asc'", "id", "asc"),
+                Arguments.of("SortBy 'id', orderBy 'desc'", "id", "desc"),
+                Arguments.of("SortBy 'price', orderBy 'asc'", "price", "asc"),
+                Arguments.of("SortBy 'price', orderBy 'desc'", "price", "desc")
         );
     }
 
@@ -48,11 +50,12 @@ public class ProductQueryServiceImplTests {
     @MethodSource("sortByParams")
     public void getProductsTest(
             String testCase,
-            String sortBy
+            String sortBy,
+            String orderBy
     ) {
         when(productRepository.findAll(any(Sort.class))).thenReturn(List.of(product1(), product2()));
 
-        var result = productQueryService.getProducts(sortBy);
+        var result = productQueryService.getProducts(sortBy, orderBy);
 
         assertFalse(result.isEmpty());
         assertEquals(2, result.size());

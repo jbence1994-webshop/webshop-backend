@@ -35,9 +35,9 @@ class ProductControllerTests {
 
     @Test
     public void getProductsTest() {
-        when(productQueryService.getProducts(any())).thenReturn(List.of(product1(), product2()));
+        when(productQueryService.getProducts(any(), any())).thenReturn(List.of(product1(), product2()));
 
-        var result = productController.getProducts("id");
+        var result = productController.getProducts("id", "asc");
 
         assertEquals(2, result.size());
     }

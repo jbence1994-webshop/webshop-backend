@@ -13,12 +13,22 @@ public class ProductQueryServiceImpl implements ProductQueryService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<Product> getProducts(String sortBy) {
+    public List<Product> getProducts(String sortBy, String orderBy) {
         if (sortBy == null || !Set.of("id", "price").contains(sortBy)) {
             sortBy = "id";
         }
 
-        return productRepository.findAll(Sort.by(sortBy));
+        if (orderBy == null || !Set.of("asc", "desc").contains(orderBy)) {
+            orderBy = "asc";
+        }
+
+        var sortDirection = Sort.Direction.ASC;
+
+        if (!orderBy.equals("asc")) {
+            sortDirection = Sort.Direction.DESC;
+        }
+
+        return productRepository.findAll(Sort.by(sortDirection, sortBy));
     }
 
     @Override
