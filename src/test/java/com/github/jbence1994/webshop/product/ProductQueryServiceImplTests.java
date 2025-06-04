@@ -37,13 +37,13 @@ public class ProductQueryServiceImplTests {
 
     private static Stream<Arguments> sortByParams() {
         return Stream.of(
-                Arguments.of("SortBy and orderBy are null", null, null),
-                Arguments.of("SortBy and orderBy are empty", "", ""),
-                Arguments.of("SortBy and orderBy are an unknown property", "testValue", "testValue"),
-                Arguments.of("SortBy 'id', orderBy 'asc'", "id", "asc"),
-                Arguments.of("SortBy 'id', orderBy 'desc'", "id", "desc"),
-                Arguments.of("SortBy 'price', orderBy 'asc'", "price", "asc"),
-                Arguments.of("SortBy 'price', orderBy 'desc'", "price", "desc")
+                Arguments.of("SortBy and orderBy are null", null, null, -1, 20),
+                Arguments.of("SortBy and orderBy are empty", "", "", 0, 20),
+                Arguments.of("SortBy and orderBy are an unknown property", "testValue", "testValue", 1, 20),
+                Arguments.of("SortBy 'id', orderBy 'asc'", "id", "asc", 2, 20),
+                Arguments.of("SortBy 'id', orderBy 'desc'", "id", "desc", -1, 20),
+                Arguments.of("SortBy 'price', orderBy 'asc'", "price", "asc", 0, 20),
+                Arguments.of("SortBy 'price', orderBy 'desc'", "price", "desc", 1, 20)
         );
     }
 
@@ -52,13 +52,15 @@ public class ProductQueryServiceImplTests {
     public void getProductsTest(
             String testCase,
             String sortBy,
-            String orderBy
+            String orderBy,
+            int page,
+            int size
     ) {
         var products = List.of(product1(), product2());
         var productsPage = new PageImpl<>(products, PageRequest.of(0, 20), products.size());
         when(productRepository.findAll(any(PageRequest.class))).thenReturn(productsPage);
 
-        var result = productQueryService.getProducts(sortBy, orderBy, 0, 20);
+        var result = productQueryService.getProducts(sortBy, orderBy, page, size);
 
         assertFalse(result.isEmpty());
         assertEquals(2, result.size());

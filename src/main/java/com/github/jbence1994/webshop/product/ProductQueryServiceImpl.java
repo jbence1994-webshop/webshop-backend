@@ -15,11 +15,12 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
     @Override
     public List<Product> getProducts(String sortBy, String orderBy, int page, int size) {
-        var sortByProperties = getSortByProperties(sortBy);
+        var sortProperties = getSortProperties(sortBy);
         var sortDirection = getSortDirection(orderBy);
+        var pageNumber = getPageNumber(page);
 
         return productRepository
-                .findAll(PageRequest.of(page, size, Sort.by(sortDirection, sortByProperties)))
+                .findAll(PageRequest.of(pageNumber, size, Sort.by(sortDirection, sortProperties)))
                 .toList();
     }
 
@@ -35,7 +36,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
         return productRepository.existsById(id);
     }
 
-    private String getSortByProperties(String sortBy) {
+    private String getSortProperties(String sortBy) {
         if (sortBy == null || !Set.of("id", "price").contains(sortBy)) {
             sortBy = "id";
         }
@@ -55,5 +56,13 @@ public class ProductQueryServiceImpl implements ProductQueryService {
         }
 
         return sortDirection;
+    }
+
+    private int getPageNumber(int page) {
+        if (page <= 0 || page == 1) {
+            return 0;
+        }
+
+        return page - 1;
     }
 }
