@@ -16,6 +16,8 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,9 +37,9 @@ class ProductControllerTests {
 
     @Test
     public void getProductsTest() {
-        when(productQueryService.getProducts()).thenReturn(List.of(product1(), product2()));
+        when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt())).thenReturn(List.of(product1(), product2()));
 
-        var result = productController.getProducts();
+        var result = productController.getProducts("id", "asc", 0, 20);
 
         assertEquals(2, result.size());
     }

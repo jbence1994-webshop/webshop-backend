@@ -2,12 +2,18 @@ package com.github.jbence1994.webshop.product;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
@@ -29,11 +35,32 @@ public class ProductQueryServiceImplTests {
     @InjectMocks
     private ProductQueryServiceImpl productQueryService;
 
-    @Test
-    public void getProductsTest() {
-        when(productRepository.findAll()).thenReturn(List.of(product1(), product2()));
+    private static Stream<Arguments> sortByParams() {
+        return Stream.of(
+                Arguments.of("SortBy and orderBy are null", null, null, -1, 20),
+                Arguments.of("SortBy and orderBy are empty", "", "", 0, 20),
+                Arguments.of("SortBy and orderBy are an unknown property", "testValue", "testValue", 1, 20),
+                Arguments.of("SortBy 'id', orderBy 'asc'", "id", "asc", 2, 20),
+                Arguments.of("SortBy 'id', orderBy 'desc'", "id", "desc", -1, 20),
+                Arguments.of("SortBy 'price', orderBy 'asc'", "price", "asc", 0, 20),
+                Arguments.of("SortBy 'price', orderBy 'desc'", "price", "desc", 1, 20)
+        );
+    }
 
-        var result = productQueryService.getProducts();
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("sortByParams")
+    public void getProductsTest(
+            String testCase,
+            String sortBy,
+            String orderBy,
+            int page,
+            int size
+    ) {
+        var products = List.of(product1(), product2());
+        var productsPage = new PageImpl<>(products, PageRequest.of(0, 20), products.size());
+        when(productRepository.findAll(any(PageRequest.class))).thenReturn(productsPage);
+
+        var result = productQueryService.getProducts(sortBy, orderBy, page, size);
 
         assertFalse(result.isEmpty());
         assertEquals(2, result.size());

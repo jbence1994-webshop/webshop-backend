@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,10 +20,14 @@ public class ProductController {
     private final ProductService productService;
     private final ProductMapper productMapper;
 
-    // TODO: Later sorting and pagination can be applied here.
     @GetMapping
-    public List<ProductDto> getProducts() {
-        return productQueryService.getProducts().stream()
+    public List<ProductDto> getProducts(
+            @RequestParam(required = false, name = "sort") String sortBy,
+            @RequestParam(required = false, name = "order") String orderBy,
+            @RequestParam(required = false, defaultValue = "0", name = "page") int page,
+            @RequestParam(required = false, defaultValue = "20", name = "size") int size
+    ) {
+        return productQueryService.getProducts(sortBy, orderBy, page, size).stream()
                 .map(productMapper::toDto)
                 .toList();
     }
