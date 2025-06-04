@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop;
 
 import com.github.jbence1994.webshop.photo.FileExtensionsConfig;
-import com.github.jbence1994.webshop.photo.ProductPhotosUploadDirectoryPathConfig;
+import com.github.jbence1994.webshop.photo.ProductPhotosUploadDirectoryConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties(value = {
         FileExtensionsConfig.class,
-        ProductPhotosUploadDirectoryPathConfig.class
+        ProductPhotosUploadDirectoryConfig.class
 })
 public class Application {
 

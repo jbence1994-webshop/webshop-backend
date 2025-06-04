@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductPhotoServiceImpl implements ProductPhotoService {
     private final FileExtensionValidator fileExtensionValidator;
-    private final ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
+    private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
     private final ProductQueryService productQueryService;
     private final ProductService productService;
     private final ProductPhotoQueryService productPhotoQueryService;
@@ -27,7 +27,7 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
             var fileName = photo.generateFileName();
 
             fileUtils.store(
-                    productPhotosUploadDirectoryPathConfig.getPath(),
+                    productPhotosUploadDirectoryConfig.getPath(),
                     fileName,
                     photo.getInputStream()
             );
@@ -52,7 +52,7 @@ public class ProductPhotoServiceImpl implements ProductPhotoService {
             var product = productQueryService.getProduct(productId);
 
             fileUtils.remove(
-                    productPhotosUploadDirectoryPathConfig.getPath(),
+                    productPhotosUploadDirectoryConfig.getPath(),
                     fileName
             );
 

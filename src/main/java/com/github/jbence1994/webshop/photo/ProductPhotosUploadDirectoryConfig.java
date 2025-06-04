@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "webshop.photo-upload-directory-path.products")
+@ConfigurationProperties(prefix = "webshop.product-photos-upload-directory-config")
 @AllArgsConstructor
 @Getter
-public class ProductPhotosUploadDirectoryPathConfig {
+public class ProductPhotosUploadDirectoryConfig {
     private String path;
 }

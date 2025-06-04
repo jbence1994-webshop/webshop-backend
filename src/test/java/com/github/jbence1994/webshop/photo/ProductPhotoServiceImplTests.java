@@ -40,7 +40,7 @@ public class ProductPhotoServiceImplTests {
     private FileExtensionValidator fileExtensionValidator;
 
     @Mock
-    private ProductPhotosUploadDirectoryPathConfig productPhotosUploadDirectoryPathConfig;
+    private ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
 
     @Mock
     private ProductQueryService productQueryService;
@@ -65,7 +65,7 @@ public class ProductPhotoServiceImplTests {
         doNothing().when(fileExtensionValidator).validate(any());
         when(productQueryService.getProduct(any())).thenReturn(product);
         when(photo.generateFileName()).thenReturn(PHOTO_FILE_NAME);
-        when(productPhotosUploadDirectoryPathConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
+        when(productPhotosUploadDirectoryConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
         when(photo.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());
 
@@ -83,7 +83,7 @@ public class ProductPhotoServiceImplTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
         verify(photo, times(1)).generateFileName();
-        verify(productPhotosUploadDirectoryPathConfig, times(1)).getPath();
+        verify(productPhotosUploadDirectoryConfig, times(1)).getPath();
         verify(photo, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, times(1)).addPhoto(any());
@@ -104,7 +104,7 @@ public class ProductPhotoServiceImplTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
         verify(photo, times(1)).generateFileName();
-        verify(productPhotosUploadDirectoryPathConfig, times(1)).getPath();
+        verify(productPhotosUploadDirectoryConfig, times(1)).getPath();
         verify(photo, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, never()).addPhoto(any());
