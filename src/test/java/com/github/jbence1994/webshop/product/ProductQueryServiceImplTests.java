@@ -8,7 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,9 +54,11 @@ public class ProductQueryServiceImplTests {
             String sortBy,
             String orderBy
     ) {
-        when(productRepository.findAll(any(Sort.class))).thenReturn(List.of(product1(), product2()));
+        var products = List.of(product1(), product2());
+        var productsPage = new PageImpl<>(products, PageRequest.of(0, 20), products.size());
+        when(productRepository.findAll(any(PageRequest.class))).thenReturn(productsPage);
 
-        var result = productQueryService.getProducts(sortBy, orderBy);
+        var result = productQueryService.getProducts(sortBy, orderBy, 0, 20);
 
         assertFalse(result.isEmpty());
         assertEquals(2, result.size());
