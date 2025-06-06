@@ -20,7 +20,7 @@ public class FileSystemUtils implements FileUtils {
 
             Files.copy(stream, Paths.get(path, fileName));
         } catch (Exception exception) {
-            throw new FileSystemException(exception.getMessage());
+            throw new FileUploadException(exception.getMessage());
         }
     }
 
@@ -29,7 +29,7 @@ public class FileSystemUtils implements FileUtils {
         try {
             Files.delete(Paths.get(path, fileName));
         } catch (Exception exception) {
-            throw new FileSystemException(exception.getMessage());
+            throw new FileDeletionException(exception.getMessage());
         }
     }
 }
