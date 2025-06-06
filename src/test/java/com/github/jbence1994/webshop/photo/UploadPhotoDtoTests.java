@@ -14,8 +14,10 @@ import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.bmpUp
 import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.jpegUploadPhotoDto;
 import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.jpgUploadPhotoDto;
 import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.pngUploadPhotoDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 public class UploadPhotoDtoTests {
     private static Stream<Arguments> uploadPhotoDtoParams() {
@@ -35,7 +37,7 @@ public class UploadPhotoDtoTests {
     ) {
         var result = uploadPhotoDto.getInputStream();
 
-        assertNotNull(result);
+        assertThat(result, not(nullValue()));
     }
 
     @ParameterizedTest(name = "{index} => {0}")
@@ -46,6 +48,6 @@ public class UploadPhotoDtoTests {
     ) {
         var result = uploadPhotoDto.getFileExtension();
 
-        assertEquals(extension, result);
+        assertThat(result, equalTo(extension));
     }
 }

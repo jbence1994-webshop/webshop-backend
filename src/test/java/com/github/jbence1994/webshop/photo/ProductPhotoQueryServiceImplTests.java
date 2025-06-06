@@ -11,7 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -35,7 +36,7 @@ public class ProductPhotoQueryServiceImplTests {
 
         var result = productPhotoQueryService.getProductPhotos(1L);
 
-        assertEquals(1, result.size());
+        assertThat(result.size(), equalTo(1));
     }
 
     @Test
@@ -47,6 +48,6 @@ public class ProductPhotoQueryServiceImplTests {
                 () -> productPhotoQueryService.getProductPhotos(1L)
         );
 
-        assertEquals("No product was found with the given ID: #1.", result.getMessage());
+        assertThat(result.getMessage(), equalTo("No product was found with the given ID: #1."));
     }
 }

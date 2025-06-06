@@ -15,9 +15,11 @@ import static com.github.jbence1994.webshop.photo.MultipartFileTestObject.multip
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.jpegUploadPhotoDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -45,10 +47,10 @@ public class ProductPhotoControllerTests {
 
         var result = productPhotoController.uploadProductPhoto(1L, multipartFile());
 
-        assertEquals(HttpStatus.CREATED, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals(PHOTO_FILE_NAME, result.getBody().fileName());
-        assertEquals(PHOTO_URL, result.getBody().url());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().fileName(), equalTo(PHOTO_FILE_NAME));
+        assertThat(result.getBody().url(), equalTo(PHOTO_URL));
     }
 
     @Test
@@ -57,7 +59,7 @@ public class ProductPhotoControllerTests {
 
         var result = productPhotoController.getProductPhotos(1L);
 
-        assertEquals(1, result.size());
+        assertThat(result.size(), equalTo(1));
     }
 
     @Test
@@ -66,7 +68,7 @@ public class ProductPhotoControllerTests {
 
         var result = productPhotoController.deleteProductPhoto(1L, PHOTO_FILE_NAME);
 
-        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
-        assertNull(result.getBody());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 }

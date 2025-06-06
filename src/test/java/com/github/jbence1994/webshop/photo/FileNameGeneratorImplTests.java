@@ -14,7 +14,8 @@ import static com.github.jbence1994.webshop.photo.PhotoTestConstants.BMP;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPEG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PNG;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 @ExtendWith(MockitoExtension.class)
 public class FileNameGeneratorImplTests {
@@ -37,6 +38,6 @@ public class FileNameGeneratorImplTests {
         var regex = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.(?:jpg|jpeg|png|bmp)$";
         var result = fileNameGenerator.generate(extension);
 
-        assertTrue(Pattern.matches(regex, result));
+        assertThat(Pattern.matches(regex, result), is(true));
     }
 }

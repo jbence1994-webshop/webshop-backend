@@ -6,8 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -25,7 +26,7 @@ public class PhotoMapperTests {
 
         var result = mapper.toDto(multipartFile);
 
-        assertArrayEquals(expectedBytes, result.getInputStreamBytes());
+        assertThat(result.getInputStreamBytes(), is(equalTo(expectedBytes)));
 
         verify(multipartFile, times(1)).getBytes();
     }
@@ -39,6 +40,6 @@ public class PhotoMapperTests {
                 () -> mapper.toDto(multipartFile)
         );
 
-        assertEquals("The photo could not be uploaded successfully.", result.getMessage());
+        assertThat(result.getMessage(), equalTo("The photo could not be uploaded successfully."));
     }
 }
