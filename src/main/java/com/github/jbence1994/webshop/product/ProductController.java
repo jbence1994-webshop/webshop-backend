@@ -2,6 +2,8 @@ package com.github.jbence1994.webshop.product;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductController {
     private final ProductQueryService productQueryService;
-    private final ProductService productService;
+    private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
     @GetMapping
@@ -39,9 +41,11 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductDto createProduct(@Valid @RequestBody CreateProductDto productDto) {
+    public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
         var product = productMapper.toEntity(productDto);
-        var createdProduct = productService.createProduct(product);
-        return productMapper.toDto(createdProduct);
+        productRepository.save(product);
+        productDto.setId(product.getId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
     }
 }

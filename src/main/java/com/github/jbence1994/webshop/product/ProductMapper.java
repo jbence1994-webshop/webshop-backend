@@ -9,5 +9,5 @@ public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "photos", ignore = true)
-    Product toEntity(CreateProductDto productDto);
+    Product toEntity(ProductDto productDto);
 }
