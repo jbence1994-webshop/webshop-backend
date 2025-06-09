@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -24,7 +23,7 @@ public class ProductControllerExceptionHandlerTests {
                 .handleProductNotFoundException(new ProductNotFoundException(1L));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-        assertThat(result.getBody(), is(not(nullValue())));
+        assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("No product was found with the given ID: #1."));
     }
 }

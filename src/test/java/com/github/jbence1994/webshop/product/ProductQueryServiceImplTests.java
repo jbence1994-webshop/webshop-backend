@@ -65,7 +65,7 @@ public class ProductQueryServiceImplTests {
 
         var result = productQueryService.getProducts(sortBy, orderBy, page, size);
 
-        assertThat(result, is(not(empty())));
+        assertThat(result, not(empty()));
         assertThat(result.size(), equalTo(2));
     }
 
@@ -75,7 +75,7 @@ public class ProductQueryServiceImplTests {
 
         var result = assertDoesNotThrow(() -> productQueryService.getProduct(1L));
 
-        assertThat(result, is(not(nullValue())));
+        assertThat(result, not(nullValue()));
         assertThat(result, samePropertyValuesAs(product1()));
     }
 

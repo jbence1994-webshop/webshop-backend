@@ -7,9 +7,17 @@ import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;
 
 public final class ProductDtoTestObject {
-    public static ProductDto productDto1() {
+    public static ProductDto productDtoWithNullId() {
+        return buildProduct(null);
+    }
+
+    public static ProductDto productDto() {
+        return buildProduct(1L);
+    }
+
+    private static ProductDto buildProduct(Long id) {
         return new ProductDto(
-                1L,
+                id,
                 PRODUCT_1_NAME,
                 BigDecimal.valueOf(49.99),
                 PRODUCT_1_UNIT,
