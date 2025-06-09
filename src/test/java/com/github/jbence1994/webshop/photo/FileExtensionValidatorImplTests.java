@@ -32,9 +32,7 @@ public class FileExtensionValidatorImplTests {
 
     @Test
     public void validateTest_HappyPath() {
-        assertDoesNotThrow(
-                () -> fileExtensionValidator.validate(jpegUploadPhotoDto())
-        );
+        assertDoesNotThrow(() -> fileExtensionValidator.validate(jpegUploadPhotoDto()));
     }
 
     @Test

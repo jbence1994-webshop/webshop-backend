@@ -50,9 +50,11 @@ public class Product {
 
     public void removePhoto(String fileName) {
         var photo = getPhoto(fileName);
-        photo.setProduct(null);
 
-        photos.remove(photo);
+        if (photo != null) {
+            photos.remove(photo);
+            photo.setProduct(null);
+        }
     }
 
     private ProductPhoto getPhoto(String fileName) {
