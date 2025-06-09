@@ -1,17 +1,17 @@
 package com.github.jbence1994.webshop.cart;
 
-import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.UUID;
 
+import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_CREATED_AT;
+import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 
 public final class CartTestObject {
     public static Cart cart1() {
         var cart = new Cart(
-                UUID.randomUUID(),
-                LocalDate.now(),
+                CART_ID,
+                CART_CREATED_AT,
                 new HashSet<>()
         );
         cart.addItem(product1());
@@ -20,8 +20,8 @@ public final class CartTestObject {
 
     public static Cart cart2() {
         var cart = new Cart(
-                UUID.randomUUID(),
-                LocalDate.now(),
+                CART_ID,
+                CART_CREATED_AT,
                 new HashSet<>()
         );
         cart.addItem(product1());
@@ -31,8 +31,8 @@ public final class CartTestObject {
 
     public static Cart emptyCart() {
         return new Cart(
-                UUID.randomUUID(),
-                LocalDate.now(),
+                CART_ID,
+                CART_CREATED_AT,
                 new HashSet<>()
         );
     }
