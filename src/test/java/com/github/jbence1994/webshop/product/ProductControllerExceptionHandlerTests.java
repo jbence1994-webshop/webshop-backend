@@ -6,8 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductControllerExceptionHandlerTests {
@@ -20,8 +23,8 @@ public class ProductControllerExceptionHandlerTests {
         var result = productControllerExceptionHandler
                 .handleProductNotFoundException(new ProductNotFoundException(1L));
 
-        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals("No product was found with the given ID: #1.", result.getBody().error());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(result.getBody(), is(not(nullValue())));
+        assertThat(result.getBody().error(), equalTo("No product was found with the given ID: #1."));
     }
 }

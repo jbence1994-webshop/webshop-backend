@@ -13,7 +13,10 @@ import static com.github.jbence1994.webshop.product.ProductDtoTestObject.product
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithNullId;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -41,7 +44,7 @@ class ProductControllerTests {
 
         var result = productController.getProducts("id", "asc", 0, 20);
 
-        assertEquals(2, result.size());
+        assertThat(result.size(), equalTo(2));
     }
 
     @Test
@@ -51,11 +54,13 @@ class ProductControllerTests {
 
         var result = productController.getProduct(1L);
 
-        assertEquals(product1().getId(), result.getId());
-        assertEquals(product1().getName(), result.getName());
-        assertEquals(product1().getPrice(), result.getPrice());
-        assertEquals(product1().getUnit(), result.getUnit());
-        assertEquals(product1().getDescription(), result.getDescription());
+        assertThat(result, allOf(
+                hasProperty("id", equalTo(product1().getId())),
+                hasProperty("name", equalTo(product1().getName())),
+                hasProperty("price", equalTo(product1().getPrice())),
+                hasProperty("unit", equalTo(product1().getUnit())),
+                hasProperty("description", equalTo(product1().getDescription()))
+        ));
     }
 
     @Test
@@ -67,7 +72,7 @@ class ProductControllerTests {
                 () -> productController.getProduct(1L)
         );
 
-        assertEquals("No product was found with the given ID: #1.", result.getMessage());
+        assertThat(result.getMessage(), equalTo("No product was found with the given ID: #1."));
     }
 
     @Test
@@ -78,10 +83,12 @@ class ProductControllerTests {
 
         var result = productController.createProduct(createProductDto1());
 
-        assertEquals(product1().getId(), result.getId());
-        assertEquals(product1().getName(), result.getName());
-        assertEquals(product1().getPrice(), result.getPrice());
-        assertEquals(product1().getUnit(), result.getUnit());
-        assertEquals(product1().getDescription(), result.getDescription());
+        assertThat(result, allOf(
+                hasProperty("id", equalTo(product1().getId())),
+                hasProperty("name", equalTo(product1().getName())),
+                hasProperty("price", equalTo(product1().getPrice())),
+                hasProperty("unit", equalTo(product1().getUnit())),
+                hasProperty("description", equalTo(product1().getDescription()))
+        ));
     }
 }

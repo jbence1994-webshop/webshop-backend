@@ -7,7 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -28,12 +29,7 @@ public class ProductServiceImplTests {
 
         var result = productService.createProduct(product1());
 
-        assertEquals(product1().getId(), result.getId());
-        assertEquals(product1().getName(), result.getName());
-        assertEquals(product1().getPrice(), result.getPrice());
-        assertEquals(product1().getUnit(), result.getUnit());
-        assertEquals(product1().getDescription(), result.getDescription());
-        assertEquals(product1().getPhotos(), result.getPhotos());
+        assertThat(result, samePropertyValuesAs(product1()));
     }
 
     @Test

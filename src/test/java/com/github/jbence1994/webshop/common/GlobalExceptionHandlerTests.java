@@ -15,8 +15,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.common.FieldErrorTestObject.fieldError;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,9 +34,9 @@ public class GlobalExceptionHandlerTests {
 
         var result = globalExceptionHandler.handleMissingServletRequestPartException(exception);
 
-        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals("Required part 'file' is missing.", result.getBody().error());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Required part 'file' is missing."));
     }
 
     @Test
@@ -46,9 +48,9 @@ public class GlobalExceptionHandlerTests {
 
         var result = globalExceptionHandler.handleConstraintViolationException(exception);
 
-        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals("The file must not be empty.", result.getBody().error());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("The file must not be empty."));
     }
 
     @Test
@@ -61,8 +63,8 @@ public class GlobalExceptionHandlerTests {
 
         var result = globalExceptionHandler.handleValidationErrors(exception);
 
-        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals(1, result.getBody().size());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().size(), equalTo(1));
     }
 }

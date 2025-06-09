@@ -8,8 +8,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPEG;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductPhotoControllerExceptionHandlerTests {
@@ -22,9 +24,9 @@ public class ProductPhotoControllerExceptionHandlerTests {
         var result = productPhotoControllerExceptionHandler
                 .handleProductNotFoundException(new ProductNotFoundException(1L));
 
-        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals("No product was found with the given ID: #1.", result.getBody().error());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("No product was found with the given ID: #1."));
     }
 
     @Test
@@ -32,9 +34,9 @@ public class ProductPhotoControllerExceptionHandlerTests {
         var result = productPhotoControllerExceptionHandler
                 .handleInvalidFileExtensionException(new InvalidFileExtensionException(JPEG));
 
-        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals("Invalid file extension: .jpeg", result.getBody().error());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Invalid file extension: .jpeg"));
     }
 
     @Test
@@ -42,9 +44,9 @@ public class ProductPhotoControllerExceptionHandlerTests {
         var result = productPhotoControllerExceptionHandler
                 .handleProductPhotoUploadException(new ProductPhotoUploadException());
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals("The photo could not be uploaded successfully.", result.getBody().error());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("The photo could not be uploaded successfully."));
     }
 
     @Test
@@ -52,8 +54,8 @@ public class ProductPhotoControllerExceptionHandlerTests {
         var result = productPhotoControllerExceptionHandler
                 .handleProductPhotoDeletionException(new ProductPhotoDeletionException());
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
-        assertNotNull(result.getBody());
-        assertEquals("The photo could not be deleted successfully.", result.getBody().error());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("The photo could not be deleted successfully."));
     }
 }

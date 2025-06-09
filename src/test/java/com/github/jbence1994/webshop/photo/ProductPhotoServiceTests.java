@@ -20,7 +20,8 @@ import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH;
 import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -81,7 +82,7 @@ public class ProductPhotoServiceTests {
 
         var result = productPhotoService.uploadPhoto(1L, uploadPhotoDto);
 
-        assertEquals(PHOTO_FILE_NAME, result.fileName());
+        assertThat(result.fileName(), equalTo(PHOTO_FILE_NAME));
 
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
@@ -102,7 +103,7 @@ public class ProductPhotoServiceTests {
                 () -> productPhotoService.uploadPhoto(1L, uploadPhotoDto)
         );
 
-        assertEquals("The photo could not be uploaded successfully.", result.getMessage());
+        assertThat(result.getMessage(), equalTo("The photo could not be uploaded successfully."));
 
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
@@ -120,7 +121,7 @@ public class ProductPhotoServiceTests {
 
         var result = productPhotoService.getPhotos(1L);
 
-        assertEquals(1, result.size());
+        assertThat(result.size(), equalTo(1));
     }
 
     @Test
@@ -144,7 +145,7 @@ public class ProductPhotoServiceTests {
                 () -> productPhotoService.deletePhoto(1L, PHOTO_FILE_NAME)
         );
 
-        assertEquals("The photo could not be deleted successfully.", result.getMessage());
+        assertThat(result.getMessage(), equalTo("The photo could not be deleted successfully."));
 
         verify(fileUtils, times(1)).remove(any(), any());
         verify(product, never()).removePhoto(any());
