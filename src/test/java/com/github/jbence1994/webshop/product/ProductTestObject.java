@@ -2,7 +2,6 @@ package com.github.jbence1994.webshop.product;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Set;
 
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_DESCRIPTION;
@@ -31,7 +30,7 @@ public final class ProductTestObject {
                 BigDecimal.valueOf(49.99),
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
-                Set.of()
+                new HashSet<>()
         );
     }
 
