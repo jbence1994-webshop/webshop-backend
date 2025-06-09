@@ -30,7 +30,7 @@
         <!-- Maven plugin versions -->
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
-        <flyway-maven-plugin.version>11.9.0</flyway-maven-plugin.version>
+        <flyway-maven-plugin.version>11.9.1</flyway-maven-plugin.version>
 
         <!-- JaCoCo properties -->
         <jacoco.line-coverage>1.00</jacoco.line-coverage>
@@ -93,6 +93,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

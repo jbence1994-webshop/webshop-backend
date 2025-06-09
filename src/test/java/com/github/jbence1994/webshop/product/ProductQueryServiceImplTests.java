@@ -17,12 +17,15 @@ import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -62,8 +65,8 @@ public class ProductQueryServiceImplTests {
 
         var result = productQueryService.getProducts(sortBy, orderBy, page, size);
 
-        assertFalse(result.isEmpty());
-        assertEquals(2, result.size());
+        assertThat(result, is(not(empty())));
+        assertThat(result.size(), equalTo(2));
     }
 
     @Test
@@ -72,8 +75,8 @@ public class ProductQueryServiceImplTests {
 
         var result = assertDoesNotThrow(() -> productQueryService.getProduct(1L));
 
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        assertThat(result, is(not(nullValue())));
+        assertThat(result, samePropertyValuesAs(product1()));
     }
 
     @Test
@@ -85,20 +88,20 @@ public class ProductQueryServiceImplTests {
                 () -> productQueryService.getProduct(1L)
         );
 
-        assertEquals("No product was found with the given ID: #1.", result.getMessage());
+        assertThat(result.getMessage(), equalTo("No product was found with the given ID: #1."));
     }
 
     @Test
     public void isProductExistByIdTest_HappyPath() {
         when(productRepository.existsById(any())).thenReturn(true);
 
-        assertTrue(productQueryService.isProductExistById(1L));
+        assertThat(productQueryService.isProductExistById(1L), is(true));
     }
 
     @Test
     public void isProductExistByIdTest_UnhappyPath() {
         when(productRepository.existsById(any())).thenReturn(false);
 
-        assertFalse(productQueryService.isProductExistById(1L));
+        assertThat(productQueryService.isProductExistById(1L), is(false));
     }
 }

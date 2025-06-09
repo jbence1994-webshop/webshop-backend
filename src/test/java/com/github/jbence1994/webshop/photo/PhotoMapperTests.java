@@ -6,8 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -19,26 +20,26 @@ public class PhotoMapperTests {
     private final MultipartFile multipartFile = mock(MultipartFile.class);
 
     @Test
-    public void toPhotoTest_HappyPath() throws IOException {
+    public void toDtoTest_HappyPath() throws IOException {
         var expectedBytes = new byte[]{1, 2, 3, 4, 5};
         when(multipartFile.getBytes()).thenReturn(expectedBytes);
 
-        var result = mapper.toPhoto(multipartFile);
+        var result = mapper.toDto(multipartFile);
 
-        assertArrayEquals(expectedBytes, result.getInputStreamBytes());
+        assertThat(result.getInputStreamBytes(), is(equalTo(expectedBytes)));
 
         verify(multipartFile, times(1)).getBytes();
     }
 
     @Test
-    public void toPhotoTest_UnhappyPath_IOException() throws IOException {
+    public void toDtoTest_UnhappyPath_IOException() throws IOException {
         when(multipartFile.getBytes()).thenThrow(new IOException("Disk error."));
 
         var result = assertThrows(
                 ProductPhotoUploadException.class,
-                () -> mapper.toPhoto(multipartFile)
+                () -> mapper.toDto(multipartFile)
         );
 
-        assertEquals("The photo could not be uploaded successfully.", result.getMessage());
+        assertThat(result.getMessage(), equalTo("The photo could not be uploaded successfully."));
     }
 }

@@ -8,10 +8,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ALLOWED_FILE_EXTENSIONS;
-import static com.github.jbence1994.webshop.photo.PhotoTestObject.jpegPhoto;
-import static com.github.jbence1994.webshop.photo.PhotoTestObject.tiffPhoto;
+import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.jpegUploadPhotoDto;
+import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.tiffUploadPhotoDto;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +33,7 @@ public class FileExtensionValidatorImplTests {
     @Test
     public void validateTest_HappyPath() {
         assertDoesNotThrow(
-                () -> fileExtensionValidator.validate(jpegPhoto())
+                () -> fileExtensionValidator.validate(jpegUploadPhotoDto())
         );
     }
 
@@ -40,8 +41,8 @@ public class FileExtensionValidatorImplTests {
     public void validateTest_UnhappyPath_InvalidFileExtensionException() {
         var result = assertThrows(
                 InvalidFileExtensionException.class,
-                () -> fileExtensionValidator.validate(tiffPhoto()));
+                () -> fileExtensionValidator.validate(tiffUploadPhotoDto()));
 
-        assertEquals("Invalid file extension: .tiff", result.getMessage());
+        assertThat(result.getMessage(), equalTo("Invalid file extension: .tiff"));
     }
 }
