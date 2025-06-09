@@ -5,11 +5,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static com.github.jbence1994.webshop.product.CreateProductDtoTestObject.createProductDto1;
-import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto1;
+import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
+import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullId;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithNullId;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
@@ -17,6 +18,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -30,7 +33,7 @@ class ProductControllerTests {
     private ProductQueryService productQueryService;
 
     @Mock
-    private ProductService productService;
+    private ProductRepository productRepository;
 
     @Mock
     private ProductMapper productMapper;
@@ -50,7 +53,7 @@ class ProductControllerTests {
     @Test
     public void getProductTest_HappyPath() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(productMapper.toDto(any())).thenReturn(productDto1());
+        when(productMapper.toDto(any())).thenReturn(productDto());
 
         var result = productController.getProduct(1L);
 
@@ -78,13 +81,13 @@ class ProductControllerTests {
     @Test
     public void createProductTest() {
         when(productMapper.toEntity(any())).thenReturn(product1WithNullId());
-        when(productService.createProduct(any())).thenReturn(product1());
-        when(productMapper.toDto(any())).thenReturn(productDto1());
+        when(productRepository.save(any())).thenReturn(product1());
 
-        var result = productController.createProduct(createProductDto1());
+        var result = productController.createProduct(productDtoWithNullId());
 
-        assertThat(result, allOf(
-                hasProperty("id", equalTo(product1().getId())),
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody(), allOf(
                 hasProperty("name", equalTo(product1().getName())),
                 hasProperty("price", equalTo(product1().getPrice())),
                 hasProperty("unit", equalTo(product1().getUnit())),

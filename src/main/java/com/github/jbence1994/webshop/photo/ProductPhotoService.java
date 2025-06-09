@@ -2,7 +2,7 @@ package com.github.jbence1994.webshop.photo;
 
 import com.github.jbence1994.webshop.product.Product;
 import com.github.jbence1994.webshop.product.ProductQueryService;
-import com.github.jbence1994.webshop.product.ProductService;
+import com.github.jbence1994.webshop.product.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class ProductPhotoService extends PhotoService<Product, ProductPhoto> {
     private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
     private final ProductPhotoQueryService productPhotoQueryService;
     private final ProductQueryService productQueryService;
-    private final ProductService productService;
+    private final ProductRepository productRepository;
 
     public ProductPhotoService(
             final FileExtensionValidator fileExtensionValidator,
@@ -22,14 +22,14 @@ public class ProductPhotoService extends PhotoService<Product, ProductPhoto> {
             final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig,
             final ProductPhotoQueryService productPhotoQueryService,
             final ProductQueryService productQueryService,
-            final ProductService productService
+            final ProductRepository productRepository
     ) {
         super(fileExtensionValidator, fileNameGenerator, fileUtils);
 
         this.productPhotosUploadDirectoryConfig = productPhotosUploadDirectoryConfig;
         this.productPhotoQueryService = productPhotoQueryService;
         this.productQueryService = productQueryService;
-        this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ProductPhotoService extends PhotoService<Product, ProductPhoto> {
 
     @Override
     public void updateEntity(Product product) {
-        productService.updateProduct(product);
+        productRepository.save(product);
     }
 
     @Override
