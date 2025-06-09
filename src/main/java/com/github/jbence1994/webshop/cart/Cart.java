@@ -39,13 +39,13 @@ public class Cart {
     @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> items = new HashSet<>();
 
-    public BigDecimal getTotalPrice() {
+    public BigDecimal calculateTotalPrice() {
         return items.stream()
-                .map(CartItem::getTotalPrice)
+                .map(CartItem::calculateTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public void addItem(Product product) {
+    public CartItem addItem(Product product) {
         var cartItem = getItem(product.getId());
 
         if (cartItem != null) {
@@ -58,6 +58,8 @@ public class Cart {
 
             items.add(cartItem);
         }
+
+        return cartItem;
     }
 
     public void removeItem(Long productId) {

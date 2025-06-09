@@ -39,7 +39,7 @@ public class CartItem {
     @Column(name = "quantity")
     private Integer quantity;
 
-    public BigDecimal getTotalPrice() {
+    public BigDecimal calculateTotalPrice() {
         return product.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
 }

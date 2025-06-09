@@ -6,7 +6,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
-import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem1;
+import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -14,8 +14,8 @@ import static org.hamcrest.Matchers.equalTo;
 public class CartItemTests {
 
     @Test
-    public void getTotalPriceTest() {
-        var result = cartItem1().getTotalPrice();
+    public void calculateTotalPriceTest() {
+        var result = cartItem().calculateTotalPrice();
 
         assertThat(result, equalTo(BigDecimal.valueOf(49.99)));
     }

@@ -20,8 +20,8 @@ public class CartTests {
     private final Cart emptyCart = CartTestObject.emptyCart();
 
     @Test
-    public void getTotalPriceTest() {
-        var result = cart2.getTotalPrice();
+    public void calculateTotalPriceTest() {
+        var result = cart2.calculateTotalPrice();
 
         assertThat(result, equalTo(BigDecimal.valueOf(139.98)));
     }
