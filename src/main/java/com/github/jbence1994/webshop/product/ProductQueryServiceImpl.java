@@ -31,11 +31,6 @@ public class ProductQueryServiceImpl implements ProductQueryService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
-    @Override
-    public boolean isProductExistById(Long id) {
-        return productRepository.existsById(id);
-    }
-
     private String getSortProperties(String sortBy) {
         if (sortBy == null || !Set.of("id", "price").contains(sortBy)) {
             sortBy = "id";

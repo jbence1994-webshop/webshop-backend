@@ -11,10 +11,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +33,7 @@ public class ProductPhotoQueryServiceImplTests {
 
     @Test
     public void getProductPhotosTest_HappyPath() {
-        when(productQueryService.isProductExistById(any())).thenReturn(true);
+        when(productQueryService.getProduct(any())).thenReturn(product1());
         when(productPhotoRepository.findAllByProductId(any())).thenReturn(List.of(productPhoto()));
 
         var result = productPhotoQueryService.getProductPhotos(1L);
@@ -41,7 +43,7 @@ public class ProductPhotoQueryServiceImplTests {
 
     @Test
     public void getProductPhotosTest_UnhappyPath() {
-        when(productQueryService.isProductExistById(any())).thenReturn(false);
+        doThrow(new ProductNotFoundException(1L)).when(productQueryService).getProduct(any());
 
         var result = assertThrows(
                 ProductNotFoundException.class,
