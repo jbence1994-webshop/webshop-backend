@@ -23,3 +23,26 @@ CREATE TABLE IF NOT EXISTS product_photos
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS carts
+(
+    id         BINARY(16) DEFAULT (UUID_TO_BIN(UUID())) NOT NULL PRIMARY KEY,
+    created_at DATE       DEFAULT (CURDATE())           NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS cart_items
+(
+    id         BIGINT     NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    cart_id    BINARY(16) NOT NULL,
+    product_id BIGINT     NOT NULL,
+    quantity   INT        NOT NULL DEFAULT 1,
+    CONSTRAINT unique_cart_id_product_id UNIQUE (cart_id, product_id),
+    CONSTRAINT fk_cart_items_carts
+        FOREIGN KEY (cart_id) REFERENCES carts (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_cart_items_products
+        FOREIGN KEY (product_id) REFERENCES products (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
