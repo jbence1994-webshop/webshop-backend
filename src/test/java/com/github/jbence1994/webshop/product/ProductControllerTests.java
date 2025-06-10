@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +34,7 @@ class ProductControllerTests {
     private ProductQueryService productQueryService;
 
     @Mock
-    private ProductRepository productRepository;
+    private ProductService productService;
 
     @Mock
     private ProductMapper productMapper;
@@ -58,11 +59,11 @@ class ProductControllerTests {
         var result = productController.getProduct(1L);
 
         assertThat(result, allOf(
-                hasProperty("id", equalTo(product1().getId())),
-                hasProperty("name", equalTo(product1().getName())),
-                hasProperty("price", equalTo(product1().getPrice())),
-                hasProperty("unit", equalTo(product1().getUnit())),
-                hasProperty("description", equalTo(product1().getDescription()))
+                hasProperty("id", equalTo(productDto().getId())),
+                hasProperty("name", equalTo(productDto().getName())),
+                hasProperty("price", equalTo(productDto().getPrice())),
+                hasProperty("unit", equalTo(productDto().getUnit())),
+                hasProperty("description", equalTo(productDto().getDescription()))
         ));
     }
 
@@ -81,17 +82,17 @@ class ProductControllerTests {
     @Test
     public void createProductTest() {
         when(productMapper.toEntity(any())).thenReturn(product1WithNullId());
-        when(productRepository.save(any())).thenReturn(product1());
+        doNothing().when(productService).createProduct(any());
 
         var result = productController.createProduct(productDtoWithNullId());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody(), allOf(
-                hasProperty("name", equalTo(product1().getName())),
-                hasProperty("price", equalTo(product1().getPrice())),
-                hasProperty("unit", equalTo(product1().getUnit())),
-                hasProperty("description", equalTo(product1().getDescription()))
+                hasProperty("name", equalTo(productDto().getName())),
+                hasProperty("price", equalTo(productDto().getPrice())),
+                hasProperty("unit", equalTo(productDto().getUnit())),
+                hasProperty("description", equalTo(productDto().getDescription()))
         ));
     }
 }

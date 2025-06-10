@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductController {
     private final ProductQueryService productQueryService;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
     private final ProductMapper productMapper;
 
     @GetMapping
@@ -43,7 +43,8 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
         var product = productMapper.toEntity(productDto);
-        productRepository.save(product);
+
+        productService.createProduct(product);
         productDto.setId(product.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
