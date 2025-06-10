@@ -46,3 +46,10 @@ CREATE TABLE IF NOT EXISTS cart_items
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS coupons
+(
+    code       VARCHAR(25)    NOT NULL PRIMARY KEY,
+    amount     DECIMAL(10, 2) NOT NULL,
+    expiration DATETIME       NOT NULL
+);
