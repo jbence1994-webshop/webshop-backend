@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.cart;
 
-import com.github.jbence1994.webshop.product.ProductQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,13 +12,12 @@ import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDto;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.emptyCartDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.updatedCartItemDto;
+import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
-import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.empty;
@@ -31,6 +29,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,13 +39,7 @@ public class CartControllerTests {
     private CartQueryService cartQueryService;
 
     @Mock
-    private ProductQueryService productQueryService;
-
-    @Mock
     private CartService cartService;
-
-    @Mock
-    private CartRepository cartRepository;
 
     @Mock
     private CartMapper cartMapper;
@@ -56,7 +49,7 @@ public class CartControllerTests {
 
     @Test
     public void createCartTest() {
-        when(cartRepository.save(any())).thenReturn(emptyCart());
+        when(cartService.createCart()).thenReturn(emptyCart());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(emptyCartDto());
 
         var result = cartController.createCart();
@@ -71,13 +64,11 @@ public class CartControllerTests {
     }
 
     @Test
-    public void addToCartTest() {
-        when(cartQueryService.getCart(any())).thenReturn(emptyCart());
-        when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(cartRepository.save(any())).thenReturn(cartWithOneItem());
+    public void addProductToCartTest() {
+        when(cartService.addProductToCart(any(), anyLong())).thenReturn(cartItem());
         when(cartMapper.toDto(any(CartItem.class))).thenReturn(cartItemDto());
 
-        var result = cartController.addToCart(CART_ID, addItemToCartRequest());
+        var result = cartController.addProductToCart(CART_ID, addItemToCartRequest());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
@@ -100,11 +91,11 @@ public class CartControllerTests {
     }
 
     @Test
-    public void updateItemTest() {
-        when(cartService.updateCartItemQuantity(any(), anyLong(), anyInt())).thenReturn(updatedCartItem());
+    public void updateCartItemTest() {
+        when(cartService.updateCartItem(any(), anyLong(), anyInt())).thenReturn(updatedCartItem());
         when(cartMapper.toDto(any(CartItem.class))).thenReturn(updatedCartItemDto());
 
-        var result = cartController.updateItem(CART_ID, 1L, updateCartItemRequest());
+        var result = cartController.updateCartItem(CART_ID, 1L, updateCartItemRequest());
 
         assertThat(result, allOf(
                 hasProperty("quantity", equalTo(updatedCartItemDto().getQuantity())),
@@ -113,11 +104,10 @@ public class CartControllerTests {
     }
 
     @Test
-    public void deleteItemTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItems());
-        when(cartRepository.save(any())).thenReturn(cartWithOneItem());
+    public void deleteCartItemTest() {
+        doNothing().when(cartService).deleteCartItem(any(), any());
 
-        var result = cartController.deleteItem(CART_ID, 1L);
+        var result = cartController.deleteCartItem(CART_ID, 1L);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
@@ -125,8 +115,7 @@ public class CartControllerTests {
 
     @Test
     public void clearCartTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItems());
-        when(cartRepository.save(any())).thenReturn(emptyCart());
+        doNothing().when(cartService).clearCart(any());
 
         var result = cartController.clearCart(CART_ID);
 

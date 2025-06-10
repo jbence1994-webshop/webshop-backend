@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.cart;
 
-import com.github.jbence1994.webshop.product.ProductQueryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,15 +20,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CartController {
     private final CartQueryService cartQueryService;
-    private final ProductQueryService productQueryService;
     private final CartService cartService;
-    private final CartRepository cartRepository;
     private final CartMapper cartMapper;
 
     @PostMapping
     public ResponseEntity<CartDto> createCart() {
-        var cart = new Cart();
-        cartRepository.save(cart);
+        var cart = cartService.createCart();
 
         var cartDto = cartMapper.toDto(cart);
 
@@ -37,15 +33,11 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}/items")
-    public ResponseEntity<CartItemDto> addToCart(
+    public ResponseEntity<CartItemDto> addProductToCart(
             @PathVariable UUID cartId,
             @Valid @RequestBody AddItemToCartRequest request
     ) {
-        var cart = cartQueryService.getCart(cartId);
-        var product = productQueryService.getProduct(request.getProductId());
-
-        var cartItem = cart.addItem(product);
-        cartRepository.save(cart);
+        var cartItem = cartService.addProductToCart(cartId, request.getProductId());
 
         var cartItemDto = cartMapper.toDto(cartItem);
 
@@ -60,12 +52,12 @@ public class CartController {
     }
 
     @PutMapping("/{cartId}/items/{productId}")
-    public CartItemDto updateItem(
+    public CartItemDto updateCartItem(
             @PathVariable UUID cartId,
             @PathVariable Long productId,
             @Valid @RequestBody UpdateCartItemRequest request
     ) {
-        var cartItem = cartService.updateCartItemQuantity(
+        var cartItem = cartService.updateCartItem(
                 cartId,
                 productId,
                 request.getQuantity()
@@ -75,24 +67,18 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartId}/items/{productId}")
-    public ResponseEntity<Void> deleteItem(
+    public ResponseEntity<Void> deleteCartItem(
             @PathVariable UUID cartId,
             @PathVariable Long productId
     ) {
-        var cart = cartQueryService.getCart(cartId);
-
-        cart.removeItem(productId);
-        cartRepository.save(cart);
+        cartService.deleteCartItem(cartId, productId);
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}/items")
     public ResponseEntity<Void> clearCart(@PathVariable UUID id) {
-        var cart = cartQueryService.getCart(id);
-
-        cart.clear();
-        cartRepository.save(cart);
+        cartService.clearCart(id);
 
         return ResponseEntity.noContent().build();
     }
