@@ -12,32 +12,48 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(MockitoExtension.class)
 public class CartTests {
-    private final Cart cart1 = CartTestObject.cart1();
-    private final Cart cart2 = CartTestObject.cart2();
+    private final Cart cart = CartTestObject.cart();
     private final Cart emptyCart = CartTestObject.emptyCart();
 
     @Test
     public void calculateTotalPriceTest() {
-        var result = cart2.calculateTotalPrice();
+        var result = cart.calculateTotalPrice();
 
         assertThat(result, equalTo(BigDecimal.valueOf(139.98)));
     }
 
     @Test
-    public void addItemTest_HappyPath_CartIsNotEmpty_NewItemToCart() {
-        cart1.addItem(product2());
+    public void getItemTest_HappyPath_CartItemIsNotNull() {
+        var result = cart.getItem(1L);
 
-        assertThat(cart1.getItems().size(), equalTo(2));
+        assertThat(result, not(nullValue()));
+        assertThat(result.getProduct().getId(), equalTo(1L));
+    }
+
+    @Test
+    public void getItemTest_UnhappyPath_CartItemIsNull() {
+        var result = cart.getItem(3L);
+
+        assertThat(result, is(nullValue()));
+    }
+
+    @Test
+    public void addItemTest_HappyPath_CartIsNotEmpty_NewItemToCart() {
+        cart.addItem(product2());
+
+        assertThat(cart.getItems().size(), equalTo(2));
     }
 
     @Test
     public void addItemTest_HappyPath_CartIsNotEmpty_AlreadyAddedItemToCart() {
-        cart2.addItem(product2());
+        cart.addItem(product2());
 
-        assertThat(cart2.getItems().size(), equalTo(2));
+        assertThat(cart.getItems().size(), equalTo(2));
     }
 
     @Test
@@ -49,9 +65,10 @@ public class CartTests {
 
     @Test
     public void removeItemTest_HappyPath_CartIsNotEmpty() {
-        cart1.removeItem(1L);
+        cart.removeItem(1L);
+        cart.removeItem(2L);
 
-        assertThat(cart1.getItems(), is(empty()));
+        assertThat(cart.getItems(), is(empty()));
     }
 
     @Test
@@ -63,14 +80,14 @@ public class CartTests {
 
     @Test
     public void clearTest_HappyPath_CartIsEmpty() {
-        cart1.clear();
+        cart.clear();
 
-        assertThat(cart1.getItems(), is(empty()));
+        assertThat(cart.getItems(), is(empty()));
     }
 
     @Test
     public void isEmptyTest_CartIsNotEmpty() {
-        var result = cart1.isEmpty();
+        var result = cart.isEmpty();
 
         assertThat(result, is(false));
     }

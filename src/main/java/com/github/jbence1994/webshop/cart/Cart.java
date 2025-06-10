@@ -45,6 +45,13 @@ public class Cart {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public CartItem getItem(Long productId) {
+        return items.stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElse(null);
+    }
+
     public CartItem addItem(Product product) {
         var cartItem = getItem(product.getId());
 
@@ -77,12 +84,5 @@ public class Cart {
 
     public boolean isEmpty() {
         return items.isEmpty();
-    }
-
-    private CartItem getItem(Long productId) {
-        return items.stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst()
-                .orElse(null);
     }
 }

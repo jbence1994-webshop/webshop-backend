@@ -12,4 +12,12 @@ public final class CartItemDtoTestObject {
                 BigDecimal.valueOf(49.99)
         );
     }
+
+    public static CartItemDto updatedCartItemDto() {
+        return new CartItemDto(
+                cartProductDto(),
+                2,
+                BigDecimal.valueOf(99.98)
+        );
+    }
 }

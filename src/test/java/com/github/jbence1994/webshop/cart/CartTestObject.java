@@ -8,22 +8,24 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 
 public final class CartTestObject {
-    public static Cart cart1() {
+    public static Cart cart() {
         var cart = new Cart(
                 CART_ID,
                 CART_CREATED_AT,
                 new HashSet<>()
         );
         cart.addItem(product1());
+        cart.addItem(product2());
         return cart;
     }
 
-    public static Cart cart2() {
+    public static Cart updatedCart() {
         var cart = new Cart(
                 CART_ID,
                 CART_CREATED_AT,
                 new HashSet<>()
         );
+        cart.addItem(product1());
         cart.addItem(product1());
         cart.addItem(product2());
         return cart;

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,5 +56,20 @@ public class CartController {
         var cart = cartQueryService.getCart(id);
 
         return cartMapper.toDto(cart);
+    }
+
+    @PutMapping("/{cartId}/items/{productId}")
+    public CartItemDto updateItem(
+            @PathVariable UUID cartId,
+            @PathVariable Long productId,
+            @Valid @RequestBody UpdateCartItemRequest request
+    ) {
+        var cart = cartQueryService.getCart(cartId);
+        var cartItem = cartQueryService.getCartItem(cartId, productId);
+
+        cartItem.setQuantity(request.getQuantity());
+        cartRepository.save(cart);
+
+        return cartMapper.toDto(cartItem);
     }
 }

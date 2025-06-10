@@ -30,6 +30,16 @@ public class CartControllerExceptionHandlerTests {
     }
 
     @Test
+    public void handleCartItemNotFoundExceptionTest() {
+        var result = cartControllerExceptionHandler
+                .handleCartItemNotFoundException(new CartItemNotFoundException(100L));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("No cart item was found with the given product ID: 100."));
+    }
+
+    @Test
     public void handleProductNotFoundExceptionTest() {
         var result = cartControllerExceptionHandler
                 .handleProductNotFoundException(new ProductNotFoundException(1L));

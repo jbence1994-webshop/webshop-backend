@@ -15,6 +15,11 @@ public class CartControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
+    @ExceptionHandler(exception = CartItemNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleCartItemNotFoundException(CartItemNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
+    }
+
     @ExceptionHandler(exception = ProductNotFoundException.class)
     public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));

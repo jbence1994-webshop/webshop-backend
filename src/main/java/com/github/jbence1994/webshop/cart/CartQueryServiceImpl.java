@@ -16,4 +16,16 @@ public class CartQueryServiceImpl implements CartQueryService {
                 .findById(id)
                 .orElseThrow(() -> new CartNotFoundException(id));
     }
+
+    @Override
+    public CartItem getCartItem(UUID cartId, Long productId) {
+        var cart = getCart(cartId);
+        var cartItem = cart.getItem(productId);
+
+        if (cartItem == null) {
+            throw new CartItemNotFoundException(productId);
+        }
+
+        return cartItem;
+    }
 }

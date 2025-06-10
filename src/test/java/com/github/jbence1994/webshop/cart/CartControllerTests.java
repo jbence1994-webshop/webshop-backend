@@ -12,9 +12,13 @@ import static com.github.jbence1994.webshop.cart.AddItemToCartRequestTestObject.
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDto;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.emptyCartDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemDto;
+import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.updatedCartItemDto;
+import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cart1;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cart;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
+import static com.github.jbence1994.webshop.cart.CartTestObject.updatedCart;
+import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -65,7 +69,7 @@ public class CartControllerTests {
     public void addToCartTest() {
         when(cartQueryService.getCart(any())).thenReturn(emptyCart());
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(cartRepository.save(any())).thenReturn(cart1());
+        when(cartRepository.save(any())).thenReturn(cart());
         when(cartMapper.toDto(any(CartItem.class))).thenReturn(cartItemDto());
 
         var result = cartController.addToCart(CART_ID, addItemToCartRequest());
@@ -80,13 +84,28 @@ public class CartControllerTests {
 
     @Test
     public void getCartTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cart1());
+        when(cartQueryService.getCart(any())).thenReturn(cart());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
 
         var result = cartController.getCart(CART_ID);
 
         assertThat(result, allOf(
                 hasProperty("totalPrice", equalTo(cartDto().getTotalPrice()))
+        ));
+    }
+
+    @Test
+    public void updateItemTest() {
+        when(cartQueryService.getCart(any())).thenReturn(cart());
+        when(cartQueryService.getCartItem(any(), any())).thenReturn(cartItem());
+        when(cartRepository.save(any())).thenReturn(updatedCart());
+        when(cartMapper.toDto(any(CartItem.class))).thenReturn(updatedCartItemDto());
+
+        var result = cartController.updateItem(CART_ID, 1L, updateCartItemRequest());
+
+        assertThat(result, allOf(
+                hasProperty("quantity", equalTo(updatedCartItemDto().getQuantity())),
+                hasProperty("totalPrice", equalTo(updatedCartItemDto().getTotalPrice()))
         ));
     }
 }
