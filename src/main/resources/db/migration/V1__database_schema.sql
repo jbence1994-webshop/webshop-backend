@@ -46,3 +46,40 @@ CREATE TABLE IF NOT EXISTS cart_items
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS users
+(
+    id           BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    first_name   VARCHAR(255) NOT NULL,
+    middle_name  VARCHAR(255),
+    last_name    VARCHAR(255) NOT NULL,
+    email        VARCHAR(255) NOT NULL UNIQUE,
+    phone_number VARCHAR(25) UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS addresses
+(
+    id           BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    address_line VARCHAR(255) NOT NULL,
+    municipality VARCHAR(255) NOT NULL,
+    province     VARCHAR(255) NOT NULL,
+    postal_code  VARCHAR(25)  NOT NULL,
+    country      VARCHAR(255) NOT NULL,
+    user_id      BIGINT       NOT NULL,
+    CONSTRAINT fk_addresses_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS profiles
+(
+    id       BIGINT       NOT NULL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    level    VARCHAR(25)  NOT NULL DEFAULT 'BRONZE',
+    CONSTRAINT fk_profiles_users
+        FOREIGN KEY (id) REFERENCES users (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
