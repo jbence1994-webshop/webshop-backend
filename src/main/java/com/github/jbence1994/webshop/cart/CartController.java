@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,5 +48,12 @@ public class CartController {
         var cartItemDto = cartMapper.toDto(cartItem);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cartItemDto);
+    }
+
+    @GetMapping("/{id}")
+    public CartDto getCart(@PathVariable UUID id) {
+        var cart = cartQueryService.getCart(id);
+
+        return cartMapper.toDto(cart);
     }
 }

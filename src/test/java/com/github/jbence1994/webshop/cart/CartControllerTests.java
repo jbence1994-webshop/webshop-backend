@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import static com.github.jbence1994.webshop.cart.AddItemToCartRequestTestObject.addItemToCartRequest;
+import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDto;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.emptyCartDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemDto;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
@@ -74,6 +75,18 @@ public class CartControllerTests {
         assertThat(result.getBody(), allOf(
                 hasProperty("quantity", equalTo(cartItemDto().getQuantity())),
                 hasProperty("totalPrice", equalTo(cartItemDto().getTotalPrice()))
+        ));
+    }
+
+    @Test
+    public void getCartTest() {
+        when(cartQueryService.getCart(any())).thenReturn(cart1());
+        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
+
+        var result = cartController.getCart(CART_ID);
+
+        assertThat(result, allOf(
+                hasProperty("totalPrice", equalTo(cartDto().getTotalPrice()))
         ));
     }
 }
