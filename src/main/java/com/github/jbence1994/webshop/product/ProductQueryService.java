@@ -11,6 +11,4 @@ public interface ProductQueryService {
     );
 
     Product getProduct(Long id);
-
-    boolean isProductExistById(Long id);
 }

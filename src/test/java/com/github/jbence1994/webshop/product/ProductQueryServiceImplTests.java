@@ -19,7 +19,6 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
@@ -89,19 +88,5 @@ public class ProductQueryServiceImplTests {
         );
 
         assertThat(result.getMessage(), equalTo("No product was found with the given ID: #1."));
-    }
-
-    @Test
-    public void isProductExistByIdTest_HappyPath() {
-        when(productRepository.existsById(any())).thenReturn(true);
-
-        assertThat(productQueryService.isProductExistById(1L), is(true));
-    }
-
-    @Test
-    public void isProductExistByIdTest_UnhappyPath() {
-        when(productRepository.existsById(any())).thenReturn(false);
-
-        assertThat(productQueryService.isProductExistById(1L), is(false));
     }
 }
