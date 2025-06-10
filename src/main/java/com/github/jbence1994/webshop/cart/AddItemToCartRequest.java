@@ -12,6 +12,6 @@ import lombok.Setter;
 @Setter
 public class AddItemToCartRequest {
 
-    @NotNull
+    @NotNull(message = "Product ID must be provided.")
     private Long productId;
 }
