@@ -13,11 +13,10 @@ import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDto;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.emptyCartDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.updatedCartItemDto;
-import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
+import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cart;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
-import static com.github.jbence1994.webshop.cart.CartTestObject.updatedCart;
 import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,6 +28,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,6 +40,9 @@ public class CartControllerTests {
 
     @Mock
     private ProductQueryService productQueryService;
+
+    @Mock
+    private CartService cartService;
 
     @Mock
     private CartRepository cartRepository;
@@ -96,9 +100,7 @@ public class CartControllerTests {
 
     @Test
     public void updateItemTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cart());
-        when(cartQueryService.getCartItem(any(), any())).thenReturn(cartItem());
-        when(cartRepository.save(any())).thenReturn(updatedCart());
+        when(cartService.updateCartItemQuantity(any(), anyLong(), anyInt())).thenReturn(updatedCartItem());
         when(cartMapper.toDto(any(CartItem.class))).thenReturn(updatedCartItemDto());
 
         var result = cartController.updateItem(CART_ID, 1L, updateCartItemRequest());

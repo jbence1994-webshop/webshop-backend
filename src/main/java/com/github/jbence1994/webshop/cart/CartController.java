@@ -21,6 +21,7 @@ import java.util.UUID;
 public class CartController {
     private final CartQueryService cartQueryService;
     private final ProductQueryService productQueryService;
+    private final CartService cartService;
     private final CartRepository cartRepository;
     private final CartMapper cartMapper;
 
@@ -64,11 +65,11 @@ public class CartController {
             @PathVariable Long productId,
             @Valid @RequestBody UpdateCartItemRequest request
     ) {
-        var cart = cartQueryService.getCart(cartId);
-        var cartItem = cartQueryService.getCartItem(cartId, productId);
-
-        cartItem.setQuantity(request.getQuantity());
-        cartRepository.save(cart);
+        var cartItem = cartService.updateCartItemQuantity(
+                cartId,
+                productId,
+                request.getQuantity()
+        );
 
         return cartMapper.toDto(cartItem);
     }

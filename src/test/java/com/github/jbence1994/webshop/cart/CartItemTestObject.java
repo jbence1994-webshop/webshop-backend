@@ -12,4 +12,13 @@ public final class CartItemTestObject {
                 1
         );
     }
+
+    public static CartItem updatedCartItem() {
+        return new CartItem(
+                1L,
+                cart(),
+                product1(),
+                2
+        );
+    }
 }
