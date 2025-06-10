@@ -28,3 +28,9 @@ INSERT INTO products (name, price, unit, description) VALUES ('Pen Set', 9.99, '
 INSERT INTO products (name, price, unit, description) VALUES ('Phone Tripod', 19.99, 'pack', 'High quality phone tripod perfect for everyday use.');
 INSERT INTO products (name, price, unit, description) VALUES ('Microphone', 79.99, 'box', 'High quality microphone perfect for everyday use.');
 INSERT INTO products (name, price, unit, description) VALUES ('Graphic Tablet', 149.99, 'set', 'High quality graphic tablet perfect for everyday use.');
+
+INSERT INTO coupons (code, amount, expiration) VALUES ('5%OFF', 5.00, '2026-01-01 23:59:59');
+INSERT INTO coupons (code, amount, expiration) VALUES ('10%OFF', 10.00, '2025-12-24 23:59:59');
+INSERT INTO coupons (code, amount, expiration) VALUES ('15%OFF', 15.00, '2025-12-24 23:59:59');
+INSERT INTO coupons (code, amount, expiration) VALUES ('20%OFF', 20.00, '2025-12-24 23:59:59');
+INSERT INTO coupons (code, amount, expiration) VALUES ('25%OFF', 25.00, '2025-06-01 00:00:00');
