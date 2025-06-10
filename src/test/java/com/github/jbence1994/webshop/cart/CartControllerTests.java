@@ -110,4 +110,14 @@ public class CartControllerTests {
                 hasProperty("totalPrice", equalTo(updatedCartItemDto().getTotalPrice()))
         ));
     }
+
+    @Test
+    public void deleteItemTest() {
+        when(cartQueryService.getCart(any())).thenReturn(cart());
+
+        var result = cartController.deleteItem(CART_ID, 1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
+    }
 }

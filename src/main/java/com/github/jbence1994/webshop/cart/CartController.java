@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +45,6 @@ public class CartController {
         var product = productQueryService.getProduct(request.getProductId());
 
         var cartItem = cart.addItem(product);
-
         cartRepository.save(cart);
 
         var cartItemDto = cartMapper.toDto(cartItem);
@@ -72,5 +72,18 @@ public class CartController {
         );
 
         return cartMapper.toDto(cartItem);
+    }
+
+    @DeleteMapping("/{cartId}/items/{productId}")
+    public ResponseEntity<Void> deleteItem(
+            @PathVariable UUID cartId,
+            @PathVariable Long productId
+    ) {
+        var cart = cartQueryService.getCart(cartId);
+
+        cart.removeItem(productId);
+        cartRepository.save(cart);
+
+        return ResponseEntity.noContent().build();
     }
 }
