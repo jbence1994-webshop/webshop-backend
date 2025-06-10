@@ -86,4 +86,14 @@ public class CartController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{id}/items")
+    public ResponseEntity<Void> clearCart(@PathVariable UUID id) {
+        var cart = cartQueryService.getCart(id);
+
+        cart.clear();
+        cartRepository.save(cart);
+
+        return ResponseEntity.noContent().build();
+    }
 }

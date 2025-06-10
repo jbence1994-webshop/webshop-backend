@@ -15,7 +15,8 @@ import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemD
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.updatedCartItemDto;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cart;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
@@ -73,7 +74,7 @@ public class CartControllerTests {
     public void addToCartTest() {
         when(cartQueryService.getCart(any())).thenReturn(emptyCart());
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(cartRepository.save(any())).thenReturn(cart());
+        when(cartRepository.save(any())).thenReturn(cartWithOneItem());
         when(cartMapper.toDto(any(CartItem.class))).thenReturn(cartItemDto());
 
         var result = cartController.addToCart(CART_ID, addItemToCartRequest());
@@ -88,7 +89,7 @@ public class CartControllerTests {
 
     @Test
     public void getCartTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cart());
+        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
 
         var result = cartController.getCart(CART_ID);
@@ -113,9 +114,21 @@ public class CartControllerTests {
 
     @Test
     public void deleteItemTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cart());
+        when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItems());
+        when(cartRepository.save(any())).thenReturn(cartWithOneItem());
 
         var result = cartController.deleteItem(CART_ID, 1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
+    }
+
+    @Test
+    public void clearCartTest() {
+        when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItems());
+        when(cartRepository.save(any())).thenReturn(emptyCart());
+
+        var result = cartController.clearCart(CART_ID);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));

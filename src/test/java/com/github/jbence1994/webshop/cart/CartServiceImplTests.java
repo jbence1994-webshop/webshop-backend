@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cart;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
 import static com.github.jbence1994.webshop.cart.CartTestObject.updatedCart;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -30,7 +30,7 @@ public class CartServiceImplTests {
 
     @Test
     public void updateItemTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cart());
+        when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItems());
         when(cartQueryService.getCartItem(any(), any())).thenReturn(cartItem());
         when(cartRepository.save(any())).thenReturn(updatedCart());
 

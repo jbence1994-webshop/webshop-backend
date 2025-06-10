@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cart;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.empty;
@@ -33,14 +33,14 @@ public class CartQueryServiceImplTests {
 
     @Test
     public void getCartTest_HappyPath() {
-        when(cartRepository.findById(any())).thenReturn(Optional.of(cart()));
+        when(cartRepository.findById(any())).thenReturn(Optional.of(cartWithTwoItems()));
 
         var result = assertDoesNotThrow(() -> cartQueryService.getCart(CART_ID));
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
-                hasProperty("id", equalTo(cart().getId())),
-                hasProperty("createdAt", equalTo(cart().getCreatedAt()))
+                hasProperty("id", equalTo(cartWithTwoItems().getId())),
+                hasProperty("createdAt", equalTo(cartWithTwoItems().getCreatedAt()))
         ));
         assertThat(result.getItems(), not(empty()));
     }
@@ -59,7 +59,7 @@ public class CartQueryServiceImplTests {
 
     @Test
     public void getCartItemTest_HappyPath() {
-        when(cartRepository.findById(any())).thenReturn(Optional.of(cart()));
+        when(cartRepository.findById(any())).thenReturn(Optional.of(cartWithTwoItems()));
 
         var result = assertDoesNotThrow(() -> cartQueryService.getCartItem(CART_ID, 1L));
 
@@ -70,7 +70,7 @@ public class CartQueryServiceImplTests {
 
     @Test
     public void getCartItemTest_UnhappyPath_CartItemNotFoundException() {
-        when(cartRepository.findById(any())).thenReturn(Optional.of(cart()));
+        when(cartRepository.findById(any())).thenReturn(Optional.of(cartWithTwoItems()));
 
         var result = assertThrows(
                 CartItemNotFoundException.class,

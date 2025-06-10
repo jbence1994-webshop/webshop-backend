@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(MockitoExtension.class)
 public class CartTests {
-    private final Cart cart = CartTestObject.cart();
+    private final Cart cart = CartTestObject.cartWithTwoItems();
     private final Cart emptyCart = CartTestObject.emptyCart();
 
     @Test
