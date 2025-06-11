@@ -31,6 +31,6 @@ INSERT INTO products (name, price, unit, description) VALUES ('Graphic Tablet', 
 
 INSERT INTO users (first_name, middle_name, last_name, email, phone_number) VALUES ('Bence', 'Zsolt', 'Juhász', 'juhasz.bence.zsolt@gmail.com', '+36501323566');
 
-INSERT INTO addresses (address_line, municipality, province, postal_code, country, user_id) VALUES ('Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY', (SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'));
+INSERT INTO addresses (id, address_line, municipality, province, postal_code, country) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), 'Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY');
 
 INSERT INTO profiles (id, username, password) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), 'jbence', '12345');

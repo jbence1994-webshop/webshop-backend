@@ -59,15 +59,14 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS addresses
 (
-    id           BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id           BIGINT       NOT NULL PRIMARY KEY,
     address_line VARCHAR(255) NOT NULL,
     municipality VARCHAR(255) NOT NULL,
     province     VARCHAR(255) NOT NULL,
     postal_code  VARCHAR(25)  NOT NULL,
     country      VARCHAR(255) NOT NULL,
-    user_id      BIGINT       NOT NULL,
     CONSTRAINT fk_addresses_users
-        FOREIGN KEY (user_id) REFERENCES users (id)
+        FOREIGN KEY (id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
