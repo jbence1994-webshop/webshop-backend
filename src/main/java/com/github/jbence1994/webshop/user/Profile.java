@@ -33,4 +33,16 @@ public class Profile {
     private String password;
 
     private int loyaltyPoints;
+
+    public MembershipTier getMembershipTier() {
+        if (loyaltyPoints <= 4_999) {
+            return MembershipTier.BRONZE;
+        } else if (loyaltyPoints <= 9_999) {
+            return MembershipTier.SILVER;
+        } else if (loyaltyPoints <= 19_999) {
+            return MembershipTier.GOLD;
+        } else {
+            return MembershipTier.PLATINUM;
+        }
+    }
 }
