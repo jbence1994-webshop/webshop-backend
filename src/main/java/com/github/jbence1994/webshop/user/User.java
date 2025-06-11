@@ -37,4 +37,7 @@ public class User {
 
     @OneToOne
     private Address address;
+
+    @OneToOne
+    private Profile profile;
 }
