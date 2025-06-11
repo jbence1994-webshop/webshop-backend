@@ -77,7 +77,6 @@ CREATE TABLE IF NOT EXISTS profiles
     username       VARCHAR(255) NOT NULL UNIQUE,
     password       VARCHAR(255) NOT NULL,
     loyalty_points INT UNSIGNED NOT NULL DEFAULT 0,
-    level          VARCHAR(25)  NOT NULL DEFAULT 'BRONZE',
     CONSTRAINT fk_profiles_users
         FOREIGN KEY (id) REFERENCES users (id)
             ON DELETE CASCADE
