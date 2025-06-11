@@ -29,6 +29,8 @@ public class Profile {
 
     private String password;
 
+    private int loyaltyPoints;
+
     @Enumerated(EnumType.STRING)
     private ProfileLevel level;
 }
