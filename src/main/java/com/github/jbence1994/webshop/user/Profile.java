@@ -1,8 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -35,7 +33,4 @@ public class Profile {
     private String password;
 
     private int loyaltyPoints;
-
-    @Enumerated(EnumType.STRING)
-    private ProfileLevel level;
 }
