@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.photo;
 
-import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import com.github.jbence1994.webshop.product.ProductQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +14,7 @@ public class ProductPhotoQueryServiceImpl implements ProductPhotoQueryService {
 
     @Override
     public List<ProductPhoto> getProductPhotos(Long productId) {
-        if (!productQueryService.isProductExistById(productId)) {
-            throw new ProductNotFoundException(productId);
-        }
-
-        return productPhotoRepository.findAllByProductId(productId);
+        var product = productQueryService.getProduct(productId);
+        return productPhotoRepository.findAllByProductId(product.getId());
     }
 }
