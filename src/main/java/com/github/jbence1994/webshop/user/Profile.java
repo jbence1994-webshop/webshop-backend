@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -21,14 +22,21 @@ import lombok.Setter;
 public class Profile {
 
     @Id
-    private Long id;
+    private Long userId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     @MapsId
     private User user;
 
-    private String username;
+    private String firstName;
 
-    private String password;
+    private String middleName;
+
+    private String lastName;
+
+    private String phoneNumber;
+
+    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Address address;
 }

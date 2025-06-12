@@ -38,11 +38,8 @@ public class UserQueryServiceImplTests {
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
                 hasProperty("id", equalTo(user().getId())),
-                hasProperty("firstName", equalTo(user().getFirstName())),
-                hasProperty("middleName", equalTo(user().getMiddleName())),
-                hasProperty("lastName", equalTo(user().getLastName())),
                 hasProperty("email", equalTo(user().getEmail())),
-                hasProperty("phoneNumber", equalTo(user().getPhoneNumber()))
+                hasProperty("password", equalTo(user().getPassword()))
         ));
     }
 

@@ -29,8 +29,8 @@ INSERT INTO products (name, price, unit, description) VALUES ('Phone Tripod', 19
 INSERT INTO products (name, price, unit, description) VALUES ('Microphone', 79.99, 'box', 'High quality microphone perfect for everyday use.');
 INSERT INTO products (name, price, unit, description) VALUES ('Graphic Tablet', 149.99, 'set', 'High quality graphic tablet perfect for everyday use.');
 
-INSERT INTO users (first_name, middle_name, last_name, email, phone_number) VALUES ('Bence', 'Zsolt', 'Juhász', 'juhasz.bence.zsolt@gmail.com', '+36501323566');
+INSERT INTO users (email, password) VALUES ('juhasz.bence.zsolt@gmail.com', '12345');
 
-INSERT INTO addresses (id, address_line, municipality, province, postal_code, country) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), 'Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY');
+INSERT INTO profiles (user_id, first_name, middle_name, last_name, phone_number) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), 'Bence', 'Zsolt', 'Juhász', '+36501323566');
 
-INSERT INTO profiles (id, username, password) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), 'jbence', '12345');
+INSERT INTO addresses (profile_id, address_line, municipality, province, postal_code, country) VALUES ((SELECT user_id FROM profiles WHERE user_id = (SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com')), 'Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY');

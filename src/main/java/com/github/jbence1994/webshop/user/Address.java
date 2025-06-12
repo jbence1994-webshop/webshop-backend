@@ -21,12 +21,12 @@ import lombok.Setter;
 public class Address {
 
     @Id
-    private Long id;
+    private Long profileId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "profile_id")
     @MapsId
-    private User user;
+    private Profile profile;
 
     private String addressLine;
 
