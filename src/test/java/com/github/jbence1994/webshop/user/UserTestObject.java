@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import static com.github.jbence1994.webshop.user.AddressTestObject.address;
-import static com.github.jbence1994.webshop.user.ProfileTestObject.bronzeProfile1;
+import static com.github.jbence1994.webshop.user.ProfileTestObject.profile;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
 import static com.github.jbence1994.webshop.user.UserTestConstants.FIRST_NAME;
 import static com.github.jbence1994.webshop.user.UserTestConstants.LAST_NAME;
@@ -18,7 +18,7 @@ public final class UserTestObject {
                 EMAIL,
                 PHONE_NUMBER,
                 address(),
-                bronzeProfile1()
+                profile()
         );
     }
 }

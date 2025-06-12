@@ -73,10 +73,9 @@ CREATE TABLE IF NOT EXISTS addresses
 
 CREATE TABLE IF NOT EXISTS profiles
 (
-    id             BIGINT       NOT NULL PRIMARY KEY,
-    username       VARCHAR(255) NOT NULL UNIQUE,
-    password       VARCHAR(255) NOT NULL,
-    loyalty_points INT UNSIGNED NOT NULL DEFAULT 0,
+    id       BIGINT       NOT NULL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
     CONSTRAINT fk_profiles_users
         FOREIGN KEY (id) REFERENCES users (id)
             ON DELETE CASCADE
