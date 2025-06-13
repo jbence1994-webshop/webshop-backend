@@ -12,7 +12,7 @@ import java.util.List;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullId;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
-import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithNullId;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -81,7 +81,7 @@ class ProductControllerTests {
 
     @Test
     public void createProductTest() {
-        when(productMapper.toEntity(any())).thenReturn(product1WithNullId());
+        when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());
 
         var result = productController.createProduct(productDtoWithNullId());

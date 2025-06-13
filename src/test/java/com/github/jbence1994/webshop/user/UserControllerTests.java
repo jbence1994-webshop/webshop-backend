@@ -5,13 +5,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
+import static com.github.jbence1994.webshop.user.RegisterUserRequestTestObject.registerUserRequest;
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
+import static com.github.jbence1994.webshop.user.UserTestObject.userAfterMappingFromDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -20,6 +25,9 @@ import static org.mockito.Mockito.when;
 public class UserControllerTests {
     @Mock
     private UserQueryService userQueryService;
+
+    @Mock
+    private UserService userService;
 
     @Mock
     private UserMapper userMapper;
@@ -64,5 +72,21 @@ public class UserControllerTests {
         );
 
         assertThat(result.getMessage(), equalTo("No user was found with the given ID: #1."));
+    }
+
+    @Test
+    public void registerUserTest() {
+        when(userMapper.toEntity(any())).thenReturn(userAfterMappingFromDto());
+        when(userService.registerUser(any())).thenReturn(user());
+        when(userMapper.toDto(any())).thenReturn(userDto());
+
+        var result = userController.registerUser(registerUserRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody(), allOf(
+                hasProperty("id", equalTo(userDto().getId())),
+                hasProperty("email", equalTo(userDto().getEmail()))
+        ));
     }
 }

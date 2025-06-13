@@ -1,5 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
+import java.time.LocalDateTime;
+
 import static com.github.jbence1994.webshop.user.AddressTestConstants.ADDRESS_LINE;
 import static com.github.jbence1994.webshop.user.AddressTestConstants.COUNTRY;
 import static com.github.jbence1994.webshop.user.AddressTestConstants.MUNICIPALITY;
@@ -15,7 +17,9 @@ public final class AddressTestObject {
                 MUNICIPALITY,
                 PROVINCE,
                 POSTAL_CODE,
-                COUNTRY
+                COUNTRY,
+                LocalDateTime.now(),
+                LocalDateTime.now()
         );
     }
 }

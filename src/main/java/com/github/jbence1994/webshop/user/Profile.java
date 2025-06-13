@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -12,8 +13,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GeneratedColumn;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "profiles")
@@ -40,6 +43,14 @@ public class Profile {
     private LocalDate dateOfBirth;
 
     private String phoneNumber;
+
+    @Column(insertable = false, updatable = false)
+    @GeneratedColumn("created_at")
+    private LocalDateTime createdAt;
+
+    @Column(insertable = false, updatable = false)
+    @GeneratedColumn("updated_at")
+    private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;

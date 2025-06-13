@@ -29,7 +29,7 @@ INSERT INTO products (name, price, unit, description) VALUES ('Phone Tripod', 19
 INSERT INTO products (name, price, unit, description) VALUES ('Microphone', 79.99, 'box', 'High quality microphone perfect for everyday use.');
 INSERT INTO products (name, price, unit, description) VALUES ('Graphic Tablet', 149.99, 'set', 'High quality graphic tablet perfect for everyday use.');
 
-INSERT INTO users (email, password) VALUES ('juhasz.bence.zsolt@gmail.com', '12345');
+INSERT INTO users (email, password) VALUES ('juhasz.bence.zsolt@gmail.com', '$2a$10$OnASmWOv6fF/voWlTQNfSOm20Fh4AaPgTDVTwPrMiF0FTjYEWzb6a');
 
 INSERT INTO profiles (user_id, first_name, middle_name, last_name, date_of_birth, phone_number) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), 'Bence', 'Zsolt', 'Juhász', '1994-03-27', '+36501323566');
 

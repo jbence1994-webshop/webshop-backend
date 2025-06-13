@@ -4,17 +4,26 @@ import java.time.LocalDateTime;
 
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profile;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
+import static com.github.jbence1994.webshop.user.UserTestConstants.ENCODED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
 
 public final class UserTestObject {
     public static User user() {
+        return buildUser(1L, ENCODED_PASSWORD, profile());
+    }
+
+    public static User userAfterMappingFromDto() {
+        return buildUser(null, PASSWORD, null);
+    }
+
+    private static User buildUser(Long id, String password, Profile profile) {
         return new User(
-                1L,
+                id,
                 EMAIL,
-                PASSWORD,
+                password,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                profile()
+                profile
         );
     }
 }

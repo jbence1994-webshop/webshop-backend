@@ -1,5 +1,7 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.user.ConfirmPassword;
+import com.github.jbence1994.webshop.user.RegisterUserRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorDto> handleConstraintViolationException(ConstraintViolationException exception) {
-        var allMessages = exception.getConstraintViolations()
-                .stream()
+        var allMessages = exception.getConstraintViolations().stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining("; "));
 
@@ -38,6 +39,14 @@ public class GlobalExceptionHandler {
         exception.getBindingResult().getFieldErrors().forEach(error ->
                 validationErrors.add(new ValidationErrorDto(error.getField(), error.getDefaultMessage()))
         );
+
+        exception.getBindingResult().getAllErrors().forEach(error -> {
+            var confirmPasswordAnnotation = RegisterUserRequest.class.getAnnotation(ConfirmPassword.class);
+
+            if (error.getDefaultMessage() != null && confirmPasswordAnnotation != null && error.getDefaultMessage().equals(confirmPasswordAnnotation.message())) {
+                validationErrors.add(new ValidationErrorDto("password", error.getDefaultMessage()));
+            }
+        });
 
         return ResponseEntity.badRequest().body(validationErrors);
     }

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.common.FieldErrorTestObject.fieldError;
+import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -54,7 +55,7 @@ public class GlobalExceptionHandlerTests {
     }
 
     @Test
-    public void handleValidationErrorsTest() {
+    public void handleValidationErrorsTest_WithFieldError() {
         var bindingResult = mock(BindingResult.class);
         var exception = mock(MethodArgumentNotValidException.class);
 
@@ -66,5 +67,24 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().size(), equalTo(1));
+        assertThat(result.getBody().getFirst().field(), equalTo("name"));
+        assertThat(result.getBody().getFirst().message(), equalTo("Name must be not empty."));
+    }
+
+    @Test
+    public void handleValidationErrorsTest_WithObjectError() {
+        var bindingResult = mock(BindingResult.class);
+        var exception = mock(MethodArgumentNotValidException.class);
+
+        when(bindingResult.getAllErrors()).thenReturn(List.of(objectError()));
+        when(exception.getBindingResult()).thenReturn(bindingResult);
+
+        var result = globalExceptionHandler.handleValidationErrors(exception);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().size(), equalTo(1));
+        assertThat(result.getBody().getFirst().field(), equalTo("password"));
+        assertThat(result.getBody().getFirst().message(), equalTo("Confirm password does not match the password."));
     }
 }

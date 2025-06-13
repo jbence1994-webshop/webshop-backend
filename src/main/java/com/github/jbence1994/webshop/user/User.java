@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GeneratedColumn;
 
 import java.time.LocalDateTime;
 
@@ -32,9 +33,11 @@ public class User {
     private String password;
 
     @Column(insertable = false, updatable = false)
+    @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
     @Column(insertable = false, updatable = false)
+    @GeneratedColumn("updated_at")
     private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
