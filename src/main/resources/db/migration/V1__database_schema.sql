@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS addresses
 
 CREATE TABLE IF NOT EXISTS coupons
 (
-    code       VARCHAR(25)    NOT NULL PRIMARY KEY,
-    amount     DECIMAL(10, 2) NOT NULL,
-    expiration DATETIME       NOT NULL
+    code            VARCHAR(25)    NOT NULL PRIMARY KEY,
+    amount          DECIMAL(10, 2) NOT NULL,
+    expiration_date DATETIME       NOT NULL
 );

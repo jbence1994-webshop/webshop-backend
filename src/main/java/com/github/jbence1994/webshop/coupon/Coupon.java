@@ -24,5 +24,5 @@ public class Coupon {
 
     private BigDecimal amount;
 
-    private LocalDateTime expiration;
+    private LocalDateTime expirationDate;
 }
