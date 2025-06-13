@@ -56,4 +56,16 @@ public class Profile {
 
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
+
+    public MembershipTier getMembershipTier() {
+        if (loyaltyPoints <= 4_999) {
+            return MembershipTier.BRONZE;
+        } else if (loyaltyPoints <= 9_999) {
+            return MembershipTier.SILVER;
+        } else if (loyaltyPoints <= 19_999) {
+            return MembershipTier.GOLD;
+        } else {
+            return MembershipTier.PLATINUM;
+        }
+    }
 }
