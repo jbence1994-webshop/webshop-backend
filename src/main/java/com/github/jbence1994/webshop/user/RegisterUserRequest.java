@@ -14,6 +14,7 @@ import lombok.Setter;
 @Setter
 @ConfirmPassword
 public class RegisterUserRequest {
+
     @NotBlank(message = "Email must be not empty.")
     @Email(message = "Email must be valid")
     private String email;
@@ -22,7 +23,6 @@ public class RegisterUserRequest {
     @Size(min = 8, max = 12, message = "Password must be between 8 to 12 characters long.")
     private String password;
 
-    @NotBlank(message = "Password must be not empty.")
-    @Size(min = 8, max = 12, message = "Password must be between 8 to 12 characters long.")
+    @NotBlank(message = "Confirm password must be not empty.")
     private String confirmPassword;
 }
