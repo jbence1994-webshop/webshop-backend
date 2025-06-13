@@ -34,7 +34,7 @@ public class Address {
 
     private String province;
 
-    private String postal_code;
+    private String postalCode;
 
     private String country;
 }
