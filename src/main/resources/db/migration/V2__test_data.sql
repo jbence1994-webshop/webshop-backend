@@ -35,8 +35,8 @@ INSERT INTO profiles (user_id, first_name, middle_name, last_name, date_of_birth
 
 INSERT INTO addresses (profile_id, address_line, municipality, province, postal_code, country) VALUES ((SELECT user_id FROM profiles WHERE user_id = (SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com')), 'Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY');
 
-INSERT INTO coupons (code, amount, expiration) VALUES ('5%OFF', 5.00, '2026-01-01 23:59:59');
-INSERT INTO coupons (code, amount, expiration) VALUES ('10%OFF', 10.00, '2025-12-24 23:59:59');
-INSERT INTO coupons (code, amount, expiration) VALUES ('15%OFF', 15.00, '2025-12-24 23:59:59');
-INSERT INTO coupons (code, amount, expiration) VALUES ('20%OFF', 20.00, '2025-12-24 23:59:59');
-INSERT INTO coupons (code, amount, expiration) VALUES ('25%OFF', 25.00, '2025-06-01 00:00:00');
+INSERT INTO coupons (code, amount, expiration_date) VALUES ('5%OFF', 5.00, '2026-01-01 23:59:59');
+INSERT INTO coupons (code, amount, expiration_date) VALUES ('10%OFF', 10.00, '2025-12-24 23:59:59');
+INSERT INTO coupons (code, amount, expiration_date) VALUES ('15%OFF', 15.00, '2025-12-24 23:59:59');
+INSERT INTO coupons (code, amount, expiration_date) VALUES ('20%OFF', 20.00, '2025-12-24 23:59:59');
+INSERT INTO coupons (code, amount, expiration_date) VALUES ('25%OFF', 25.00, '2025-06-01 00:00:00');
