@@ -31,7 +31,7 @@ public class UploadPhotoDtoTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("uploadPhotoDtoParams")
-    public void getInputStreamTest(
+    public void getInputStreamTests(
             String testCase,
             UploadPhotoDto uploadPhotoDto
     ) {

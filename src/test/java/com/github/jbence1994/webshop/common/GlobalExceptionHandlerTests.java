@@ -4,17 +4,24 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.common.FieldErrorTestObject.fieldError;
+import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError1;
+import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError2;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -27,6 +34,13 @@ public class GlobalExceptionHandlerTests {
 
     @InjectMocks
     private GlobalExceptionHandler globalExceptionHandler;
+
+    private static Stream<Arguments> objectErrorParams() {
+        return Stream.of(
+                Arguments.of("ConfirmPassword", objectError1(), "confirmPassword", "Confirm password does not match the password."),
+                Arguments.of("ConfirmNewPassword", objectError2(), "confirmNewPassword", "Confirm new password does not match the new password.")
+        );
+    }
 
     @Test
     void handleMissingServletRequestPartExceptionTest() {
@@ -54,7 +68,7 @@ public class GlobalExceptionHandlerTests {
     }
 
     @Test
-    public void handleValidationErrorsTest() {
+    public void handleValidationErrorsTest_WithFieldError() {
         var bindingResult = mock(BindingResult.class);
         var exception = mock(MethodArgumentNotValidException.class);
 
@@ -66,5 +80,30 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().size(), equalTo(1));
+        assertThat(result.getBody().getFirst().field(), equalTo("name"));
+        assertThat(result.getBody().getFirst().message(), equalTo("Name must be not empty."));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("objectErrorParams")
+    public void handleValidationErrorsTests_WithObjectError(
+            String testCase,
+            ObjectError error,
+            String fieldName,
+            String message
+    ) {
+        var bindingResult = mock(BindingResult.class);
+        var exception = mock(MethodArgumentNotValidException.class);
+
+        when(bindingResult.getAllErrors()).thenReturn(List.of(error));
+        when(exception.getBindingResult()).thenReturn(bindingResult);
+
+        var result = globalExceptionHandler.handleValidationErrors(exception);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().size(), equalTo(1));
+        assertThat(result.getBody().getFirst().field(), equalTo(fieldName));
+        assertThat(result.getBody().getFirst().message(), equalTo(message));
     }
 }

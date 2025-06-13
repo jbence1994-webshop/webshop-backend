@@ -23,7 +23,7 @@ public final class ProductTestObject {
         );
     }
 
-    public static Product product1WithNullId() {
+    public static Product product1AfterMappingFromDto() {
         return new Product(
                 null,
                 PRODUCT_1_NAME,
