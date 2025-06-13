@@ -19,6 +19,7 @@ public final class ProfileTestObject {
                 LAST_NAME,
                 DATE_OF_BIRTH,
                 PHONE_NUMBER,
+                0,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 address()
