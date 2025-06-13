@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "profiles")
 @AllArgsConstructor
@@ -34,6 +36,8 @@ public class Profile {
     private String middleName;
 
     private String lastName;
+
+    private LocalDate dateOfBirth;
 
     private String phoneNumber;
 
