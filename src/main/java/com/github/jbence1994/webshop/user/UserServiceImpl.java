@@ -1,14 +1,13 @@
 package com.github.jbence1994.webshop.user;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordManager passwordManager;
 
     @Override
     public User registerUser(User user) {
@@ -18,7 +17,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistsException(email);
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordManager.encode(user.getPassword()));
         userRepository.save(user);
 
         return user;

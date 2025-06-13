@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
@@ -26,7 +25,7 @@ public class UserServiceImplTests {
     private UserRepository userRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private PasswordManager passwordManager;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -34,13 +33,13 @@ public class UserServiceImplTests {
     @Test
     public void registerUserTest_HappyPath() {
         when(userRepository.existsByEmail(any())).thenReturn(false);
-        when(passwordEncoder.encode(any())).thenReturn(HASHED_PASSWORD);
+        when(passwordManager.encode(any())).thenReturn(HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user());
 
         assertDoesNotThrow(() -> userService.registerUser(user()));
 
         verify(userRepository, times(1)).existsByEmail(any());
-        verify(passwordEncoder, times(1)).encode(any());
+        verify(passwordManager, times(1)).encode(any());
         verify(userRepository, times(1)).save(any());
     }
 
@@ -56,7 +55,7 @@ public class UserServiceImplTests {
         assertThat(result.getMessage(), equalTo("Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."));
 
         verify(userRepository, times(1)).existsByEmail(any());
-        verify(passwordEncoder, never()).encode(any());
+        verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
 }
