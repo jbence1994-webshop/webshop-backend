@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
 import static com.github.jbence1994.webshop.user.RegisterUserRequestTestObject.registerUserRequest;
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
@@ -17,6 +18,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -88,5 +90,10 @@ public class UserControllerTests {
                 hasProperty("id", equalTo(userDto().getId())),
                 hasProperty("email", equalTo(userDto().getEmail()))
         ));
+    }
+
+    @Test
+    public void changePasswordTest() {
+        assertDoesNotThrow(() -> userController.changePassword(1L, changePasswordRequest()));
     }
 }

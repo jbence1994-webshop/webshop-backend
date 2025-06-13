@@ -35,4 +35,16 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
+
+    @PostMapping("/{userId}")
+    public void changePassword(
+            @PathVariable Long userId,
+            @Valid @RequestBody ChangePasswordRequest request
+    ) {
+        userService.changePassword(
+                userId,
+                request.getOldPassword(),
+                request.getNewPassword()
+        );
+    }
 }

@@ -1,10 +1,13 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.user.ChangePasswordRequest;
+import com.github.jbence1994.webshop.user.ConfirmNewPassword;
 import com.github.jbence1994.webshop.user.ConfirmPassword;
 import com.github.jbence1994.webshop.user.RegisterUserRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -40,14 +43,27 @@ public class GlobalExceptionHandler {
                 validationErrors.add(new ValidationErrorDto(error.getField(), error.getDefaultMessage()))
         );
 
-        exception.getBindingResult().getAllErrors().forEach(error -> {
-            var confirmPasswordAnnotation = RegisterUserRequest.class.getAnnotation(ConfirmPassword.class);
+        var confirmPasswordDefaultMessage = RegisterUserRequest.class.getAnnotation(ConfirmPassword.class).message();
+        var confirmNewPasswordDefaultMessage = ChangePasswordRequest.class.getAnnotation(ConfirmNewPassword.class).message();
 
-            if (error.getDefaultMessage() != null && confirmPasswordAnnotation != null && error.getDefaultMessage().equals(confirmPasswordAnnotation.message())) {
-                validationErrors.add(new ValidationErrorDto("password", error.getDefaultMessage()));
-            }
+        exception.getBindingResult().getAllErrors().forEach(error -> {
+            addIfMatches(validationErrors, error, "confirmPassword", confirmPasswordDefaultMessage);
+            addIfMatches(validationErrors, error, "confirmNewPassword", confirmNewPasswordDefaultMessage);
         });
 
         return ResponseEntity.badRequest().body(validationErrors);
+    }
+
+    private void addIfMatches(
+            List<ValidationErrorDto> validationErrors,
+            ObjectError error,
+            String fieldName,
+            String expectedMessage
+    ) {
+        var message = error.getDefaultMessage();
+
+        if (message != null && message.equals(expectedMessage)) {
+            validationErrors.add(new ValidationErrorDto(fieldName, message));
+        }
     }
 }

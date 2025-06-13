@@ -4,9 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_OLD_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_HASHED_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.OLD_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -20,6 +25,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 public class UserServiceImplTests {
+
+    @Mock
+    private UserQueryService userQueryService;
 
     @Mock
     private UserRepository userRepository;
@@ -55,6 +63,39 @@ public class UserServiceImplTests {
         assertThat(result.getMessage(), equalTo("Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."));
 
         verify(userRepository, times(1)).existsByEmail(any());
+        verify(passwordManager, never()).encode(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    public void changePasswordTest_HappyPath() {
+        when(userQueryService.getUser(any())).thenReturn(user());
+        when(passwordManager.verify(any(), any())).thenReturn(true);
+        when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
+        when(userRepository.save(any())).thenReturn(user());
+
+        assertDoesNotThrow(() -> userService.changePassword(1L, OLD_PASSWORD, NEW_PASSWORD));
+
+        verify(userQueryService, times(1)).getUser(any());
+        verify(passwordManager, times(1)).verify(any(), any());
+        verify(passwordManager, times(1)).encode(any());
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void changePasswordTest_UnhappyPath_AccessDeniedException() {
+        when(userQueryService.getUser(any())).thenReturn(user());
+        when(passwordManager.verify(any(), any())).thenReturn(false);
+
+        var result = assertThrows(
+                AccessDeniedException.class,
+                () -> userService.changePassword(1L, INVALID_OLD_PASSWORD, NEW_PASSWORD)
+        );
+
+        assertThat(result.getMessage(), equalTo("Invalid old password."));
+
+        verify(userQueryService, times(1)).getUser(any());
+        verify(passwordManager, times(1)).verify(any(), any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }

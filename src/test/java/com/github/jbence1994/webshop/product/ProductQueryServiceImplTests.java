@@ -51,7 +51,7 @@ public class ProductQueryServiceImplTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("sortByParams")
-    public void getProductsTest(
+    public void getProductsTests(
             String testCase,
             String sortBy,
             String orderBy,
