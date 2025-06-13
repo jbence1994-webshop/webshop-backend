@@ -19,6 +19,16 @@ public class UserControllerExceptionHandlerTests {
     private UserControllerExceptionHandler userControllerExceptionHandler;
 
     @Test
+    public void handleUserNotFoundException() {
+        var result = userControllerExceptionHandler
+                .handleUserNotFoundException(new UserNotFoundException(1L));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("No user was found with the given ID: #1."));
+    }
+
+    @Test
     public void handleEmailAlreadyExistsExceptionTest() {
         var result = userControllerExceptionHandler
                 .handleEmailAlreadyExistsException(new EmailAlreadyExistsException(EMAIL));
