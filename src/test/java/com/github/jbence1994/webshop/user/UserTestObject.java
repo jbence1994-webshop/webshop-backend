@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profile;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
-import static com.github.jbence1994.webshop.user.UserTestConstants.ENCODED_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
 
 public final class UserTestObject {
     public static User user() {
-        return buildUser(1L, ENCODED_PASSWORD, profile());
+        return buildUser(1L, HASHED_PASSWORD, profile());
     }
 
     public static User userAfterMappingFromDto() {

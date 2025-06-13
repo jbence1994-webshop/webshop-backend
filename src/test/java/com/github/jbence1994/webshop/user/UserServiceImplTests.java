@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static com.github.jbence1994.webshop.user.UserTestConstants.ENCODED_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -34,7 +34,7 @@ public class UserServiceImplTests {
     @Test
     public void registerUserTest_HappyPath() {
         when(userRepository.existsByEmail(any())).thenReturn(false);
-        when(passwordEncoder.encode(any())).thenReturn(ENCODED_PASSWORD);
+        when(passwordEncoder.encode(any())).thenReturn(HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user());
 
         assertDoesNotThrow(() -> userService.registerUser(user()));
