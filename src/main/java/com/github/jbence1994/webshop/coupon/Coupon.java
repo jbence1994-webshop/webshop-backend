@@ -25,4 +25,8 @@ public class Coupon {
     private BigDecimal amount;
 
     private LocalDateTime expirationDate;
+
+    public boolean isExpired() {
+        return expirationDate.isBefore(LocalDateTime.now());
+    }
 }
