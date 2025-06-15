@@ -53,16 +53,7 @@ public class ProductPhotoController {
     @GetMapping
     public List<PhotoResponse> getProductPhotos(@PathVariable Long productId) {
         var productPhotos = productPhotoQueryService.getProductPhotos(productId);
-
-        // FIXME: Use Mapstruct here.
-        return productPhotos.stream()
-                .map(productPhoto -> {
-                    var fileName = productPhoto.getFileName();
-                    var url = photoUrlBuilder.buildUrl(fileName);
-
-                    return new PhotoResponse(fileName, url);
-                })
-                .toList();
+        return photoMapper.toPhotoResponses(productPhotos, photoUrlBuilder);
     }
 
     @DeleteMapping("/{fileName}")

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.photo.MultipartFileTestObject.multipartFile;
+import static com.github.jbence1994.webshop.photo.PhotoResponseTestObject.photoResponse;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
@@ -58,6 +59,7 @@ public class ProductPhotoControllerTests {
     @Test
     public void getProductPhotosTest() {
         when(productPhotoQueryService.getProductPhotos(any())).thenReturn(List.of(productPhoto()));
+        when(photoMapper.toPhotoResponses(any(), any())).thenReturn(List.of(photoResponse()));
 
         var result = productPhotoController.getProductPhotos(1L);
 
