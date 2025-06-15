@@ -20,7 +20,7 @@ public interface PhotoMapper {
         try {
             return file.getBytes();
         } catch (IOException exception) {
-            throw new ProductPhotoUploadException();
+            throw new PhotoUploadException();
         }
     }
 

@@ -89,11 +89,11 @@ public class ProductPhotoServiceTests {
     }
 
     @Test
-    public void uploadPhotoTest_UnhappyPath_ProductPhotoUploadException() {
+    public void uploadPhotoTest_UnhappyPath_PhotoUploadException() {
         doThrow(new FileUploadException("Disk error.")).when(fileUtils).store(any(), any(), any());
 
         var result = assertThrows(
-                ProductPhotoUploadException.class,
+                PhotoUploadException.class,
                 () -> productPhotoService.uploadPhoto(1L, uploadPhotoDto)
         );
 
@@ -122,11 +122,11 @@ public class ProductPhotoServiceTests {
     }
 
     @Test
-    public void deletePhotoTest_UnhappyPath_ProductPhotoUploadException() {
+    public void deletePhotoTest_UnhappyPath_PhotoUploadException() {
         doThrow(new FileDeletionException("Disk error.")).when(fileUtils).remove(any(), any());
 
         var result = assertThrows(
-                ProductPhotoDeletionException.class,
+                PhotoDeletionException.class,
                 () -> productPhotoService.deletePhoto(1L, PHOTO_FILE_NAME)
         );
 

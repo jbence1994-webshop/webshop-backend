@@ -40,9 +40,9 @@ public class ProductPhotoControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleProductPhotoUploadExceptionTest() {
+    public void handlePhotoUploadExceptionTest() {
         var result = productPhotoControllerExceptionHandler
-                .handleProductPhotoUploadException(new ProductPhotoUploadException());
+                .handlePhotoUploadException(new PhotoUploadException());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));
@@ -50,9 +50,9 @@ public class ProductPhotoControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleProductPhotoDeletionExceptionTest() {
+    public void handlePhotoDeletionExceptionTest() {
         var result = productPhotoControllerExceptionHandler
-                .handleProductPhotoDeletionException(new ProductPhotoDeletionException());
+                .handlePhotoDeletionException(new PhotoDeletionException());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));

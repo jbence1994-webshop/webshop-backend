@@ -32,11 +32,11 @@ public class PhotoMapperTests {
     }
 
     @Test
-    public void toUploadPhotoTest_UnhappyPath_IOException() throws IOException {
+    public void toUploadPhotoTest_UnhappyPath_PhotoUploadException() throws IOException {
         when(multipartFile.getBytes()).thenThrow(new IOException("Disk error."));
 
         var result = assertThrows(
-                ProductPhotoUploadException.class,
+                PhotoUploadException.class,
                 () -> mapper.toUploadPhoto(multipartFile)
         );
 

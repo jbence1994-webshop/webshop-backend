@@ -35,7 +35,7 @@ public class ProductPhotoService implements PhotoService {
 
             return fileName;
         } catch (FileUploadException exception) {
-            throw new ProductPhotoUploadException();
+            throw new PhotoUploadException();
         }
     }
 
@@ -52,7 +52,7 @@ public class ProductPhotoService implements PhotoService {
             product.removePhoto(fileName);
             productService.updateProduct(product);
         } catch (FileDeletionException exception) {
-            throw new ProductPhotoDeletionException();
+            throw new PhotoDeletionException();
         }
     }
 }
