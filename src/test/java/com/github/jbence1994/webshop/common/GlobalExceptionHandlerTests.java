@@ -3,6 +3,7 @@ package com.github.jbence1994.webshop.common;
 import com.github.jbence1994.webshop.image.ImageDeletionException;
 import com.github.jbence1994.webshop.image.ImageUploadException;
 import com.github.jbence1994.webshop.image.InvalidFileExtensionException;
+import com.github.jbence1994.webshop.user.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -82,6 +83,15 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("The file must not be empty."));
+    }
+
+    @Test
+    public void handleUserNotFoundExceptionTest() {
+        var result = globalExceptionHandler.handleUserNotFoundException(new UserNotFoundException(1L));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("No user was found with the given ID: #1."));
     }
 
     @Test

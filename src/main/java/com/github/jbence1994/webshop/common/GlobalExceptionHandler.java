@@ -7,6 +7,7 @@ import com.github.jbence1994.webshop.user.ChangePasswordRequest;
 import com.github.jbence1994.webshop.user.ConfirmNewPassword;
 import com.github.jbence1994.webshop.user.ConfirmPassword;
 import com.github.jbence1994.webshop.user.RegisterUserRequest;
+import com.github.jbence1994.webshop.user.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,11 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("; "));
 
         return ResponseEntity.badRequest().body(new ErrorDto(allMessages));
+    }
+
+    @ExceptionHandler(exception = UserNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleUserNotFoundException(UserNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(InvalidFileExtensionException.class)
