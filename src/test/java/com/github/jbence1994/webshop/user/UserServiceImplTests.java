@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_OLD_PASSWORD;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class UserServiceImplTests {
 
     @Mock
