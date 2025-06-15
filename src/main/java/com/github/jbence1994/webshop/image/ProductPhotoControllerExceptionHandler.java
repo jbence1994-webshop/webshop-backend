@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ProductPhotoControllerExceptionHandler {
 
     // FIXME: Duplicate... Move to common.
-    @ExceptionHandler(ProductNotFoundException.class)
+    @ExceptionHandler(exception = ProductNotFoundException.class)
     public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }

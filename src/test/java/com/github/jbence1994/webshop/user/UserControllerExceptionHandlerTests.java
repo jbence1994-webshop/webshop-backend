@@ -21,8 +21,7 @@ public class UserControllerExceptionHandlerTests {
 
     @Test
     public void handleEmailAlreadyExistsExceptionTest() {
-        var result = userControllerExceptionHandler
-                .handleEmailAlreadyExistsException(new EmailAlreadyExistsException(EMAIL));
+        var result = userControllerExceptionHandler.handleEmailAlreadyExistsException(new EmailAlreadyExistsException(EMAIL));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
         assertThat(result.getBody(), not(nullValue()));
@@ -30,9 +29,8 @@ public class UserControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleAccessDeniedException() {
-        var result = userControllerExceptionHandler
-                .handleAccessDeniedException(new AccessDeniedException("Invalid old password."));
+    public void handleAccessDeniedExceptionTest() {
+        var result = userControllerExceptionHandler.handleAccessDeniedException(new AccessDeniedException("Invalid old password."));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
         assertThat(result.getBody(), not(nullValue()));
