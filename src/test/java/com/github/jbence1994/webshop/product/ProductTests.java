@@ -2,8 +2,8 @@ package com.github.jbence1994.webshop.product;
 
 import org.junit.jupiter.api.Test;
 
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_NOT_EXISTING_FILE_NAME;
+import static com.github.jbence1994.webshop.image.PhotoTestConstants.PHOTO_FILE_NAME;
+import static com.github.jbence1994.webshop.image.PhotoTestConstants.PHOTO_NOT_EXISTING_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
 import static org.hamcrest.MatcherAssert.assertThat;
