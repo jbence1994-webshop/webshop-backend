@@ -2,7 +2,7 @@ package com.github.jbence1994.webshop.photo;
 
 import com.github.jbence1994.webshop.product.Product;
 import com.github.jbence1994.webshop.product.ProductQueryService;
-import com.github.jbence1994.webshop.product.ProductRepository;
+import com.github.jbence1994.webshop.product.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,16 +44,16 @@ public class ProductPhotoServiceTests {
     private ProductPhotoQueryService productPhotoQueryService;
 
     @Mock
-    private FileExtensionValidator fileExtensionValidator;
-
-    @Mock
     private ProductQueryService productQueryService;
 
     @Mock
-    private FileNameGenerator fileNameGenerator;
+    private ProductService productService;
 
     @Mock
-    private ProductRepository productRepository;
+    private FileExtensionValidator fileExtensionValidator;
+
+    @Mock
+    private FileNameGenerator fileNameGenerator;
 
     @Mock
     private FileUtils fileUtils;
@@ -71,8 +71,7 @@ public class ProductPhotoServiceTests {
         when(fileNameGenerator.generate(any())).thenReturn(PHOTO_FILE_NAME);
         when(productPhotosUploadDirectoryConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
         when(uploadPhotoDto.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
-        when(productRepository.save(any())).thenReturn(product);
-
+        doNothing().when(productService).updateProduct(any());
     }
 
     @Test
@@ -91,7 +90,7 @@ public class ProductPhotoServiceTests {
         verify(uploadPhotoDto, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, times(1)).addPhoto(any());
-        verify(productRepository, times(1)).save(any());
+        verify(productService, times(1)).updateProduct(any());
     }
 
     @Test
@@ -112,7 +111,7 @@ public class ProductPhotoServiceTests {
         verify(uploadPhotoDto, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, never()).addPhoto(any());
-        verify(productRepository, never()).save(any());
+        verify(productService, never()).updateProduct(any());
     }
 
     @Test
@@ -133,7 +132,7 @@ public class ProductPhotoServiceTests {
 
         verify(fileUtils, times(1)).remove(any(), any());
         verify(product, times(1)).removePhoto(any());
-        verify(productRepository, times(1)).save(any());
+        verify(productService, times(1)).updateProduct(any());
     }
 
     @Test
@@ -149,6 +148,6 @@ public class ProductPhotoServiceTests {
 
         verify(fileUtils, times(1)).remove(any(), any());
         verify(product, never()).removePhoto(any());
-        verify(productRepository, never()).save(any());
+        verify(productService, never()).updateProduct(any());
     }
 }

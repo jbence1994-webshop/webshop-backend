@@ -1,7 +1,6 @@
 package com.github.jbence1994.webshop.photo;
 
-import com.github.jbence1994.webshop.product.Product;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,12 +17,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products/{productId}/photos")
-@AllArgsConstructor
 @Validated
 public class ProductPhotoController {
-    private final PhotoService<Product, ProductPhoto> productPhotoService;
+    private final PhotoService productPhotoService;
     private final PhotoMapper photoMapper;
     private final PhotoUrlBuilder photoUrlBuilder;
+
+    public ProductPhotoController(
+            @Qualifier("productPhotoService") final PhotoService productPhotoService,
+            final PhotoMapper photoMapper,
+            final PhotoUrlBuilder photoUrlBuilder
+    ) {
+        this.productPhotoService = productPhotoService;
+        this.photoMapper = photoMapper;
+        this.photoUrlBuilder = photoUrlBuilder;
+    }
 
     @PostMapping
     public ResponseEntity<PhotoResponse> uploadProductPhoto(

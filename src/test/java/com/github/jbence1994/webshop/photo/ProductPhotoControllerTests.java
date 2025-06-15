@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.photo;
 
-import com.github.jbence1994.webshop.product.Product;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class ProductPhotoControllerTests {
 
     @Mock
-    private PhotoService<Product, ProductPhoto> productPhotoService;
+    private PhotoService productPhotoService;
 
     @Mock
     private PhotoMapper photoMapper;
