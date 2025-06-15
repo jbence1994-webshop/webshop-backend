@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProductPhoto implements Photo {
+public class ProductPhoto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +30,4 @@ public class ProductPhoto implements Photo {
     private Product product;
 
     private String fileName;
-
-    @Override
-    public String getFileName() {
-        return fileName;
-    }
 }

@@ -1,7 +1,6 @@
 package com.github.jbence1994.webshop.photo;
 
-import com.github.jbence1994.webshop.product.Product;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,42 +17,43 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products/{productId}/photos")
-@AllArgsConstructor
 @Validated
 public class ProductPhotoController {
-    private final PhotoService<Product, ProductPhoto> productPhotoService;
+    private final PhotoService photoService;
+    private final ProductPhotoQueryService productPhotoQueryService;
     private final PhotoMapper photoMapper;
     private final PhotoUrlBuilder photoUrlBuilder;
+
+    public ProductPhotoController(
+            @Qualifier("productPhotoService") final PhotoService photoService,
+            final ProductPhotoQueryService productPhotoQueryService,
+            final PhotoMapper photoMapper,
+            final PhotoUrlBuilder photoUrlBuilder
+    ) {
+        this.photoService = photoService;
+        this.productPhotoQueryService = productPhotoQueryService;
+        this.photoMapper = photoMapper;
+        this.photoUrlBuilder = photoUrlBuilder;
+    }
 
     @PostMapping
     public ResponseEntity<PhotoResponse> uploadProductPhoto(
             @PathVariable Long productId,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
-        var uploadPhotoDto = photoMapper.toDto(file);
-        var productPhoto = productPhotoService.uploadPhoto(productId, uploadPhotoDto);
+        var uploadPhoto = photoMapper.toUploadPhoto(file);
+        var uploadedPhotoFileName = photoService.uploadPhoto(productId, uploadPhoto);
 
-        var fileName = productPhoto.fileName();
-        var url = photoUrlBuilder.buildUrl(fileName);
+        var url = photoUrlBuilder.buildUrl(uploadedPhotoFileName);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new PhotoResponse(fileName, url));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PhotoResponse(uploadedPhotoFileName, url));
 
     }
 
     @GetMapping
     public List<PhotoResponse> getProductPhotos(@PathVariable Long productId) {
-        var productPhotos = productPhotoService.getPhotos(productId);
-
-        return productPhotos.stream()
-                .map(productPhoto -> {
-                    var fileName = productPhoto.fileName();
-                    var url = photoUrlBuilder.buildUrl(fileName);
-
-                    return new PhotoResponse(fileName, url);
-                })
-                .toList();
+        var productPhotos = productPhotoQueryService.getProductPhotos(productId);
+        return photoMapper.toPhotoResponses(productPhotos, photoUrlBuilder);
     }
 
     @DeleteMapping("/{fileName}")
@@ -61,7 +61,7 @@ public class ProductPhotoController {
             @PathVariable Long productId,
             @PathVariable String fileName
     ) {
-        productPhotoService.deletePhoto(productId, fileName);
+        photoService.deletePhoto(productId, fileName);
 
         return ResponseEntity.noContent().build();
     }
