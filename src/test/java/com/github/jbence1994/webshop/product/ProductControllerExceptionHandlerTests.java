@@ -19,8 +19,7 @@ public class ProductControllerExceptionHandlerTests {
 
     @Test
     public void handleProductNotFoundExceptionTest() {
-        var result = productControllerExceptionHandler
-                .handleProductNotFoundException(new ProductNotFoundException(1L));
+        var result = productControllerExceptionHandler.handleProductNotFoundException(new ProductNotFoundException(1L));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertThat(result.getBody(), not(nullValue()));

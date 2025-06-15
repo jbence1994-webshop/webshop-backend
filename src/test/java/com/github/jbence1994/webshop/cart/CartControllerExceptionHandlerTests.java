@@ -21,8 +21,7 @@ public class CartControllerExceptionHandlerTests {
 
     @Test
     public void handleCartNotFoundExceptionTest() {
-        var result = cartControllerExceptionHandler
-                .handleCartNotFoundException(new CartNotFoundException(CART_ID));
+        var result = cartControllerExceptionHandler.handleCartNotFoundException(new CartNotFoundException(CART_ID));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertThat(result.getBody(), not(nullValue()));
@@ -31,8 +30,7 @@ public class CartControllerExceptionHandlerTests {
 
     @Test
     public void handleCartItemNotFoundExceptionTest() {
-        var result = cartControllerExceptionHandler
-                .handleCartItemNotFoundException(new CartItemNotFoundException(100L));
+        var result = cartControllerExceptionHandler.handleCartItemNotFoundException(new CartItemNotFoundException(100L));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertThat(result.getBody(), not(nullValue()));
@@ -41,8 +39,7 @@ public class CartControllerExceptionHandlerTests {
 
     @Test
     public void handleProductNotFoundExceptionTest() {
-        var result = cartControllerExceptionHandler
-                .handleProductNotFoundException(new ProductNotFoundException(1L));
+        var result = cartControllerExceptionHandler.handleProductNotFoundException(new ProductNotFoundException(1L));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));

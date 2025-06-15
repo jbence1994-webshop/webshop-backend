@@ -21,8 +21,7 @@ public class ProductPhotoControllerExceptionHandlerTests {
 
     @Test
     public void handleProductNotFoundExceptionTest() {
-        var result = productPhotoControllerExceptionHandler
-                .handleProductNotFoundException(new ProductNotFoundException(1L));
+        var result = productPhotoControllerExceptionHandler.handleProductNotFoundException(new ProductNotFoundException(1L));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertThat(result.getBody(), not(nullValue()));
@@ -31,8 +30,7 @@ public class ProductPhotoControllerExceptionHandlerTests {
 
     @Test
     public void handleInvalidFileExtensionExceptionTest() {
-        var result = productPhotoControllerExceptionHandler
-                .handleInvalidFileExtensionException(new InvalidFileExtensionException(JPEG));
+        var result = productPhotoControllerExceptionHandler.handleInvalidFileExtensionException(new InvalidFileExtensionException(JPEG));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
