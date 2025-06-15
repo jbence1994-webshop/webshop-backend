@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -26,32 +25,5 @@ public class ProductPhotoControllerExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("No product was found with the given ID: #1."));
-    }
-
-    @Test
-    public void handleInvalidFileExtensionExceptionTest() {
-        var result = productPhotoControllerExceptionHandler.handleInvalidFileExtensionException(new InvalidFileExtensionException(JPEG));
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("Invalid file extension: .jpeg"));
-    }
-
-    @Test
-    public void handleImageUploadExceptionTest() {
-        var result = productPhotoControllerExceptionHandler.handleImageUploadException(new ImageUploadException("The photo could not be uploaded successfully."));
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("The photo could not be uploaded successfully."));
-    }
-
-    @Test
-    public void handleImageDeletionExceptionTest() {
-        var result = productPhotoControllerExceptionHandler.handleImageDeletionException(new ImageDeletionException("The photo could not be deleted successfully."));
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("The photo could not be deleted successfully."));
     }
 }

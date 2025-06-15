@@ -13,3 +13,6 @@ webshop:
 
   product-photos-upload-directory-config:
     path: ${PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH}
+
+  profile-avatar-upload-directory-config:
+    path: ${PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH}

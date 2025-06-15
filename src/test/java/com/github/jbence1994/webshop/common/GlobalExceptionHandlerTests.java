@@ -1,5 +1,9 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.image.ImageDeletionException;
+import com.github.jbence1994.webshop.image.ImageUploadException;
+import com.github.jbence1994.webshop.image.InvalidFileExtensionException;
+import com.github.jbence1994.webshop.user.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -13,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.Collections;
@@ -20,8 +25,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.common.FieldErrorTestObject.fieldError;
+import static com.github.jbence1994.webshop.common.FileTestConstants.MAX_UPLOAD_SIZE;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError1;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError2;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -54,6 +61,17 @@ public class GlobalExceptionHandlerTests {
     }
 
     @Test
+    public void handleMaxUploadSizeExceededExceptionTest() {
+        var exception = new MaxUploadSizeExceededException(MAX_UPLOAD_SIZE);
+
+        var result = globalExceptionHandler.handleMaxUploadSizeExceededException(exception);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.PAYLOAD_TOO_LARGE));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Maximum upload size of 1048576 bytes exceeded"));
+    }
+
+    @Test
     public void handleConstraintViolationExceptionTest() {
         ConstraintViolation<?> constraintViolation = mock(ConstraintViolation.class);
         var constraintViolations = Collections.singleton(constraintViolation);
@@ -65,6 +83,42 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("The file must not be empty."));
+    }
+
+    @Test
+    public void handleUserNotFoundExceptionTest() {
+        var result = globalExceptionHandler.handleUserNotFoundException(new UserNotFoundException(1L));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("No user was found with the given ID: #1."));
+    }
+
+    @Test
+    public void handleInvalidFileExtensionExceptionTest() {
+        var result = globalExceptionHandler.handleInvalidFileExtensionException(new InvalidFileExtensionException(JPEG));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Invalid file extension: .jpeg"));
+    }
+
+    @Test
+    public void handleImageUploadExceptionTest() {
+        var result = globalExceptionHandler.handleImageUploadException(new ImageUploadException("The photo could not be uploaded successfully."));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("The photo could not be uploaded successfully."));
+    }
+
+    @Test
+    public void handleImageDeletionExceptionTest() {
+        var result = globalExceptionHandler.handleImageDeletionException(new ImageDeletionException("The photo could not be deleted successfully."));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("The photo could not be deleted successfully."));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.image;
 
+import com.github.jbence1994.webshop.user.UserQueryService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,55 +14,55 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/products/{productId}/photos")
+@RequestMapping("/users/{userId}/profile/avatar")
 @Validated
-public class ProductPhotoController {
-    private final ProductPhotoQueryService productPhotoQueryService;
+public class ProfileAvatarController {
+    private final UserQueryService userQueryService;
     private final ImageService imageService;
     private final ImageMapper imageMapper;
     private final ImageUrlBuilder imageUrlBuilder;
 
-    public ProductPhotoController(
-            final ProductPhotoQueryService productPhotoQueryService,
-            @Qualifier("productPhotoService") final ImageService imageService,
+    public ProfileAvatarController(
+            final UserQueryService userQueryService,
+            @Qualifier("profileAvatarService") final ImageService imageService,
             final ImageMapper imageMapper,
             final ImageUrlBuilder imageUrlBuilder
     ) {
-        this.productPhotoQueryService = productPhotoQueryService;
+        this.userQueryService = userQueryService;
         this.imageService = imageService;
         this.imageMapper = imageMapper;
         this.imageUrlBuilder = imageUrlBuilder;
     }
 
     @PostMapping
-    public ResponseEntity<ImageResponse> uploadProductPhoto(
-            @PathVariable Long productId,
+    public ResponseEntity<ImageResponse> uploadProfileAvatar(
+            @PathVariable Long userId,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
         var uploadImage = imageMapper.toUploadImage(file);
-        var uploadedImageFileName = imageService.uploadImage(productId, uploadImage);
+        var uploadedImageFileName = imageService.uploadImage(userId, uploadImage);
 
         var url = imageUrlBuilder.buildUrl(uploadedImageFileName);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new ImageResponse(uploadedImageFileName, url));
-
     }
 
     @GetMapping
-    public List<ImageResponse> getProductPhotos(@PathVariable Long productId) {
-        var productPhotos = productPhotoQueryService.getProductPhotos(productId);
-        return imageMapper.toImageResponses(productPhotos, imageUrlBuilder);
+    public ImageResponse getProfileAvatar(@PathVariable Long userId) {
+        var profileAvatar = userQueryService.getUser(userId).getProfileAvatar();
+
+        var url = imageUrlBuilder.buildUrl(profileAvatar);
+
+        return new ImageResponse(profileAvatar, url);
     }
 
     @DeleteMapping("/{fileName}")
-    public ResponseEntity<Void> deleteProductPhoto(
-            @PathVariable Long productId,
+    public ResponseEntity<Void> deleteProfileAvatar(
+            @PathVariable Long userId,
             @PathVariable String fileName
     ) {
-        imageService.deleteImage(productId, fileName);
+        imageService.deleteImage(userId, fileName);
 
         return ResponseEntity.noContent().build();
     }
