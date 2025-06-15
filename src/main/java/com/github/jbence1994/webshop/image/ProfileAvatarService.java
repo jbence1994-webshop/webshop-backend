@@ -22,6 +22,13 @@ public class ProfileAvatarService implements ImageService {
 
             var user = userQueryService.getUser(userId);
 
+            if (user.hasProfileAvatar()) {
+                fileUtils.remove(
+                        profileAvatarUploadDirectoryConfig.getPath(),
+                        user.getProfileAvatar()
+                );
+            }
+
             var fileName = fileNameGenerator.generate(uploadImage.getFileExtension());
 
             fileUtils.store(
