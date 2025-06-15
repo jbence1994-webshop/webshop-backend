@@ -19,9 +19,9 @@ public final class ProfileTestObject {
                 LAST_NAME,
                 DATE_OF_BIRTH,
                 PHONE_NUMBER,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
                 null,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
                 address()
         );
     }
