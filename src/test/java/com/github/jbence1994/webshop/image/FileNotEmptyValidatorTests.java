@@ -28,6 +28,7 @@ public class FileNotEmptyValidatorTests {
         fileNotEmptyValidator.initialize(mock(FileNotEmpty.class));
     }
 
+    // TODO: Refactor to parameterized test.
     @Test
     public void isValidTest_HappyPath() {
         var result = fileNotEmptyValidator.isValid(multipartFile(), context);

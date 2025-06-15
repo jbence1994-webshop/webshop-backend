@@ -85,6 +85,7 @@ public class CartTests {
         assertThat(cart.getItems(), is(empty()));
     }
 
+    // TODO: Refactor to parameterized test.
     @Test
     public void isEmptyTest_CartIsNotEmpty() {
         var result = cart.isEmpty();
