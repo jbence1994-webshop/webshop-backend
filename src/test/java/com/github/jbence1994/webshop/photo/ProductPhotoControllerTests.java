@@ -43,7 +43,7 @@ public class ProductPhotoControllerTests {
 
     @Test
     public void uploadProductPhotoTest() {
-        when(photoMapper.toDto(any())).thenReturn(jpegUploadPhoto());
+        when(photoMapper.toUploadPhoto(any())).thenReturn(jpegUploadPhoto());
         when(photoService.uploadPhoto(any(), any())).thenReturn(PHOTO_FILE_NAME);
         when(photoUrlBuilder.buildUrl(any())).thenReturn(PHOTO_URL);
 

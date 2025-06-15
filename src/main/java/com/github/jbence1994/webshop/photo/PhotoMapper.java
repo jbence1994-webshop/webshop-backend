@@ -10,7 +10,7 @@ import java.io.IOException;
 public interface PhotoMapper {
 
     @Mapping(target = "inputStreamBytes", expression = "java(getBytes(file))")
-    UploadPhoto toDto(MultipartFile file);
+    UploadPhoto toUploadPhoto(MultipartFile file);
 
     default byte[] getBytes(MultipartFile file) {
         try {

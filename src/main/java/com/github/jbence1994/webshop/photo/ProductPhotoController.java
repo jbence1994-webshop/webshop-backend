@@ -41,14 +41,12 @@ public class ProductPhotoController {
             @PathVariable Long productId,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
-        var uploadPhoto = photoMapper.toDto(file);
+        var uploadPhoto = photoMapper.toUploadPhoto(file);
         var uploadedPhotoFileName = photoService.uploadPhoto(productId, uploadPhoto);
 
         var url = photoUrlBuilder.buildUrl(uploadedPhotoFileName);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new PhotoResponse(uploadedPhotoFileName, url));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PhotoResponse(uploadedPhotoFileName, url));
 
     }
 
