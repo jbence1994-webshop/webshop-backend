@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS product_photos
     id         BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
     product_id BIGINT      NOT NULL,
     file_name  VARCHAR(41) NOT NULL UNIQUE,
+    created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_products_product_photos
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
