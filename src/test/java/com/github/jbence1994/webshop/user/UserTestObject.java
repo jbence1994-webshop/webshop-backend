@@ -2,19 +2,19 @@ package com.github.jbence1994.webshop.user;
 
 import java.time.LocalDateTime;
 
-import static com.github.jbence1994.webshop.user.ProfileTestObject.profile;
-import static com.github.jbence1994.webshop.user.ProfileTestObject.profileWithAvatar;
+import static com.github.jbence1994.webshop.user.ProfileTestObject.platinumProfile3;
+import static com.github.jbence1994.webshop.user.ProfileTestObject.bronzeProfile1;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
 import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
 
 public final class UserTestObject {
     public static User user() {
-        return buildUser(1L, HASHED_PASSWORD, profile());
+        return buildUser(1L, HASHED_PASSWORD, bronzeProfile1());
     }
 
     public static User userWithAvatar() {
-        return buildUser(1L, HASHED_PASSWORD, profileWithAvatar());
+        return buildUser(1L, HASHED_PASSWORD, platinumProfile3());
     }
 
     public static User userAfterMappingFromDto() {

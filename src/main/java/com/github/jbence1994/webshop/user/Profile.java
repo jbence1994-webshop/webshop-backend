@@ -46,6 +46,8 @@ public class Profile {
 
     private String avatarFileName;
 
+    private int loyaltyPoints;
+
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
@@ -56,4 +58,8 @@ public class Profile {
 
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
+
+    public MembershipTier getMembershipTier() {
+        return MembershipTier.fromPoints(loyaltyPoints);
+    }
 }
