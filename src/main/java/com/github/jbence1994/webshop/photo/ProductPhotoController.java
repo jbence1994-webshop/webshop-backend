@@ -19,16 +19,19 @@ import java.util.List;
 @RequestMapping("/products/{productId}/photos")
 @Validated
 public class ProductPhotoController {
-    private final PhotoService productPhotoService;
+    private final PhotoService photoService;
+    private final ProductPhotoQueryService productPhotoQueryService;
     private final PhotoMapper photoMapper;
     private final PhotoUrlBuilder photoUrlBuilder;
 
     public ProductPhotoController(
-            @Qualifier("productPhotoService") final PhotoService productPhotoService,
+            @Qualifier("productPhotoService") final PhotoService photoService,
+            final ProductPhotoQueryService productPhotoQueryService,
             final PhotoMapper photoMapper,
             final PhotoUrlBuilder photoUrlBuilder
     ) {
-        this.productPhotoService = productPhotoService;
+        this.photoService = photoService;
+        this.productPhotoQueryService = productPhotoQueryService;
         this.photoMapper = photoMapper;
         this.photoUrlBuilder = photoUrlBuilder;
     }
@@ -38,25 +41,25 @@ public class ProductPhotoController {
             @PathVariable Long productId,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
-        var uploadPhotoDto = photoMapper.toDto(file);
-        var productPhoto = productPhotoService.uploadPhoto(productId, uploadPhotoDto);
+        var uploadPhoto = photoMapper.toDto(file);
+        var uploadedPhotoFileName = photoService.uploadPhoto(productId, uploadPhoto);
 
-        var fileName = productPhoto.fileName();
-        var url = photoUrlBuilder.buildUrl(fileName);
+        var url = photoUrlBuilder.buildUrl(uploadedPhotoFileName);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new PhotoResponse(fileName, url));
+                .body(new PhotoResponse(uploadedPhotoFileName, url));
 
     }
 
     @GetMapping
     public List<PhotoResponse> getProductPhotos(@PathVariable Long productId) {
-        var productPhotos = productPhotoService.getPhotos(productId);
+        var productPhotos = productPhotoQueryService.getProductPhotos(productId);
 
+        // FIXME: Use Mapstruct here.
         return productPhotos.stream()
                 .map(productPhoto -> {
-                    var fileName = productPhoto.fileName();
+                    var fileName = productPhoto.getFileName();
                     var url = photoUrlBuilder.buildUrl(fileName);
 
                     return new PhotoResponse(fileName, url);
@@ -69,7 +72,7 @@ public class ProductPhotoController {
             @PathVariable Long productId,
             @PathVariable String fileName
     ) {
-        productPhotoService.deletePhoto(productId, fileName);
+        photoService.deletePhoto(productId, fileName);
 
         return ResponseEntity.noContent().build();
     }

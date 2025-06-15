@@ -13,12 +13,10 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.io.ByteArrayInputStream;
-import java.util.List;
 
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.FILE_SIZE;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH;
-import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -41,9 +39,6 @@ public class ProductPhotoServiceTests {
     private ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
 
     @Mock
-    private ProductPhotoQueryService productPhotoQueryService;
-
-    @Mock
     private ProductQueryService productQueryService;
 
     @Mock
@@ -62,7 +57,7 @@ public class ProductPhotoServiceTests {
     private ProductPhotoService productPhotoService;
 
     private final Product product = spy(product1());
-    private final UploadPhotoDto uploadPhotoDto = mock(UploadPhotoDto.class);
+    private final UploadPhoto uploadPhotoDto = mock(UploadPhoto.class);
 
     @BeforeEach
     public void setUp() {
@@ -81,7 +76,7 @@ public class ProductPhotoServiceTests {
 
         var result = productPhotoService.uploadPhoto(1L, uploadPhotoDto);
 
-        assertThat(result.fileName(), equalTo(PHOTO_FILE_NAME));
+        assertThat(result, equalTo(PHOTO_FILE_NAME));
 
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
@@ -94,7 +89,7 @@ public class ProductPhotoServiceTests {
     }
 
     @Test
-    public void uploadPhotoTest_UnhappyPath_FileSystemException() {
+    public void uploadPhotoTest_UnhappyPath_ProductPhotoUploadException() {
         doThrow(new FileUploadException("Disk error.")).when(fileUtils).store(any(), any(), any());
 
         var result = assertThrows(
@@ -115,15 +110,6 @@ public class ProductPhotoServiceTests {
     }
 
     @Test
-    public void getPhotosTest_HappyPath() {
-        when(productPhotoQueryService.getProductPhotos(any())).thenReturn(List.of(productPhoto()));
-
-        var result = productPhotoService.getPhotos(1L);
-
-        assertThat(result.size(), equalTo(1));
-    }
-
-    @Test
     public void deletePhotoTest_HappyPath() {
         doNothing().when(fileUtils).remove(any(), any());
         doNothing().when(product).removePhoto(any());
@@ -136,7 +122,7 @@ public class ProductPhotoServiceTests {
     }
 
     @Test
-    public void deletePhotoTest_UnhappyPath_FileSystemException() {
+    public void deletePhotoTest_UnhappyPath_ProductPhotoUploadException() {
         doThrow(new FileDeletionException("Disk error.")).when(fileUtils).remove(any(), any());
 
         var result = assertThrows(

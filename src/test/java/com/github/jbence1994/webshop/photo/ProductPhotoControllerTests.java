@@ -9,11 +9,11 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static com.github.jbence1994.webshop.photo.DownloadPhotoDtoTestObject.downloadPhotoDto;
 import static com.github.jbence1994.webshop.photo.MultipartFileTestObject.multipartFile;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PHOTO_URL;
-import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.jpegUploadPhotoDto;
+import static com.github.jbence1994.webshop.photo.ProductPhotoTestObject.productPhoto;
+import static com.github.jbence1994.webshop.photo.UploadPhotoTestObject.jpegUploadPhoto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -27,7 +27,10 @@ import static org.mockito.Mockito.when;
 public class ProductPhotoControllerTests {
 
     @Mock
-    private PhotoService productPhotoService;
+    private PhotoService photoService;
+
+    @Mock
+    private ProductPhotoQueryService productPhotoQueryService;
 
     @Mock
     private PhotoMapper photoMapper;
@@ -40,8 +43,8 @@ public class ProductPhotoControllerTests {
 
     @Test
     public void uploadProductPhotoTest() {
-        when(photoMapper.toDto(any())).thenReturn(jpegUploadPhotoDto());
-        when(productPhotoService.uploadPhoto(any(), any())).thenReturn(downloadPhotoDto());
+        when(photoMapper.toDto(any())).thenReturn(jpegUploadPhoto());
+        when(photoService.uploadPhoto(any(), any())).thenReturn(PHOTO_FILE_NAME);
         when(photoUrlBuilder.buildUrl(any())).thenReturn(PHOTO_URL);
 
         var result = productPhotoController.uploadProductPhoto(1L, multipartFile());
@@ -54,7 +57,7 @@ public class ProductPhotoControllerTests {
 
     @Test
     public void getProductPhotosTest() {
-        when(productPhotoService.getPhotos(any())).thenReturn(List.of(downloadPhotoDto()));
+        when(productPhotoQueryService.getProductPhotos(any())).thenReturn(List.of(productPhoto()));
 
         var result = productPhotoController.getProductPhotos(1L);
 
@@ -63,7 +66,7 @@ public class ProductPhotoControllerTests {
 
     @Test
     public void deleteProductPhotoTest() {
-        doNothing().when(productPhotoService).deletePhoto(any(), any());
+        doNothing().when(photoService).deletePhoto(any(), any());
 
         var result = productPhotoController.deleteProductPhoto(1L, PHOTO_FILE_NAME);
 

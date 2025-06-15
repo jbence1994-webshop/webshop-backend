@@ -13,7 +13,7 @@ import java.io.InputStream;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UploadPhotoDto {
+public class UploadPhoto {
     private boolean isEmpty;
     private String originalFilename;
     private Long size;
