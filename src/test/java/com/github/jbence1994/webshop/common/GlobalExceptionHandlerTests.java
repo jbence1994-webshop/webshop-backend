@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.Collections;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.common.FieldErrorTestObject.fieldError;
+import static com.github.jbence1994.webshop.common.FileTestConstants.MAX_UPLOAD_SIZE;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError1;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError2;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
@@ -55,6 +57,17 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("Required part 'file' is missing."));
+    }
+
+    @Test
+    public void handleMaxUploadSizeExceededExceptionTest() {
+        var exception = new MaxUploadSizeExceededException(MAX_UPLOAD_SIZE);
+
+        var result = globalExceptionHandler.handleMaxUploadSizeExceededException(exception);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.PAYLOAD_TOO_LARGE));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Maximum upload size of 1048576 bytes exceeded"));
     }
 
     @Test
