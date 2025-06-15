@@ -27,4 +27,5 @@ public interface ImageTestConstants {
     String PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH = "uploads/photos/products";
     String PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH = "uploads/avatars/profiles";
     String PHOTO_URL = String.format("%s/%s/%s", "www.example.com/uploads/photos/products", PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH, PHOTO_FILE_NAME);
+    String AVATAR_URL = String.format("%s/%s/%s", "www.example.com/uploads/avatars/profiles", PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH, AVATAR_FILE_NAME);
 }

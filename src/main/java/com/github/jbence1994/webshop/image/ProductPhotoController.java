@@ -19,19 +19,19 @@ import java.util.List;
 @RequestMapping("/products/{productId}/photos")
 @Validated
 public class ProductPhotoController {
-    private final ImageService imageService;
     private final ProductPhotoQueryService productPhotoQueryService;
+    private final ImageService imageService;
     private final ImageMapper imageMapper;
     private final ImageUrlBuilder imageUrlBuilder;
 
     public ProductPhotoController(
-            @Qualifier("productPhotoService") final ImageService imageService,
             final ProductPhotoQueryService productPhotoQueryService,
+            @Qualifier("productPhotoService") final ImageService imageService,
             final ImageMapper imageMapper,
             final ImageUrlBuilder imageUrlBuilder
     ) {
-        this.imageService = imageService;
         this.productPhotoQueryService = productPhotoQueryService;
+        this.imageService = imageService;
         this.imageMapper = imageMapper;
         this.imageUrlBuilder = imageUrlBuilder;
     }

@@ -46,4 +46,8 @@ public class User {
     public void setProfileAvatar(String fileName) {
         profile.setAvatarFileName(fileName);
     }
+
+    public String getProfileAvatar() {
+        return profile.getAvatarFileName();
+    }
 }

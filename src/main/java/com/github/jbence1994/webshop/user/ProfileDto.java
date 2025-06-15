@@ -17,6 +17,5 @@ public class ProfileDto {
     private String lastName;
     private LocalDate dateOfBirth;
     private String phoneNumber;
-    private String avatarFileName;
     private AddressDto address;
 }

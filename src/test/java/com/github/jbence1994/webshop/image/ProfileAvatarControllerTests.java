@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.image;
 
+import com.github.jbence1994.webshop.user.UserQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,10 +8,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_URL;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.image.MultipartFileTestObject.multipartFile;
 import static com.github.jbence1994.webshop.image.UploadImageTestObject.jpegUploadImage;
+import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -22,6 +25,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ProfileAvatarControllerTests {
+
+    @Mock
+    private UserQueryService userQueryService;
 
     @Mock
     private ImageService imageService;
@@ -47,6 +53,16 @@ public class ProfileAvatarControllerTests {
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().fileName(), equalTo(PHOTO_FILE_NAME));
         assertThat(result.getBody().url(), equalTo(PHOTO_URL));
+    }
+
+    @Test
+    public void getProfileAvatarTest() {
+        when(userQueryService.getUser(any())).thenReturn(userWithAvatar());
+        when(imageUrlBuilder.buildUrl(any())).thenReturn(AVATAR_URL);
+
+        var result = profileAvatarController.getProfileAvatar(1L);
+
+        assertThat(result, not(nullValue()));
     }
 
     @Test

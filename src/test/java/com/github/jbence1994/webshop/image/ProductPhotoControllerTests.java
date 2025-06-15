@@ -28,10 +28,10 @@ import static org.mockito.Mockito.when;
 public class ProductPhotoControllerTests {
 
     @Mock
-    private ImageService imageService;
+    private ProductPhotoQueryService productPhotoQueryService;
 
     @Mock
-    private ProductPhotoQueryService productPhotoQueryService;
+    private ImageService imageService;
 
     @Mock
     private ImageMapper imageMapper;
