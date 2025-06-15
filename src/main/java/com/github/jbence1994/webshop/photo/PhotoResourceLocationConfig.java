@@ -9,14 +9,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @AllArgsConstructor
 public class PhotoResourceLocationConfig implements WebMvcConfigurer {
     private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
+    private final ProfilePhotosUploadDirectoryConfig profilePhotosUploadDirectoryConfig;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        var path = productPhotosUploadDirectoryConfig.getPath();
+        var productPhotosUploadDirectoryPath = productPhotosUploadDirectoryConfig.getPath();
+        var profilePhotosUploadDirectoryPath = profilePhotosUploadDirectoryConfig.getPath();
 
         registry
-                .addResourceHandler(path + "/**")
-                .addResourceLocations("file:" + path)
+                .addResourceHandler(
+                        productPhotosUploadDirectoryPath + "/**",
+                        profilePhotosUploadDirectoryPath + "/**"
+                )
+                .addResourceLocations(
+                        "file:" + productPhotosUploadDirectoryPath,
+                        "file:" + profilePhotosUploadDirectoryPath
+                )
                 .setCachePeriod(3600);
     }
 }
