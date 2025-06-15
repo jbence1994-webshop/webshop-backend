@@ -3,6 +3,7 @@ package com.github.jbence1994.webshop.common;
 import com.github.jbence1994.webshop.image.ImageDeletionException;
 import com.github.jbence1994.webshop.image.ImageUploadException;
 import com.github.jbence1994.webshop.image.InvalidFileExtensionException;
+import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import com.github.jbence1994.webshop.user.ChangePasswordRequest;
 import com.github.jbence1994.webshop.user.ConfirmNewPassword;
 import com.github.jbence1994.webshop.user.ConfirmPassword;
@@ -44,6 +45,11 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("; "));
 
         return ResponseEntity.badRequest().body(new ErrorDto(allMessages));
+    }
+
+    @ExceptionHandler(exception = ProductNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = UserNotFoundException.class)
