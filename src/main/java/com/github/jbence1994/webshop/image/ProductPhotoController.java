@@ -42,11 +42,11 @@ public class ProductPhotoController {
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
         var uploadImage = imageMapper.toUploadImage(file);
-        var uploadedPhotoFileName = imageService.uploadImage(productId, uploadImage);
+        var uploadedImageFileName = imageService.uploadImage(productId, uploadImage);
 
-        var url = imageUrlBuilder.buildUrl(uploadedPhotoFileName);
+        var url = imageUrlBuilder.buildUrl(uploadedImageFileName);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ImageResponse(uploadedPhotoFileName, url));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ImageResponse(uploadedImageFileName, url));
 
     }
 
