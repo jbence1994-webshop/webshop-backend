@@ -2,7 +2,7 @@ package com.github.jbence1994.webshop.image;
 
 import java.util.List;
 
-public interface PhotoTestConstants {
+public interface ImageTestConstants {
     String JPG = "jpg";
     String JPEG = "jpeg";
     String PNG = "png";

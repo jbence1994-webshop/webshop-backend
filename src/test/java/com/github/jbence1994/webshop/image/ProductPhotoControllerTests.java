@@ -9,12 +9,12 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static com.github.jbence1994.webshop.image.ImageResponseTestObject.imageResponse;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.image.MultipartFileTestObject.multipartFile;
-import static com.github.jbence1994.webshop.image.PhotoResponseTestObject.photoResponse;
-import static com.github.jbence1994.webshop.image.PhotoTestConstants.PHOTO_FILE_NAME;
-import static com.github.jbence1994.webshop.image.PhotoTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.image.ProductPhotoTestObject.productPhoto;
-import static com.github.jbence1994.webshop.image.UploadPhotoTestObject.jpegUploadPhoto;
+import static com.github.jbence1994.webshop.image.UploadImageTestObject.jpegUploadImage;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -28,25 +28,25 @@ import static org.mockito.Mockito.when;
 public class ProductPhotoControllerTests {
 
     @Mock
-    private PhotoService photoService;
+    private ImageService imageService;
 
     @Mock
     private ProductPhotoQueryService productPhotoQueryService;
 
     @Mock
-    private PhotoMapper photoMapper;
+    private ImageMapper imageMapper;
 
     @Mock
-    private PhotoUrlBuilder photoUrlBuilder;
+    private ImageUrlBuilder imageUrlBuilder;
 
     @InjectMocks
     private ProductPhotoController productPhotoController;
 
     @Test
     public void uploadProductPhotoTest() {
-        when(photoMapper.toUploadPhoto(any())).thenReturn(jpegUploadPhoto());
-        when(photoService.uploadPhoto(any(), any())).thenReturn(PHOTO_FILE_NAME);
-        when(photoUrlBuilder.buildUrl(any())).thenReturn(PHOTO_URL);
+        when(imageMapper.toUploadImage(any())).thenReturn(jpegUploadImage());
+        when(imageService.uploadImage(any(), any())).thenReturn(PHOTO_FILE_NAME);
+        when(imageUrlBuilder.buildUrl(any())).thenReturn(PHOTO_URL);
 
         var result = productPhotoController.uploadProductPhoto(1L, multipartFile());
 
@@ -59,7 +59,7 @@ public class ProductPhotoControllerTests {
     @Test
     public void getProductPhotosTest() {
         when(productPhotoQueryService.getProductPhotos(any())).thenReturn(List.of(productPhoto()));
-        when(photoMapper.toPhotoResponses(any(), any())).thenReturn(List.of(photoResponse()));
+        when(imageMapper.toImageResponses(any(), any())).thenReturn(List.of(imageResponse()));
 
         var result = productPhotoController.getProductPhotos(1L);
 
@@ -68,7 +68,7 @@ public class ProductPhotoControllerTests {
 
     @Test
     public void deleteProductPhotoTest() {
-        doNothing().when(photoService).deletePhoto(any(), any());
+        doNothing().when(imageService).deleteImage(any(), any());
 
         var result = productPhotoController.deleteProductPhoto(1L, PHOTO_FILE_NAME);
 

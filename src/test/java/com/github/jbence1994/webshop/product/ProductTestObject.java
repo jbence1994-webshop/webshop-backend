@@ -3,7 +3,7 @@ package com.github.jbence1994.webshop.product;
 import java.math.BigDecimal;
 import java.util.HashSet;
 
-import static com.github.jbence1994.webshop.image.PhotoTestConstants.PHOTO_FILE_NAME;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_DESCRIPTION;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;

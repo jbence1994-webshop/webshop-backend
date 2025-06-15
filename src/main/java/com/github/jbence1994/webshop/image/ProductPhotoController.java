@@ -19,41 +19,41 @@ import java.util.List;
 @RequestMapping("/products/{productId}/photos")
 @Validated
 public class ProductPhotoController {
-    private final PhotoService photoService;
+    private final ImageService imageService;
     private final ProductPhotoQueryService productPhotoQueryService;
-    private final PhotoMapper photoMapper;
-    private final PhotoUrlBuilder photoUrlBuilder;
+    private final ImageMapper imageMapper;
+    private final ImageUrlBuilder imageUrlBuilder;
 
     public ProductPhotoController(
-            @Qualifier("productPhotoService") final PhotoService photoService,
+            @Qualifier("productPhotoService") final ImageService imageService,
             final ProductPhotoQueryService productPhotoQueryService,
-            final PhotoMapper photoMapper,
-            final PhotoUrlBuilder photoUrlBuilder
+            final ImageMapper imageMapper,
+            final ImageUrlBuilder imageUrlBuilder
     ) {
-        this.photoService = photoService;
+        this.imageService = imageService;
         this.productPhotoQueryService = productPhotoQueryService;
-        this.photoMapper = photoMapper;
-        this.photoUrlBuilder = photoUrlBuilder;
+        this.imageMapper = imageMapper;
+        this.imageUrlBuilder = imageUrlBuilder;
     }
 
     @PostMapping
-    public ResponseEntity<PhotoResponse> uploadProductPhoto(
+    public ResponseEntity<ImageResponse> uploadProductPhoto(
             @PathVariable Long productId,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
-        var uploadPhoto = photoMapper.toUploadPhoto(file);
-        var uploadedPhotoFileName = photoService.uploadPhoto(productId, uploadPhoto);
+        var uploadImage = imageMapper.toUploadImage(file);
+        var uploadedPhotoFileName = imageService.uploadImage(productId, uploadImage);
 
-        var url = photoUrlBuilder.buildUrl(uploadedPhotoFileName);
+        var url = imageUrlBuilder.buildUrl(uploadedPhotoFileName);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new PhotoResponse(uploadedPhotoFileName, url));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ImageResponse(uploadedPhotoFileName, url));
 
     }
 
     @GetMapping
-    public List<PhotoResponse> getProductPhotos(@PathVariable Long productId) {
+    public List<ImageResponse> getProductPhotos(@PathVariable Long productId) {
         var productPhotos = productPhotoQueryService.getProductPhotos(productId);
-        return photoMapper.toPhotoResponses(productPhotos, photoUrlBuilder);
+        return imageMapper.toImageResponses(productPhotos, imageUrlBuilder);
     }
 
     @DeleteMapping("/{fileName}")
@@ -61,7 +61,7 @@ public class ProductPhotoController {
             @PathVariable Long productId,
             @PathVariable String fileName
     ) {
-        photoService.deletePhoto(productId, fileName);
+        imageService.deleteImage(productId, fileName);
 
         return ResponseEntity.noContent().build();
     }

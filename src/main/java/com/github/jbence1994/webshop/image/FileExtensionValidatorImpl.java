@@ -9,8 +9,8 @@ public class FileExtensionValidatorImpl implements FileExtensionValidator {
     private final FileExtensionsConfig fileExtensionsConfig;
 
     @Override
-    public void validate(UploadPhoto photo) {
-        var fileExtension = photo.getFileExtension();
+    public void validate(UploadImage image) {
+        var fileExtension = image.getFileExtension();
 
         if (!hasValidExtension(fileExtension)) {
             throw new InvalidFileExtensionException(fileExtension);

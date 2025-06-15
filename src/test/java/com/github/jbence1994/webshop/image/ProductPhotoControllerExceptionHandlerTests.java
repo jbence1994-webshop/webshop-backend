@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import static com.github.jbence1994.webshop.image.PhotoTestConstants.JPEG;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -40,9 +40,8 @@ public class ProductPhotoControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleProductPhotoUploadExceptionTest() {
-        var result = productPhotoControllerExceptionHandler
-                .handleProductPhotoUploadException(new ProductPhotoUploadException());
+    public void handleImageUploadExceptionTest() {
+        var result = productPhotoControllerExceptionHandler.handleImageUploadException(new ImageUploadException("The photo could not be uploaded successfully."));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));
@@ -50,9 +49,8 @@ public class ProductPhotoControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleProductPhotoDeletionExceptionTest() {
-        var result = productPhotoControllerExceptionHandler
-                .handleProductPhotoDeletionException(new ProductPhotoDeletionException());
+    public void handleImageDeletionExceptionTest() {
+        var result = productPhotoControllerExceptionHandler.handleImageDeletionException(new ImageDeletionException("The photo could not be deleted successfully."));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));

@@ -20,13 +20,13 @@ public class ProductPhotoControllerExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(ProductPhotoUploadException.class)
-    public ResponseEntity<ErrorDto> handleProductPhotoUploadException(ProductPhotoUploadException exception) {
+    @ExceptionHandler(ImageUploadException.class)
+    public ResponseEntity<ErrorDto> handleImageUploadException(ImageUploadException exception) {
         return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(ProductPhotoDeletionException.class)
-    public ResponseEntity<ErrorDto> handleProductPhotoDeletionException(ProductPhotoDeletionException exception) {
+    @ExceptionHandler(ImageDeletionException.class)
+    public ResponseEntity<ErrorDto> handleImageDeletionException(ImageDeletionException exception) {
         return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
 }

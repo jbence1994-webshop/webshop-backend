@@ -11,23 +11,23 @@ import java.io.IOException;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface PhotoMapper {
+public interface ImageMapper {
 
     @Mapping(target = "inputStreamBytes", expression = "java(getBytes(file))")
-    UploadPhoto toUploadPhoto(MultipartFile file);
+    UploadImage toUploadImage(MultipartFile file);
 
     default byte[] getBytes(MultipartFile file) {
         try {
             return file.getBytes();
         } catch (IOException exception) {
-            throw new ProductPhotoUploadException();
+            throw new ImageUploadException();
         }
     }
 
-    @IterableMapping(qualifiedByName = "toPhotoResponse")
-    List<PhotoResponse> toPhotoResponses(List<ProductPhoto> photos, @Context PhotoUrlBuilder photoUrlBuilder);
+    @IterableMapping(qualifiedByName = "toImageResponse")
+    List<ImageResponse> toImageResponses(List<ProductPhoto> photos, @Context ImageUrlBuilder imageUrlBuilder);
 
-    @Named("toPhotoResponse")
-    @Mapping(target = "url", expression = "java(photoUrlBuilder.buildUrl(photo.getFileName()))")
-    PhotoResponse toPhotoResponse(ProductPhoto photo, @Context PhotoUrlBuilder photoUrlBuilder);
+    @Named("toImageResponse")
+    @Mapping(target = "url", expression = "java(imageUrlBuilder.buildUrl(photo.getFileName()))")
+    ImageResponse toImageResponse(ProductPhoto photo, @Context ImageUrlBuilder imageUrlBuilder);
 }

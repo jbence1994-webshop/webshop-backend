@@ -192,8 +192,8 @@
                     <excludes>
                         <exclude>com/github/jbence1994/webshop/**/*Config*</exclude>
                         <exclude>com/github/jbence1994/webshop/**/*MapperImpl*</exclude>
-                        <exclude>com/github/jbence1994/webshop/photo/FileSystemUtils*</exclude>
-                        <exclude>com/github/jbence1994/webshop/photo/PhotoUrlBuilder*</exclude>
+                        <exclude>com/github/jbence1994/webshop/image/FileSystemUtils*</exclude>
+                        <exclude>com/github/jbence1994/webshop/image/ImageUrlBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/Application*</exclude>
                     </excludes>
                 </configuration>

@@ -6,7 +6,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Component
 @AllArgsConstructor
-public class PhotoUrlBuilder {
+public class ImageUrlBuilder {
     private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
 
     public String buildUrl(String fileName) {

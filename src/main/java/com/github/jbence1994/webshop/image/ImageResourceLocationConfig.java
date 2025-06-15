@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @AllArgsConstructor
-public class PhotoResourceLocationConfig implements WebMvcConfigurer {
+public class ImageResourceLocationConfig implements WebMvcConfigurer {
     private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
 
     @Override

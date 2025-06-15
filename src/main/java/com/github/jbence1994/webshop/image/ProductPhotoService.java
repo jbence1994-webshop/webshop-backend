@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class ProductPhotoService implements PhotoService {
+public class ProductPhotoService implements ImageService {
     private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
     private final ProductQueryService productQueryService;
     private final ProductService productService;
@@ -16,18 +16,18 @@ public class ProductPhotoService implements PhotoService {
     private final FileUtils fileUtils;
 
     @Override
-    public String uploadPhoto(Long productId, UploadPhoto uploadPhoto) {
+    public String uploadImage(Long productId, UploadImage uploadImage) {
         try {
-            fileExtensionValidator.validate(uploadPhoto);
+            fileExtensionValidator.validate(uploadImage);
 
             var product = productQueryService.getProduct(productId);
 
-            var fileName = fileNameGenerator.generate(uploadPhoto.getFileExtension());
+            var fileName = fileNameGenerator.generate(uploadImage.getFileExtension());
 
             fileUtils.store(
                     productPhotosUploadDirectoryConfig.getPath(),
                     fileName,
-                    uploadPhoto.getInputStream()
+                    uploadImage.getInputStream()
             );
 
             product.addPhoto(fileName);
@@ -35,12 +35,12 @@ public class ProductPhotoService implements PhotoService {
 
             return fileName;
         } catch (FileUploadException exception) {
-            throw new ProductPhotoUploadException();
+            throw new ImageUploadException("The photo could not be uploaded successfully.");
         }
     }
 
     @Override
-    public void deletePhoto(Long productId, String fileName) {
+    public void deleteImage(Long productId, String fileName) {
         try {
             var product = productQueryService.getProduct(productId);
 
@@ -52,7 +52,7 @@ public class ProductPhotoService implements PhotoService {
             product.removePhoto(fileName);
             productService.updateProduct(product);
         } catch (FileDeletionException exception) {
-            throw new ProductPhotoDeletionException();
+            throw new ImageDeletionException("The photo could not be deleted successfully.");
         }
     }
 }

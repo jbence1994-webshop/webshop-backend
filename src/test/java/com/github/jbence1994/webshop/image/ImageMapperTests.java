@@ -9,22 +9,23 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class PhotoMapperTests {
-    private final PhotoMapper mapper = Mappers.getMapper(PhotoMapper.class);
+public class ImageMapperTests {
+    private final ImageMapper imageMapper = Mappers.getMapper(ImageMapper.class);
     private final MultipartFile multipartFile = mock(MultipartFile.class);
 
     @Test
-    public void toUploadPhotoTest_HappyPath() throws IOException {
+    public void toUploadImageTest_HappyPath() throws IOException {
         var expectedBytes = new byte[]{1, 2, 3, 4, 5};
         when(multipartFile.getBytes()).thenReturn(expectedBytes);
 
-        var result = mapper.toUploadPhoto(multipartFile);
+        var result = imageMapper.toUploadImage(multipartFile);
 
         assertThat(result.getInputStreamBytes(), is(equalTo(expectedBytes)));
 
@@ -32,14 +33,14 @@ public class PhotoMapperTests {
     }
 
     @Test
-    public void toUploadPhotoTest_UnhappyPath_IOException() throws IOException {
+    public void toUploadImageTest_UnhappyPath_ImageUploadException() throws IOException {
         when(multipartFile.getBytes()).thenThrow(new IOException("Disk error."));
 
         var result = assertThrows(
-                ProductPhotoUploadException.class,
-                () -> mapper.toUploadPhoto(multipartFile)
+                ImageUploadException.class,
+                () -> imageMapper.toUploadImage(multipartFile)
         );
 
-        assertThat(result.getMessage(), equalTo("The photo could not be uploaded successfully."));
+        assertThat(result.getMessage(), is(nullValue()));
     }
 }
