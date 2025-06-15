@@ -50,4 +50,8 @@ public class User {
     public String getProfileAvatar() {
         return profile.getAvatarFileName();
     }
+
+    public boolean hasProfileAvatar() {
+        return profile.getAvatarFileName() != null;
+    }
 }
