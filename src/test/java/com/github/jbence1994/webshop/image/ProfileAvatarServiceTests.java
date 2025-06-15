@@ -18,6 +18,7 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE
 import static com.github.jbence1994.webshop.image.ImageTestConstants.FILE_SIZE;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
+import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -57,6 +58,7 @@ public class ProfileAvatarServiceTests {
     private ProfileAvatarService profileAvatarService;
 
     private final User userWithoutAvatar = spy(user());
+    private final User user = spy(userWithAvatar());
     private final UploadImage uploadImage = mock(UploadImage.class);
 
     @BeforeEach
@@ -70,7 +72,8 @@ public class ProfileAvatarServiceTests {
     }
 
     @Test
-    public void uploadImageTest_HappyPath() {
+    public void uploadImageTest_HappyPath_UserDoNotHaveAvatarUploadedYet() {
+        when(userWithoutAvatar.hasProfileAvatar()).thenReturn(false);
         doNothing().when(fileUtils).store(any(), any(), any());
         doNothing().when(userWithoutAvatar).setProfileAvatar(any());
 
@@ -80,11 +83,37 @@ public class ProfileAvatarServiceTests {
 
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(userQueryService, times(1)).getUser(any());
+        verify(userWithoutAvatar, times(1)).hasProfileAvatar();
+        verify(fileUtils, never()).remove(any(), any());
         verify(fileNameGenerator, times(1)).generate(any());
         verify(profileAvatarUploadDirectoryConfig, times(1)).getPath();
         verify(uploadImage, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(userWithoutAvatar, times(1)).setProfileAvatar(any());
+        verify(userService, times(1)).updateUser(any());
+    }
+
+    @Test
+    public void uploadImageTest_HappyPath_UserDoesHaveAvatarUploadedAlready() {
+        when(userQueryService.getUser(any())).thenReturn(user);
+        when(user.hasProfileAvatar()).thenReturn(true);
+        doNothing().when(fileUtils).remove(any(), any());
+        doNothing().when(fileUtils).store(any(), any(), any());
+        doNothing().when(userWithoutAvatar).setProfileAvatar(any());
+
+        var result = profileAvatarService.uploadImage(1L, uploadImage);
+
+        assertThat(result, equalTo(AVATAR_FILE_NAME));
+
+        verify(fileExtensionValidator, times(1)).validate(any());
+        verify(fileUtils, times(1)).remove(any(), any());
+        verify(userQueryService, times(1)).getUser(any());
+        verify(user, times(1)).hasProfileAvatar();
+        verify(fileNameGenerator, times(1)).generate(any());
+        verify(profileAvatarUploadDirectoryConfig, times(2)).getPath();
+        verify(uploadImage, times(1)).getInputStream();
+        verify(fileUtils, times(1)).store(any(), any(), any());
+        verify(user, times(1)).setProfileAvatar(any());
         verify(userService, times(1)).updateUser(any());
     }
 
