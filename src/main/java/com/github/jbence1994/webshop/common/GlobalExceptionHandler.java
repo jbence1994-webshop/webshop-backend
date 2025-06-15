@@ -1,5 +1,8 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.photo.InvalidFileExtensionException;
+import com.github.jbence1994.webshop.photo.PhotoDeletionException;
+import com.github.jbence1994.webshop.photo.PhotoUploadException;
 import com.github.jbence1994.webshop.user.ChangePasswordRequest;
 import com.github.jbence1994.webshop.user.ConfirmNewPassword;
 import com.github.jbence1994.webshop.user.ConfirmPassword;
@@ -33,6 +36,21 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("; "));
 
         return ResponseEntity.badRequest().body(new ErrorDto(allMessages));
+    }
+
+    @ExceptionHandler(InvalidFileExtensionException.class)
+    public ResponseEntity<ErrorDto> handleInvalidFileExtensionException(InvalidFileExtensionException exception) {
+        return ResponseEntity.badRequest().body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(PhotoUploadException.class)
+    public ResponseEntity<ErrorDto> handlePhotoUploadException(PhotoUploadException exception) {
+        return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(PhotoDeletionException.class)
+    public ResponseEntity<ErrorDto> handlePhotoDeletionException(PhotoDeletionException exception) {
+        return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
