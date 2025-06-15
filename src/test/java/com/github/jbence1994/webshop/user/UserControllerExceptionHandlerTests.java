@@ -20,19 +20,8 @@ public class UserControllerExceptionHandlerTests {
     private UserControllerExceptionHandler userControllerExceptionHandler;
 
     @Test
-    public void handleUserNotFoundException() {
-        var result = userControllerExceptionHandler
-                .handleUserNotFoundException(new UserNotFoundException(1L));
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("No user was found with the given ID: #1."));
-    }
-
-    @Test
     public void handleEmailAlreadyExistsExceptionTest() {
-        var result = userControllerExceptionHandler
-                .handleEmailAlreadyExistsException(new EmailAlreadyExistsException(EMAIL));
+        var result = userControllerExceptionHandler.handleEmailAlreadyExistsException(new EmailAlreadyExistsException(EMAIL));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
         assertThat(result.getBody(), not(nullValue()));
@@ -40,9 +29,8 @@ public class UserControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleAccessDeniedException() {
-        var result = userControllerExceptionHandler
-                .handleAccessDeniedException(new AccessDeniedException("Invalid old password."));
+    public void handleAccessDeniedExceptionTest() {
+        var result = userControllerExceptionHandler.handleAccessDeniedException(new AccessDeniedException("Invalid old password."));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
         assertThat(result.getBody(), not(nullValue()));

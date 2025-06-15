@@ -44,6 +44,8 @@ public class Profile {
 
     private String phoneNumber;
 
+    private String avatarFileName;
+
     private int loyaltyPoints;
 
     @Column(insertable = false, updatable = false)

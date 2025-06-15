@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.user;
 
 import java.time.LocalDateTime;
 
+import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.user.AddressTestObject.address;
 import static com.github.jbence1994.webshop.user.ProfileTestConstants.DATE_OF_BIRTH;
 import static com.github.jbence1994.webshop.user.ProfileTestConstants.FIRST_NAME;
@@ -11,54 +12,57 @@ import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMB
 
 public final class ProfileTestObject {
     public static Profile bronzeProfile1() {
-        return buildProfile(0);
+        return buildProfile(null, 0);
     }
 
     public static Profile bronzeProfile2() {
-        return buildProfile(2_500);
+        return buildProfile(null, 2_500);
     }
 
     public static Profile bronzeProfile3() {
-        return buildProfile(4_999);
+        return buildProfile(null, 4_999);
     }
 
     public static Profile silverProfile1() {
-        return buildProfile(5_000);
+        return buildProfile(null, 5_000);
     }
 
     public static Profile silverProfile2() {
-        return buildProfile(7_500);
+        return buildProfile(null, 7_500);
     }
 
     public static Profile silverProfile3() {
-        return buildProfile(9_999);
+        return buildProfile(null, 9_999);
     }
 
     public static Profile goldProfile1() {
-        return buildProfile(10_000);
+        return buildProfile(null, 10_000);
     }
 
     public static Profile goldProfile2() {
-        return buildProfile(15_000);
+        return buildProfile(null, 15_000);
     }
 
     public static Profile goldProfile3() {
-        return buildProfile(19_999);
+        return buildProfile(null, 19_999);
     }
 
     public static Profile platinumProfile1() {
-        return buildProfile(20_000);
+        return buildProfile(null, 20_000);
     }
 
     public static Profile platinumProfile2() {
-        return buildProfile(510_000);
+        return buildProfile(null, 510_000);
     }
 
     public static Profile platinumProfile3() {
-        return buildProfile(1_000_000);
+        return buildProfile(AVATAR_FILE_NAME, 1_000_000);
     }
 
-    private static Profile buildProfile(int loyaltyPoints) {
+    private static Profile buildProfile(
+            String avatarFileName,
+            int loyaltyPoints
+    ) {
         return new Profile(
                 1L,
                 null,
@@ -67,6 +71,7 @@ public final class ProfileTestObject {
                 LAST_NAME,
                 DATE_OF_BIRTH,
                 PHONE_NUMBER,
+                avatarFileName,
                 loyaltyPoints,
                 LocalDateTime.now(),
                 LocalDateTime.now(),

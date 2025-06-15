@@ -1,16 +1,23 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.image.ImageDeletionException;
+import com.github.jbence1994.webshop.image.ImageUploadException;
+import com.github.jbence1994.webshop.image.InvalidFileExtensionException;
+import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import com.github.jbence1994.webshop.user.ChangePasswordRequest;
 import com.github.jbence1994.webshop.user.ConfirmNewPassword;
 import com.github.jbence1994.webshop.user.ConfirmPassword;
 import com.github.jbence1994.webshop.user.RegisterUserRequest;
+import com.github.jbence1994.webshop.user.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.ArrayList;
@@ -26,6 +33,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorDto(String.format("Required part '%s' is missing.", fieldName)));
     }
 
+    @ExceptionHandler(exception = MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorDto> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException exception) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(new ErrorDto(exception.getMessage()));
+    }
+
     @ExceptionHandler(exception = ConstraintViolationException.class)
     public ResponseEntity<ErrorDto> handleConstraintViolationException(ConstraintViolationException exception) {
         var allMessages = exception.getConstraintViolations().stream()
@@ -33,6 +45,31 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("; "));
 
         return ResponseEntity.badRequest().body(new ErrorDto(allMessages));
+    }
+
+    @ExceptionHandler(exception = ProductNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = UserNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleUserNotFoundException(UserNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = InvalidFileExtensionException.class)
+    public ResponseEntity<ErrorDto> handleInvalidFileExtensionException(InvalidFileExtensionException exception) {
+        return ResponseEntity.badRequest().body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = ImageUploadException.class)
+    public ResponseEntity<ErrorDto> handleImageUploadException(ImageUploadException exception) {
+        return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = ImageDeletionException.class)
+    public ResponseEntity<ErrorDto> handleImageDeletionException(ImageDeletionException exception) {
+        return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = MethodArgumentNotValidException.class)
