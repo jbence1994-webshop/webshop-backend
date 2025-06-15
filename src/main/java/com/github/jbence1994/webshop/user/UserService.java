@@ -4,4 +4,6 @@ public interface UserService {
     User registerUser(User user);
 
     void changePassword(Long userId, String oldPassword, String newPassword);
+
+    void updateUser(User user);
 }

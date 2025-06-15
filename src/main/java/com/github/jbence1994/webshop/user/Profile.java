@@ -44,6 +44,8 @@ public class Profile {
 
     private String phoneNumber;
 
+    private String avatarFileName;
+
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;

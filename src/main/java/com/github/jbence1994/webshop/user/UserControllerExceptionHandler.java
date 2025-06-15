@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(basePackageClasses = UserController.class)
 public class UserControllerExceptionHandler {
 
-    @ExceptionHandler(exception = UserNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleUserNotFoundException(UserNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
-    }
-
     @ExceptionHandler(exception = EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorDto> handleEmailAlreadyExistsException(EmailAlreadyExistsException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));

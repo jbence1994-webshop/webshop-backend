@@ -11,5 +11,6 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "profile", ignore = true)
+    @Mapping(target = "profileAvatar", ignore = true)
     User toEntity(RegisterUserRequest request);
 }
