@@ -12,29 +12,29 @@ import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ORIGINAL_FI
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ORIGINAL_FILE_NAME_PNG;
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ORIGINAL_FILE_NAME_TIFF;
 
-public final class UploadPhotoDtoTestObject {
-    public static UploadPhotoDto jpegUploadPhotoDto() {
-        return buildUploadPhotoDto(ORIGINAL_FILE_NAME_JPEG, CONTENT_TYPE_IMAGE_JPEG);
+public final class UploadPhotoTestObject {
+    public static UploadPhoto jpegUploadPhoto() {
+        return buildUploadPhoto(ORIGINAL_FILE_NAME_JPEG, CONTENT_TYPE_IMAGE_JPEG);
     }
 
-    public static UploadPhotoDto jpgUploadPhotoDto() {
-        return buildUploadPhotoDto(ORIGINAL_FILE_NAME_JPG, CONTENT_TYPE_IMAGE_JPG);
+    public static UploadPhoto jpgUploadPhoto() {
+        return buildUploadPhoto(ORIGINAL_FILE_NAME_JPG, CONTENT_TYPE_IMAGE_JPG);
     }
 
-    public static UploadPhotoDto pngUploadPhotoDto() {
-        return buildUploadPhotoDto(ORIGINAL_FILE_NAME_PNG, CONTENT_TYPE_IMAGE_PNG);
+    public static UploadPhoto pngUploadPhoto() {
+        return buildUploadPhoto(ORIGINAL_FILE_NAME_PNG, CONTENT_TYPE_IMAGE_PNG);
     }
 
-    public static UploadPhotoDto bmpUploadPhotoDto() {
-        return buildUploadPhotoDto(ORIGINAL_FILE_NAME_BMP, CONTENT_TYPE_IMAGE_BMP);
+    public static UploadPhoto bmpUploadPhoto() {
+        return buildUploadPhoto(ORIGINAL_FILE_NAME_BMP, CONTENT_TYPE_IMAGE_BMP);
     }
 
-    public static UploadPhotoDto tiffUploadPhotoDto() {
-        return buildUploadPhotoDto(ORIGINAL_FILE_NAME_TIFF, CONTENT_TYPE_IMAGE_TIFF);
+    public static UploadPhoto tiffUploadPhoto() {
+        return buildUploadPhoto(ORIGINAL_FILE_NAME_TIFF, CONTENT_TYPE_IMAGE_TIFF);
     }
 
-    private static UploadPhotoDto buildUploadPhotoDto(String originalFilename, String contentType) {
-        return new UploadPhotoDto(
+    private static UploadPhoto buildUploadPhoto(String originalFilename, String contentType) {
+        return new UploadPhoto(
                 false,
                 originalFilename,
                 FILE_SIZE,

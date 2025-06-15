@@ -20,11 +20,11 @@ public class PhotoMapperTests {
     private final MultipartFile multipartFile = mock(MultipartFile.class);
 
     @Test
-    public void toDtoTest_HappyPath() throws IOException {
+    public void toUploadPhotoTest_HappyPath() throws IOException {
         var expectedBytes = new byte[]{1, 2, 3, 4, 5};
         when(multipartFile.getBytes()).thenReturn(expectedBytes);
 
-        var result = mapper.toDto(multipartFile);
+        var result = mapper.toUploadPhoto(multipartFile);
 
         assertThat(result.getInputStreamBytes(), is(equalTo(expectedBytes)));
 
@@ -32,12 +32,12 @@ public class PhotoMapperTests {
     }
 
     @Test
-    public void toDtoTest_UnhappyPath_IOException() throws IOException {
+    public void toUploadPhotoTest_UnhappyPath_IOException() throws IOException {
         when(multipartFile.getBytes()).thenThrow(new IOException("Disk error."));
 
         var result = assertThrows(
                 ProductPhotoUploadException.class,
-                () -> mapper.toDto(multipartFile)
+                () -> mapper.toUploadPhoto(multipartFile)
         );
 
         assertThat(result.getMessage(), equalTo("The photo could not be uploaded successfully."));

@@ -42,7 +42,7 @@ public class ProductPhotoQueryServiceImplTests {
     }
 
     @Test
-    public void getProductPhotosTest_UnhappyPath() {
+    public void getProductPhotosTest_UnhappyPath_ProductNotFoundException() {
         doThrow(new ProductNotFoundException(1L)).when(productQueryService).getProduct(any());
 
         var result = assertThrows(
