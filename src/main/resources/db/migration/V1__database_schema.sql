@@ -72,6 +72,17 @@ CREATE TABLE IF NOT EXISTS profiles
             ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS profile_photos
+(
+    id         BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    profile_id BIGINT      NOT NULL,
+    file_name  VARCHAR(41) NOT NULL UNIQUE,
+    CONSTRAINT fk_profile_photos_profiles
+        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS addresses
 (
     profile_id   BIGINT       NOT NULL PRIMARY KEY,
