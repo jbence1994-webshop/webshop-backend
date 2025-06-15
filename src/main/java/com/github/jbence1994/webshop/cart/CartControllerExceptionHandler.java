@@ -20,7 +20,6 @@ public class CartControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
-    // FIXME: Duplicate... Move to common.
     @ExceptionHandler(exception = ProductNotFoundException.class)
     public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
