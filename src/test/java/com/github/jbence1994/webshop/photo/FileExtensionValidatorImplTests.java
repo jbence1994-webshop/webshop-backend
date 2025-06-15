@@ -3,13 +3,25 @@ package com.github.jbence1994.webshop.photo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.stream.Stream;
+
 import static com.github.jbence1994.webshop.photo.PhotoTestConstants.ALLOWED_FILE_EXTENSIONS;
-import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.jpegUploadPhotoDto;
-import static com.github.jbence1994.webshop.photo.UploadPhotoDtoTestObject.tiffUploadPhotoDto;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.BMP;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPEG;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPG;
+import static com.github.jbence1994.webshop.photo.PhotoTestConstants.PNG;
+import static com.github.jbence1994.webshop.photo.UploadPhotoTestObject.bmpUploadPhoto;
+import static com.github.jbence1994.webshop.photo.UploadPhotoTestObject.jpegUploadPhoto;
+import static com.github.jbence1994.webshop.photo.UploadPhotoTestObject.jpgUploadPhoto;
+import static com.github.jbence1994.webshop.photo.UploadPhotoTestObject.pngUploadPhoto;
+import static com.github.jbence1994.webshop.photo.UploadPhotoTestObject.tiffUploadPhoto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -25,21 +37,34 @@ public class FileExtensionValidatorImplTests {
     @InjectMocks
     private FileExtensionValidatorImpl fileExtensionValidator;
 
+    private static Stream<Arguments> uploadPhotoParams() {
+        return Stream.of(
+                Arguments.of(JPEG, jpegUploadPhoto()),
+                Arguments.of(JPG, jpgUploadPhoto()),
+                Arguments.of(PNG, pngUploadPhoto()),
+                Arguments.of(BMP, bmpUploadPhoto())
+        );
+    }
+
     @BeforeEach
     public void setUp() {
         when(fileExtensionsConfig.getAllowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
     }
 
-    @Test
-    public void validateTest_HappyPath() {
-        assertDoesNotThrow(() -> fileExtensionValidator.validate(jpegUploadPhotoDto()));
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("uploadPhotoParams")
+    public void validateTests_HappyPath(
+            String testCase,
+            UploadPhoto uploadPhoto
+    ) {
+        assertDoesNotThrow(() -> fileExtensionValidator.validate(uploadPhoto));
     }
 
     @Test
     public void validateTest_UnhappyPath_InvalidFileExtensionException() {
         var result = assertThrows(
                 InvalidFileExtensionException.class,
-                () -> fileExtensionValidator.validate(tiffUploadPhotoDto()));
+                () -> fileExtensionValidator.validate(tiffUploadPhoto()));
 
         assertThat(result.getMessage(), equalTo("Invalid file extension: .tiff"));
     }

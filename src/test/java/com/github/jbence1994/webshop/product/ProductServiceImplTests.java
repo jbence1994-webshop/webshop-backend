@@ -26,4 +26,11 @@ public class ProductServiceImplTests {
 
         assertDoesNotThrow(() -> productService.createProduct(product1()));
     }
+
+    @Test
+    public void updateProductTest() {
+        when(productRepository.save(any())).thenReturn(product1());
+
+        assertDoesNotThrow(() -> productService.updateProduct(product1()));
+    }
 }

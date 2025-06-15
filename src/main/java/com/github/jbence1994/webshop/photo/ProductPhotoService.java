@@ -1,74 +1,58 @@
 package com.github.jbence1994.webshop.photo;
 
-import com.github.jbence1994.webshop.product.Product;
 import com.github.jbence1994.webshop.product.ProductQueryService;
-import com.github.jbence1994.webshop.product.ProductRepository;
+import com.github.jbence1994.webshop.product.ProductService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class ProductPhotoService extends PhotoService<Product, ProductPhoto> {
+@AllArgsConstructor
+public class ProductPhotoService implements PhotoService {
     private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
-    private final ProductPhotoQueryService productPhotoQueryService;
     private final ProductQueryService productQueryService;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
+    private final FileExtensionValidator fileExtensionValidator;
+    private final FileNameGenerator fileNameGenerator;
+    private final FileUtils fileUtils;
 
-    public ProductPhotoService(
-            final FileExtensionValidator fileExtensionValidator,
-            final FileNameGenerator fileNameGenerator,
-            final FileUtils fileUtils,
+    @Override
+    public String uploadPhoto(Long productId, UploadPhoto uploadPhoto) {
+        try {
+            fileExtensionValidator.validate(uploadPhoto);
 
-            final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig,
-            final ProductPhotoQueryService productPhotoQueryService,
-            final ProductQueryService productQueryService,
-            final ProductRepository productRepository
-    ) {
-        super(fileExtensionValidator, fileNameGenerator, fileUtils);
+            var product = productQueryService.getProduct(productId);
 
-        this.productPhotosUploadDirectoryConfig = productPhotosUploadDirectoryConfig;
-        this.productPhotoQueryService = productPhotoQueryService;
-        this.productQueryService = productQueryService;
-        this.productRepository = productRepository;
+            var fileName = fileNameGenerator.generate(uploadPhoto.getFileExtension());
+
+            fileUtils.store(
+                    productPhotosUploadDirectoryConfig.getPath(),
+                    fileName,
+                    uploadPhoto.getInputStream()
+            );
+
+            product.addPhoto(fileName);
+            productService.updateProduct(product);
+
+            return fileName;
+        } catch (FileUploadException exception) {
+            throw new ProductPhotoUploadException();
+        }
     }
 
     @Override
-    public String getPhotosUploadDirectoryPath() {
-        return productPhotosUploadDirectoryConfig.getPath();
-    }
+    public void deletePhoto(Long productId, String fileName) {
+        try {
+            var product = productQueryService.getProduct(productId);
 
-    @Override
-    public Product getEntity(Long productId) {
-        return productQueryService.getProduct(productId);
-    }
+            fileUtils.remove(
+                    productPhotosUploadDirectoryConfig.getPath(),
+                    fileName
+            );
 
-    @Override
-    public void updateEntity(Product product) {
-        productRepository.save(product);
-    }
-
-    @Override
-    public void addPhotoToEntity(Product product, String fileName) {
-        product.addPhoto(fileName);
-    }
-
-    @Override
-    public void removePhotoFromEntity(Product product, String fileName) {
-        product.removePhoto(fileName);
-    }
-
-    @Override
-    public List<ProductPhoto> getEntityPhotos(Long productId) {
-        return productPhotoQueryService.getProductPhotos(productId);
-    }
-
-    @Override
-    public RuntimeException photoUploadException() {
-        return new ProductPhotoUploadException();
-    }
-
-    @Override
-    public RuntimeException photoDeletionException() {
-        return new ProductPhotoDeletionException();
+            product.removePhoto(fileName);
+            productService.updateProduct(product);
+        } catch (FileDeletionException exception) {
+            throw new ProductPhotoDeletionException();
+        }
     }
 }
