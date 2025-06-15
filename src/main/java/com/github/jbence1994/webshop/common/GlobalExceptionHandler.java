@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MissingServletRequestPartException.class)
+    @ExceptionHandler(exception = MissingServletRequestPartException.class)
     public ResponseEntity<ErrorDto> handleMissingServletRequestPartException(MissingServletRequestPartException exception) {
         var fieldName = exception.getRequestPartName();
         return ResponseEntity.badRequest().body(new ErrorDto(String.format("Required part '%s' is missing.", fieldName)));
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(exception = ConstraintViolationException.class)
     public ResponseEntity<ErrorDto> handleConstraintViolationException(ConstraintViolationException exception) {
         var allMessages = exception.getConstraintViolations().stream()
                 .map(ConstraintViolation::getMessage)
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorDto(allMessages));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(exception = MethodArgumentNotValidException.class)
     public ResponseEntity<List<ValidationErrorDto>> handleValidationErrors(MethodArgumentNotValidException exception) {
         var validationErrors = new ArrayList<ValidationErrorDto>();
 
