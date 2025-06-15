@@ -99,4 +99,11 @@ public class UserServiceImplTests {
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
+
+    @Test
+    public void updateUserTest() {
+        when(userRepository.save(any())).thenReturn(user());
+
+        assertDoesNotThrow(() -> userService.updateUser(user()));
+    }
 }

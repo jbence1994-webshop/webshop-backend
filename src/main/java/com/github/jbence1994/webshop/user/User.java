@@ -42,4 +42,8 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
+
+    public void setProfileAvatar(String fileName) {
+        profile.setAvatarFileName(fileName);
+    }
 }
