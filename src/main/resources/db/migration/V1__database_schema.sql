@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS profiles
     last_name        VARCHAR(255) NOT NULL,
     date_of_birth    DATE         NOT NULL,
     phone_number     VARCHAR(25) UNIQUE,
-    avatar_file_name VARCHAR(41) UNIQUE    DEFAULT NULL,
+    avatar_file_name VARCHAR(41) UNIQUE,
     created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_profiles_users
