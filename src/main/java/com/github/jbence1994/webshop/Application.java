@@ -1,8 +1,8 @@
 package com.github.jbence1994.webshop;
 
-import com.github.jbence1994.webshop.photo.FileExtensionsConfig;
-import com.github.jbence1994.webshop.photo.ProductPhotosUploadDirectoryConfig;
-import com.github.jbence1994.webshop.photo.ProfilePhotosUploadDirectoryConfig;
+import com.github.jbence1994.webshop.image.FileExtensionsConfig;
+import com.github.jbence1994.webshop.image.ProductPhotosUploadDirectoryConfig;
+import com.github.jbence1994.webshop.image.ProfileAvatarUploadDirectoryConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties(value = {
         FileExtensionsConfig.class,
         ProductPhotosUploadDirectoryConfig.class,
-        ProfilePhotosUploadDirectoryConfig.class
+        ProfileAvatarUploadDirectoryConfig.class
 })
 public class Application {
 

@@ -1,8 +1,8 @@
 package com.github.jbence1994.webshop.common;
 
-import com.github.jbence1994.webshop.photo.InvalidFileExtensionException;
-import com.github.jbence1994.webshop.photo.PhotoDeletionException;
-import com.github.jbence1994.webshop.photo.PhotoUploadException;
+import com.github.jbence1994.webshop.image.ImageDeletionException;
+import com.github.jbence1994.webshop.image.ImageUploadException;
+import com.github.jbence1994.webshop.image.InvalidFileExtensionException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.common.FieldErrorTestObject.fieldError;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError1;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError2;
-import static com.github.jbence1994.webshop.photo.PhotoTestConstants.JPEG;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -81,8 +81,8 @@ public class GlobalExceptionHandlerTests {
     }
 
     @Test
-    public void handlePhotoUploadExceptionTest() {
-        var result = globalExceptionHandler.handlePhotoUploadException(new PhotoUploadException());
+    public void handleImageUploadExceptionTest() {
+        var result = globalExceptionHandler.handleImageUploadException(new ImageUploadException("The photo could not be uploaded successfully."));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));
@@ -90,8 +90,8 @@ public class GlobalExceptionHandlerTests {
     }
 
     @Test
-    public void handlePhotoDeletionExceptionTest() {
-        var result = globalExceptionHandler.handlePhotoDeletionException(new PhotoDeletionException());
+    public void handleImageDeletionExceptionTest() {
+        var result = globalExceptionHandler.handleImageDeletionException(new ImageDeletionException("The photo could not be deleted successfully."));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));

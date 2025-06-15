@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
-import com.github.jbence1994.webshop.photo.ProductPhoto;
+import com.github.jbence1994.webshop.image.ProductPhoto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
