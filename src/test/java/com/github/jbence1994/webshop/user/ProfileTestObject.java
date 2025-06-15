@@ -21,6 +21,7 @@ public final class ProfileTestObject {
                 PHONE_NUMBER,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
+                null,
                 address()
         );
     }
