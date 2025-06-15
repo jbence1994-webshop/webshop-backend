@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.image;
 
 import com.github.jbence1994.webshop.product.Product;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GeneratedColumn;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product_photos")
@@ -31,4 +35,8 @@ public class ProductPhoto {
     private Product product;
 
     private String fileName;
+
+    @Column(insertable = false, updatable = false)
+    @GeneratedColumn("created_at")
+    private LocalDateTime createdAt;
 }
