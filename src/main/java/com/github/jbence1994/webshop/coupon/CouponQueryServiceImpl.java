@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class CouponServiceImpl implements CouponService {
+public class CouponQueryServiceImpl implements CouponQueryService {
     private final CouponRepository couponRepository;
 
     @Override

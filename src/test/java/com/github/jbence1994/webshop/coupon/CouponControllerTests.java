@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class CouponControllerTests {
 
     @Mock
-    private CouponService couponService;
+    private CouponQueryService couponQueryService;
 
     @Mock
     private CouponMapper couponMapper;
@@ -31,14 +31,14 @@ public class CouponControllerTests {
 
     @Test
     public void getCouponsTest() {
-        when(couponService.getCoupons()).thenReturn(List.of(notExpiredCoupon()));
+        when(couponQueryService.getCoupons()).thenReturn(List.of(notExpiredCoupon()));
         when(couponMapper.toDto(any())).thenReturn(notExpiredCouponDto());
 
         var result = couponController.getCoupons();
 
         assertThat(result.size(), equalTo(1));
 
-        verify(couponService, times(1)).getCoupons();
+        verify(couponQueryService, times(1)).getCoupons();
         verify(couponMapper, times(1)).toDto(any());
     }
 }

@@ -11,12 +11,12 @@ import java.util.List;
 @RequestMapping("/coupons")
 @AllArgsConstructor
 public class CouponController {
-    private final CouponService couponService;
+    private final CouponQueryService couponQueryService;
     private final CouponMapper couponMapper;
 
     @GetMapping
     public List<CouponDto> getCoupons() {
-        return couponService.getCoupons().stream()
+        return couponQueryService.getCoupons().stream()
                 .map(couponMapper::toDto)
                 .toList();
     }

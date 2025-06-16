@@ -19,13 +19,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CouponServiceImplTests {
+public class CouponQueryServiceImplTests {
 
     @Mock
     private CouponRepository couponRepository;
 
     @InjectMocks
-    private CouponServiceImpl couponService;
+    private CouponQueryServiceImpl couponService;
 
     @Test
     public void getCouponsTest() {
