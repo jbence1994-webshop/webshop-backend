@@ -43,3 +43,4 @@ INSERT INTO coupons (code, amount, expiration_date) VALUES ('25%OFF', 25.00, '20
 INSERT INTO coupons (code, amount, expiration_date) VALUES ('100$OFF', 100.00, '9999-12-31 23:59:59');
 
 INSERT INTO user_coupons (user_id, coupon_code) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), (SELECT code FROM coupons WHERE code = '100$OFF'));
+INSERT INTO user_coupons (user_id, coupon_code) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), (SELECT code FROM coupons WHERE code = '25%OFF'));
