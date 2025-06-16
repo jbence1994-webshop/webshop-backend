@@ -1,7 +1,6 @@
 package com.github.jbence1994.webshop.coupon;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Set;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.CODE_1;
@@ -25,7 +24,7 @@ public final class CouponTestObject {
                 CODE_2,
                 BigDecimal.valueOf(10.00),
                 EXPIRED_COUPON_EXPIRATION_DATE,
-                new HashSet<>()
+                Set.of(user())
         );
     }
 }

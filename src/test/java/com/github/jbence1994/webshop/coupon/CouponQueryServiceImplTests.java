@@ -37,4 +37,15 @@ public class CouponQueryServiceImplTests {
 
         verify(couponRepository, times(1)).findAll(any(Sort.class));
     }
+
+    @Test
+    public void getCouponsByUserTest() {
+        when(couponRepository.findByUserId(any())).thenReturn(List.of(notExpiredCoupon(), expiredCoupon()));
+
+        var result = couponService.getCouponsByUser(any());
+
+        assertThat(result.size(), equalTo(1));
+
+        verify(couponRepository, times(1)).findByUserId(any());
+    }
 }
