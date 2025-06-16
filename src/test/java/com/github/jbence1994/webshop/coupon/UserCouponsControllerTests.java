@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.coupon;
 
+import com.github.jbence1994.webshop.user.UserQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,12 +14,16 @@ import static com.github.jbence1994.webshop.coupon.CouponTestObject.notExpiredCo
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserCouponsControllerTests {
+
+    @Mock
+    private UserQueryService userQueryService;
 
     @Mock
     private CouponQueryService couponQueryService;
@@ -31,6 +36,7 @@ public class UserCouponsControllerTests {
 
     @Test
     public void getCouponsTest() {
+        doNothing().when(userQueryService).verifyUserExists(any());
         when(couponQueryService.getCouponsByUser(any())).thenReturn(List.of(notExpiredCoupon()));
         when(couponMapper.toDto(any())).thenReturn(notExpiredCouponDto());
 
