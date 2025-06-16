@@ -101,6 +101,9 @@ CREATE TABLE IF NOT EXISTS user_coupons
 (
     user_id     BIGINT      NOT NULL,
     coupon_code VARCHAR(25) NOT NULL,
+    created_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    redeemed    TINYINT(1)  NOT NULL DEFAULT 0,
+    redeemed_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, coupon_code),
     CONSTRAINT fk_user_coupons_users
         FOREIGN KEY (user_id) REFERENCES users (id)
