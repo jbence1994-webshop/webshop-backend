@@ -4,4 +4,6 @@ import java.util.List;
 
 public interface CouponQueryService {
     List<Coupon> getCoupons();
+
+    List<Coupon> getCouponsByUser(Long userId);
 }

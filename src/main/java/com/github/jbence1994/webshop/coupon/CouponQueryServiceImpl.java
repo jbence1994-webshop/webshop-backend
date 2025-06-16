@@ -20,4 +20,9 @@ public class CouponQueryServiceImpl implements CouponQueryService {
                 .filter(coupon -> !coupon.isExpired())
                 .toList();
     }
+
+    @Override
+    public List<Coupon> getCouponsByUser(Long userId) {
+        return couponRepository.findByUserId(userId);
+    }
 }
