@@ -2,10 +2,16 @@ package com.github.jbence1994.webshop.cart;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.stream.Stream;
 
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
+import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,8 +23,15 @@ import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(MockitoExtension.class)
 public class CartTests {
-    private final Cart cart = CartTestObject.cartWithTwoItems();
-    private final Cart emptyCart = CartTestObject.emptyCart();
+    private final Cart cart = cartWithTwoItems();
+    private final Cart emptyCart = emptyCart();
+
+    private static Stream<Arguments> cartParams() {
+        return Stream.of(
+                Arguments.of("Cart is not empty", cartWithTwoItems(), false),
+                Arguments.of("Cart is empty", emptyCart(), true)
+        );
+    }
 
     @Test
     public void calculateTotalPriceTest() {
@@ -85,18 +98,15 @@ public class CartTests {
         assertThat(cart.getItems(), is(empty()));
     }
 
-    // TODO: Refactor to parameterized test.
-    @Test
-    public void isEmptyTest_CartIsNotEmpty() {
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("cartParams")
+    public void isEmptyTests(
+            String testCase,
+            Cart cart,
+            boolean expectedResult
+    ) {
         var result = cart.isEmpty();
 
-        assertThat(result, is(false));
-    }
-
-    @Test
-    public void isEmptyTest_CartIsEmpty() {
-        var result = emptyCart.isEmpty();
-
-        assertThat(result, is(true));
+        assertThat(result, is(expectedResult));
     }
 }

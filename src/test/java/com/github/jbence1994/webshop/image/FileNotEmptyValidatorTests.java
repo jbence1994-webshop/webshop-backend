@@ -2,11 +2,16 @@ package com.github.jbence1994.webshop.image;
 
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.image.MultipartFileTestObject.emptyMultipartFile;
 import static com.github.jbence1994.webshop.image.MultipartFileTestObject.multipartFile;
@@ -23,23 +28,27 @@ public class FileNotEmptyValidatorTests {
     @InjectMocks
     private FileNotEmptyValidator fileNotEmptyValidator;
 
+    private static Stream<Arguments> fileParams() {
+        return Stream.of(
+                Arguments.of("File is not empty", multipartFile(), true),
+                Arguments.of("File is empty", emptyMultipartFile(), false)
+        );
+    }
+
     @BeforeEach
     public void setUp() {
         fileNotEmptyValidator.initialize(mock(FileNotEmpty.class));
     }
 
-    // TODO: Refactor to parameterized test.
-    @Test
-    public void isValidTest_HappyPath() {
-        var result = fileNotEmptyValidator.isValid(multipartFile(), context);
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("fileParams")
+    public void isValidTests(
+            String testCase,
+            MultipartFile file,
+            boolean expectedResult
+    ) {
+        var result = fileNotEmptyValidator.isValid(file, context);
 
-        assertThat(result, is(true));
-    }
-
-    @Test
-    public void isValidTest_UnhappyPath_FileIsEmpty() {
-        var result = fileNotEmptyValidator.isValid(emptyMultipartFile(), context);
-
-        assertThat(result, is(false));
+        assertThat(result, is(expectedResult));
     }
 }
