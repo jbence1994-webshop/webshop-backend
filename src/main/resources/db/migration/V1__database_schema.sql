@@ -96,3 +96,18 @@ CREATE TABLE IF NOT EXISTS coupons
     amount          DECIMAL(10, 2) NOT NULL,
     expiration_date DATETIME       NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS user_coupons
+(
+    user_id     BIGINT      NOT NULL,
+    coupon_code VARCHAR(25) NOT NULL,
+    PRIMARY KEY (user_id, coupon_code),
+    CONSTRAINT fk_user_coupons_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_user_coupons_coupons
+        FOREIGN KEY (coupon_code) REFERENCES coupons (code)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
