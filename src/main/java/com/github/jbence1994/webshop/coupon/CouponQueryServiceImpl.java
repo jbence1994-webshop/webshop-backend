@@ -23,6 +23,10 @@ public class CouponQueryServiceImpl implements CouponQueryService {
 
     @Override
     public List<Coupon> getCouponsByUser(Long userId) {
-        return couponRepository.findByUserId(userId);
+        var userCoupons = couponRepository.findByUserId(userId);
+
+        return userCoupons.stream()
+                .filter(coupon -> !coupon.isExpired())
+                .toList();
     }
 }
