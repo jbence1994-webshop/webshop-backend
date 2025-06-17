@@ -34,13 +34,3 @@ INSERT INTO users (email, password) VALUES ('juhasz.bence.zsolt@gmail.com', '$2a
 INSERT INTO profiles (user_id, first_name, middle_name, last_name, date_of_birth, phone_number) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), 'Bence', 'Zsolt', 'Juhász', '1994-03-27', '+36501323566');
 
 INSERT INTO addresses (profile_id, address_line, municipality, province, postal_code, country) VALUES ((SELECT user_id FROM profiles WHERE user_id = (SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com')), 'Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY');
-
-INSERT INTO coupons (code, amount, expiration_date) VALUES ('5%OFF', 5.00, '2099-01-01 23:59:59');
-INSERT INTO coupons (code, amount, expiration_date) VALUES ('10%OFF', 10.00, '2025-12-24 23:59:59');
-INSERT INTO coupons (code, amount, expiration_date) VALUES ('15%OFF', 15.00, '2025-12-24 23:59:59');
-INSERT INTO coupons (code, amount, expiration_date) VALUES ('20%OFF', 20.00, '2025-12-24 23:59:59');
-INSERT INTO coupons (code, amount, expiration_date) VALUES ('25%OFF', 25.00, '2025-06-01 00:00:00');
-INSERT INTO coupons (code, amount, expiration_date) VALUES ('100$OFF', 100.00, '9999-12-31 23:59:59');
-
-INSERT INTO user_coupons (user_id, coupon_code) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), (SELECT code FROM coupons WHERE code = '100$OFF'));
-INSERT INTO user_coupons (user_id, coupon_code) VALUES ((SELECT id FROM users WHERE email = 'juhasz.bence.zsolt@gmail.com'), (SELECT code FROM coupons WHERE code = '25%OFF'));
