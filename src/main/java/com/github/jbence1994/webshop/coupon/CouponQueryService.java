@@ -5,7 +5,5 @@ import java.util.List;
 public interface CouponQueryService {
     List<Coupon> getCoupons();
 
-    Coupon getCoupon(String code);
-
     List<Coupon> getCouponsByUser(Long userId);
 }

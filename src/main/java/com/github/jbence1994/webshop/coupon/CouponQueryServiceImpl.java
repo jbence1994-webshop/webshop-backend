@@ -22,13 +22,6 @@ public class CouponQueryServiceImpl implements CouponQueryService {
     }
 
     @Override
-    public Coupon getCoupon(String code) {
-        return couponRepository
-                .findById(code)
-                .orElseThrow(() -> new CouponNotFoundException(code));
-    }
-
-    @Override
     public List<Coupon> getCouponsByUser(Long userId) {
         var userCoupons = couponRepository.findByUserId(userId);
 
