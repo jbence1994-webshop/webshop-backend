@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.coupon;
 
+import com.github.jbence1994.webshop.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ public class CouponQueryServiceImpl implements CouponQueryService {
     }
 
     @Override
-    public List<Coupon> getCouponsByUser(Long userId) {
-        var userCoupons = couponRepository.findByUserId(userId);
+    public List<Coupon> getCouponsByUser(User user) {
+        var userCoupons = couponRepository.getCouponsByUser(user);
 
         return userCoupons.stream()
                 .filter(coupon -> !coupon.isExpired())
