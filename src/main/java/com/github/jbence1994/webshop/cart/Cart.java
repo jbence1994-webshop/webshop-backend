@@ -16,6 +16,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
@@ -30,6 +31,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class Cart {
 
     @Id
@@ -82,14 +84,6 @@ public class Cart {
 
     public boolean hasCouponApplied() {
         return appliedCoupon != null;
-    }
-
-    public void applyCoupon(Coupon coupon) {
-        appliedCoupon = coupon;
-    }
-
-    public void removeCoupon() {
-        appliedCoupon = null;
     }
 
     public void clear() {

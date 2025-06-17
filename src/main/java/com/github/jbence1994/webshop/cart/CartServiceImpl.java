@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.coupon.CouponExpiredException;
 import com.github.jbence1994.webshop.product.ProductQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -68,7 +69,11 @@ public class CartServiceImpl implements CartService {
     public Cart applyCouponToCart(UUID cartId, Coupon coupon) {
         var cart = cartQueryService.getCart(cartId);
 
-        cart.applyCoupon(coupon);
+        if (coupon.isExpired()) {
+            throw new CouponExpiredException(coupon.getCode());
+        }
+
+        cart.setAppliedCoupon(coupon);
         cartRepository.save(cart);
 
         return cart;
