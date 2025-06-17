@@ -10,43 +10,43 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.BMP;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.JPG;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PNG;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.bmpUploadImage;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.jpegUploadImage;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.jpgUploadImage;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.pngUploadImage;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.bmpImageUpload;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpegImageUpload;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpgImageUpload;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.pngImageUpload;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-public class UploadImageTests {
-    private static Stream<Arguments> uploadImageParams() {
+public class ImageUploadTests {
+    private static Stream<Arguments> imageUploadParams() {
         return Stream.of(
-                Arguments.of(JPEG, jpegUploadImage()),
-                Arguments.of(JPG, jpgUploadImage()),
-                Arguments.of(PNG, pngUploadImage()),
-                Arguments.of(BMP, bmpUploadImage())
+                Arguments.of(JPEG, jpegImageUpload()),
+                Arguments.of(JPG, jpgImageUpload()),
+                Arguments.of(PNG, pngImageUpload()),
+                Arguments.of(BMP, bmpImageUpload())
         );
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("uploadImageParams")
+    @MethodSource("imageUploadParams")
     public void getInputStreamTests(
             String testCase,
-            UploadImage uploadImage
+            ImageUpload image
     ) {
-        var result = uploadImage.getInputStream();
+        var result = image.getInputStream();
 
         assertThat(result, not(nullValue()));
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("uploadImageParams")
+    @MethodSource("imageUploadParams")
     public void getFileExtensionTests(
             String extension,
-            UploadImage uploadImage
+            ImageUpload image
     ) {
-        var result = uploadImage.getFileExtension();
+        var result = image.getFileExtension();
 
         assertThat(result, equalTo(extension));
     }

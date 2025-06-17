@@ -11,10 +11,10 @@ import java.util.List;
 
 import static com.github.jbence1994.webshop.coupon.CouponDtoTestObject.notExpiredCouponDto;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.notExpiredCoupon;
+import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,7 +36,7 @@ public class UserCouponsControllerTests {
 
     @Test
     public void getCouponsTest() {
-        doNothing().when(userQueryService).verifyUserExists(any());
+        when(userQueryService.getUser(any())).thenReturn(user());
         when(couponQueryService.getCouponsByUser(any())).thenReturn(List.of(notExpiredCoupon()));
         when(couponMapper.toDto(any())).thenReturn(notExpiredCouponDto());
 
@@ -44,6 +44,7 @@ public class UserCouponsControllerTests {
 
         assertThat(result.size(), equalTo(1));
 
+        verify(userQueryService, times(1)).getUser(any());
         verify(couponQueryService, times(1)).getCouponsByUser(any());
         verify(couponMapper, times(1)).toDto(any());
     }

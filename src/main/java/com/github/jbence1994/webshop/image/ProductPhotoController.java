@@ -41,7 +41,7 @@ public class ProductPhotoController {
             @PathVariable Long productId,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
-        var uploadImage = imageMapper.toUploadImage(file);
+        var uploadImage = imageMapper.toImageUpload(file);
         var uploadedImageFileName = imageService.uploadImage(productId, uploadImage);
 
         var url = imageUrlBuilder.buildUrl(uploadedImageFileName);

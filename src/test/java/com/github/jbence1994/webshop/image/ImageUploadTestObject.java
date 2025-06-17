@@ -12,29 +12,29 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.ORIGINAL_FI
 import static com.github.jbence1994.webshop.image.ImageTestConstants.ORIGINAL_FILE_NAME_PNG;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.ORIGINAL_FILE_NAME_TIFF;
 
-public final class UploadImageTestObject {
-    public static UploadImage jpegUploadImage() {
-        return buildUploadImage(ORIGINAL_FILE_NAME_JPEG, CONTENT_TYPE_IMAGE_JPEG);
+public final class ImageUploadTestObject {
+    public static ImageUpload jpegImageUpload() {
+        return buildImageUpload(ORIGINAL_FILE_NAME_JPEG, CONTENT_TYPE_IMAGE_JPEG);
     }
 
-    public static UploadImage jpgUploadImage() {
-        return buildUploadImage(ORIGINAL_FILE_NAME_JPG, CONTENT_TYPE_IMAGE_JPG);
+    public static ImageUpload jpgImageUpload() {
+        return buildImageUpload(ORIGINAL_FILE_NAME_JPG, CONTENT_TYPE_IMAGE_JPG);
     }
 
-    public static UploadImage pngUploadImage() {
-        return buildUploadImage(ORIGINAL_FILE_NAME_PNG, CONTENT_TYPE_IMAGE_PNG);
+    public static ImageUpload pngImageUpload() {
+        return buildImageUpload(ORIGINAL_FILE_NAME_PNG, CONTENT_TYPE_IMAGE_PNG);
     }
 
-    public static UploadImage bmpUploadImage() {
-        return buildUploadImage(ORIGINAL_FILE_NAME_BMP, CONTENT_TYPE_IMAGE_BMP);
+    public static ImageUpload bmpImageUpload() {
+        return buildImageUpload(ORIGINAL_FILE_NAME_BMP, CONTENT_TYPE_IMAGE_BMP);
     }
 
-    public static UploadImage tiffUploadImage() {
-        return buildUploadImage(ORIGINAL_FILE_NAME_TIFF, CONTENT_TYPE_IMAGE_TIFF);
+    public static ImageUpload tiffImageUpload() {
+        return buildImageUpload(ORIGINAL_FILE_NAME_TIFF, CONTENT_TYPE_IMAGE_TIFF);
     }
 
-    private static UploadImage buildUploadImage(String originalFilename, String contentType) {
-        return new UploadImage(
+    private static ImageUpload buildImageUpload(String originalFilename, String contentType) {
+        return new ImageUpload(
                 false,
                 originalFilename,
                 FILE_SIZE,
