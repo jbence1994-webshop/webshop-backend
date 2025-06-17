@@ -19,9 +19,10 @@ public class UserCouponsController {
 
     @GetMapping
     public List<CouponDto> getCoupons(@PathVariable("id") Long id) {
-        userQueryService.verifyUserExists(id);
+        // FIXME: Refactor later to fetch all coupons by the current, logged in User
+        var user = userQueryService.getUser(id);
 
-        return couponQueryService.getCouponsByUser(id).stream()
+        return couponQueryService.getCouponsByUser(user).stream()
                 .map(couponMapper::toDto)
                 .toList();
     }

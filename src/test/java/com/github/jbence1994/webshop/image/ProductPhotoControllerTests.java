@@ -12,9 +12,9 @@ import java.util.List;
 import static com.github.jbence1994.webshop.image.ImageResponseTestObject.imageResponse;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_URL;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpegImageUpload;
 import static com.github.jbence1994.webshop.image.MultipartFileTestObject.multipartFile;
 import static com.github.jbence1994.webshop.image.ProductPhotoTestObject.productPhoto;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.jpegUploadImage;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -44,7 +44,7 @@ public class ProductPhotoControllerTests {
 
     @Test
     public void uploadProductPhotoTest() {
-        when(imageMapper.toUploadImage(any())).thenReturn(jpegUploadImage());
+        when(imageMapper.toImageUpload(any())).thenReturn(jpegImageUpload());
         when(imageService.uploadImage(any(), any())).thenReturn(PHOTO_FILE_NAME);
         when(imageUrlBuilder.buildUrl(any())).thenReturn(PHOTO_URL);
 
