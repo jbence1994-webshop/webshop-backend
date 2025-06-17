@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS orders
             ON UPDATE CASCADE
 );
 
-create table order_items
+CREATE TABLE IF NOT EXISTS order_items
 (
     id          BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
     order_id    BIGINT         NOT NULL,
