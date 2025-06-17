@@ -57,7 +57,7 @@ public class ProductPhotoServiceTests {
     private ProductPhotoService productPhotoService;
 
     private final Product product = spy(product1());
-    private final UploadImage uploadImage = mock(UploadImage.class);
+    private final ImageUpload image = mock(ImageUpload.class);
 
     @BeforeEach
     public void setUp() {
@@ -65,7 +65,7 @@ public class ProductPhotoServiceTests {
         when(productQueryService.getProduct(any())).thenReturn(product);
         when(fileNameGenerator.generate(any())).thenReturn(PHOTO_FILE_NAME);
         when(productPhotosUploadDirectoryConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
-        when(uploadImage.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
+        when(image.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());
     }
 
@@ -74,7 +74,7 @@ public class ProductPhotoServiceTests {
         doNothing().when(fileUtils).store(any(), any(), any());
         doNothing().when(product).addPhoto(any());
 
-        var result = productPhotoService.uploadImage(1L, uploadImage);
+        var result = productPhotoService.uploadImage(1L, image);
 
         assertThat(result, equalTo(PHOTO_FILE_NAME));
 
@@ -82,7 +82,7 @@ public class ProductPhotoServiceTests {
         verify(productQueryService, times(1)).getProduct(any());
         verify(fileNameGenerator, times(1)).generate(any());
         verify(productPhotosUploadDirectoryConfig, times(1)).getPath();
-        verify(uploadImage, times(1)).getInputStream();
+        verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, times(1)).addPhoto(any());
         verify(productService, times(1)).updateProduct(any());
@@ -94,7 +94,7 @@ public class ProductPhotoServiceTests {
 
         var result = assertThrows(
                 ImageUploadException.class,
-                () -> productPhotoService.uploadImage(1L, uploadImage)
+                () -> productPhotoService.uploadImage(1L, image)
         );
 
         assertThat(result.getMessage(), equalTo("The photo could not be uploaded successfully."));
@@ -103,7 +103,7 @@ public class ProductPhotoServiceTests {
         verify(productQueryService, times(1)).getProduct(any());
         verify(fileNameGenerator, times(1)).generate(any());
         verify(productPhotosUploadDirectoryConfig, times(1)).getPath();
-        verify(uploadImage, times(1)).getInputStream();
+        verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, never()).addPhoto(any());
         verify(productService, never()).updateProduct(any());

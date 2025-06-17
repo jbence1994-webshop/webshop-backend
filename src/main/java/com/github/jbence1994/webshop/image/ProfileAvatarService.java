@@ -16,9 +16,9 @@ public class ProfileAvatarService implements ImageService {
     private final FileUtils fileUtils;
 
     @Override
-    public String uploadImage(Long userId, UploadImage uploadImage) {
+    public String uploadImage(Long userId, ImageUpload image) {
         try {
-            fileExtensionValidator.validate(uploadImage);
+            fileExtensionValidator.validate(image);
 
             var user = userQueryService.getUser(userId);
 
@@ -29,12 +29,12 @@ public class ProfileAvatarService implements ImageService {
                 );
             }
 
-            var fileName = fileNameGenerator.generate(uploadImage.getFileExtension());
+            var fileName = fileNameGenerator.generate(image.getFileExtension());
 
             fileUtils.store(
                     profileAvatarUploadDirectoryConfig.getPath(),
                     fileName,
-                    uploadImage.getInputStream()
+                    image.getInputStream()
             );
 
             user.setProfileAvatar(fileName);

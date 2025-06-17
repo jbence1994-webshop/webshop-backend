@@ -40,7 +40,7 @@ public class ProfileAvatarController {
             @PathVariable Long userId,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
-        var uploadImage = imageMapper.toUploadImage(file);
+        var uploadImage = imageMapper.toImageUpload(file);
         var uploadedImageFileName = imageService.uploadImage(userId, uploadImage);
 
         var url = imageUrlBuilder.buildUrl(uploadedImageFileName);
