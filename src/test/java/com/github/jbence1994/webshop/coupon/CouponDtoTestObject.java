@@ -2,17 +2,17 @@ package com.github.jbence1994.webshop.coupon;
 
 import java.math.BigDecimal;
 
-import static com.github.jbence1994.webshop.coupon.CouponTestConstants.NOT_EXPIRED_COUPON_CODE;
-import static com.github.jbence1994.webshop.coupon.CouponTestConstants.NOT_EXPIRED_COUPON_DESCRIPTION;
+import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
+import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_DESCRIPTION;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.NOT_EXPIRED_COUPON_EXPIRATION_DATE;
 
 public final class CouponDtoTestObject {
-    public static CouponDto notExpiredCouponDto() {
+    public static CouponDto couponDto1() {
         return new CouponDto(
-                NOT_EXPIRED_COUPON_CODE,
+                COUPON_1_CODE,
                 DiscountType.PERCENT_OFF.name(),
-                BigDecimal.valueOf(10.00),
-                NOT_EXPIRED_COUPON_DESCRIPTION,
+                BigDecimal.valueOf(0.10),
+                COUPON_1_DESCRIPTION,
                 NOT_EXPIRED_COUPON_EXPIRATION_DATE
         );
     }

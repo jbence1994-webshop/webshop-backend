@@ -57,14 +57,19 @@ VALUES ('WELCOME10', 'PERCENT_OFF', 0.10, '10% off welcome coupon', '9999-12-31 
        ('FREESHIP', 'FREE_SHIPPING', 0.00, 'Free shipping on all orders', '2025-12-31 23:59:59'),
        ('BUY1GET1', 'BUY_ONE_GET_ONE', 0.00, 'Buy one get one free', '2025-12-31 23:59:59');
 
-SET @couponCodeNotExpired := (SELECT code
-                              FROM coupons
-                              WHERE code = 'WELCOME10');
+SET @percentOffNotExpiredCoupon := (SELECT code
+                                    FROM coupons
+                                    WHERE code = 'WELCOME10');
 
-SET @couponCodeExpired := (SELECT code
-                           FROM coupons
-                           WHERE code = 'SPRING15');
+SET @fixedAmountNotExpiredCoupon := (SELECT code
+                                     FROM coupons
+                                     WHERE code = 'NEWUSER5');
+
+SET @percentOffExpiredCoupon := (SELECT code
+                                 FROM coupons
+                                 WHERE code = 'SPRING15');
 
 INSERT INTO user_coupons (user_id, coupon_code)
-VALUES (@userId, @couponCodeNotExpired),
-       (@userId, @couponCodeExpired);
+VALUES (@userId, @percentOffNotExpiredCoupon),
+       (@userId, @fixedAmountNotExpiredCoupon),
+       (@userId, @percentOffExpiredCoupon);

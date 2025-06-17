@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users/{id}/coupons")
 @AllArgsConstructor
-public class UserCouponsController {
+public class UserCouponController {
     private final UserQueryService userQueryService;
     private final CouponQueryService couponQueryService;
     private final CouponMapper couponMapper;
