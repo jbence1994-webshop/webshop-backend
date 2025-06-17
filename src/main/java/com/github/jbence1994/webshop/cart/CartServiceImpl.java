@@ -78,4 +78,14 @@ public class CartServiceImpl implements CartService {
 
         return cart;
     }
+
+    @Override
+    public Cart removeCouponFromCart(UUID cartId) {
+        var cart = cartQueryService.getCart(cartId);
+
+        cart.setAppliedCoupon(null);
+        cartRepository.save(cart);
+
+        return cart;
+    }
 }

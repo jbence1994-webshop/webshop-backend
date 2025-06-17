@@ -20,4 +20,6 @@ public interface CartService {
     void clearCart(UUID cartId);
 
     Cart applyCouponToCart(UUID cartId, Coupon coupon);
+
+    Cart removeCouponFromCart(UUID cartId);
 }
