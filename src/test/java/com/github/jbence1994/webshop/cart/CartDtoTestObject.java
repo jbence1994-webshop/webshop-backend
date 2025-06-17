@@ -9,18 +9,21 @@ import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 
 public final class CartDtoTestObject {
     public static CartDto cartDto() {
-        return new CartDto(
-                CART_ID,
-                List.of(cartItemDto()),
-                BigDecimal.valueOf(49.99)
-        );
+        return buildCartDto(List.of(cartItemDto()), BigDecimal.valueOf(49.99));
     }
 
     public static CartDto emptyCartDto() {
-        return new CartDto(
-                CART_ID,
-                new ArrayList<>(),
-                BigDecimal.ZERO
-        );
+        return buildCartDto(new ArrayList<>(), BigDecimal.ZERO);
+    }
+
+    public static CartDto cartDtoWithOneItemAndAppliedCoupon() {
+        return buildCartDto(List.of(cartItemDto()), BigDecimal.valueOf(49.99));
+    }
+
+    private static CartDto buildCartDto(
+            List<CartItemDto> cartItems,
+            BigDecimal totalPrice
+    ) {
+        return new CartDto(CART_ID, cartItems, null, totalPrice);
     }
 }
