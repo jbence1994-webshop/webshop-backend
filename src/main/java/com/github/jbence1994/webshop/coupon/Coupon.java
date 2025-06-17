@@ -4,7 +4,6 @@ import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -40,7 +39,7 @@ public class Coupon {
 
     private LocalDateTime expirationDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "user_coupons",
             joinColumns = @JoinColumn(name = "coupon_code", referencedColumnName = "code"),

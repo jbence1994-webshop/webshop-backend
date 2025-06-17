@@ -12,7 +12,8 @@ public final class CartTestObject {
         var cart = new Cart(
                 CART_ID,
                 CART_CREATED_AT,
-                new ArrayList<>()
+                new ArrayList<>(),
+                null
         );
         cart.addItem(product1());
         cart.addItem(product2());
@@ -23,7 +24,8 @@ public final class CartTestObject {
         var cart = new Cart(
                 CART_ID,
                 CART_CREATED_AT,
-                new ArrayList<>()
+                new ArrayList<>(),
+                null
         );
         cart.addItem(product2());
         return cart;
@@ -33,7 +35,8 @@ public final class CartTestObject {
         var cart = new Cart(
                 CART_ID,
                 CART_CREATED_AT,
-                new ArrayList<>()
+                new ArrayList<>(),
+                null
         );
         cart.addItem(product1());
         cart.addItem(product1());
@@ -45,7 +48,8 @@ public final class CartTestObject {
         return new Cart(
                 CART_ID,
                 CART_CREATED_AT,
-                new ArrayList<>()
+                new ArrayList<>(),
+                null
         );
     }
 }

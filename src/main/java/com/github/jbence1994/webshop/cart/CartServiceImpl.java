@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.cart;
 
+import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.product.ProductQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,5 +62,15 @@ public class CartServiceImpl implements CartService {
 
         cart.clear();
         cartRepository.save(cart);
+    }
+
+    @Override
+    public Cart applyCouponToCart(UUID cartId, Coupon coupon) {
+        var cart = cartQueryService.getCart(cartId);
+
+        cart.applyCoupon(coupon);
+        cartRepository.save(cart);
+
+        return cart;
     }
 }
