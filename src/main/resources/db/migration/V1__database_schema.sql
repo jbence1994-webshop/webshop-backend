@@ -90,6 +90,33 @@ CREATE TABLE IF NOT EXISTS addresses
             ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS coupons
+(
+    code            VARCHAR(25)    NOT NULL PRIMARY KEY,
+    type            VARCHAR(25)    NOT NULL,
+    value           DECIMAL(10, 2) NOT NULL,
+    description     VARCHAR(75)    NOT NULL,
+    expiration_date DATETIME       NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_coupons
+(
+    user_id     BIGINT      NOT NULL,
+    coupon_code VARCHAR(25) NOT NULL,
+    created_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    redeemed    TINYINT(1)  NOT NULL DEFAULT 0,
+    redeemed_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, coupon_code),
+    CONSTRAINT fk_user_coupons_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_user_coupons_coupons
+        FOREIGN KEY (coupon_code) REFERENCES coupons (code)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS orders
 (
     id          BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
