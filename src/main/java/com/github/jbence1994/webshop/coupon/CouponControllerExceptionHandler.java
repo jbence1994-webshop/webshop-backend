@@ -13,9 +13,4 @@ public class CouponControllerExceptionHandler {
     public ResponseEntity<ErrorDto> handleCouponNotFoundException(CouponNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
-
-    @ExceptionHandler(exception = CouponExpiredException.class)
-    public ResponseEntity<ErrorDto> handleCouponExpiredException(CouponExpiredException exception) {
-        return ResponseEntity.status(HttpStatus.GONE).body(new ErrorDto(exception.getMessage()));
-    }
 }
