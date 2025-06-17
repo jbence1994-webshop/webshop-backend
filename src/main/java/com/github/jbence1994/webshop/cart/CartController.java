@@ -32,12 +32,12 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartDto);
     }
 
-    @PostMapping("/{cartId}/items")
+    @PostMapping("/{id}/items")
     public ResponseEntity<CartItemDto> addProductToCart(
-            @PathVariable UUID cartId,
+            @PathVariable UUID id,
             @Valid @RequestBody AddItemToCartRequest request
     ) {
-        var cartItem = cartService.addProductToCart(cartId, request.getProductId());
+        var cartItem = cartService.addProductToCart(id, request.getProductId());
 
         var cartItemDto = cartMapper.toDto(cartItem);
 
@@ -81,5 +81,22 @@ public class CartController {
         cartService.clearCart(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/coupon")
+    public CartDto applyCouponToCart(
+            @PathVariable UUID id,
+            @Valid @RequestBody ApplyCouponToCartRequest request
+    ) {
+        var cart = cartService.applyCouponToCart(id, request.getCouponCode());
+
+        return cartMapper.toDto(cart);
+    }
+
+    @DeleteMapping("/{id}/coupon")
+    public CartDto removeCouponFromCart(@PathVariable UUID id) {
+        var cart = cartService.removeCouponFromCart(id);
+
+        return cartMapper.toDto(cart);
     }
 }

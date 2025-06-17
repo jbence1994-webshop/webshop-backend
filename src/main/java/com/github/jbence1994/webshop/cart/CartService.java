@@ -1,13 +1,11 @@
 package com.github.jbence1994.webshop.cart;
 
-import com.github.jbence1994.webshop.coupon.Coupon;
-
 import java.util.UUID;
 
 public interface CartService {
     Cart createCart();
 
-    CartItem addProductToCart(UUID cartId, Long productId);
+    CartItem addProductToCart(UUID id, Long productId);
 
     CartItem updateCartItem(
             UUID cartId,
@@ -19,7 +17,7 @@ public interface CartService {
 
     void clearCart(UUID cartId);
 
-    Cart applyCouponToCart(UUID cartId, Coupon coupon);
+    Cart applyCouponToCart(UUID id, String couponCode);
 
-    Cart removeCouponFromCart(UUID cartId);
+    Cart removeCouponFromCart(UUID id);
 }
