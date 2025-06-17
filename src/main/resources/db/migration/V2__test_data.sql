@@ -40,7 +40,7 @@ SET @userId := (SELECT id
 INSERT INTO profiles (user_id, first_name, middle_name, last_name, date_of_birth, phone_number)
 VALUES (@userId, 'Bence', 'Zsolt', 'Juhász', '1994-03-27', '+36501323566');
 
-SET @profileId := (SELECT profiles.user_id
+SET @profileId := (SELECT user_id
                    FROM profiles
                    WHERE user_id = @userId);
 
