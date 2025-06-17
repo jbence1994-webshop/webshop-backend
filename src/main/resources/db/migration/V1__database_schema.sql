@@ -92,11 +92,11 @@ CREATE TABLE IF NOT EXISTS addresses
 
 CREATE TABLE IF NOT EXISTS orders
 (
-    id             BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    customer_id    BIGINT         NOT NULL,
-    total_price    DECIMAL(10, 2) NOT NULL,
-    payment_status VARCHAR(20)    NOT NULL,
-    created_at     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id          BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    customer_id BIGINT         NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
+    status      VARCHAR(20)    NOT NULL,
+    created_at  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_orders_users
         FOREIGN KEY (customer_id) REFERENCES users (id)
             ON DELETE CASCADE
