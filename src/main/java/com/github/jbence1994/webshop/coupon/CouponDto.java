@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Setter
 public class CouponDto {
     private String code;
-
-    private BigDecimal amount;
-
+    private String type;
+    private BigDecimal value;
+    private String description;
     private LocalDateTime expirationDate;
 }

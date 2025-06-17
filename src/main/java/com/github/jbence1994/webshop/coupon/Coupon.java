@@ -2,6 +2,8 @@ package com.github.jbence1994.webshop.coupon;
 
 import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -29,7 +31,12 @@ public class Coupon {
     @Id
     private String code;
 
-    private BigDecimal amount;
+    @Enumerated(EnumType.STRING)
+    private DiscountType type;
+
+    private BigDecimal value;
+
+    private String description;
 
     private LocalDateTime expirationDate;
 
