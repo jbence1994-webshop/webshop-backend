@@ -9,8 +9,8 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.expiredCoupon;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.notExpiredCoupon;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon1;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon3;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +29,7 @@ public class CouponQueryServiceImplTests {
 
     @Test
     public void getCouponsTest() {
-        when(couponRepository.findAll(any(Sort.class))).thenReturn(List.of(notExpiredCoupon(), expiredCoupon()));
+        when(couponRepository.findAll(any(Sort.class))).thenReturn(List.of(coupon1(), coupon3()));
 
         var result = couponService.getCoupons();
 
@@ -40,7 +40,7 @@ public class CouponQueryServiceImplTests {
 
     @Test
     public void getCouponsByUserTest() {
-        when(couponRepository.getCouponsByUser(any())).thenReturn(List.of(notExpiredCoupon(), expiredCoupon()));
+        when(couponRepository.getCouponsByUser(any())).thenReturn(List.of(coupon1(), coupon3()));
 
         var result = couponService.getCouponsByUser(any());
 

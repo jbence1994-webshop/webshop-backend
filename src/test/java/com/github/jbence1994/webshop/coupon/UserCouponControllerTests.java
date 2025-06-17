@@ -9,8 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.github.jbence1994.webshop.coupon.CouponDtoTestObject.notExpiredCouponDto;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.notExpiredCoupon;
+import static com.github.jbence1994.webshop.coupon.CouponDtoTestObject.couponDto1;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon1;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserCouponsControllerTests {
+public class UserCouponControllerTests {
 
     @Mock
     private UserQueryService userQueryService;
@@ -32,15 +32,15 @@ public class UserCouponsControllerTests {
     private CouponMapper couponMapper;
 
     @InjectMocks
-    private UserCouponsController userCouponsController;
+    private UserCouponController userCouponController;
 
     @Test
     public void getCouponsTest() {
         when(userQueryService.getUser(any())).thenReturn(user());
-        when(couponQueryService.getCouponsByUser(any())).thenReturn(List.of(notExpiredCoupon()));
-        when(couponMapper.toDto(any())).thenReturn(notExpiredCouponDto());
+        when(couponQueryService.getCouponsByUser(any())).thenReturn(List.of(coupon1()));
+        when(couponMapper.toDto(any())).thenReturn(couponDto1());
 
-        var result = userCouponsController.getCoupons(1L);
+        var result = userCouponController.getCoupons(1L);
 
         assertThat(result.size(), equalTo(1));
 
