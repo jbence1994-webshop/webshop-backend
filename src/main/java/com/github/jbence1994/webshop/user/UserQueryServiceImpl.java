@@ -14,11 +14,4 @@ public class UserQueryServiceImpl implements UserQueryService {
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
-
-    @Override
-    public void verifyUserExists(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
-    }
 }

@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    // TODO: Later add option to change password when User is not logged in: e.g.: forgot password scenario.
     @Override
     public void changePassword(Long userId, String oldPassword, String newPassword) {
         var user = userQueryService.getUser(userId);

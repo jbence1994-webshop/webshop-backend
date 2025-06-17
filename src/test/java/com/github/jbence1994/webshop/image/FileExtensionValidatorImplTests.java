@@ -17,11 +17,10 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.BMP;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.JPG;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PNG;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.bmpUploadImage;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.jpegUploadImage;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.jpgUploadImage;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.pngUploadImage;
-import static com.github.jbence1994.webshop.image.UploadImageTestObject.tiffUploadImage;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.bmpImageUpload;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpegImageUpload;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.pngImageUpload;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.tiffImageUpload;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -39,10 +38,10 @@ public class FileExtensionValidatorImplTests {
 
     private static Stream<Arguments> uploadImageParams() {
         return Stream.of(
-                Arguments.of(JPEG, jpegUploadImage()),
-                Arguments.of(JPG, jpgUploadImage()),
-                Arguments.of(PNG, pngUploadImage()),
-                Arguments.of(BMP, bmpUploadImage())
+                Arguments.of(JPEG, jpegImageUpload()),
+                Arguments.of(JPG, jpegImageUpload()),
+                Arguments.of(PNG, pngImageUpload()),
+                Arguments.of(BMP, bmpImageUpload())
         );
     }
 
@@ -55,16 +54,16 @@ public class FileExtensionValidatorImplTests {
     @MethodSource("uploadImageParams")
     public void validateTests_HappyPath(
             String testCase,
-            UploadImage uploadImage
+            ImageUpload image
     ) {
-        assertDoesNotThrow(() -> fileExtensionValidator.validate(uploadImage));
+        assertDoesNotThrow(() -> fileExtensionValidator.validate(image));
     }
 
     @Test
     public void validateTest_UnhappyPath_InvalidFileExtensionException() {
         var result = assertThrows(
                 InvalidFileExtensionException.class,
-                () -> fileExtensionValidator.validate(tiffUploadImage()));
+                () -> fileExtensionValidator.validate(tiffImageUpload()));
 
         assertThat(result.getMessage(), equalTo("Invalid file extension: .tiff"));
     }

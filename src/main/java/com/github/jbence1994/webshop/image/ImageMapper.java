@@ -14,7 +14,7 @@ import java.util.List;
 public interface ImageMapper {
 
     @Mapping(target = "inputStreamBytes", expression = "java(getBytes(file))")
-    UploadImage toUploadImage(MultipartFile file);
+    ImageUpload toImageUpload(MultipartFile file);
 
     default byte[] getBytes(MultipartFile file) {
         try {

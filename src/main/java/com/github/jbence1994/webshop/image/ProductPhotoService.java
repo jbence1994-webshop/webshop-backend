@@ -16,18 +16,18 @@ public class ProductPhotoService implements ImageService {
     private final FileUtils fileUtils;
 
     @Override
-    public String uploadImage(Long productId, UploadImage uploadImage) {
+    public String uploadImage(Long productId, ImageUpload image) {
         try {
-            fileExtensionValidator.validate(uploadImage);
+            fileExtensionValidator.validate(image);
 
             var product = productQueryService.getProduct(productId);
 
-            var fileName = fileNameGenerator.generate(uploadImage.getFileExtension());
+            var fileName = fileNameGenerator.generate(image.getFileExtension());
 
             fileUtils.store(
                     productPhotosUploadDirectoryConfig.getPath(),
                     fileName,
-                    uploadImage.getInputStream()
+                    image.getInputStream()
             );
 
             product.addPhoto(fileName);
