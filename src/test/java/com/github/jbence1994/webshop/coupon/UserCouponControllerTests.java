@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserCouponsControllerTests {
+public class UserCouponControllerTests {
 
     @Mock
     private UserQueryService userQueryService;
@@ -32,7 +32,7 @@ public class UserCouponsControllerTests {
     private CouponMapper couponMapper;
 
     @InjectMocks
-    private UserCouponsController userCouponsController;
+    private UserCouponController userCouponController;
 
     @Test
     public void getCouponsTest() {
@@ -40,7 +40,7 @@ public class UserCouponsControllerTests {
         when(couponQueryService.getCouponsByUser(any())).thenReturn(List.of(coupon1()));
         when(couponMapper.toDto(any())).thenReturn(couponDto1());
 
-        var result = userCouponsController.getCoupons(1L);
+        var result = userCouponController.getCoupons(1L);
 
         assertThat(result.size(), equalTo(1));
 
