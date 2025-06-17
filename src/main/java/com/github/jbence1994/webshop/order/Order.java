@@ -47,7 +47,6 @@ public class Order {
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
-    // TODO: When one specific order is get by it's id 'items' can be an EAGER fetch.
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> items;
 }
