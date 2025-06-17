@@ -28,7 +28,8 @@ public final class UserTestObject {
                 password,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                profile
+                profile,
+                null
         );
     }
 }

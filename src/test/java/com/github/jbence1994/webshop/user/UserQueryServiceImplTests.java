@@ -54,4 +54,23 @@ public class UserQueryServiceImplTests {
 
         assertThat(result.getMessage(), equalTo("No user was found with the given ID: #1."));
     }
+
+    @Test
+    public void verifyUserExistsTest_HappyPath() {
+        when(userRepository.existsById(any())).thenReturn(true);
+
+        assertDoesNotThrow(() -> userQueryService.verifyUserExists(1L));
+    }
+
+    @Test
+    public void verifyUserExistsTest_UnhappyPath_UserNotFoundException() {
+        when(userRepository.existsById(any())).thenReturn(false);
+
+        var result = assertThrows(
+                UserNotFoundException.class,
+                () -> userQueryService.verifyUserExists(1L)
+        );
+
+        assertThat(result.getMessage(), equalTo("No user was found with the given ID: #1."));
+    }
 }
