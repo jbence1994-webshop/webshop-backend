@@ -18,8 +18,8 @@ import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,7 +39,7 @@ public class Cart {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartItem> items = new HashSet<>();
+    private List<CartItem> items = new ArrayList<>();
 
     public BigDecimal calculateTotalPrice() {
         return items.stream()

@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.cart;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_CREATED_AT;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
@@ -12,7 +12,7 @@ public final class CartTestObject {
         var cart = new Cart(
                 CART_ID,
                 CART_CREATED_AT,
-                new HashSet<>()
+                new ArrayList<>()
         );
         cart.addItem(product1());
         cart.addItem(product2());
@@ -23,7 +23,7 @@ public final class CartTestObject {
         var cart = new Cart(
                 CART_ID,
                 CART_CREATED_AT,
-                new HashSet<>()
+                new ArrayList<>()
         );
         cart.addItem(product2());
         return cart;
@@ -33,7 +33,7 @@ public final class CartTestObject {
         var cart = new Cart(
                 CART_ID,
                 CART_CREATED_AT,
-                new HashSet<>()
+                new ArrayList<>()
         );
         cart.addItem(product1());
         cart.addItem(product1());
@@ -45,7 +45,7 @@ public final class CartTestObject {
         return new Cart(
                 CART_ID,
                 CART_CREATED_AT,
-                new HashSet<>()
+                new ArrayList<>()
         );
     }
 }
