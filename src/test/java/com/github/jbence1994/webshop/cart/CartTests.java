@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
@@ -26,18 +28,26 @@ public class CartTests {
     private final Cart cart = cartWithTwoItems();
     private final Cart emptyCart = emptyCart();
 
-    private static Stream<Arguments> cartParams() {
+    private static Stream<Arguments> cartEmptyCheckParams() {
         return Stream.of(
                 Arguments.of("Cart is not empty", cartWithTwoItems(), false),
                 Arguments.of("Cart is empty", emptyCart(), true)
         );
     }
 
-    @Test
-    public void calculateTotalPriceTest() {
-        var result = cart.calculateTotalPrice();
+    private static Stream<Arguments> cartHasCouponAppliedParams() {
+        return Stream.of(
+                Arguments.of("Cart has coupon applied", cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(), true),
+                Arguments.of("Cart does not have a coupon applied", cartWithTwoItems(), false)
+        );
+    }
 
-        assertThat(result, equalTo(BigDecimal.valueOf(139.98)));
+    private static Stream<Arguments> cartTotalPriceCalculationParams() {
+        return Stream.of(
+                Arguments.of("Without applied coupon", cartWithTwoItems(), BigDecimal.valueOf(139.98)),
+                Arguments.of("With fixed amount type of applied coupon", cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(), BigDecimal.valueOf(134.98)),
+                Arguments.of("With percent off type of applied coupon", cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(), BigDecimal.valueOf(125.98))
+        );
     }
 
     @Test
@@ -91,6 +101,18 @@ public class CartTests {
         assertThat(emptyCart.getItems(), is(empty()));
     }
 
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("cartHasCouponAppliedParams")
+    public void hasCouponAppliedTests(
+            String testCase,
+            Cart cart,
+            boolean expectedResult
+    ) {
+        var result = cart.hasCouponApplied();
+
+        assertThat(result, is(expectedResult));
+    }
+
     @Test
     public void clearTest_HappyPath_CartIsEmpty() {
         cart.clear();
@@ -99,7 +121,7 @@ public class CartTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("cartParams")
+    @MethodSource("cartEmptyCheckParams")
     public void isEmptyTests(
             String testCase,
             Cart cart,
@@ -108,5 +130,19 @@ public class CartTests {
         var result = cart.isEmpty();
 
         assertThat(result, is(expectedResult));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("cartTotalPriceCalculationParams")
+    public void calculateTotalPriceTests(
+            String testCase,
+            Cart cart,
+            BigDecimal expectedResult
+    ) {
+        var priceAdjustmentStrategyFactory = new PriceAdjustmentStrategyFactory();
+
+        var result = cart.calculateTotalPrice(priceAdjustmentStrategyFactory);
+
+        assertThat(result, equalTo(expectedResult));
     }
 }
