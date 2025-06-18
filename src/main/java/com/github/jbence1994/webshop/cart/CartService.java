@@ -5,7 +5,7 @@ import java.util.UUID;
 public interface CartService {
     Cart createCart();
 
-    CartItem addProductToCart(UUID cartId, Long productId);
+    CartItem addProductToCart(UUID id, Long productId);
 
     CartItem updateCartItem(
             UUID cartId,
@@ -16,4 +16,8 @@ public interface CartService {
     void deleteCartItem(UUID cartId, Long productId);
 
     void clearCart(UUID cartId);
+
+    Cart applyCouponToCart(UUID id, String couponCode);
+
+    Cart removeCouponFromCart(UUID id);
 }

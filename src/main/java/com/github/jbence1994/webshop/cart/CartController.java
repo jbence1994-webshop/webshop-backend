@@ -22,6 +22,7 @@ public class CartController {
     private final CartQueryService cartQueryService;
     private final CartService cartService;
     private final CartMapper cartMapper;
+    private final CartDtoEnricher cartDtoEnricher;
 
     @PostMapping
     public ResponseEntity<CartDto> createCart() {
@@ -29,15 +30,15 @@ public class CartController {
 
         var cartDto = cartMapper.toDto(cart);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartDtoEnricher.enrich(cartDto, cart));
     }
 
-    @PostMapping("/{cartId}/items")
+    @PostMapping("/{id}/items")
     public ResponseEntity<CartItemDto> addProductToCart(
-            @PathVariable UUID cartId,
+            @PathVariable UUID id,
             @Valid @RequestBody AddItemToCartRequest request
     ) {
-        var cartItem = cartService.addProductToCart(cartId, request.getProductId());
+        var cartItem = cartService.addProductToCart(id, request.getProductId());
 
         var cartItemDto = cartMapper.toDto(cartItem);
 
@@ -48,7 +49,9 @@ public class CartController {
     public CartDto getCart(@PathVariable UUID id) {
         var cart = cartQueryService.getCart(id);
 
-        return cartMapper.toDto(cart);
+        var cartDto = cartMapper.toDto(cart);
+
+        return cartDtoEnricher.enrich(cartDto, cart);
     }
 
     @PutMapping("/{cartId}/items/{productId}")
@@ -81,5 +84,26 @@ public class CartController {
         cartService.clearCart(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/coupon")
+    public CartDto applyCouponToCart(
+            @PathVariable UUID id,
+            @Valid @RequestBody ApplyCouponToCartRequest request
+    ) {
+        var cart = cartService.applyCouponToCart(id, request.getCouponCode());
+
+        var cartDto = cartMapper.toDto(cart);
+
+        return cartDtoEnricher.enrich(cartDto, cart);
+    }
+
+    @DeleteMapping("/{id}/coupon")
+    public CartDto removeCouponFromCart(@PathVariable UUID id) {
+        var cart = cartService.removeCouponFromCart(id);
+
+        var cartDto = cartMapper.toDto(cart);
+
+        return cartDtoEnricher.enrich(cartDto, cart);
     }
 }
