@@ -93,20 +93,17 @@ public class Cart {
         return items.isEmpty();
     }
 
-    public BigDecimal calculateTotalPrice(PriceAdjustmentStrategyFactory factory) {
-        var totalPrice = calculateTotalPrice();
+    public BigDecimal calculateTotalPrice(PriceAdjustmentStrategyFactory priceAdjustmentStrategyFactory) {
+        var totalPrice = items.stream()
+                .map(CartItem::calculateTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (!hasCouponApplied()) {
             return totalPrice;
         }
 
-        var strategy = factory.getPriceAdjustmentStrategy(appliedCoupon.getType());
-        return strategy.adjustPrice(totalPrice, appliedCoupon.getValue());
-    }
-
-    private BigDecimal calculateTotalPrice() {
-        return items.stream()
-                .map(CartItem::calculateTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return priceAdjustmentStrategyFactory
+                .getPriceAdjustmentStrategy(appliedCoupon.getType())
+                .adjustPrice(totalPrice, appliedCoupon.getValue());
     }
 }

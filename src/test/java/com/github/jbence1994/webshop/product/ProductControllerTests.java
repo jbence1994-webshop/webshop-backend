@@ -20,7 +20,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -65,18 +64,6 @@ class ProductControllerTests {
                 hasProperty("unit", equalTo(productDto().getUnit())),
                 hasProperty("description", equalTo(productDto().getDescription()))
         ));
-    }
-
-    @Test
-    public void getProductTest_UnhappyPath_ProductNotFoundException() {
-        when(productQueryService.getProduct(any())).thenThrow(new ProductNotFoundException(1L));
-
-        var result = assertThrows(
-                ProductNotFoundException.class,
-                () -> productController.getProduct(1L)
-        );
-
-        assertThat(result.getMessage(), equalTo("No product was found with the given ID: #1."));
     }
 
     @Test

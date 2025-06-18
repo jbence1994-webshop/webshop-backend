@@ -2,7 +2,7 @@ package com.github.jbence1994.webshop.common;
 
 import org.springframework.validation.FieldError;
 
-public class FieldErrorTestObject {
+public final class FieldErrorTestObject {
     public static FieldError fieldError() {
         return new FieldError(
                 "CreateProductDto",

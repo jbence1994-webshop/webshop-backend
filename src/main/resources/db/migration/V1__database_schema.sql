@@ -122,3 +122,34 @@ CREATE TABLE IF NOT EXISTS cart_items
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS orders
+(
+    id          BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    customer_id BIGINT         NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
+    status      VARCHAR(20)    NOT NULL,
+    created_at  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_orders_users
+        FOREIGN KEY (customer_id) REFERENCES users (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS order_items
+(
+    id          BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    order_id    BIGINT         NOT NULL,
+    product_id  BIGINT         NOT NULL,
+    unit_price  DECIMAL(10, 2) NOT NULL,
+    quantity    INT            NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT fk_order_items_orders
+        FOREIGN KEY (order_id) REFERENCES orders (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_order_items_products
+        FOREIGN KEY (product_id) REFERENCES products (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
