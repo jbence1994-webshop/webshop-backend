@@ -103,11 +103,12 @@ public class Cart {
             return totalPrice;
         }
 
-        var strategy = priceAdjustmentStrategyFactory.getPriceAdjustmentStrategy(appliedCoupon.getType());
-        return strategy.adjustPrice(totalPrice, appliedCoupon.getValue());
+        return priceAdjustmentStrategyFactory
+                .getPriceAdjustmentStrategy(appliedCoupon.getType())
+                .adjustPrice(totalPrice, appliedCoupon.getValue());
     }
 
-    public List<OrderItem> fromCartItemsToOrderItems() {
+    public List<OrderItem> fromCartItems() {
         var orderItems = new ArrayList<OrderItem>();
 
         items.forEach(item -> {
