@@ -20,8 +20,8 @@ import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -49,5 +49,5 @@ public class Order {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderItem> items = new LinkedHashSet<>();
+    private List<OrderItem> items = new ArrayList<>();
 }
