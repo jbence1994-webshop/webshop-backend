@@ -79,7 +79,7 @@ public class ProductQueryServiceImplTests {
     }
 
     @Test
-    public void getProductTest_UnhappyPath() {
+    public void getProductTest_UnhappyPath_ProductNotFoundException() {
         when(productRepository.findById(any())).thenReturn(Optional.empty());
 
         var result = assertThrows(

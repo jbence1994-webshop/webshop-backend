@@ -2,7 +2,7 @@ package com.github.jbence1994.webshop.common;
 
 import org.springframework.validation.ObjectError;
 
-public class ObjectErrorTestObject {
+public final class ObjectErrorTestObject {
     public static ObjectError objectError1() {
         return new ObjectError(
                 "registerUserRequest",
