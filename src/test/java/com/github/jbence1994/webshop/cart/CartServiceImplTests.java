@@ -1,20 +1,26 @@
 package com.github.jbence1994.webshop.cart;
 
+import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.coupon.CouponExpiredException;
 import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.product.ProductQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItemAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.CartTestObject.updatedCart;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
@@ -50,6 +56,25 @@ public class CartServiceImplTests {
 
     @InjectMocks
     private CartServiceImpl cartService;
+
+    private static Stream<Arguments> applyCouponToCartUnhappyPathParams() {
+        return Stream.of(
+                Arguments.of(
+                        "CartIsEmptyException",
+                        emptyCart(),
+                        coupon1(),
+                        CartIsEmptyException.class,
+                        "Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."
+                ),
+                Arguments.of(
+                        "CouponExpiredException",
+                        cartWithOneItem(),
+                        coupon3(),
+                        CouponExpiredException.class,
+                        "Coupon with the given code 'SPRING15' has expired."
+                )
+        );
+    }
 
     @Test
     public void createCartTest() {
@@ -104,7 +129,7 @@ public class CartServiceImplTests {
     public void applyCouponToCartTest_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(couponQueryService.getCoupon(any())).thenReturn(coupon1());
-        when(cartRepository.save(any())).thenReturn(cartWithOneItemAndPercentOffTypeOfAppliedCoupon());
+        when(cartRepository.save(any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
 
         assertDoesNotThrow(() -> cartService.applyCouponToCart(CART_ID, COUPON_1_CODE));
 
@@ -113,17 +138,24 @@ public class CartServiceImplTests {
         verify(cartRepository, times(1)).save(any());
     }
 
-    @Test
-    public void applyCouponToCartTest_UnhappyPath_CouponExpiredException() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-        when(couponQueryService.getCoupon(any())).thenReturn(coupon3());
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("applyCouponToCartUnhappyPathParams")
+    public void applyCouponToCartTest_UnhappyPaths(
+            String testCase,
+            Cart cart,
+            Coupon coupon,
+            Class<RuntimeException> expectedException,
+            String expectedExceptionMessage
+    ) {
+        when(cartQueryService.getCart(any())).thenReturn(cart);
+        when(couponQueryService.getCoupon(any())).thenReturn(coupon);
 
         var result = assertThrows(
-                CouponExpiredException.class,
+                expectedException,
                 () -> cartService.applyCouponToCart(CART_ID, COUPON_1_CODE)
         );
 
-        assertThat(result.getMessage(), equalTo("Coupon with the given code 'SPRING15' has expired."));
+        assertThat(result.getMessage(), equalTo(expectedExceptionMessage));
 
         verify(cartQueryService, times(1)).getCart(any());
         verify(couponQueryService, times(1)).getCoupon(any());
@@ -132,7 +164,7 @@ public class CartServiceImplTests {
 
     @Test
     public void removeCouponFromCartTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItemAndPercentOffTypeOfAppliedCoupon());
+        when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
         when(cartRepository.save(any())).thenReturn(cartWithTwoItems());
 
         assertDoesNotThrow(() -> cartService.removeCouponFromCart(CART_ID));

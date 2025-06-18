@@ -35,16 +35,18 @@ public final class CartTestObject {
         return buildCart();
     }
 
-    public static Cart cartWithOneItemAndFixedAmountTypeOfAppliedCoupon() {
+    public static Cart cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon() {
         var cart = buildCart();
         cart.addItem(product1());
+        cart.addItem(product2());
         cart.setAppliedCoupon(coupon2());
         return cart;
     }
 
-    public static Cart cartWithOneItemAndPercentOffTypeOfAppliedCoupon() {
+    public static Cart cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon() {
         var cart = buildCart();
         cart.addItem(product1());
+        cart.addItem(product2());
         cart.setAppliedCoupon(coupon1());
         return cart;
     }

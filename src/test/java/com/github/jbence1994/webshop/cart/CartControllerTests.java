@@ -18,7 +18,7 @@ import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItemAndPercentOffTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -128,7 +128,7 @@ public class CartControllerTests {
 
     @Test
     public void applyCouponToCartTest() {
-        when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithOneItemAndPercentOffTypeOfAppliedCoupon());
+        when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon());
 
         var result = cartController.applyCouponToCart(CART_ID, applyCouponToCartRequest());
