@@ -32,6 +32,11 @@ public class CartControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
+    @ExceptionHandler(exception = CartIsEmptyException.class)
+    public ResponseEntity<ErrorDto> handleCartIsEmptyException(CartIsEmptyException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
+    }
+
     @ExceptionHandler(exception = CouponExpiredException.class)
     public ResponseEntity<ErrorDto> handleCouponExpiredException(CouponExpiredException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));

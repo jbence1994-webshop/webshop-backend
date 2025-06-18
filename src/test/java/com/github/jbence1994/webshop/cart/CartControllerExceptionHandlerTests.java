@@ -60,6 +60,15 @@ public class CartControllerExceptionHandlerTests {
     }
 
     @Test
+    public void handleCartIsEmptyExceptionTest() {
+        var result = cartControllerExceptionHandler.handleCartIsEmptyException(new CartIsEmptyException(CART_ID));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
+    }
+
+    @Test
     public void handleCouponExpiredExceptionTest() {
         var result = cartControllerExceptionHandler.handleCouponExpiredException(new CouponExpiredException(COUPON_3_CODE));
 
