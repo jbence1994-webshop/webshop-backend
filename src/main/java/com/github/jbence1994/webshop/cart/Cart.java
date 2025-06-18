@@ -20,7 +20,6 @@ import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,32 +93,20 @@ public class Cart {
         return items.isEmpty();
     }
 
-    public BigDecimal calculateTotalPrice() {
-        var totalPrice = items.stream()
-                .map(CartItem::calculateTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    public BigDecimal calculateTotalPrice(PriceAdjustmentStrategyFactory factory) {
+        var totalPrice = calculateTotalPrice();
 
         if (!hasCouponApplied()) {
             return totalPrice;
         }
 
-        return switch (appliedCoupon.getType()) {
-            case FIXED_AMOUNT -> calculateFixedAmountDiscount(totalPrice);
-            case PERCENT_OFF -> calculatePercentOffDiscount(totalPrice);
-            case BUY_ONE_GET_ONE -> throw new RuntimeException("BUY_ONE_GET_ONE currently not supported.");
-            case FREE_SHIPPING -> throw new RuntimeException("FREE_SHIPPING currently not supported.");
-        };
+        var strategy = factory.getPriceAdjustmentStrategy(appliedCoupon.getType());
+        return strategy.adjustPrice(totalPrice, appliedCoupon.getValue());
     }
 
-    private BigDecimal calculateFixedAmountDiscount(BigDecimal totalPrice) {
-        return totalPrice.subtract(appliedCoupon.getValue()).max(BigDecimal.ZERO);
-    }
-
-    private BigDecimal calculatePercentOffDiscount(BigDecimal totalPrice) {
-        var discountValue = totalPrice
-                .multiply(appliedCoupon.getValue())
-                .setScale(2, RoundingMode.UP);
-
-        return totalPrice.subtract(discountValue);
+    private BigDecimal calculateTotalPrice() {
+        return items.stream()
+                .map(CartItem::calculateTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

@@ -139,7 +139,9 @@ public class CartTests {
             Cart cart,
             BigDecimal expectedResult
     ) {
-        var result = cart.calculateTotalPrice();
+        var priceAdjustmentStrategyFactory = new PriceAdjustmentStrategyFactory();
+
+        var result = cart.calculateTotalPrice(priceAdjustmentStrategyFactory);
 
         assertThat(result, equalTo(expectedResult));
     }

@@ -22,6 +22,7 @@ public class CartController {
     private final CartQueryService cartQueryService;
     private final CartService cartService;
     private final CartMapper cartMapper;
+    private final CartDtoEnricher cartDtoEnricher;
 
     @PostMapping
     public ResponseEntity<CartDto> createCart() {
@@ -29,7 +30,7 @@ public class CartController {
 
         var cartDto = cartMapper.toDto(cart);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartDtoEnricher.enrich(cartDto, cart));
     }
 
     @PostMapping("/{id}/items")
@@ -48,7 +49,9 @@ public class CartController {
     public CartDto getCart(@PathVariable UUID id) {
         var cart = cartQueryService.getCart(id);
 
-        return cartMapper.toDto(cart);
+        var cartDto = cartMapper.toDto(cart);
+
+        return cartDtoEnricher.enrich(cartDto, cart);
     }
 
     @PutMapping("/{cartId}/items/{productId}")
@@ -90,13 +93,17 @@ public class CartController {
     ) {
         var cart = cartService.applyCouponToCart(id, request.getCouponCode());
 
-        return cartMapper.toDto(cart);
+        var cartDto = cartMapper.toDto(cart);
+
+        return cartDtoEnricher.enrich(cartDto, cart);
     }
 
     @DeleteMapping("/{id}/coupon")
     public CartDto removeCouponFromCart(@PathVariable UUID id) {
         var cart = cartService.removeCouponFromCart(id);
 
-        return cartMapper.toDto(cart);
+        var cartDto = cartMapper.toDto(cart);
+
+        return cartDtoEnricher.enrich(cartDto, cart);
     }
 }
