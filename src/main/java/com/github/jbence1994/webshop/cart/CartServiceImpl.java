@@ -1,5 +1,7 @@
 package com.github.jbence1994.webshop.cart;
 
+import com.github.jbence1994.webshop.coupon.CouponExpiredException;
+import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.product.ProductQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import java.util.UUID;
 public class CartServiceImpl implements CartService {
     private final CartQueryService cartQueryService;
     private final ProductQueryService productQueryService;
+    private final CouponQueryService couponQueryService;
     private final CartRepository cartRepository;
 
     @Override
@@ -22,8 +25,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem addProductToCart(UUID cartId, Long productId) {
-        var cart = cartQueryService.getCart(cartId);
+    public CartItem addProductToCart(UUID id, Long productId) {
+        var cart = cartQueryService.getCart(id);
         var product = productQueryService.getProduct(productId);
 
         var cartItem = cart.addItem(product);
@@ -61,5 +64,34 @@ public class CartServiceImpl implements CartService {
 
         cart.clear();
         cartRepository.save(cart);
+    }
+
+    @Override
+    public Cart applyCouponToCart(UUID id, String couponCode) {
+        var cart = cartQueryService.getCart(id);
+        var coupon = couponQueryService.getCoupon(couponCode);
+
+        if (cart.isEmpty()) {
+            throw new CartIsEmptyException(id);
+        }
+
+        if (coupon.isExpired()) {
+            throw new CouponExpiredException(coupon.getCode());
+        }
+
+        cart.setAppliedCoupon(coupon);
+        cartRepository.save(cart);
+
+        return cart;
+    }
+
+    @Override
+    public Cart removeCouponFromCart(UUID id) {
+        var cart = cartQueryService.getCart(id);
+
+        cart.setAppliedCoupon(null);
+        cartRepository.save(cart);
+
+        return cart;
     }
 }
