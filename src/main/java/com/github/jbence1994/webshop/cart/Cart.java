@@ -93,14 +93,14 @@ public class Cart {
         return items.isEmpty();
     }
 
-    public BigDecimal calculateTotalPrice(PriceAdjustmentStrategyFactory factory) {
+    public BigDecimal calculateTotalPrice(PriceAdjustmentStrategyFactory priceAdjustmentStrategyFactory) {
         var totalPrice = calculateTotalPrice();
 
         if (!hasCouponApplied()) {
             return totalPrice;
         }
 
-        var strategy = factory.getPriceAdjustmentStrategy(appliedCoupon.getType());
+        var strategy = priceAdjustmentStrategyFactory.getPriceAdjustmentStrategy(appliedCoupon.getType());
         return strategy.adjustPrice(totalPrice, appliedCoupon.getValue());
     }
 
