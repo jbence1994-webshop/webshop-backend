@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.order.OrderItem;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -94,7 +95,9 @@ public class Cart {
     }
 
     public BigDecimal calculateTotalPrice(PriceAdjustmentStrategyFactory priceAdjustmentStrategyFactory) {
-        var totalPrice = calculateTotalPrice();
+        var totalPrice = items.stream()
+                .map(CartItem::calculateTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (!hasCouponApplied()) {
             return totalPrice;
@@ -104,9 +107,16 @@ public class Cart {
         return strategy.adjustPrice(totalPrice, appliedCoupon.getValue());
     }
 
-    private BigDecimal calculateTotalPrice() {
-        return items.stream()
-                .map(CartItem::calculateTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    public List<OrderItem> fromCartItemsToOrderItems() {
+        var orderItems = new ArrayList<OrderItem>();
+
+        items.forEach(item -> {
+            var orderItem = new OrderItem();
+            orderItem.setProduct(item.getProduct());
+            orderItem.setQuantity(item.getQuantity());
+            orderItems.add(orderItem);
+        });
+
+        return orderItems;
     }
 }
