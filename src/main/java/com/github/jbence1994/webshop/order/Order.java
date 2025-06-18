@@ -1,7 +1,5 @@
 package com.github.jbence1994.webshop.order;
 
-import com.github.jbence1994.webshop.cart.Cart;
-import com.github.jbence1994.webshop.cart.PriceAdjustmentStrategyFactory;
 import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -51,29 +49,4 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
-
-    public static Order fromCart(
-            Cart cart,
-            User customer,
-            PriceAdjustmentStrategyFactory priceAdjustmentStrategyFactory
-    ) {
-        var order = new Order();
-        order.setCustomer(customer);
-        order.setStatus(PaymentStatus.PENDING);
-        order.setTotalPrice(cart.calculateTotalPrice(priceAdjustmentStrategyFactory));
-
-        var orderItems = cart.fromCartItems();
-
-        orderItems.forEach(item -> {
-                    item.setOrder(order);
-                    order.items.add(item);
-                }
-        );
-
-        return order;
-    }
-
-    public boolean isPlacedBy(User customer) {
-        return this.customer.equals(customer);
-    }
 }

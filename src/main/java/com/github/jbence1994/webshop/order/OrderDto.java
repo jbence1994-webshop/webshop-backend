@@ -15,8 +15,8 @@ import java.util.List;
 @Setter
 public class OrderDto {
     private Long id;
-    private String status;
     private BigDecimal totalPrice;
+    private String status;
     private LocalDateTime createdAt;
     private List<OrderItemDto> items;
 }
