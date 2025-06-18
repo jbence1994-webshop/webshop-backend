@@ -16,7 +16,7 @@ public final class CartDtoTestObject {
         return buildCartDto(new ArrayList<>(), BigDecimal.ZERO);
     }
 
-    public static CartDto cartDtoWithOneItemAndAppliedCoupon() {
+    public static CartDto cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon() {
         return buildCartDto(List.of(cartItemDto()), BigDecimal.valueOf(49.99));
     }
 

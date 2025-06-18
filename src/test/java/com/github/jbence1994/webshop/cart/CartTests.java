@@ -10,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItemAndFixedAmountTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItemAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
@@ -24,20 +26,22 @@ import static org.hamcrest.Matchers.nullValue;
 @ExtendWith(MockitoExtension.class)
 public class CartTests {
     private final Cart cart = cartWithTwoItems();
+    private final Cart cartWithFixedAmountTypeOfAppliedCoupon = cartWithOneItemAndFixedAmountTypeOfAppliedCoupon();
+    private final Cart cartWithPercentOffTypeOfAppliedCoupon = cartWithOneItemAndPercentOffTypeOfAppliedCoupon();
     private final Cart emptyCart = emptyCart();
 
-    private static Stream<Arguments> cartParams() {
+    private static Stream<Arguments> cartEmptyCheckParams() {
         return Stream.of(
                 Arguments.of("Cart is not empty", cartWithTwoItems(), false),
                 Arguments.of("Cart is empty", emptyCart(), true)
         );
     }
 
-    @Test
-    public void calculateTotalPriceTest() {
-        var result = cart.calculateTotalPrice();
-
-        assertThat(result, equalTo(BigDecimal.valueOf(139.98)));
+    private static Stream<Arguments> cartHasCouponAppliedParams() {
+        return Stream.of(
+                Arguments.of("Cart has coupon applied", cartWithOneItemAndFixedAmountTypeOfAppliedCoupon(), true),
+                Arguments.of("Cart does not have a coupon applied", cartWithTwoItems(), false)
+        );
     }
 
     @Test
@@ -91,6 +95,18 @@ public class CartTests {
         assertThat(emptyCart.getItems(), is(empty()));
     }
 
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("cartHasCouponAppliedParams")
+    public void hasCouponAppliedTests(
+            String testCase,
+            Cart cart,
+            boolean expectedResult
+    ) {
+        var result = cart.hasCouponApplied();
+
+        assertThat(result, is(expectedResult));
+    }
+
     @Test
     public void clearTest_HappyPath_CartIsEmpty() {
         cart.clear();
@@ -99,7 +115,7 @@ public class CartTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("cartParams")
+    @MethodSource("cartEmptyCheckParams")
     public void isEmptyTests(
             String testCase,
             Cart cart,
@@ -108,5 +124,26 @@ public class CartTests {
         var result = cart.isEmpty();
 
         assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void calculateTotalPriceTest_DoesNotHaveCouponApplied() {
+        var result = cart.calculateTotalPrice();
+
+        assertThat(result, equalTo(BigDecimal.valueOf(139.98)));
+    }
+
+    @Test
+    public void calculateTotalPriceTest_HasFixedAmountTypeOfCouponApplied() {
+        var result = cartWithFixedAmountTypeOfAppliedCoupon.calculateTotalPrice();
+
+        assertThat(result, equalTo(BigDecimal.valueOf(44.99)));
+    }
+
+    @Test
+    public void calculateTotalPriceTest_HasPercentOffTypeOfCouponApplied() {
+        var result = cartWithPercentOffTypeOfAppliedCoupon.calculateTotalPrice();
+
+        assertThat(result, equalTo(BigDecimal.valueOf(44.99)));
     }
 }

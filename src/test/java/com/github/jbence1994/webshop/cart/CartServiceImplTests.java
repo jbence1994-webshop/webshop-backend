@@ -13,7 +13,7 @@ import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItemAndAppliedCoupon;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItemAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.CartTestObject.updatedCart;
@@ -104,7 +104,7 @@ public class CartServiceImplTests {
     public void applyCouponToCartTest_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(couponQueryService.getCoupon(any())).thenReturn(coupon1());
-        when(cartRepository.save(any())).thenReturn(cartWithOneItemAndAppliedCoupon());
+        when(cartRepository.save(any())).thenReturn(cartWithOneItemAndPercentOffTypeOfAppliedCoupon());
 
         assertDoesNotThrow(() -> cartService.applyCouponToCart(CART_ID, COUPON_1_CODE));
 
@@ -132,7 +132,7 @@ public class CartServiceImplTests {
 
     @Test
     public void removeCouponFromCartTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItemAndAppliedCoupon());
+        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItemAndPercentOffTypeOfAppliedCoupon());
         when(cartRepository.save(any())).thenReturn(cartWithTwoItems());
 
         assertDoesNotThrow(() -> cartService.removeCouponFromCart(CART_ID));
