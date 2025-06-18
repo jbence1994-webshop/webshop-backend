@@ -99,14 +99,16 @@ public class Cart {
                 .map(CartItem::calculateTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        if (hasCouponApplied()) {
-            switch (appliedCoupon.getType()) {
-                case FIXED_AMOUNT -> totalPrice = calculateFixedAmountDiscount(totalPrice);
-                case PERCENT_OFF -> totalPrice = calculatePercentOffDiscount(totalPrice);
-            }
+        if (!hasCouponApplied()) {
+            return totalPrice;
         }
 
-        return totalPrice;
+        return switch (appliedCoupon.getType()) {
+            case FIXED_AMOUNT -> calculateFixedAmountDiscount(totalPrice);
+            case PERCENT_OFF -> calculatePercentOffDiscount(totalPrice);
+            case BUY_ONE_GET_ONE -> throw new RuntimeException("BUY_ONE_GET_ONE currently not supported.");
+            case FREE_SHIPPING -> throw new RuntimeException("FREE_SHIPPING currently not supported.");
+        };
     }
 
     private BigDecimal calculateFixedAmountDiscount(BigDecimal totalPrice) {
