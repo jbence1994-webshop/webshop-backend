@@ -36,7 +36,6 @@ public class Order {
     @Id
     private Long id;
 
-    // TODO: Current fetch strategy is LAZY, because later getting all orders by the current, logged-in user.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private User customer;

@@ -112,9 +112,7 @@ public class Cart {
         var orderItems = new ArrayList<OrderItem>();
 
         items.forEach(item -> {
-            var orderItem = new OrderItem();
-            orderItem.setProduct(item.getProduct());
-            orderItem.setQuantity(item.getQuantity());
+            var orderItem = new OrderItem(item.getProduct(), item.getQuantity());
             orderItems.add(orderItem);
         });
 
