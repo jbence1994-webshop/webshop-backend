@@ -8,7 +8,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import static com.github.jbence1994.webshop.cart.AddItemToCartRequestTestObject.addItemToCartRequest;
+import static com.github.jbence1994.webshop.cart.ApplyCouponToCartRequestTestObject.applyCouponToCartRequest;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDto;
+import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDtoWithOneItemAndAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.emptyCartDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.updatedCartItemDto;
@@ -16,6 +18,7 @@ import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItemAndAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -121,5 +124,33 @@ public class CartControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
+    }
+
+    @Test
+    public void applyCouponToCartTest() {
+        when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithOneItemAndAppliedCoupon());
+        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithOneItemAndAppliedCoupon());
+
+        var result = cartController.applyCouponToCart(CART_ID, applyCouponToCartRequest());
+
+        assertThat(result, allOf(
+                hasProperty("id", equalTo(cartDtoWithOneItemAndAppliedCoupon().getId())),
+                hasProperty("totalPrice", equalTo(cartDtoWithOneItemAndAppliedCoupon().getTotalPrice())),
+                hasProperty("appliedCoupon", equalTo(cartDtoWithOneItemAndAppliedCoupon().getAppliedCoupon()))
+        ));
+    }
+
+    @Test
+    public void removeCouponFromCartTest() {
+        when(cartService.removeCouponFromCart(any())).thenReturn(cartWithOneItem());
+        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
+
+        var result = cartController.removeCouponFromCart(CART_ID);
+
+        assertThat(result, allOf(
+                hasProperty("id", equalTo(cartDtoWithOneItemAndAppliedCoupon().getId())),
+                hasProperty("totalPrice", equalTo(cartDtoWithOneItemAndAppliedCoupon().getTotalPrice())),
+                hasProperty("appliedCoupon", equalTo(cartDtoWithOneItemAndAppliedCoupon().getAppliedCoupon()))
+        ));
     }
 }
