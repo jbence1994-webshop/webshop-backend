@@ -8,6 +8,7 @@ public interface UserMapper {
     UserDto toDto(User user);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "role", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "profile", ignore = true)
