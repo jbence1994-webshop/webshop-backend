@@ -50,6 +50,7 @@ public class JwtServiceImpl implements JwtService {
                 .subject(identity.id().toString())
                 .add("email", identity.email())
                 .add("firstName", identity.firstName())
+                .add("middleName", identity.middleName())
                 .add("lastName", identity.lastName())
                 .add("role", identity.role())
                 .issuedAt(new Date())
