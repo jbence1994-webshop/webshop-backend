@@ -30,8 +30,8 @@ VALUES ('Wireless Mouse', 49.99, 'piece', 'High quality wireless mouse perfect f
        ('Microphone', 79.99, 'box', 'High quality microphone perfect for everyday use.'),
        ('Graphic Tablet', 149.99, 'set', 'High quality graphic tablet perfect for everyday use.');
 
-INSERT INTO users (email, password)
-VALUES ('juhasz.bence.zsolt@gmail.com', '$2a$10$OnASmWOv6fF/voWlTQNfSOm20Fh4AaPgTDVTwPrMiF0FTjYEWzb6a');
+INSERT INTO users (email, password, role)
+VALUES ('juhasz.bence.zsolt@gmail.com', '$2a$10$OnASmWOv6fF/voWlTQNfSOm20Fh4AaPgTDVTwPrMiF0FTjYEWzb6a', 'ADMIN');
 
 SET @userId := (SELECT id
                 FROM users

@@ -15,6 +15,7 @@ import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,7 +37,7 @@ public class UserCouponControllerTests {
 
     @Test
     public void getCouponsTest() {
-        when(userQueryService.getUser(any())).thenReturn(user());
+        when(userQueryService.getUser(anyLong())).thenReturn(user());
         when(couponQueryService.getCouponsByUser(any())).thenReturn(List.of(coupon1()));
         when(couponMapper.toDto(any())).thenReturn(couponDto1());
 
@@ -44,7 +45,7 @@ public class UserCouponControllerTests {
 
         assertThat(result.size(), equalTo(1));
 
-        verify(userQueryService, times(1)).getUser(any());
+        verify(userQueryService, times(1)).getUser(anyLong());
         verify(couponQueryService, times(1)).getCouponsByUser(any());
         verify(couponMapper, times(1)).toDto(any());
     }

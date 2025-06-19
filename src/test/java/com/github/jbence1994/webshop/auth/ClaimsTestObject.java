@@ -1,0 +1,18 @@
+package com.github.jbence1994.webshop.auth;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
+import static com.github.jbence1994.webshop.auth.UserIdentityTestObject.userIdentity;
+
+public final class ClaimsTestObject {
+    public static Claims claims() {
+        return Jwts.claims()
+                .subject(userIdentity().id().toString())
+                .add("email", userIdentity().email())
+                .add("firstName", userIdentity().firstName())
+                .add("middleName", userIdentity().middleName())
+                .add("lastName", userIdentity().lastName())
+                .build();
+    }
+}

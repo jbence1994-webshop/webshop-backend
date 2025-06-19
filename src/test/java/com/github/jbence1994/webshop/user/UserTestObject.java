@@ -26,6 +26,7 @@ public final class UserTestObject {
                 id,
                 EMAIL,
                 password,
+                Role.ADMIN,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 profile,
