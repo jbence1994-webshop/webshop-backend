@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +40,7 @@ public class UserControllerTests {
 
     @Test
     public void getUserTest_HappyPath() {
-        when(userQueryService.getUser(any())).thenReturn(user());
+        when(userQueryService.getUser(anyLong())).thenReturn(user());
         when(userMapper.toDto(any())).thenReturn(userDto());
 
         var result = userController.getUser(1L);
@@ -66,7 +67,7 @@ public class UserControllerTests {
 
     @Test
     public void getUserTest_UnhappyPath_UserNotFoundException() {
-        when(userQueryService.getUser(any())).thenThrow(new UserNotFoundException(1L));
+        when(userQueryService.getUser(anyLong())).thenThrow(new UserNotFoundException(1L));
 
         var result = assertThrows(
                 UserNotFoundException.class,

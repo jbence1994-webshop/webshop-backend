@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -30,7 +31,7 @@ public class UserQueryServiceImplTests {
     private UserQueryServiceImpl userQueryService;
 
     @Test
-    public void getUserTest_HappyPath() {
+    public void getUserTest_ById_HappyPath() {
         when(userRepository.findById(any())).thenReturn(Optional.of(user()));
 
         var result = assertDoesNotThrow(() -> userQueryService.getUser(1L));
@@ -44,7 +45,7 @@ public class UserQueryServiceImplTests {
     }
 
     @Test
-    public void getUserTest_UnhappyPath() {
+    public void getUserTest_ById_UnhappyPath() {
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
         var result = assertThrows(
@@ -53,5 +54,31 @@ public class UserQueryServiceImplTests {
         );
 
         assertThat(result.getMessage(), equalTo("No user was found with the given ID: #1."));
+    }
+
+    @Test
+    public void getUserTest_ByEmail_HappyPath() {
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user()));
+
+        var result = assertDoesNotThrow(() -> userQueryService.getUser(EMAIL));
+
+        assertThat(result, not(nullValue()));
+        assertThat(result, allOf(
+                hasProperty("id", equalTo(user().getId())),
+                hasProperty("email", equalTo(user().getEmail())),
+                hasProperty("password", equalTo(user().getPassword()))
+        ));
+    }
+
+    @Test
+    public void getUserTest_ByEmail_UnhappyPath() {
+        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+
+        var result = assertThrows(
+                UserNotFoundException.class,
+                () -> userQueryService.getUser(EMAIL)
+        );
+
+        assertThat(result.getMessage(), equalTo("No user was found with the given e-mail: 'juhasz.bence.zsolt@gmail.com'."));
     }
 }

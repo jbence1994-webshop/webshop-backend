@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +58,7 @@ public class ProfileAvatarControllerTests {
 
     @Test
     public void getProfileAvatarTest() {
-        when(userQueryService.getUser(any())).thenReturn(userWithAvatar());
+        when(userQueryService.getUser(anyLong())).thenReturn(userWithAvatar());
         when(imageUrlBuilder.buildUrl(any())).thenReturn(AVATAR_URL);
 
         var result = profileAvatarController.getProfileAvatar(1L);

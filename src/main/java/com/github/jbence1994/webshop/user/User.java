@@ -4,6 +4,8 @@ import com.github.jbence1994.webshop.coupon.Coupon;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,6 +38,9 @@ public class User {
     private String email;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
