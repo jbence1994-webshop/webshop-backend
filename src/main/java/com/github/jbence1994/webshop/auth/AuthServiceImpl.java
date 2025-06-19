@@ -3,6 +3,7 @@ package com.github.jbence1994.webshop.auth;
 import com.github.jbence1994.webshop.user.User;
 import com.github.jbence1994.webshop.user.UserQueryService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,6 +52,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (
+                authentication == null ||
+                        !authentication.isAuthenticated() ||
+                        authentication.getPrincipal().equals("anonymousUser")
+        ) {
+            throw new AccessDeniedException("Access denied.");
+        }
+
         var userId = (Long) authentication.getPrincipal();
 
         return userQueryService.getUser(userId);
