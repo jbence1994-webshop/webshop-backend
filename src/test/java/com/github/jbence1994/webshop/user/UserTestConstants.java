@@ -3,9 +3,10 @@ package com.github.jbence1994.webshop.user;
 public interface UserTestConstants {
     String EMAIL = "juhasz.bence.zsolt@gmail.com";
     String PASSWORD = "12345678";
+    String INVALID_PASSWORD = "123456789";
     String OLD_PASSWORD = PASSWORD;
     String INVALID_OLD_PASSWORD = "123456789";
-    String NEW_PASSWORD = "123456789";
+    String NEW_PASSWORD = INVALID_PASSWORD;
     String HASHED_PASSWORD = "$2a$10$OnASmWOv6fF/voWlTQNfSOm20Fh4AaPgTDVTwPrMiF0FTjYEWzb6a";
     String NEW_HASHED_PASSWORD = "$2a$10$OnASmWOv6fF/voWlTQNfSOm20Fh4AaPgTDVTwPrMiF0FTjYEWzb6b";
     String CONFIRM_PASSWORD = PASSWORD;
