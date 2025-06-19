@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -106,5 +107,12 @@ public class UserServiceImplTests {
         when(userRepository.save(any())).thenReturn(user());
 
         assertDoesNotThrow(() -> userService.updateUser(user()));
+    }
+
+    @Test
+    public void deleteUserTest() {
+        doNothing().when(userRepository).deleteById(any());
+
+        assertDoesNotThrow(() -> userService.deleteUser(any()));
     }
 }
