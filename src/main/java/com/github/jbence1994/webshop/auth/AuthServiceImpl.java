@@ -39,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Jwt refreshAccessToken(String refreshToken) {
         var jwt = jwtService.parseToken(refreshToken);
+
         if (jwt == null || jwt.isExpired()) {
             throw new BadCredentialsException("Invalid refresh token.");
         }
