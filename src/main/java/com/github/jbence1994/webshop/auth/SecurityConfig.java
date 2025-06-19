@@ -53,14 +53,17 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
                             securityRules.forEach(rule -> rule.configure(registry));
-                            registry.anyRequest().authenticated();
+                            // FIXME: registry.anyRequest().authenticated();
+                            registry.anyRequest().permitAll(); // TODO: Later protect all endpoints in the security rule configs.
                         }
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(configurer -> {
                             configurer.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-                            configurer.accessDeniedHandler((request, response, accessDeniedException) ->
-                                    response.setStatus(HttpStatus.FORBIDDEN.value()));
+                            configurer.accessDeniedHandler(
+                                    (request, response, accessDeniedException) ->
+                                            response.setStatus(HttpStatus.FORBIDDEN.value())
+                            );
                         }
                 );
 
