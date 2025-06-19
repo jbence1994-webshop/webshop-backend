@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 public class ProductDto {
     private Long id;
 
+    @NotNull(message = "Name must be provided.")
     @NotBlank(message = "Name must be not empty.")
     @Size(max = 255, message = "Name must be less than 255 characters.")
     private String name;
@@ -28,6 +29,7 @@ public class ProductDto {
     @DecimalMin(value = "0.00")
     private BigDecimal price;
 
+    @NotNull(message = "Unit must be provided.")
     @NotBlank(message = "Unit must be not empty.")
     @Size(max = 25, message = "Unit must be less than 25 characters.")
     private String unit;
