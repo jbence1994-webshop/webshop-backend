@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,14 +25,5 @@ public class UserControllerExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."));
-    }
-
-    @Test
-    public void handleAccessDeniedExceptionTest() {
-        var result = userControllerExceptionHandler.handleAccessDeniedException(new AccessDeniedException("Invalid old password."));
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("Invalid old password."));
     }
 }
