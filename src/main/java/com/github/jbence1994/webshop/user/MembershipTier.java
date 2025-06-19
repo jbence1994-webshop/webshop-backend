@@ -15,8 +15,8 @@ public enum MembershipTier {
 
     public static MembershipTier fromPoints(int points) {
         return Stream.of(values())
-                .filter(tier -> points <= tier.maxPoints)
+                .filter(tier -> points >= 0 && points <= tier.maxPoints)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid loyalty points: " + points));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid value: %d.", points)));
     }
 }
