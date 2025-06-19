@@ -20,9 +20,6 @@ import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
-import static com.github.jbence1994.webshop.cart.EnrichedCartDtoTestObject.enrichedCartDto;
-import static com.github.jbence1994.webshop.cart.EnrichedCartDtoTestObject.enrichedCartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon;
-import static com.github.jbence1994.webshop.cart.EnrichedCartDtoTestObject.enrichedEmptyCartDto;
 import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -50,9 +47,6 @@ public class CartControllerTests {
     @Mock
     private CartMapper cartMapper;
 
-    @Mock
-    private CartDtoEnricher cartDtoEnricher;
-
     @InjectMocks
     private CartController cartController;
 
@@ -60,15 +54,14 @@ public class CartControllerTests {
     public void createCartTest() {
         when(cartService.createCart()).thenReturn(emptyCart());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(emptyCartDto());
-        when(cartDtoEnricher.enrich(any(), any())).thenReturn(enrichedEmptyCartDto());
 
         var result = cartController.createCart();
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody(), allOf(
-                hasProperty("id", equalTo(enrichedEmptyCartDto().getId())),
-                hasProperty("totalPrice", equalTo(enrichedEmptyCartDto().getTotalPrice()))
+                hasProperty("id", equalTo(emptyCartDto().getId())),
+                hasProperty("totalPrice", equalTo(emptyCartDto().getTotalPrice()))
         ));
         assertThat(result.getBody().getItems(), is(empty()));
     }
@@ -92,13 +85,12 @@ public class CartControllerTests {
     public void getCartTest() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
-        when(cartDtoEnricher.enrich(any(), any())).thenReturn(enrichedCartDto());
 
         var result = cartController.getCart(CART_ID);
 
         assertThat(result, allOf(
-                hasProperty("id", equalTo(enrichedCartDto().getId())),
-                hasProperty("totalPrice", equalTo(enrichedCartDto().getTotalPrice()))
+                hasProperty("id", equalTo(cartDto().getId())),
+                hasProperty("totalPrice", equalTo(cartDto().getTotalPrice()))
         ));
     }
 
@@ -139,14 +131,13 @@ public class CartControllerTests {
     public void applyCouponToCartTest() {
         when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon());
-        when(cartDtoEnricher.enrich(any(), any())).thenReturn(enrichedCartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon());
 
         var result = cartController.applyCouponToCart(CART_ID, applyCouponToCartRequest());
 
         assertThat(result, allOf(
-                hasProperty("id", equalTo(enrichedCartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getId())),
-                hasProperty("totalPrice", equalTo(enrichedCartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getTotalPrice())),
-                hasProperty("appliedCoupon", equalTo(enrichedCartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getAppliedCoupon()))
+                hasProperty("id", equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getId())),
+                hasProperty("totalPrice", equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getTotalPrice())),
+                hasProperty("appliedCoupon", equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getAppliedCoupon()))
         ));
     }
 
@@ -154,13 +145,13 @@ public class CartControllerTests {
     public void removeCouponFromCartTest() {
         when(cartService.removeCouponFromCart(any())).thenReturn(cartWithOneItem());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
-        when(cartDtoEnricher.enrich(any(), any())).thenReturn(enrichedCartDto());
 
         var result = cartController.removeCouponFromCart(CART_ID);
 
         assertThat(result, allOf(
-                hasProperty("id", equalTo(enrichedCartDto().getId())),
-                hasProperty("appliedCoupon", equalTo(enrichedCartDto().getAppliedCoupon()))
+                hasProperty("id", equalTo(cartDto().getId())),
+                hasProperty("totalPrice", equalTo(cartDto().getTotalPrice())),
+                hasProperty("appliedCoupon", equalTo(cartDto().getAppliedCoupon()))
         ));
     }
 }

@@ -93,7 +93,7 @@ public class Cart {
         return items.isEmpty();
     }
 
-    public BigDecimal calculateTotalPrice(PriceAdjustmentStrategyFactory priceAdjustmentStrategyFactory) {
+    public BigDecimal calculateTotalPrice() {
         var totalPrice = items.stream()
                 .map(CartItem::calculateTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -102,7 +102,7 @@ public class Cart {
             return totalPrice;
         }
 
-        return priceAdjustmentStrategyFactory
+        return PriceAdjustmentStrategyFactory
                 .getPriceAdjustmentStrategy(appliedCoupon.getType())
                 .adjustPrice(totalPrice, appliedCoupon.getValue());
     }
