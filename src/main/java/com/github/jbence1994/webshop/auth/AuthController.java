@@ -22,9 +22,9 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response
     ) {
-        var loginResult = authService.login(request);
+        var loginResponse = authService.login(request);
 
-        var refreshToken = loginResult.refreshToken().toString();
+        var refreshToken = loginResponse.refreshToken().toString();
         var cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
@@ -32,7 +32,7 @@ public class AuthController {
         cookie.setSecure(true);
         response.addCookie(cookie);
 
-        return new JwtResponse(loginResult.accessToken().toString());
+        return new JwtResponse(loginResponse.accessToken().toString());
     }
 
     @PostMapping("/refresh")
