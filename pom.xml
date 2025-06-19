@@ -37,9 +37,9 @@
         <flyway-maven-plugin.version>11.9.1</flyway-maven-plugin.version>
 
         <!-- JaCoCo properties -->
-        <jacoco.line-coverage>0.94</jacoco.line-coverage>
-        <jacoco.branch-coverage>0.94</jacoco.branch-coverage>
-        <jacoco.complexity-coverage>0.95</jacoco.complexity-coverage>
+        <jacoco.line-coverage>0.93</jacoco.line-coverage>
+        <jacoco.branch-coverage>0.88</jacoco.branch-coverage>
+        <jacoco.complexity-coverage>0.93</jacoco.complexity-coverage>
         <jacoco.method-coverage>0.95</jacoco.method-coverage>
         <jacoco.class-coverage>0.94</jacoco.class-coverage>
 

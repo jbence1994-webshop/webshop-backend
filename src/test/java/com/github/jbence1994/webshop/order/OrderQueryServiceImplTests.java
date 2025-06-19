@@ -1,15 +1,22 @@
 package com.github.jbence1994.webshop.order;
 
+import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.user.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.order.OrderTestObject.order;
+import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -23,17 +30,26 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class OrderQueryServiceImplTests {
 
     @Mock
     private OrderRepository orderRepository;
 
+    @Mock
+    private AuthService authService;
+
     @InjectMocks
     private OrderQueryServiceImpl orderQueryService;
 
+    @BeforeEach
+    public void setUp() {
+        when(authService.getCurrentUser()).thenReturn(user());
+    }
+
     @Test
     public void getOrdersTest() {
-        when(orderRepository.findAll()).thenReturn(List.of(order()));
+        when(orderRepository.getOrdersByCustomer(any())).thenReturn(List.of(order()));
 
         var result = orderQueryService.getOrders();
 
@@ -57,7 +73,7 @@ public class OrderQueryServiceImplTests {
     }
 
     @Test
-    public void getOrderTest_UnhappyPath_OrderNotFound() {
+    public void getOrderTest_UnhappyPath_OrderNotFoundException() {
         when(orderRepository.getOrderWithItems(any())).thenReturn(Optional.empty());
 
         var result = assertThrows(
@@ -66,5 +82,18 @@ public class OrderQueryServiceImplTests {
         );
 
         assertThat(result.getMessage(), equalTo("No order was found with the given ID: #1."));
+    }
+
+    @Test
+    public void getOrderTest_UnhappyPath_AccessDeniedException() {
+        when(authService.getCurrentUser()).thenReturn(new User());
+        when(orderRepository.getOrderWithItems(any())).thenReturn(Optional.of(order()));
+
+        var result = assertThrows(
+                AccessDeniedException.class,
+                () -> orderQueryService.getOrder(1L)
+        );
+
+        assertThat(result.getMessage(), equalTo("Access denied."));
     }
 }

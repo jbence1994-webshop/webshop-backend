@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -79,6 +80,15 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.PAYLOAD_TOO_LARGE));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("Maximum upload size of 1048576 bytes exceeded"));
+    }
+
+    @Test
+    public void handleAccessDeniedExceptionTest() {
+        var result = globalExceptionHandler.handleAccessDeniedException(new AccessDeniedException("Invalid old password."));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Invalid old password."));
     }
 
     @Test
