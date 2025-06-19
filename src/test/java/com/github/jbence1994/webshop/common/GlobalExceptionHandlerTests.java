@@ -51,7 +51,16 @@ public class GlobalExceptionHandlerTests {
     }
 
     @Test
-    void handleMissingServletRequestPartExceptionTest() {
+    public void handleHttpMessageNotReadableExceptionTest() {
+        var result = globalExceptionHandler.handleHttpMessageNotReadableException();
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Invalid request body."));
+    }
+
+    @Test
+    public void handleMissingServletRequestPartExceptionTest() {
         var exception = new MissingServletRequestPartException("file");
 
         var result = globalExceptionHandler.handleMissingServletRequestPartException(exception);
