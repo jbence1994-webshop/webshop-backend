@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.auth;
 
-import com.github.jbence1994.webshop.user.UserMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class AuthController {
     private final JwtConfig jwtConfig;
-    private final UserMapper userMapper;
     private final AuthService authService;
 
     @PostMapping("/login")
@@ -26,7 +24,7 @@ public class AuthController {
     ) {
         var loginResult = authService.login(request);
 
-        var refreshToken = loginResult.getRefreshToken().toString();
+        var refreshToken = loginResult.refreshToken().toString();
         var cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
@@ -34,7 +32,7 @@ public class AuthController {
         cookie.setSecure(true);
         response.addCookie(cookie);
 
-        return new JwtResponse(loginResult.getAccessToken().toString());
+        return new JwtResponse(loginResult.accessToken().toString());
     }
 
     @PostMapping("/refresh")
