@@ -14,4 +14,11 @@ public class UserQueryServiceImpl implements UserQueryService {
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
+
+    @Override
+    public User getUser(String email) {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+    }
 }

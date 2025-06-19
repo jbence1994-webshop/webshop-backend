@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -69,14 +70,14 @@ public class UserServiceImplTests {
 
     @Test
     public void changePasswordTest_HappyPath() {
-        when(userQueryService.getUser(any())).thenReturn(user());
+        when(userQueryService.getUser(anyLong())).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user());
 
         assertDoesNotThrow(() -> userService.changePassword(1L, OLD_PASSWORD, NEW_PASSWORD));
 
-        verify(userQueryService, times(1)).getUser(any());
+        verify(userQueryService, times(1)).getUser(anyLong());
         verify(passwordManager, times(1)).verify(any(), any());
         verify(passwordManager, times(1)).encode(any());
         verify(userRepository, times(1)).save(any());
@@ -84,7 +85,7 @@ public class UserServiceImplTests {
 
     @Test
     public void changePasswordTest_UnhappyPath_AccessDeniedException() {
-        when(userQueryService.getUser(any())).thenReturn(user());
+        when(userQueryService.getUser(anyLong())).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(false);
 
         var result = assertThrows(
@@ -94,7 +95,7 @@ public class UserServiceImplTests {
 
         assertThat(result.getMessage(), equalTo("Invalid old password."));
 
-        verify(userQueryService, times(1)).getUser(any());
+        verify(userQueryService, times(1)).getUser(anyLong());
         verify(passwordManager, times(1)).verify(any(), any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
