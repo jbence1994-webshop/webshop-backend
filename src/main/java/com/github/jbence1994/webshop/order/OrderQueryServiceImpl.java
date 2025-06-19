@@ -1,6 +1,8 @@
 package com.github.jbence1994.webshop.order;
 
+import com.github.jbence1994.webshop.auth.AuthService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,20 +11,26 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderQueryServiceImpl implements OrderQueryService {
     private final OrderRepository orderRepository;
+    private final AuthService authService;
 
     @Override
     public List<Order> getOrders() {
-        // FIXME: Later refactor this to get all orders of the current, logged in user.
-        return orderRepository.findAll();
+        var user = authService.getCurrentUser();
+        return orderRepository.getOrdersByCustomer(user);
     }
 
     @Override
     public Order getOrder(Long id) {
-        // FIXME: Later refactor this to check the current, logged in user can access an order ot not.
-        // FIXME: Just the ones that the user itself performed.
-
-        return orderRepository
+        var order = orderRepository
                 .getOrderWithItems(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
+
+        var user = authService.getCurrentUser();
+
+        if (!order.isPlacedBy(user)) {
+            throw new AccessDeniedException("Access denied.");
+        }
+
+        return order;
     }
 }
