@@ -23,7 +23,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     @Override
     public Order getOrder(Long id) {
         var order = orderRepository
-                .findByIdWithItems(id)
+                .findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
 
         var user = authService.getCurrentUser();

@@ -35,7 +35,7 @@ class JwtServiceImplTests {
     private JwtServiceImpl jwtService;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         when(jwtConfig.getAccessTokenExpiration()).thenReturn(ACCESS_TOKEN_EXPIRATION);
         when(jwtConfig.getRefreshTokenExpiration()).thenReturn(REFRESH_TOKEN_EXPIRATION);
         when(jwtConfig.getSecretKey()).thenReturn(secretKey());
