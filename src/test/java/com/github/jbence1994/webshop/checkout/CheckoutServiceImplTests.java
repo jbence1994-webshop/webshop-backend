@@ -2,10 +2,10 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
-import com.github.jbence1994.webshop.cart.CartService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.OrderService;
+import com.github.jbence1994.webshop.user.LoyaltyPointsCalculator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +33,9 @@ import static org.mockito.Mockito.when;
 public class CheckoutServiceImplTests {
 
     @Mock
+    private LoyaltyPointsCalculator loyaltyPointsCalculator;
+
+    @Mock
     private CartQueryService cartQueryService;
 
     @Mock
@@ -40,9 +43,6 @@ public class CheckoutServiceImplTests {
 
     @Mock
     private OrderService orderService;
-
-    @Mock
-    private CartService cartService;
 
     @Mock
     private AuthService authService;
@@ -55,7 +55,6 @@ public class CheckoutServiceImplTests {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
-        doNothing().when(cartService).clearCart(any());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -65,7 +64,6 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any());
-        verify(cartService, times(1)).clearCart(any());
     }
 
     @Test
@@ -74,7 +72,6 @@ public class CheckoutServiceImplTests {
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any());
-        doNothing().when(cartService).clearCart(any());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -84,7 +81,6 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any());
-        verify(cartService, times(1)).clearCart(any());
     }
 
     @Test
@@ -102,6 +98,5 @@ public class CheckoutServiceImplTests {
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any());
-        verify(cartService, never()).clearCart(any());
     }
 }
