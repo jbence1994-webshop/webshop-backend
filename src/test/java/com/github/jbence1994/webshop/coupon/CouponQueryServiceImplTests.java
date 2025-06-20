@@ -76,12 +76,12 @@ public class CouponQueryServiceImplTests {
 
     @Test
     public void getCouponsByUserTest() {
-        when(couponRepository.findAllByUser(any())).thenReturn(List.of(coupon1(), coupon3()));
+        when(couponRepository.getCouponsByUser(any())).thenReturn(List.of(coupon1(), coupon3()));
 
         var result = couponQueryService.getCouponsByUser(any());
 
         assertThat(result.size(), equalTo(1));
 
-        verify(couponRepository, times(1)).findAllByUser(any());
+        verify(couponRepository, times(1)).getCouponsByUser(any());
     }
 }
