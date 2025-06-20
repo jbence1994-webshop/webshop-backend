@@ -9,7 +9,7 @@ public class CouponServiceImpl implements CouponService {
     private final CouponRepository couponRepository;
 
     @Override
-    public void redeemCoupon(Long userId, String couponCode) {
-        couponRepository.redeemCoupon(userId, couponCode);
+    public void redeemCoupon(Long userId, String couponCode, Long orderId) {
+        couponRepository.redeemCoupon(userId, couponCode, orderId);
     }
 }

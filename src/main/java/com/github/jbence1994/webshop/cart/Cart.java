@@ -85,6 +85,10 @@ public class Cart {
         return appliedCoupon != null;
     }
 
+    public String getCouponCode() {
+        return appliedCoupon.getCode();
+    }
+
     public void clear() {
         items.clear();
     }
