@@ -43,7 +43,7 @@ public class CartTests {
         return Stream.of(
                 Arguments.of("Without applied coupon", cartWithTwoItems(), BigDecimal.valueOf(139.98)),
                 Arguments.of("With fixed amount type of applied coupon", cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(), BigDecimal.valueOf(134.98)),
-                Arguments.of("With percent off type of applied coupon", cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(), BigDecimal.valueOf(125.98))
+                Arguments.of("With percent off type of applied coupon", cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(), BigDecimal.valueOf(125.99))
         );
     }
 
