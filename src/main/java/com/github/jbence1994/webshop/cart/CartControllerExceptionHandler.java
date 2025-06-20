@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(basePackageClasses = CartController.class)
 public class CartControllerExceptionHandler {
 
-    @ExceptionHandler(exception = CartNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleCartNotFoundException(CartNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
-    }
-
-    @ExceptionHandler(exception = CartItemNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleCartItemNotFoundException(CartItemNotFoundException exception) {
+    @ExceptionHandler(exception = {
+            CartNotFoundException.class,
+            CartItemNotFoundException.class
+    })
+    public ResponseEntity<ErrorDto> handleCartOrCartItemNotFoundException(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
