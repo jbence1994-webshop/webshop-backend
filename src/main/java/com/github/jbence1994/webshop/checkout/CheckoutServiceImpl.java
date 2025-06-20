@@ -43,6 +43,8 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cartService.clearCart(cartId);
 
+        // TODO: Algorithm to increase loyalty and reward points.
+
         // TODO: Payment integration.
 
         // 1) If payment was successful:
