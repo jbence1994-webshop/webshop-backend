@@ -72,7 +72,7 @@ public class CartServiceImpl implements CartService {
         var coupon = couponQueryService.getCoupon(couponCode);
 
         if (cart.isEmpty()) {
-            throw new CartIsEmptyException(id);
+            throw new EmptyCartException(id);
         }
 
         if (coupon.isExpired()) {

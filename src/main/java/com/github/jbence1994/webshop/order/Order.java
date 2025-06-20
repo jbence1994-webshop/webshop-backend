@@ -50,7 +50,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public boolean isPlacedBy(User customer) {
-        return this.customer.getEmail().equals(customer.getEmail());
+    public boolean isPlacedBy(String customerEmail) {
+        return customerEmail.equals(customer.getEmail());
     }
 }

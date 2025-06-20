@@ -27,7 +27,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
         var user = authService.getCurrentUser();
 
-        if (!order.isPlacedBy(user)) {
+        if (!order.isPlacedBy(user.getEmail())) {
             throw new AccessDeniedException("Access denied.");
         }
 
