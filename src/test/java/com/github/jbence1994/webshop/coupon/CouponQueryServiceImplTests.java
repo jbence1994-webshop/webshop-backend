@@ -1,18 +1,19 @@
 package com.github.jbence1994.webshop.coupon;
 
+import com.github.jbence1994.webshop.auth.AuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon1;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon3;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon2;
+import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,18 +33,22 @@ public class CouponQueryServiceImplTests {
     @Mock
     private CouponRepository couponRepository;
 
+    @Mock
+    private AuthService authService;
+
     @InjectMocks
     private CouponQueryServiceImpl couponQueryService;
 
     @Test
     public void getCouponsTest() {
-        when(couponRepository.findAll(any(Sort.class))).thenReturn(List.of(coupon1(), coupon3()));
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(couponRepository.findAllByUser(any())).thenReturn(List.of(coupon1(), coupon2()));
 
         var result = couponQueryService.getCoupons();
 
-        assertThat(result.size(), equalTo(1));
+        assertThat(result.size(), equalTo(2));
 
-        verify(couponRepository, times(1)).findAll(any(Sort.class));
+        verify(couponRepository, times(1)).findAllByUser(any());
     }
 
     @Test
@@ -72,16 +77,5 @@ public class CouponQueryServiceImplTests {
         );
 
         assertThat(result.getMessage(), equalTo("No coupon was found with the given coupon code: 'WELCOME10'."));
-    }
-
-    @Test
-    public void getCouponsByUserTest() {
-        when(couponRepository.getCouponsByUser(any())).thenReturn(List.of(coupon1(), coupon3()));
-
-        var result = couponQueryService.getCouponsByUser(any());
-
-        assertThat(result.size(), equalTo(1));
-
-        verify(couponRepository, times(1)).getCouponsByUser(any());
     }
 }
