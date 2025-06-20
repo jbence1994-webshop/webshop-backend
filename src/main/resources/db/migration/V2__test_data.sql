@@ -51,7 +51,6 @@ INSERT INTO coupons (code, type, value, description, expiration_date)
 VALUES ('WELCOME10', 'PERCENT_OFF', 0.10, '10% off welcome coupon', '9999-12-31 23:59:59'),
        ('SPRING15', 'PERCENT_OFF', 0.15, '15% off spring promotion', '2025-03-31 23:59:59'),
        ('SAVE20', 'PERCENT_OFF', 0.20, '20% off site-wide sale', '2025-11-30 23:59:59'),
-       ('NEWUSER5', 'FIXED_AMOUNT', 5.00, '$5 off first purchase', '9999-12-31 23:59:59'),
        ('CASHBACK5', 'FIXED_AMOUNT', 5.00, '$5 cashback on any order', '2025-09-30 23:59:59'),
        ('EXTRA5', 'FIXED_AMOUNT', 5.00, '$5 off sale items', '2025-02-28 23:59:59'),
        ('FREESHIP', 'FREE_SHIPPING', 0.00, 'Free shipping on all orders', '2025-12-31 23:59:59'),
