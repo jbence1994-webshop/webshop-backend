@@ -59,7 +59,7 @@ public class OrderQueryServiceImplTests {
 
     @Test
     public void getOrderTest_HappyPath() {
-        when(orderRepository.findByIdWithItems(any())).thenReturn(Optional.of(order()));
+        when(orderRepository.findById(any())).thenReturn(Optional.of(order()));
 
         var result = assertDoesNotThrow(() -> orderQueryService.getOrder(1L));
 
@@ -74,7 +74,7 @@ public class OrderQueryServiceImplTests {
 
     @Test
     public void getOrderTest_UnhappyPath_OrderNotFoundException() {
-        when(orderRepository.findByIdWithItems(any())).thenReturn(Optional.empty());
+        when(orderRepository.findById(any())).thenReturn(Optional.empty());
 
         var result = assertThrows(
                 OrderNotFoundException.class,
@@ -87,7 +87,7 @@ public class OrderQueryServiceImplTests {
     @Test
     public void getOrderTest_UnhappyPath_AccessDeniedException() {
         when(authService.getCurrentUser()).thenReturn(anotherUser());
-        when(orderRepository.findByIdWithItems(any())).thenReturn(Optional.of(order()));
+        when(orderRepository.findById(any())).thenReturn(Optional.of(order()));
 
         var result = assertThrows(
                 AccessDeniedException.class,
