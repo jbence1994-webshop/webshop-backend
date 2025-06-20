@@ -69,67 +69,12 @@ CREATE TABLE IF NOT EXISTS addresses
             ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS coupons
-(
-    code            VARCHAR(25)    NOT NULL PRIMARY KEY,
-    type            VARCHAR(25)    NOT NULL,
-    value           DECIMAL(10, 2) NOT NULL,
-    description     VARCHAR(75)    NOT NULL,
-    expiration_date DATETIME       NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS user_coupons
-(
-    user_id     BIGINT      NOT NULL,
-    coupon_code VARCHAR(25) NOT NULL,
-    created_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    redeemed    TINYINT(1)  NOT NULL DEFAULT 0,
-    redeemed_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, coupon_code),
-    CONSTRAINT fk_user_coupons_users
-        FOREIGN KEY (user_id) REFERENCES users (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT fk_user_coupons_coupons
-        FOREIGN KEY (coupon_code) REFERENCES coupons (code)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS carts
-(
-    id             BINARY(16) NOT NULL PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
-    created_at     DATETIME   NOT NULL             DEFAULT CURRENT_TIMESTAMP,
-    applied_coupon VARCHAR(25),
-    CONSTRAINT fk_carts_coupons
-        FOREIGN KEY (applied_coupon) REFERENCES coupons (code)
-            ON DELETE SET NULL
-            ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS cart_items
-(
-    id         BIGINT     NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    cart_id    BINARY(16) NOT NULL,
-    product_id BIGINT     NOT NULL,
-    quantity   INT        NOT NULL DEFAULT 1,
-    CONSTRAINT unique_cart_id_product_id UNIQUE (cart_id, product_id),
-    CONSTRAINT fk_cart_items_carts
-        FOREIGN KEY (cart_id) REFERENCES carts (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT fk_cart_items_products
-        FOREIGN KEY (product_id) REFERENCES products (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS orders
 (
     id          BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
     customer_id BIGINT         NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
-    status      VARCHAR(20)    NOT NULL,
+    status      VARCHAR(20)    NOT NULL DEFAULT 'PENDING',
     created_at  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_orders_users
         FOREIGN KEY (customer_id) REFERENCES users (id)
@@ -150,6 +95,66 @@ CREATE TABLE IF NOT EXISTS order_items
             ON DELETE CASCADE
             ON UPDATE CASCADE,
     CONSTRAINT fk_order_items_products
+        FOREIGN KEY (product_id) REFERENCES products (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS coupons
+(
+    code            VARCHAR(25)    NOT NULL PRIMARY KEY,
+    type            VARCHAR(25)    NOT NULL,
+    value           DECIMAL(10, 2) NOT NULL,
+    description     VARCHAR(75)    NOT NULL,
+    expiration_date DATETIME       NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_coupons
+(
+    user_id     BIGINT      NOT NULL,
+    coupon_code VARCHAR(25) NOT NULL,
+    created_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    redeemed    TINYINT(1)  NOT NULL DEFAULT 0,
+    redeemed_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    order_id    BIGINT,
+    PRIMARY KEY (user_id, coupon_code),
+    CONSTRAINT fk_user_coupons_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_user_coupons_coupons
+        FOREIGN KEY (coupon_code) REFERENCES coupons (code)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_user_coupons_orders
+        FOREIGN KEY (order_id) REFERENCES orders (id)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS carts
+(
+    id             BINARY(16) NOT NULL PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+    created_at     DATETIME   NOT NULL             DEFAULT CURRENT_TIMESTAMP,
+    applied_coupon VARCHAR(25),
+    CONSTRAINT fk_carts_coupons
+        FOREIGN KEY (applied_coupon) REFERENCES coupons (code)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS cart_items
+(
+    id         BIGINT     NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    cart_id    BINARY(16) NOT NULL,
+    product_id BIGINT     NOT NULL,
+    quantity   INT        NOT NULL DEFAULT 1,
+    CONSTRAINT unique_cart_id_product_id UNIQUE (cart_id, product_id),
+    CONSTRAINT fk_cart_items_carts
+        FOREIGN KEY (cart_id) REFERENCES carts (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_cart_items_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE

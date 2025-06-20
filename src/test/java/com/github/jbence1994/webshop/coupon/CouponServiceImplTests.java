@@ -24,10 +24,10 @@ public class CouponServiceImplTests {
 
     @Test
     public void getCouponsTest() {
-        doNothing().when(couponRepository).redeemCoupon(any(), any());
+        doNothing().when(couponRepository).redeemCoupon(any(), any(), any());
 
-        assertDoesNotThrow(() -> couponService.redeemCoupon(1L, COUPON_1_CODE));
+        assertDoesNotThrow(() -> couponService.redeemCoupon(1L, COUPON_1_CODE, 1L));
 
-        verify(couponRepository, times(1)).redeemCoupon(any(), any());
+        verify(couponRepository, times(1)).redeemCoupon(any(), any(), any());
     }
 }
