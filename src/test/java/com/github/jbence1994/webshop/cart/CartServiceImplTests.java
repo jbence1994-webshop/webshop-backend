@@ -152,7 +152,7 @@ public class CartServiceImplTests {
 
         var result = assertThrows(
                 expectedException,
-                () -> cartService.applyCouponToCart(CART_ID, COUPON_1_CODE)
+                () -> cartService.applyCouponToCart(CART_ID, coupon.getCode())
         );
 
         assertThat(result.getMessage(), equalTo(expectedExceptionMessage));
