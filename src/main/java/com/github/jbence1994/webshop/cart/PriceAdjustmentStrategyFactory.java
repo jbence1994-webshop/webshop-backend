@@ -8,6 +8,7 @@ import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PriceAdjustmentStrategyFactory {
+
     private static final Map<DiscountType, PriceAdjustmentStrategy> priceAdjustmentStrategies = Map.of(
             DiscountType.FIXED_AMOUNT, new FixedAmountPriceAdjustmentStrategy(),
             DiscountType.PERCENT_OFF, new PercentOffPriceAdjustmentStrategy()
