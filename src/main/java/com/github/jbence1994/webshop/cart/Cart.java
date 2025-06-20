@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.order.OrderItem;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -104,5 +105,16 @@ public class Cart {
         return PriceAdjustmentStrategyFactory
                 .getPriceAdjustmentStrategy(appliedCoupon.getType())
                 .adjustPrice(totalPrice, appliedCoupon.getValue());
+    }
+
+    public List<OrderItem> fromItems() {
+        var orderItems = new ArrayList<OrderItem>();
+
+        items.forEach(item -> {
+            var orderItem = new OrderItem(item.getProduct(), item.getQuantity());
+            orderItems.add(orderItem);
+        });
+
+        return orderItems;
     }
 }

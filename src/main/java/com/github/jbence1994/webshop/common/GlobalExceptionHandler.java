@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.image.ImageDeletionException;
 import com.github.jbence1994.webshop.image.ImageUploadException;
 import com.github.jbence1994.webshop.image.InvalidFileExtensionException;
@@ -66,6 +67,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(exception = UserNotFoundException.class)
     public ResponseEntity<ErrorDto> handleUserNotFoundException(UserNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = EmptyCartException.class)
+    public ResponseEntity<ErrorDto> handleEmptyCartException(EmptyCartException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = InvalidFileExtensionException.class)

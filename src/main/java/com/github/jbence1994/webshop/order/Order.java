@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
+import com.github.jbence1994.webshop.cart.Cart;
 import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -55,5 +56,22 @@ public class Order {
 
     public boolean isPlacedBy(String customerEmail) {
         return customerEmail.equals(customer.getEmail());
+    }
+
+    public static Order fromCart(Cart cart, User customer) {
+        var order = new Order();
+        order.setCustomer(customer);
+        order.setStatus(PaymentStatus.PENDING);
+        order.setTotalPrice(cart.calculateTotalPrice());
+
+        var items = cart.fromItems();
+
+        items.forEach(item -> {
+                    item.setOrder(order);
+                    order.items.add(item);
+                }
+        );
+
+        return order;
     }
 }
