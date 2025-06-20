@@ -38,6 +38,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         orderService.createOrder(order);
 
         if (cart.hasCouponApplied()) {
+            // FIXME: For better tracing persist the 'orderId' in the 'user_coupons' table.
             couponService.redeemCoupon(user.getId(), cart.getAppliedCoupon().getCode());
         }
 
