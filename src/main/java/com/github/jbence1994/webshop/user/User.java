@@ -67,4 +67,8 @@ public class User {
     public boolean hasProfileAvatar() {
         return profile.getAvatarFileName() != null;
     }
+
+    public void increaseLoyaltyPoints(int loyaltyPoints) {
+        profile.setLoyaltyPoints(profile.getLoyaltyPoints() + loyaltyPoints);
+    }
 }

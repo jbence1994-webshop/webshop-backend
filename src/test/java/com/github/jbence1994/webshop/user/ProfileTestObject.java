@@ -11,15 +11,58 @@ import static com.github.jbence1994.webshop.user.ProfileTestConstants.MIDDLE_NAM
 import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMBER;
 
 public final class ProfileTestObject {
-    public static Profile profile() {
-        return buildProfile(null);
+    public static Profile bronzeProfile1() {
+        return buildProfile(null, 0);
     }
 
-    public static Profile profileWithAvatar() {
-        return buildProfile(AVATAR_FILE_NAME);
+    public static Profile bronzeProfile2() {
+        return buildProfile(null, 2_500);
     }
 
-    private static Profile buildProfile(String avatarFileName) {
+    public static Profile bronzeProfile3() {
+        return buildProfile(null, 4_999);
+    }
+
+    public static Profile silverProfile1() {
+        return buildProfile(null, 5_000);
+    }
+
+    public static Profile silverProfile2() {
+        return buildProfile(null, 7_500);
+    }
+
+    public static Profile silverProfile3() {
+        return buildProfile(null, 9_999);
+    }
+
+    public static Profile goldProfile1() {
+        return buildProfile(null, 10_000);
+    }
+
+    public static Profile goldProfile2() {
+        return buildProfile(null, 15_000);
+    }
+
+    public static Profile goldProfile3() {
+        return buildProfile(null, 19_999);
+    }
+
+    public static Profile platinumProfile1() {
+        return buildProfile(null, 20_000);
+    }
+
+    public static Profile platinumProfile2() {
+        return buildProfile(null, 510_000);
+    }
+
+    public static Profile platinumProfile3() {
+        return buildProfile(AVATAR_FILE_NAME, 1_000_000);
+    }
+
+    private static Profile buildProfile(
+            String avatarFileName,
+            int loyaltyPoints
+    ) {
         return new Profile(
                 1L,
                 null,
@@ -29,6 +72,7 @@ public final class ProfileTestObject {
                 DATE_OF_BIRTH,
                 PHONE_NUMBER,
                 avatarFileName,
+                loyaltyPoints,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 address()

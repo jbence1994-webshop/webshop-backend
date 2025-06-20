@@ -2,12 +2,12 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
-import com.github.jbence1994.webshop.cart.CartService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
 import com.github.jbence1994.webshop.order.PaymentStatus;
+import com.github.jbence1994.webshop.user.LoyaltyPointsCalculator;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
+    private final LoyaltyPointsCalculator loyaltyPointsCalculator;
     private final CartQueryService cartQueryService;
     private final CouponService couponService;
     private final OrderService orderService;
-    private final CartService cartService;
     private final AuthService authService;
 
     @Override
@@ -41,7 +41,14 @@ public class CheckoutServiceImpl implements CheckoutService {
             couponService.redeemCoupon(user.getId(), cart.getAppliedCoupon().getCode());
         }
 
-        cartService.clearCart(cartId);
+        cart.clear();
+
+        // FIXME: Loyalty point earning values can be change in different, timely campaigns.
+        // TODO: For that feature gating can be implemented.
+        var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
+        user.increaseLoyaltyPoints(loyaltyPoints);
+
+        // TODO: Algorithm to reward points.
 
         // TODO: Payment integration.
 
