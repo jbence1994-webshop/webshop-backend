@@ -51,6 +51,21 @@ public class GlobalExceptionHandlerTests {
         );
     }
 
+    private static Stream<Arguments> imageUploadOrImageDeletionExceptionParams() {
+        return Stream.of(
+                Arguments.of(
+                        "ImageUploadException",
+                        new ImageUploadException("The photo could not be uploaded successfully."),
+                        "The photo could not be uploaded successfully."
+                ),
+                Arguments.of(
+                        "ImageUploadException",
+                        new ImageDeletionException("The photo could not be deleted successfully."),
+                        "The photo could not be deleted successfully."
+                )
+        );
+    }
+
     @Test
     public void handleHttpMessageNotReadableExceptionTest() {
         var result = globalExceptionHandler.handleHttpMessageNotReadableException();
@@ -132,22 +147,18 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getBody().error(), equalTo("Invalid file extension: .jpeg"));
     }
 
-    @Test
-    public void handleImageUploadExceptionTest() {
-        var result = globalExceptionHandler.handleImageUploadException(new ImageUploadException("The photo could not be uploaded successfully."));
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("imageUploadOrImageDeletionExceptionParams")
+    public void handleImageUploadOrImageDeletionExceptionTests(
+            String testCase,
+            RuntimeException exception,
+            String expectedExceptionMessage
+    ) {
+        var result = globalExceptionHandler.handleImageUploadOrImageDeletionException(exception);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("The photo could not be uploaded successfully."));
-    }
-
-    @Test
-    public void handleImageDeletionExceptionTest() {
-        var result = globalExceptionHandler.handleImageDeletionException(new ImageDeletionException("The photo could not be deleted successfully."));
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("The photo could not be deleted successfully."));
+        assertThat(result.getBody().error(), equalTo(expectedExceptionMessage));
     }
 
     @Test

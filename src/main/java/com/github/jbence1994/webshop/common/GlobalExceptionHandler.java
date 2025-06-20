@@ -73,13 +73,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(exception = ImageUploadException.class)
-    public ResponseEntity<ErrorDto> handleImageUploadException(ImageUploadException exception) {
-        return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
-    }
-
-    @ExceptionHandler(exception = ImageDeletionException.class)
-    public ResponseEntity<ErrorDto> handleImageDeletionException(ImageDeletionException exception) {
+    @ExceptionHandler(exception = {
+            ImageUploadException.class,
+            ImageDeletionException.class
+    })
+    public ResponseEntity<ErrorDto> handleImageUploadOrImageDeletionException(RuntimeException exception) {
         return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
 
