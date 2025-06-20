@@ -16,13 +16,14 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     @Override
     public List<Order> getOrders() {
         var user = authService.getCurrentUser();
-        return orderRepository.getOrdersByCustomer(user);
+
+        return orderRepository.findAllByCustomer(user.getId());
     }
 
     @Override
     public Order getOrder(Long id) {
         var order = orderRepository
-                .getOrderWithItems(id)
+                .findByIdWithItems(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
 
         var user = authService.getCurrentUser();
