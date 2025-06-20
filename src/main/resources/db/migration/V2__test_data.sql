@@ -49,27 +49,12 @@ VALUES (@profileId, 'Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', '
 
 INSERT INTO coupons (code, type, value, description, expiration_date)
 VALUES ('WELCOME10', 'PERCENT_OFF', 0.10, '10% off welcome coupon', '9999-12-31 23:59:59'),
-       ('SPRING15', 'PERCENT_OFF', 0.15, '15% off spring promotion', '2025-03-31 23:59:59'),
-       ('SAVE20', 'PERCENT_OFF', 0.20, '20% off site-wide sale', '2025-11-30 23:59:59'),
-       ('NEWUSER5', 'FIXED_AMOUNT', 5.00, '$5 off first purchase', '9999-12-31 23:59:59'),
-       ('CASHBACK5', 'FIXED_AMOUNT', 5.00, '$5 cashback on any order', '2025-09-30 23:59:59'),
-       ('EXTRA5', 'FIXED_AMOUNT', 5.00, '$5 off sale items', '2025-02-28 23:59:59'),
-       ('FREESHIP', 'FREE_SHIPPING', 0.00, 'Free shipping on all orders', '2025-12-31 23:59:59'),
-       ('BUY1GET1', 'BUY_ONE_GET_ONE', 0.00, 'Buy one get one free', '2025-12-31 23:59:59');
+       ('SPRING15', 'FIXED_AMOUNT', 0.15, '$15 cashback spring promotion', '2025-03-31 23:59:59'),
+       ('FREESHIP', 'FREE_SHIPPING', 0.00, 'Free shipping on all orders', '2026-12-31 23:59:59');
 
-SET @percentOffNotExpiredCoupon := (SELECT code
-                                    FROM coupons
-                                    WHERE code = 'WELCOME10');
-
-SET @fixedAmountNotExpiredCoupon := (SELECT code
-                                     FROM coupons
-                                     WHERE code = 'NEWUSER5');
-
-SET @percentOffExpiredCoupon := (SELECT code
-                                 FROM coupons
-                                 WHERE code = 'SPRING15');
+SET @couponCode := (SELECT code
+                    FROM coupons
+                    WHERE code = 'WELCOME10');
 
 INSERT INTO user_coupons (user_id, coupon_code)
-VALUES (@userId, @percentOffNotExpiredCoupon),
-       (@userId, @fixedAmountNotExpiredCoupon),
-       (@userId, @percentOffExpiredCoupon);
+VALUES (@userId, @couponCode);
