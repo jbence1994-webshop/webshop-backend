@@ -6,4 +6,6 @@ public interface CouponQueryService {
     List<Coupon> getCoupons();
 
     Coupon getCoupon(String code);
+
+    boolean isRedeemedCoupon(String code);
 }
