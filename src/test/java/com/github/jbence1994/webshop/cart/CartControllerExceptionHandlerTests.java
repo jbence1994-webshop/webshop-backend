@@ -78,8 +78,8 @@ public class CartControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleCartIsEmptyExceptionTest() {
-        var result = cartControllerExceptionHandler.handleCartIsEmptyException(new CartIsEmptyException(CART_ID));
+    public void handleEmptyCartExceptionTest() {
+        var result = cartControllerExceptionHandler.handleEmptyCartException(new EmptyCartException(CART_ID));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
