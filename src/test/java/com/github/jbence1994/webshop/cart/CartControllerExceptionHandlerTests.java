@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.cart;
 
-import com.github.jbence1994.webshop.coupon.CouponExpiredException;
 import com.github.jbence1994.webshop.coupon.CouponNotFoundException;
+import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -85,8 +85,8 @@ public class CartControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleCouponExpiredExceptionTest() {
-        var result = cartControllerExceptionHandler.handleCouponExpiredException(new CouponExpiredException(COUPON_3_CODE));
+    public void handleExpiredCouponExceptionTest() {
+        var result = cartControllerExceptionHandler.handleExpiredCouponException(new ExpiredCouponException(COUPON_3_CODE));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));

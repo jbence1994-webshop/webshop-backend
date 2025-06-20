@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.order;
 
-import com.github.jbence1994.webshop.user.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,10 +10,10 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     @EntityGraph(attributePaths = "items.product")
-    @Query("SELECT o FROM Order o WHERE o.customer = :customer")
-    List<Order> getOrdersByCustomer(@Param("customer") User customer);
+    @Query("SELECT o FROM Order o WHERE o.customer.id = :customerId ORDER BY o.createdAt DESC")
+    List<Order> findAllByCustomer(@Param("customerId") Long customerId);
 
     @EntityGraph(attributePaths = "items.product")
     @Query("SELECT o FROM Order o WHERE o.id = :orderId")
-    Optional<Order> getOrderWithItems(@Param("orderId") Long orderId);
+    Optional<Order> findByIdWithItems(@Param("orderId") Long orderId);
 }
