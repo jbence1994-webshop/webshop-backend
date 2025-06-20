@@ -1,8 +1,7 @@
 package com.github.jbence1994.webshop.coupon;
 
-import com.github.jbence1994.webshop.user.User;
+import com.github.jbence1994.webshop.auth.AuthService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,30 +10,20 @@ import java.util.List;
 @AllArgsConstructor
 public class CouponQueryServiceImpl implements CouponQueryService {
     private final CouponRepository couponRepository;
+    private final AuthService authService;
 
     @Override
     public List<Coupon> getCoupons() {
-        var sortedCoupons = couponRepository
-                .findAll(Sort.by(Sort.Direction.ASC, "expirationDate"));
+        var user = authService.getCurrentUser();
 
-        return sortedCoupons.stream()
-                .filter(coupon -> !coupon.isExpired())
-                .toList();
+        return couponRepository.findAllByUser(user.getId());
     }
 
     @Override
     public Coupon getCoupon(String code) {
+        // FIXME: Refactor later to a User wouldn't be able to apply another User's coupon to it's own cart.
         return couponRepository
                 .findById(code)
                 .orElseThrow(() -> new CouponNotFoundException(code));
-    }
-
-    @Override
-    public List<Coupon> getCouponsByUser(User user) {
-        var userCoupons = couponRepository.getCouponsByUser(user);
-
-        return userCoupons.stream()
-                .filter(coupon -> !coupon.isExpired())
-                .toList();
     }
 }

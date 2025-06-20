@@ -1,7 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import com.github.jbence1994.webshop.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +49,7 @@ public class OrderQueryServiceImplTests {
 
     @Test
     public void getOrdersTest() {
-        when(orderRepository.getOrdersByCustomer(any())).thenReturn(List.of(order()));
+        when(orderRepository.findAllByCustomer(any())).thenReturn(List.of(order()));
 
         var result = orderQueryService.getOrders();
 
@@ -60,7 +59,7 @@ public class OrderQueryServiceImplTests {
 
     @Test
     public void getOrderTest_HappyPath() {
-        when(orderRepository.getOrderWithItems(any())).thenReturn(Optional.of(order()));
+        when(orderRepository.findByIdWithItems(any())).thenReturn(Optional.of(order()));
 
         var result = assertDoesNotThrow(() -> orderQueryService.getOrder(1L));
 
@@ -75,7 +74,7 @@ public class OrderQueryServiceImplTests {
 
     @Test
     public void getOrderTest_UnhappyPath_OrderNotFoundException() {
-        when(orderRepository.getOrderWithItems(any())).thenReturn(Optional.empty());
+        when(orderRepository.findByIdWithItems(any())).thenReturn(Optional.empty());
 
         var result = assertThrows(
                 OrderNotFoundException.class,
@@ -88,7 +87,7 @@ public class OrderQueryServiceImplTests {
     @Test
     public void getOrderTest_UnhappyPath_AccessDeniedException() {
         when(authService.getCurrentUser()).thenReturn(anotherUser());
-        when(orderRepository.getOrderWithItems(any())).thenReturn(Optional.of(order()));
+        when(orderRepository.findByIdWithItems(any())).thenReturn(Optional.of(order()));
 
         var result = assertThrows(
                 AccessDeniedException.class,
