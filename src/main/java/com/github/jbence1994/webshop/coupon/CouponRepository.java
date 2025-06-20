@@ -13,11 +13,12 @@ public interface CouponRepository extends JpaRepository<Coupon, String> {
 
     @Modifying
     @Query(
-            value = "UPDATE user_coupons SET redeemed = 1, redeemed_at = CURRENT_TIMESTAMP WHERE user_id = :userId AND coupon_code = :couponCode",
+            value = "UPDATE user_coupons SET redeemed = 1, redeemed_at = CURRENT_TIMESTAMP, order_id = :orderId WHERE user_id = :userId AND coupon_code = :couponCode",
             nativeQuery = true
     )
     void redeemCoupon(
             @Param("userId") Long userId,
-            @Param("couponCode") String couponCode
+            @Param("couponCode") String couponCode,
+            @Param("orderId") Long orderId
     );
 }

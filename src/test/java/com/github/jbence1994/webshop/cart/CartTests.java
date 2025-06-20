@@ -12,6 +12,7 @@ import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
+import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_CODE;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -108,6 +109,13 @@ public class CartTests {
         var result = cart.hasCouponApplied();
 
         assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getCouponCodeTest() {
+        var result = cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon().getCouponCode();
+
+        assertThat(result, equalTo(COUPON_2_CODE));
     }
 
     @Test
