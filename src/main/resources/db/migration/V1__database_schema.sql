@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS profiles
     date_of_birth    DATE         NOT NULL,
     phone_number     VARCHAR(25) UNIQUE,
     avatar_file_name VARCHAR(41) UNIQUE,
+    loyalty_points   INT UNSIGNED NOT NULL DEFAULT 0,
     created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_profiles_users

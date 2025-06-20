@@ -17,5 +17,6 @@ public class ProfileDto {
     private String lastName;
     private LocalDate dateOfBirth;
     private String phoneNumber;
+    private int loyaltyPoints;
     private AddressDto address;
 }
