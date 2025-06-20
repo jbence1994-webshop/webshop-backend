@@ -30,8 +30,8 @@ public class CartControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(exception = CartIsEmptyException.class)
-    public ResponseEntity<ErrorDto> handleCartIsEmptyException(CartIsEmptyException exception) {
+    @ExceptionHandler(exception = EmptyCartException.class)
+    public ResponseEntity<ErrorDto> handleEmptyCartException(EmptyCartException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 

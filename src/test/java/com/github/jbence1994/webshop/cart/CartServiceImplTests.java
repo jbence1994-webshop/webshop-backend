@@ -60,10 +60,10 @@ public class CartServiceImplTests {
     private static Stream<Arguments> applyCouponToCartUnhappyPathParams() {
         return Stream.of(
                 Arguments.of(
-                        "CartIsEmptyException",
+                        "EmptyCartException",
                         emptyCart(),
                         coupon1(),
-                        CartIsEmptyException.class,
+                        EmptyCartException.class,
                         "Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."
                 ),
                 Arguments.of(
