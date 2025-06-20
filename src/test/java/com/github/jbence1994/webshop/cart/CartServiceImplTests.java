@@ -1,8 +1,8 @@
 package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
-import com.github.jbence1994.webshop.coupon.CouponExpiredException;
 import com.github.jbence1994.webshop.coupon.CouponQueryService;
+import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.product.ProductQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,10 +67,10 @@ public class CartServiceImplTests {
                         "Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."
                 ),
                 Arguments.of(
-                        "CouponExpiredException",
+                        "ExpiredCouponException",
                         cartWithOneItem(),
                         coupon3(),
-                        CouponExpiredException.class,
+                        ExpiredCouponException.class,
                         "Coupon with the given code 'SPRING15' has expired."
                 )
         );

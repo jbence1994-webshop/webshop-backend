@@ -1,8 +1,8 @@
 package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.common.ErrorDto;
-import com.github.jbence1994.webshop.coupon.CouponExpiredException;
 import com.github.jbence1994.webshop.coupon.CouponNotFoundException;
+import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +35,8 @@ public class CartControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(exception = CouponExpiredException.class)
-    public ResponseEntity<ErrorDto> handleCouponExpiredException(CouponExpiredException exception) {
+    @ExceptionHandler(exception = ExpiredCouponException.class)
+    public ResponseEntity<ErrorDto> handleExpiredCouponException(ExpiredCouponException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 }
