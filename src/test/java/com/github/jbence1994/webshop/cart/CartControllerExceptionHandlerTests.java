@@ -2,8 +2,6 @@ package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.CouponExpiredException;
 import com.github.jbence1994.webshop.coupon.CouponNotFoundException;
-import com.github.jbence1994.webshop.image.ImageDeletionException;
-import com.github.jbence1994.webshop.image.ImageUploadException;
 import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
