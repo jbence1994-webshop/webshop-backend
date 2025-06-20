@@ -1,11 +1,11 @@
 package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.order.OrderItem;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,7 +41,7 @@ public class Cart {
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
 
     @ManyToOne
@@ -105,5 +105,16 @@ public class Cart {
         return PriceAdjustmentStrategyFactory
                 .getPriceAdjustmentStrategy(appliedCoupon.getType())
                 .adjustPrice(totalPrice, appliedCoupon.getValue());
+    }
+
+    public List<OrderItem> fromItems() {
+        var orderItems = new ArrayList<OrderItem>();
+
+        items.forEach(item -> {
+            var orderItem = new OrderItem(item.getProduct(), item.getQuantity());
+            orderItems.add(orderItem);
+        });
+
+        return orderItems;
     }
 }

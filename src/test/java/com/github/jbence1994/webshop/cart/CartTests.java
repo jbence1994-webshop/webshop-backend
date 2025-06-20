@@ -1,11 +1,9 @@
 package com.github.jbence1994.webshop.cart;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
@@ -23,7 +21,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-@ExtendWith(MockitoExtension.class)
 public class CartTests {
     private final Cart cart = cartWithTwoItems();
     private final Cart emptyCart = emptyCart();
@@ -142,5 +139,13 @@ public class CartTests {
         var result = cart.calculateTotalPrice();
 
         assertThat(result, equalTo(expectedResult));
+    }
+
+    @Test
+    public void fromItemsTest() {
+        var result = cart.fromItems();
+
+        assertThat(result, not(empty()));
+        assertThat(result.size(), equalTo(2));
     }
 }

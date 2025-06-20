@@ -79,6 +79,8 @@ public class CartServiceImpl implements CartService {
             throw new ExpiredCouponException(coupon.getCode());
         }
 
+        // FIXME: Do not allow User to re-apply an already redeemed coupon.
+
         cart.setAppliedCoupon(coupon);
         cartRepository.save(cart);
 

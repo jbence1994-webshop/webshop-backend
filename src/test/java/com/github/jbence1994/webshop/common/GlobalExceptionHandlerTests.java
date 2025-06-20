@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.image.ImageDeletionException;
 import com.github.jbence1994.webshop.image.ImageUploadException;
 import com.github.jbence1994.webshop.image.InvalidFileExtensionException;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.common.FieldErrorTestObject.fieldError;
 import static com.github.jbence1994.webshop.common.FileTestConstants.MAX_UPLOAD_SIZE;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError1;
@@ -136,6 +138,15 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("No user was found with the given ID: #1."));
+    }
+
+    @Test
+    public void handleEmptyCartExceptionTest() {
+        var result = globalExceptionHandler.handleEmptyCartException(new EmptyCartException(CART_ID));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
     }
 
     @Test
