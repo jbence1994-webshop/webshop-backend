@@ -64,7 +64,7 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
-        verify(couponService, never()).redeemCoupon(any(), any());
+        verify(couponService, never()).redeemCoupon(any(), any(), any());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class CheckoutServiceImplTests {
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(6);
-        doNothing().when(couponService).redeemCoupon(any(), any());
+        doNothing().when(couponService).redeemCoupon(any(), any(), any());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -83,7 +83,7 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
-        verify(couponService, times(1)).redeemCoupon(any(), any());
+        verify(couponService, times(1)).redeemCoupon(any(), any(), any());
     }
 
     @Test
@@ -101,6 +101,6 @@ public class CheckoutServiceImplTests {
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
         verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
-        verify(couponService, never()).redeemCoupon(any(), any());
+        verify(couponService, never()).redeemCoupon(any(), any(), any());
     }
 }

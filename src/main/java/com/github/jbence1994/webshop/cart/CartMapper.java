@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 public interface CartMapper {
 
     @Mapping(target = "totalPrice", expression = "java(cart.calculateTotalPrice())")
-    @Mapping(target = "appliedCoupon", expression = "java(cart.getAppliedCoupon() != null ? cart.getAppliedCoupon().getCode() : null)")
+    @Mapping(target = "appliedCoupon", expression = "java(cart.getAppliedCoupon() != null ? cart.getCouponCode() : null)")
     CartDto toDto(Cart cart);
 
     @Mapping(target = "totalPrice", expression = "java(cartItem.calculateTotalPrice())")
