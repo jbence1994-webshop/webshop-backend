@@ -3,6 +3,9 @@ package com.github.jbence1994.webshop.auth;
 import com.github.jbence1994.webshop.user.UserQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -10,7 +13,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 
+import java.util.stream.Stream;
+
 import static com.github.jbence1994.webshop.auth.JwtTestObject.accessToken;
+import static com.github.jbence1994.webshop.auth.JwtTestObject.expiredAccessToken;
 import static com.github.jbence1994.webshop.auth.JwtTestObject.refreshToken;
 import static com.github.jbence1994.webshop.auth.LoginRequestTestObject.loginRequest;
 import static com.github.jbence1994.webshop.auth.LoginResponseTestObject.loginResponse;
@@ -43,6 +49,13 @@ public class AuthServiceImplTests {
     @InjectMocks
     private AuthServiceImpl authService;
 
+    private static Stream<Arguments> jwtParams() {
+        return Stream.of(
+                Arguments.of("Jwt is null", null),
+                Arguments.of("Jwt is expired", expiredAccessToken())
+        );
+    }
+
     @Test
     public void loginTest() {
         when(authenticationManager.authenticate(any())).thenReturn(mock(Authentication.class));
@@ -69,9 +82,13 @@ public class AuthServiceImplTests {
         assertThat(result.toString(), equalTo(accessToken().toString()));
     }
 
-    @Test
-    public void refreshAccessTokenTest_UnhappyPath_JwtIsNull() {
-        when(jwtService.parseToken(any())).thenReturn(null);
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("jwtParams")
+    public void refreshAccessTokenTest_UnhappyPaths(
+            String testCase,
+            Jwt jwt
+    ) {
+        when(jwtService.parseToken(any())).thenReturn(jwt);
 
         var result = assertThrows(
                 BadCredentialsException.class,
