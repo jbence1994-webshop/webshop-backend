@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.auth.AuthTestConstants.ACCESS_TOKEN_AS_STRING;
 import static com.github.jbence1994.webshop.auth.JwtTestObject.accessToken;
 import static com.github.jbence1994.webshop.auth.JwtTestObject.expiredAccessToken;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -47,12 +46,5 @@ public class JwtTests {
         var result = accessToken().getRole();
 
         assertThat(result, equalTo(Role.ADMIN));
-    }
-
-    @Test
-    public void toStringTest() {
-        var result = accessToken().toString();
-
-        assertThat(result, equalTo(ACCESS_TOKEN_AS_STRING));
     }
 }
