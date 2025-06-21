@@ -6,6 +6,7 @@ import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.OrderService;
 import com.github.jbence1994.webshop.user.LoyaltyPointsCalculator;
+import com.github.jbence1994.webshop.user.RewardPointsCalculator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,6 +35,9 @@ public class CheckoutServiceImplTests {
 
     @Mock
     private LoyaltyPointsCalculator loyaltyPointsCalculator;
+
+    @Mock
+    private RewardPointsCalculator rewardPointsCalculator;
 
     @Mock
     private CartQueryService cartQueryService;

@@ -8,6 +8,7 @@ import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
 import com.github.jbence1994.webshop.order.PaymentStatus;
 import com.github.jbence1994.webshop.user.LoyaltyPointsCalculator;
+import com.github.jbence1994.webshop.user.RewardPointsCalculator;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
     private final LoyaltyPointsCalculator loyaltyPointsCalculator;
+    private final RewardPointsCalculator rewardPointsCalculator;
     private final CartQueryService cartQueryService;
     private final CouponService couponService;
     private final OrderService orderService;
@@ -52,7 +54,12 @@ public class CheckoutServiceImpl implements CheckoutService {
         var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
         user.increaseLoyaltyPoints(loyaltyPoints);
 
-        // TODO: Algorithm to reward points.
+        var tier = user.getMembershipTier();
+        var rewardPoints = rewardPointsCalculator.calculateRewardPoints(
+                order.getTotalPrice(),
+                tier.getRewardPointsMultiplier()
+        );
+        user.increaseRewardPoints(rewardPoints);
 
         // TODO: Payment integration.
 
