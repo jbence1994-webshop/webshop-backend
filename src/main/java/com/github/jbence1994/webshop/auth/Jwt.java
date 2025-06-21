@@ -2,11 +2,15 @@ package com.github.jbence1994.webshop.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.AllArgsConstructor;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-public record Jwt(Claims claims, SecretKey secretKey) {
+@AllArgsConstructor
+public class Jwt {
+    private Claims claims;
+    private SecretKey secretKey;
 
     public boolean isExpired() {
         return claims.getExpiration().before(new Date());

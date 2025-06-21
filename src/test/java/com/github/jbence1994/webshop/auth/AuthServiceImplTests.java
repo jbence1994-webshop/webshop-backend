@@ -53,7 +53,8 @@ public class AuthServiceImplTests {
 
         var result = authService.login(loginRequest());
 
-        assertThat(result, equalTo(loginResponse()));
+        assertThat(result.accessToken().toString(), equalTo(loginResponse().accessToken().toString()));
+        assertThat(result.refreshToken().toString(), equalTo(loginResponse().refreshToken().toString()));
     }
 
     @Test
@@ -65,7 +66,7 @@ public class AuthServiceImplTests {
 
         var result = authService.refreshAccessToken(refreshToken().toString());
 
-        assertThat(result, equalTo(accessToken()));
+        assertThat(result.toString(), equalTo(accessToken().toString()));
     }
 
     @Test
