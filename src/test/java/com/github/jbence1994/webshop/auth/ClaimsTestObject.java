@@ -32,7 +32,7 @@ public final class ClaimsTestObject {
                 .add("firstName", userIdentity().firstName())
                 .add("middleName", userIdentity().middleName())
                 .add("lastName", userIdentity().lastName())
-                .add("role", userIdentity().role())
+                .add("role", userIdentity().role().name())
                 .expiration(expiration)
                 .build();
     }
