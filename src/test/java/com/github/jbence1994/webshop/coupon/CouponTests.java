@@ -22,7 +22,7 @@ public class CouponTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("couponParams")
-    public void isExpiredTest_Expired(
+    public void isExpiredTests(
             String testCase,
             Coupon coupon,
             boolean expectedResult
