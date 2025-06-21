@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.cart;
 
+import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
 import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.product.ProductQueryService;
@@ -76,10 +77,12 @@ public class CartServiceImpl implements CartService {
         }
 
         if (coupon.isExpired()) {
-            throw new ExpiredCouponException(coupon.getCode());
+            throw new ExpiredCouponException(couponCode);
         }
 
-        // FIXME: Do not allow User to re-apply an already redeemed coupon.
+        if (couponQueryService.isRedeemedCoupon(couponCode)) {
+            throw new CouponAlreadyRedeemedException(couponCode);
+        }
 
         cart.setAppliedCoupon(coupon);
         cartRepository.save(cart);

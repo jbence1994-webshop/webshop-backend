@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.cart;
 
+import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
 import com.github.jbence1994.webshop.coupon.CouponNotFoundException;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.product.ProductNotFoundException;
@@ -81,6 +82,15 @@ public class CartControllerExceptionHandlerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("Coupon with the given code 'SPRING15' has expired."));
+        assertThat(result.getBody().error(), equalTo("Coupon with the given code: 'SPRING15' has expired."));
+    }
+
+    @Test
+    public void handleCouponAlreadyRedeemedExceptionTest() {
+        var result = cartControllerExceptionHandler.handleCouponAlreadyRedeemedException(new CouponAlreadyRedeemedException(COUPON_3_CODE));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Coupon with the given code: 'SPRING15' is already redeemed. Try another one."));
     }
 }

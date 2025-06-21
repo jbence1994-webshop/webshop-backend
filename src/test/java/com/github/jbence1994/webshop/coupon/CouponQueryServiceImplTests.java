@@ -3,14 +3,19 @@ package com.github.jbence1994.webshop.coupon;
 import com.github.jbence1994.webshop.auth.AuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
+import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon1;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon2;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
@@ -38,6 +43,13 @@ public class CouponQueryServiceImplTests {
 
     @InjectMocks
     private CouponQueryServiceImpl couponQueryService;
+
+    private static Stream<Arguments> isRedeemedCouponTestParams() {
+        return Stream.of(
+                Arguments.of("Coupon is redeemed", COUPON_1_CODE, 1, true),
+                Arguments.of("Coupon is not yet redeemed", COUPON_2_CODE, 0, false)
+        );
+    }
 
     @Test
     public void getCouponsTest() {
@@ -77,5 +89,20 @@ public class CouponQueryServiceImplTests {
         );
 
         assertThat(result.getMessage(), equalTo("No coupon was found with the given coupon code: 'WELCOME10'."));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("isRedeemedCouponTestParams")
+    public void isRedeemedCouponTests(
+            String testCase,
+            String couponCode,
+            int returnValueFromRepository,
+            boolean expectedResult
+    ) {
+        when(couponRepository.isRedeemedCoupon(any())).thenReturn(returnValueFromRepository);
+
+        var result = couponQueryService.isRedeemedCoupon(couponCode);
+
+        assertThat(result, equalTo(expectedResult));
     }
 }
