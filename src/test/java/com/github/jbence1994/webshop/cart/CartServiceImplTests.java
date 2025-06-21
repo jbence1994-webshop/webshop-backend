@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
 import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.product.ProductQueryService;
@@ -71,7 +72,7 @@ public class CartServiceImplTests {
                         cartWithOneItem(),
                         coupon3(),
                         ExpiredCouponException.class,
-                        "Coupon with the given code 'SPRING15' has expired."
+                        "Coupon with the given code: 'SPRING15' has expired."
                 )
         );
     }
@@ -129,12 +130,14 @@ public class CartServiceImplTests {
     public void applyCouponToCartTest_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(couponQueryService.getCoupon(any())).thenReturn(coupon1());
+        when(couponQueryService.isRedeemedCoupon(any())).thenReturn(false);
         when(cartRepository.save(any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
 
         assertDoesNotThrow(() -> cartService.applyCouponToCart(CART_ID, COUPON_1_CODE));
 
         verify(cartQueryService, times(1)).getCart(any());
         verify(couponQueryService, times(1)).getCoupon(any());
+        verify(couponQueryService, times(1)).isRedeemedCoupon(any());
         verify(cartRepository, times(1)).save(any());
     }
 
@@ -152,13 +155,33 @@ public class CartServiceImplTests {
 
         var result = assertThrows(
                 expectedException,
-                () -> cartService.applyCouponToCart(CART_ID, COUPON_1_CODE)
+                () -> cartService.applyCouponToCart(CART_ID, coupon.getCode())
         );
 
         assertThat(result.getMessage(), equalTo(expectedExceptionMessage));
 
         verify(cartQueryService, times(1)).getCart(any());
         verify(couponQueryService, times(1)).getCoupon(any());
+        verify(couponQueryService, never()).isRedeemedCoupon(any());
+        verify(cartRepository, never()).save(any());
+    }
+
+    @Test
+    public void applyCouponToCartTest_UnhappyPath_CouponAlreadyRedeemedException() {
+        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
+        when(couponQueryService.getCoupon(any())).thenReturn(coupon1());
+        when(couponQueryService.isRedeemedCoupon(any())).thenReturn(true);
+
+        var result = assertThrows(
+                CouponAlreadyRedeemedException.class,
+                () -> cartService.applyCouponToCart(CART_ID, COUPON_1_CODE)
+        );
+
+        assertThat(result.getMessage(), equalTo("Coupon with the given code: 'WELCOME10' is already redeemed. Try another one."));
+
+        verify(cartQueryService, times(1)).getCart(any());
+        verify(couponQueryService, times(1)).getCoupon(any());
+        verify(couponQueryService, times(1)).isRedeemedCoupon(any());
         verify(cartRepository, never()).save(any());
     }
 

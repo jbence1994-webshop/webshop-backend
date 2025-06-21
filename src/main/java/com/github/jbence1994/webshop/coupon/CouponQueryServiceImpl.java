@@ -26,4 +26,9 @@ public class CouponQueryServiceImpl implements CouponQueryService {
                 .findById(code)
                 .orElseThrow(() -> new CouponNotFoundException(code));
     }
+
+    @Override
+    public boolean isRedeemedCoupon(String code) {
+        return couponRepository.isRedeemedCoupon(code) == 1;
+    }
 }
