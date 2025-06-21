@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.auth;
 
+import com.github.jbence1994.webshop.user.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,10 @@ public class Jwt {
 
     public Long getUserId() {
         return Long.valueOf(claims.getSubject());
+    }
+
+    public Role getRole() {
+        return claims.get("role", Role.class);
     }
 
     @Override

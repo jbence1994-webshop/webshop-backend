@@ -61,9 +61,9 @@ public class JwtAuthenticationFilterTests {
 
         var parsedJwt = mock(Jwt.class);
         when(jwtService.parseToken(any())).thenReturn(parsedJwt);
-        when(jwtService.getRoleFromToken(any())).thenReturn(Role.ADMIN);
-        when(jwtService.getUserIdFromToken(any())).thenReturn(1L);
         when(parsedJwt.isExpired()).thenReturn(false);
+        when(parsedJwt.getUserId()).thenReturn(1L);
+        when(parsedJwt.getRole()).thenReturn(Role.ADMIN);
 
         filter.doFilterInternal(request, response, filterChain);
 
