@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.auth;
 
-import com.github.jbence1994.webshop.user.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -32,16 +31,6 @@ public class JwtServiceImpl implements JwtService {
         } catch (JwtException exception) {
             return null;
         }
-    }
-
-    @Override
-    public Long getUserIdFromToken(String token) {
-        return Long.valueOf(getClaims(token).getSubject());
-    }
-
-    @Override
-    public Role getRoleFromToken(String token) {
-        return Role.valueOf(getClaims(token).get("role", String.class));
     }
 
     private Jwt generateToken(UserIdentity identity, long tokenExpiration) {

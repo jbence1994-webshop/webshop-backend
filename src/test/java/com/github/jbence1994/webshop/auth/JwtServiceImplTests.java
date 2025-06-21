@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.auth;
 
-import com.github.jbence1994.webshop.user.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,19 +86,5 @@ class JwtServiceImplTests {
         var result = jwtService.parseToken(MALFORMED_TOKEN);
 
         assertThat(result, is(nullValue()));
-    }
-
-    @Test
-    public void getUserIdFromTokenTest() {
-        var result = jwtService.getUserIdFromToken(jwtService.generateAccessToken(userIdentity()).toString());
-
-        assertThat(result, equalTo(1L));
-    }
-
-    @Test
-    public void getRoleFromTokenTest() {
-        var result = jwtService.getRoleFromToken(jwtService.generateAccessToken(userIdentity()).toString());
-
-        assertThat(result, equalTo(Role.ADMIN));
     }
 }
