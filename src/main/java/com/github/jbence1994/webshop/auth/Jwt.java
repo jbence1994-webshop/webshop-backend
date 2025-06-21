@@ -22,7 +22,7 @@ public class Jwt {
     }
 
     public Role getRole() {
-        return claims.get("role", Role.class);
+        return Role.valueOf(claims.get("role", String.class));
     }
 
     @Override
