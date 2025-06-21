@@ -71,7 +71,7 @@ public class CartServiceImplTests {
                         cartWithOneItem(),
                         coupon3(),
                         ExpiredCouponException.class,
-                        "Coupon with the given code 'SPRING15' has expired."
+                        "Coupon with the given code: 'SPRING15' has expired."
                 )
         );
     }
