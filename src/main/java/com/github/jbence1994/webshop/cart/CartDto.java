@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +11,7 @@ import java.util.UUID;
 @Getter
 public class CartDto {
     private UUID id;
-    private List<CartItemDto> items = new ArrayList<>();
+    private List<CartItemDto> items;
     private String appliedCoupon;
-    private BigDecimal totalPrice = BigDecimal.ZERO;
+    private BigDecimal totalPrice;
 }
