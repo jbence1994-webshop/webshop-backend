@@ -16,4 +16,6 @@ public class CheckoutRequest {
 
     @NotNull(message = "Cart ID must be provided.")
     private UUID cartId;
+
+    // TODO: Determine rewardPointsAction is "EARN" or "BURN".
 }

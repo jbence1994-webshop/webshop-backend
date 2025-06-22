@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
@@ -55,11 +57,14 @@ public class CheckoutServiceImpl implements CheckoutService {
         user.increaseLoyaltyPoints(loyaltyPoints);
 
         var tier = user.getMembershipTier();
+        // TODO: Increase rewards points in the action is "EARN"
         var rewardPoints = rewardPointsCalculator.calculateRewardPoints(
                 order.getTotalPrice(),
                 tier.getRewardPointsMultiplier()
         );
-        user.increaseRewardPoints(rewardPoints);
+        user.earnRewardPoints(rewardPoints);
+        // TODO: Subtract all the rewardPoints from the orderTotaPrice
+        var totalPriceAfterRewardPointsBurn = order.getTotalPrice().subtract(BigDecimal.ZERO);
 
         // TODO: Payment integration.
 
