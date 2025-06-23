@@ -95,7 +95,7 @@ public class CartServiceImplTests {
         var result = cartService.addProductToCart(CART_ID, 1L);
 
         assertThat(result.getQuantity(), equalTo(cartItem().getQuantity()));
-        assertThat(result.calculateTotalPrice(), equalTo(cartItem().calculateTotalPrice()));
+        assertThat(result.calculateSubTotal(), equalTo(cartItem().calculateSubTotal()));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class CartServiceImplTests {
         var result = cartService.updateCartItem(CART_ID, 1L, 2);
 
         assertThat(result.getQuantity(), equalTo(updatedCartItem().getQuantity()));
-        assertThat(result.calculateTotalPrice(), equalTo(updatedCartItem().calculateTotalPrice()));
+        assertThat(result.calculateSubTotal(), equalTo(updatedCartItem().calculateSubTotal()));
     }
 
     @Test
