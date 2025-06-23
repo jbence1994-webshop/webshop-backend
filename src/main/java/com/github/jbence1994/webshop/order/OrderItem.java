@@ -45,6 +45,6 @@ public class OrderItem {
         this.product = product;
         this.unitPrice = product.getPrice();
         this.quantity = quantity;
-        this.subTotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+        this.subTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
 }
