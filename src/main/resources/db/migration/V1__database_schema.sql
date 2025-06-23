@@ -84,12 +84,12 @@ CREATE TABLE IF NOT EXISTS orders
 
 CREATE TABLE IF NOT EXISTS order_items
 (
-    id          BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    order_id    BIGINT         NOT NULL,
-    product_id  BIGINT         NOT NULL,
-    unit_price  DECIMAL(10, 2) NOT NULL,
-    quantity    INT            NOT NULL,
-    total_price DECIMAL(10, 2) NOT NULL,
+    id         BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    order_id   BIGINT         NOT NULL,
+    product_id BIGINT         NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    quantity   INT            NOT NULL,
+    sub_total  DECIMAL(10, 2) NOT NULL,
     CONSTRAINT fk_order_items_orders
         FOREIGN KEY (order_id) REFERENCES orders (id)
             ON DELETE CASCADE
