@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
@@ -42,9 +43,21 @@ public class CartTests {
 
     private static Stream<Arguments> cartTotalPriceCalculationParams() {
         return Stream.of(
-                Arguments.of("Without applied coupon", cartWithTwoItems(), BigDecimal.valueOf(139.98)),
-                Arguments.of("With fixed amount type of applied coupon", cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(), BigDecimal.valueOf(134.98)),
-                Arguments.of("With percent off type of applied coupon", cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(), BigDecimal.valueOf(125.99))
+                Arguments.of(
+                        "Without applied coupon",
+                        cartWithTwoItems(),
+                        new PriceCalculationResult(BigDecimal.valueOf(139.98), BigDecimal.ZERO)
+                ),
+                Arguments.of(
+                        "With fixed amount type of applied coupon",
+                        cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(),
+                        new PriceCalculationResult(BigDecimal.valueOf(134.98), BigDecimal.valueOf(5).setScale(2, RoundingMode.DOWN))
+                ),
+                Arguments.of(
+                        "With percent off type of applied coupon",
+                        cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(),
+                        new PriceCalculationResult(BigDecimal.valueOf(125.99), BigDecimal.valueOf(13.99))
+                )
         );
     }
 
@@ -142,11 +155,12 @@ public class CartTests {
     public void calculateTotalPriceTests(
             String testCase,
             Cart cart,
-            BigDecimal expectedResult
+            PriceCalculationResult expectedResult
     ) {
         var result = cart.calculateTotalPrice();
 
-        assertThat(result, equalTo(expectedResult));
+        assertThat(result.totalPrice(), equalTo(expectedResult.totalPrice()));
+        assertThat(result.discountAmount(), equalTo(expectedResult.discountAmount()));
     }
 
     @Test

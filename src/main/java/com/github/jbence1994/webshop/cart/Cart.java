@@ -97,18 +97,22 @@ public class Cart {
         return items.isEmpty();
     }
 
-    public BigDecimal calculateTotalPrice() {
+    public PriceCalculationResult calculateTotalPrice() {
         var totalPrice = items.stream()
                 .map(CartItem::calculateSubTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (!hasCouponApplied()) {
-            return totalPrice;
+            return new PriceCalculationResult(totalPrice, BigDecimal.ZERO);
         }
 
-        return PriceAdjustmentStrategyFactory
+        var discountedTotalPrice = PriceAdjustmentStrategyFactory
                 .getPriceAdjustmentStrategy(appliedCoupon.getType())
                 .adjustPrice(totalPrice, appliedCoupon.getValue());
+
+        var discountAmount = totalPrice.subtract(discountedTotalPrice);
+
+        return new PriceCalculationResult(discountedTotalPrice, discountAmount);
     }
 
     public List<OrderItem> fromItems() {

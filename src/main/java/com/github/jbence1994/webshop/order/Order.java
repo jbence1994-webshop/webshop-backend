@@ -61,10 +61,13 @@ public class Order {
     }
 
     public static Order fromCart(Cart cart, User customer) {
+        var priceCalculationResult = cart.calculateTotalPrice();
+
         var order = new Order();
         order.setCustomer(customer);
         order.setStatus(PaymentStatus.PENDING);
-        order.setTotalPrice(cart.calculateTotalPrice());
+        order.setTotalPrice(priceCalculationResult.totalPrice());
+        order.setDiscountAmount(priceCalculationResult.discountAmount());
 
         var items = cart.fromItems();
 
