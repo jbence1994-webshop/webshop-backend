@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS orders
     customer_id     BIGINT         NOT NULL,
     total_price     DECIMAL(10, 2) NOT NULL,
     discount_amount DECIMAL(10, 2) NOT NULL,
+    shipping_cost   DECIMAL(10, 2) NOT NULL,
     status          VARCHAR(20)    NOT NULL DEFAULT 'PENDING',
     created_at      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_orders_users
