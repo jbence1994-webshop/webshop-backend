@@ -44,7 +44,7 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    private BigDecimal discountTotal;
+    private BigDecimal discountAmount;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
