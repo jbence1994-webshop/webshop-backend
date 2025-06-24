@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import static com.github.jbence1994.webshop.user.ProfileTestObject.platinumProfile3;
 import static com.github.jbence1994.webshop.user.ProfileTestObject.bronzeProfile1;
 import static com.github.jbence1994.webshop.user.UserTestConstants.ANOTHER_EMAIL;
+import static com.github.jbence1994.webshop.user.UserTestConstants.ANOTHER_HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
 import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
@@ -15,7 +16,7 @@ public final class UserTestObject {
     }
 
     public static User anotherUser() {
-        return buildUser(1L, ANOTHER_EMAIL, HASHED_PASSWORD, Role.USER, bronzeProfile1());
+        return buildUser(1L, ANOTHER_EMAIL, ANOTHER_HASHED_PASSWORD, Role.USER, bronzeProfile1());
     }
 
     public static User userWithAvatar() {

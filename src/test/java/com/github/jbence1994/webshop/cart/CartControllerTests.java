@@ -22,10 +22,8 @@ import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -59,11 +57,10 @@ public class CartControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody(), allOf(
-                hasProperty("id", equalTo(emptyCartDto().getId())),
-                hasProperty("totalPrice", equalTo(emptyCartDto().getTotalPrice()))
-        ));
-        assertThat(result.getBody().getItems(), is(empty()));
+        assertThat(result.getBody().id(), equalTo(emptyCartDto().id()));
+        assertThat(result.getBody().items(), is(empty()));
+        assertThat(result.getBody().appliedCoupon(), is(nullValue()));
+        assertThat(result.getBody().totalPrice(), equalTo(emptyCartDto().totalPrice()));
     }
 
     @Test
@@ -75,10 +72,9 @@ public class CartControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody(), allOf(
-                hasProperty("quantity", equalTo(cartItemDto().getQuantity())),
-                hasProperty("totalPrice", equalTo(cartItemDto().getTotalPrice()))
-        ));
+        assertThat(result.getBody().product(), not(nullValue()));
+        assertThat(result.getBody().quantity(), equalTo(cartItemDto().quantity()));
+        assertThat(result.getBody().totalPrice(), equalTo(cartItemDto().totalPrice()));
     }
 
     @Test
@@ -88,10 +84,8 @@ public class CartControllerTests {
 
         var result = cartController.getCart(CART_ID);
 
-        assertThat(result, allOf(
-                hasProperty("id", equalTo(cartDto().getId())),
-                hasProperty("totalPrice", equalTo(cartDto().getTotalPrice()))
-        ));
+        assertThat(result.id(), equalTo(cartDto().id()));
+        assertThat(result.totalPrice(), equalTo(cartDto().totalPrice()));
     }
 
     @Test
@@ -101,10 +95,9 @@ public class CartControllerTests {
 
         var result = cartController.updateCartItem(CART_ID, 1L, updateCartItemRequest());
 
-        assertThat(result, allOf(
-                hasProperty("quantity", equalTo(updatedCartItemDto().getQuantity())),
-                hasProperty("totalPrice", equalTo(updatedCartItemDto().getTotalPrice()))
-        ));
+        assertThat(result.product(), not(nullValue()));
+        assertThat(result.quantity(), equalTo(updatedCartItemDto().quantity()));
+        assertThat(result.totalPrice(), equalTo(updatedCartItemDto().totalPrice()));
     }
 
     @Test
@@ -134,11 +127,10 @@ public class CartControllerTests {
 
         var result = cartController.applyCouponToCart(CART_ID, applyCouponToCartRequest());
 
-        assertThat(result, allOf(
-                hasProperty("id", equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getId())),
-                hasProperty("totalPrice", equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getTotalPrice())),
-                hasProperty("appliedCoupon", equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().getAppliedCoupon()))
-        ));
+        assertThat(result.id(), equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().id()));
+        assertThat(result.items().size(), equalTo(1));
+        assertThat(result.appliedCoupon(), is(nullValue()));
+        assertThat(result.totalPrice(), equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().totalPrice()));
     }
 
     @Test
@@ -148,10 +140,8 @@ public class CartControllerTests {
 
         var result = cartController.removeCouponFromCart(CART_ID);
 
-        assertThat(result, allOf(
-                hasProperty("id", equalTo(cartDto().getId())),
-                hasProperty("totalPrice", equalTo(cartDto().getTotalPrice())),
-                hasProperty("appliedCoupon", equalTo(cartDto().getAppliedCoupon()))
-        ));
+        assertThat(result.id(), equalTo(cartDto().id()));
+        assertThat(result.totalPrice(), equalTo(cartDto().totalPrice()));
+        assertThat(result.appliedCoupon(), equalTo(cartDto().appliedCoupon()));
     }
 }

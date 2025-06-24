@@ -34,12 +34,12 @@ public final class ImageUploadTestObject {
     }
 
     private static ImageUpload buildImageUpload(String originalFilename, String contentType) {
-        return new ImageUpload(
-                false,
-                originalFilename,
-                FILE_SIZE,
-                contentType,
-                new byte[FILE_SIZE.intValue()]
-        );
+        var imageUpload = new ImageUpload();
+        imageUpload.setEmpty(false);
+        imageUpload.setOriginalFilename(originalFilename);
+        imageUpload.setSize(FILE_SIZE);
+        imageUpload.setContentType(contentType);
+        imageUpload.setInputStreamBytes(new byte[FILE_SIZE.intValue()]);
+        return imageUpload;
     }
 }

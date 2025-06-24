@@ -1,8 +1,8 @@
-package com.github.jbence1994.webshop.cart;
+package com.github.jbence1994.webshop.order;
 
 import java.math.BigDecimal;
 
-public record CartProductDto(
+public record OrderProductDto(
         Long id,
         String name,
         BigDecimal price
