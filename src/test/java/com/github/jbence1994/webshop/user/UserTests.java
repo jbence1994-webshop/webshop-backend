@@ -11,6 +11,7 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -50,5 +51,12 @@ public class UserTests {
         var result = user.hasProfileAvatar();
 
         assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void earnLoyaltyPointsTest() {
+        user1.earnLoyaltyPoints(100);
+
+        assertThat(100, equalTo(user1.getProfile().getLoyaltyPoints()));
     }
 }

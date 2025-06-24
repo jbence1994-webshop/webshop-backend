@@ -68,7 +68,7 @@ public class User {
         return profile.getAvatarFileName() != null;
     }
 
-    public void increaseLoyaltyPoints(int loyaltyPoints) {
+    public void earnLoyaltyPoints(int loyaltyPoints) {
         profile.setLoyaltyPoints(profile.getLoyaltyPoints() + loyaltyPoints);
     }
 

@@ -51,7 +51,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.clear();
 
-        user.increaseLoyaltyPoints(order.calculateLoyaltyPoints());
+        user.earnLoyaltyPoints(order.calculateLoyaltyPoints());
 
         if (RewardPointsAction.BURN.equals(request.getAction())) {
             var totalPriceAsPoints = order.getTotalPrice()
