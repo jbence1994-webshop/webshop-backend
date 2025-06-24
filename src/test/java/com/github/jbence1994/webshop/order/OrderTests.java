@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class OrderTests {
 
-    private static Stream<Arguments> totalPriceParams() {
+    private static Stream<Arguments> calculateLoyaltyPointsTestParams() {
         return Stream.of(
                 Arguments.of("Total price: $19.99, loyalty points: 0", BigDecimal.valueOf(19.99), 0),
                 Arguments.of("Total price: $20, loyalty points: 1", BigDecimal.valueOf(20.00), 1),
@@ -43,7 +43,7 @@ public class OrderTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("totalPriceParams")
+    @MethodSource("calculateLoyaltyPointsTestParams")
     public void calculateLoyaltyPointsTest(
             String testCase,
             BigDecimal totalPrice,
