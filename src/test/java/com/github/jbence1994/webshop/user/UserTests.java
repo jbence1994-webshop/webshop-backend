@@ -20,7 +20,7 @@ public class UserTests {
     private final User user1 = user();
     private final User user2 = userWithAvatar();
 
-    private static Stream<Arguments> userParams() {
+    private static Stream<Arguments> hasProfileAvatarTestParams() {
         return Stream.of(
                 Arguments.of("User with avatar", userWithAvatar(), true),
                 Arguments.of("User without avatar", user(), false)
@@ -42,7 +42,7 @@ public class UserTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("userParams")
+    @MethodSource("hasProfileAvatarTestParams")
     public void hasProfileAvatarTests(
             String testCase,
             User user,
