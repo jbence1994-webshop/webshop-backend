@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class OrderItemDto {
-    private ProductDto product;
+    private OrderProductDto product;
     private int quantity;
     private BigDecimal subTotal;
 }
