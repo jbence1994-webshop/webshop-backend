@@ -11,7 +11,7 @@ public final class OrderDtoTestObject {
         return new OrderDto(
                 1L,
                 TOTAL_PRICE,
-                OrderStatus.COMPLETED.name(),
+                PaymentStatus.COMPLETED.name(),
                 CREATED_AT,
                 List.of(orderItemDto())
         );

@@ -13,7 +13,7 @@ public final class OrderTestObject {
                 1L,
                 user(),
                 TOTAL_PRICE,
-                OrderStatus.COMPLETED,
+                PaymentStatus.COMPLETED,
                 CREATED_AT,
                 List.of(orderItem())
         );

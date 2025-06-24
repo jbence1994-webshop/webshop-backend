@@ -45,7 +45,7 @@ public class Order {
     private BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private PaymentStatus status;
 
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
@@ -61,7 +61,7 @@ public class Order {
     public static Order fromCart(Cart cart, User customer) {
         var order = new Order();
         order.setCustomer(customer);
-        order.setStatus(OrderStatus.PENDING);
+        order.setStatus(PaymentStatus.PENDING);
         order.setTotalPrice(cart.calculateTotalPrice());
 
         var items = cart.fromItems();

@@ -6,7 +6,7 @@ import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
-import com.github.jbence1994.webshop.order.OrderStatus;
+import com.github.jbence1994.webshop.order.PaymentStatus;
 import com.github.jbence1994.webshop.user.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.user.RewardPointsCalculator;
 import jakarta.transaction.Transactional;
@@ -69,13 +69,13 @@ public class CheckoutServiceImpl implements CheckoutService {
         // TODO: Payment integration.
 
         // 1) If payment was successful:
-        order.setStatus(OrderStatus.COMPLETED);
+        order.setStatus(PaymentStatus.COMPLETED);
 
         //2) If payment was failed:
-        // order.setStatus(OrderStatus.FAILED);
+        // order.setStatus(PaymentStatus.FAILED);
 
         // 3) If payment aborted for a long time:
-        // order.setStatus(OrderStatus.CANCELLED);
+        // order.setStatus(PaymentStatus.CANCELLED);
 
         return new CheckoutResponse(order.getId());
     }
