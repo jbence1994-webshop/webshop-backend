@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
-public enum PaymentStatus {
+public enum OrderStatus {
     PENDING,
     CANCELLED,
     COMPLETED,

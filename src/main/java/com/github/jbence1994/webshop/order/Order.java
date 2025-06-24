@@ -49,7 +49,7 @@ public class Order {
     private BigDecimal shippingCost;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status;
+    private OrderStatus status;
 
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
@@ -67,7 +67,7 @@ public class Order {
 
         var order = new Order();
         order.setCustomer(customer);
-        order.setStatus(PaymentStatus.PENDING);
+        order.setStatus(OrderStatus.PENDING);
         order.setTotalPrice(price.getTotalPrice());
         order.setDiscountAmount(price.getDiscountAmount());
         order.setShippingCost(price.getShippingCost());

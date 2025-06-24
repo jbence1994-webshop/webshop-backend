@@ -16,7 +16,7 @@ public final class OrderTestObject {
                 TOTAL_PRICE,
                 BigDecimal.ZERO,
                 BigDecimal.valueOf(20),
-                PaymentStatus.COMPLETED,
+                OrderStatus.COMPLETED,
                 CREATED_AT,
                 List.of(orderItem())
         );
