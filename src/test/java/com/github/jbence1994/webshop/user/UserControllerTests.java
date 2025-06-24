@@ -47,24 +47,18 @@ public class UserControllerTests {
 
         var result = userController.getUser(1L);
 
-        assertThat(result, allOf(
-                hasProperty("id", equalTo(userDto().getId())),
-                hasProperty("email", equalTo(userDto().getEmail()))
-        ));
-        assertThat(result.getProfile(), allOf(
-                hasProperty("firstName", equalTo(userDto().getProfile().getFirstName())),
-                hasProperty("middleName", equalTo(userDto().getProfile().getMiddleName())),
-                hasProperty("lastName", equalTo(userDto().getProfile().getLastName())),
-                hasProperty("dateOfBirth", equalTo(userDto().getProfile().getDateOfBirth())),
-                hasProperty("phoneNumber", equalTo(userDto().getProfile().getPhoneNumber()))
-        ));
-        assertThat(result.getProfile().getAddress(), allOf(
-                hasProperty("addressLine", equalTo(userDto().getProfile().getAddress().getAddressLine())),
-                hasProperty("municipality", equalTo(userDto().getProfile().getAddress().getMunicipality())),
-                hasProperty("province", equalTo(userDto().getProfile().getAddress().getProvince())),
-                hasProperty("postalCode", equalTo(userDto().getProfile().getAddress().getPostalCode())),
-                hasProperty("country", equalTo(userDto().getProfile().getAddress().getCountry()))
-        ));
+        assertThat(result.id(), equalTo(userDto().id()));
+        assertThat(result.email(), equalTo(userDto().email()));
+        assertThat(result.profile().firstName(), equalTo(userDto().profile().firstName()));
+        assertThat(result.profile().middleName(), equalTo(userDto().profile().middleName()));
+        assertThat(result.profile().lastName(), equalTo(userDto().profile().lastName()));
+        assertThat(result.profile().dateOfBirth(), equalTo(userDto().profile().dateOfBirth()));
+        assertThat(result.profile().phoneNumber(), equalTo(userDto().profile().phoneNumber()));
+        assertThat(result.profile().address().addressLine(), equalTo(userDto().profile().address().addressLine()));
+        assertThat(result.profile().address().municipality(), equalTo(userDto().profile().address().municipality()));
+        assertThat(result.profile().address().province(), equalTo(userDto().profile().address().province()));
+        assertThat(result.profile().address().postalCode(), equalTo(userDto().profile().address().postalCode()));
+        assertThat(result.profile().address().country(), equalTo(userDto().profile().address().country()));
     }
 
     @Test
@@ -89,10 +83,8 @@ public class UserControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody(), allOf(
-                hasProperty("id", equalTo(userDto().getId())),
-                hasProperty("email", equalTo(userDto().getEmail()))
-        ));
+        assertThat(result.getBody().id(), equalTo(userDto().id()));
+        assertThat(result.getBody().email(), equalTo(userDto().email()));
     }
 
     @Test
