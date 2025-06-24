@@ -46,7 +46,9 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.clear();
 
-        user.earnLoyaltyPoints(order.calculateLoyaltyPoints());
+        var loyaltyPoints = order.calculateLoyaltyPoints();
+        user.earnLoyaltyPoints(loyaltyPoints);
+        order.setEarnedLoyaltyPoints(loyaltyPoints);
 
         // TODO: Algorithm to reward points.
 
