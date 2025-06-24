@@ -1,14 +1,12 @@
 package com.github.jbence1994.webshop.image;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-@AllArgsConstructor
-@Getter
+@Data
 public class ImageUpload {
     private boolean isEmpty;
     private String originalFilename;
