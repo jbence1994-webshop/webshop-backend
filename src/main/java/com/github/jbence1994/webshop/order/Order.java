@@ -44,8 +44,12 @@ public class Order {
 
     private BigDecimal totalPrice;
 
+    private BigDecimal discountAmount;
+
+    private BigDecimal shippingCost;
+
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status;
+    private OrderStatus status;
 
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
@@ -59,10 +63,14 @@ public class Order {
     }
 
     public static Order fromCart(Cart cart, User customer) {
+        var price = cart.calculateTotal();
+
         var order = new Order();
         order.setCustomer(customer);
-        order.setStatus(PaymentStatus.PENDING);
-        order.setTotalPrice(cart.calculateTotalPrice());
+        order.setStatus(OrderStatus.PENDING);
+        order.setTotalPrice(price.getTotalPrice());
+        order.setDiscountAmount(price.getDiscountAmount());
+        order.setShippingCost(price.getShippingCost());
 
         var items = cart.fromItems();
 

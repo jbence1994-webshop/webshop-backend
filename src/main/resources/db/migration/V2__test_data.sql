@@ -49,7 +49,7 @@ VALUES (@profileId, 'Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', '
 
 INSERT INTO coupons (code, type, value, description, expiration_date)
 VALUES ('WELCOME10', 'PERCENT_OFF', 0.10, '10% off welcome coupon', '9999-12-31 23:59:59'),
-       ('SPRING15', 'FIXED_AMOUNT', 0.15, '$15 cashback spring promotion', '2025-03-31 23:59:59'),
+       ('SPRING15', 'FIXED_AMOUNT', 15.00, '$15 cashback spring promotion', '2025-03-31 23:59:59'),
        ('FREESHIP', 'FREE_SHIPPING', 0.00, 'Free shipping on all orders', '2026-12-31 23:59:59');
 
 SET @couponCode := (SELECT code

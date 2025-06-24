@@ -11,7 +11,8 @@ public class PriceAdjustmentStrategyFactory {
 
     private static final Map<DiscountType, PriceAdjustmentStrategy> priceAdjustmentStrategies = Map.of(
             DiscountType.FIXED_AMOUNT, new FixedAmountPriceAdjustmentStrategy(),
-            DiscountType.PERCENT_OFF, new PercentOffPriceAdjustmentStrategy()
+            DiscountType.PERCENT_OFF, new PercentOffPriceAdjustmentStrategy(),
+            DiscountType.FREE_SHIPPING, new FreeShippingPriceAdjustmentStrategy()
     );
 
     public static PriceAdjustmentStrategy getPriceAdjustmentStrategy(DiscountType type) {

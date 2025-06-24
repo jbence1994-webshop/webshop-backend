@@ -16,8 +16,7 @@ import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_CODE;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon1;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon2;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -54,28 +53,28 @@ public class CouponQueryServiceImplTests {
     @Test
     public void getCouponsTest() {
         when(authService.getCurrentUser()).thenReturn(user());
-        when(couponRepository.findAllByUser(any())).thenReturn(List.of(coupon1(), coupon2()));
+        when(couponRepository.findAllByUser(any())).thenReturn(List.of(percentOffNotExpiredCoupon()));
 
         var result = couponQueryService.getCoupons();
 
-        assertThat(result.size(), equalTo(2));
+        assertThat(result.size(), equalTo(1));
 
         verify(couponRepository, times(1)).findAllByUser(any());
     }
 
     @Test
     public void getCouponTest_HappyPath() {
-        when(couponRepository.findById(any())).thenReturn(Optional.of(coupon1()));
+        when(couponRepository.findById(any())).thenReturn(Optional.of(percentOffNotExpiredCoupon()));
 
         var result = assertDoesNotThrow(() -> couponQueryService.getCoupon(COUPON_1_CODE));
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
-                hasProperty("code", equalTo(coupon1().getCode())),
-                hasProperty("type", equalTo(coupon1().getType())),
-                hasProperty("value", equalTo(coupon1().getValue())),
-                hasProperty("description", equalTo(coupon1().getDescription())),
-                hasProperty("expirationDate", equalTo(coupon1().getExpirationDate()))
+                hasProperty("code", equalTo(percentOffNotExpiredCoupon().getCode())),
+                hasProperty("type", equalTo(percentOffNotExpiredCoupon().getType())),
+                hasProperty("value", equalTo(percentOffNotExpiredCoupon().getValue())),
+                hasProperty("description", equalTo(percentOffNotExpiredCoupon().getDescription())),
+                hasProperty("expirationDate", equalTo(percentOffNotExpiredCoupon().getExpirationDate()))
         ));
     }
 
