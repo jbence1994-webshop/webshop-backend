@@ -5,7 +5,6 @@ import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.OrderService;
-import com.github.jbence1994.webshop.user.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.user.RewardPointsCalculator;
 import com.github.jbence1994.webshop.user.User;
 import org.junit.jupiter.api.Test;
@@ -43,9 +42,6 @@ import static org.mockito.Mockito.when;
 public class CheckoutServiceImplTests {
 
     @Mock
-    private LoyaltyPointsCalculator loyaltyPointsCalculator;
-
-    @Mock
     private RewardPointsCalculator rewardPointsCalculator;
 
     @Mock
@@ -81,7 +77,6 @@ public class CheckoutServiceImplTests {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
-        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(4);
         when(rewardPointsCalculator.calculateRewardPoints(any(), anyDouble())).thenReturn(134);
 
         var result = checkoutService.checkout(earnRewardPointsCheckoutRequest());
@@ -91,7 +86,6 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
-        verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
         verify(rewardPointsCalculator, times(1)).calculateRewardPoints(any(), anyDouble());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
     }
@@ -101,7 +95,6 @@ public class CheckoutServiceImplTests {
         when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
-        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(6);
         when(rewardPointsCalculator.calculateRewardPoints(any(), anyDouble())).thenReturn(202);
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
 
@@ -112,7 +105,6 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
-        verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
         verify(rewardPointsCalculator, times(1)).calculateRewardPoints(any(), anyDouble());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
     }
@@ -126,7 +118,6 @@ public class CheckoutServiceImplTests {
         when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon());
         when(authService.getCurrentUser()).thenReturn(user);
         doNothing().when(orderService).createOrder(any());
-        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(6);
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
 
         var result = checkoutService.checkout(burnRewardPointsCheckoutRequest());
@@ -136,7 +127,6 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
-        verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
     }
 
@@ -154,7 +144,6 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
-        verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
         verify(rewardPointsCalculator, never()).calculateRewardPoints(any(), anyDouble());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
     }

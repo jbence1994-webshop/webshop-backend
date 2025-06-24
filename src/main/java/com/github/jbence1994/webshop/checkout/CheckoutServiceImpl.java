@@ -7,7 +7,6 @@ import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
 import com.github.jbence1994.webshop.order.OrderStatus;
-import com.github.jbence1994.webshop.user.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.user.RewardPointsCalculator;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,6 @@ import java.math.RoundingMode;
 @Service
 @AllArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
-    private final LoyaltyPointsCalculator loyaltyPointsCalculator;
     private final RewardPointsCalculator rewardPointsCalculator;
     private final CartQueryService cartQueryService;
     private final CouponService couponService;
@@ -53,9 +51,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.clear();
 
-        // TODO: Loyalty point earning values can be change in timely campaigns => Feature gating.
-        var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
-        user.increaseLoyaltyPoints(loyaltyPoints);
+        user.increaseLoyaltyPoints(order.calculateLoyaltyPoints());
 
         if (RewardPointsAction.BURN.equals(request.getAction())) {
             var totalPriceAsPoints = order.getTotalPrice()
