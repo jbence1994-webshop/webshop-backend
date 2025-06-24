@@ -51,7 +51,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         // FIXME: Loyalty point earning values can be change in different, timely campaigns.
         // TODO: For that feature gating can be implemented.
         var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
-        user.increaseLoyaltyPoints(loyaltyPoints);
+        user.earnLoyaltyPoints(loyaltyPoints);
 
         // TODO: Algorithm to reward points.
 
