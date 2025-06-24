@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS orders
     created_at      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_orders_users
         FOREIGN KEY (customer_id) REFERENCES users (id)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
             ON UPDATE CASCADE
 );
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS order_items
             ON UPDATE CASCADE,
     CONSTRAINT fk_order_items_products
         FOREIGN KEY (product_id) REFERENCES products (id)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
             ON UPDATE CASCADE
 );
 
@@ -122,11 +122,11 @@ CREATE TABLE IF NOT EXISTS user_coupons
     PRIMARY KEY (user_id, coupon_code),
     CONSTRAINT fk_user_coupons_users
         FOREIGN KEY (user_id) REFERENCES users (id)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
             ON UPDATE CASCADE,
     CONSTRAINT fk_user_coupons_coupons
         FOREIGN KEY (coupon_code) REFERENCES coupons (code)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
             ON UPDATE CASCADE,
     CONSTRAINT fk_user_coupons_orders
         FOREIGN KEY (order_id) REFERENCES orders (id)
