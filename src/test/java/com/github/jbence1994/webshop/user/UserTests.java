@@ -51,4 +51,6 @@ public class UserTests {
 
         assertThat(result, is(expectedResult));
     }
+
+    // TODO: Add unit tests for helper methods.
 }
