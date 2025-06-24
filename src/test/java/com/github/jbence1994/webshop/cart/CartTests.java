@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFreeShippingTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_CODE;
@@ -41,22 +42,27 @@ public class CartTests {
         );
     }
 
-    private static Stream<Arguments> cartTotalPriceCalculationParams() {
+    private static Stream<Arguments> cartTotalParams() {
         return Stream.of(
                 Arguments.of(
                         "Without applied coupon",
                         cartWithTwoItems(),
-                        new PriceCalculationResult(BigDecimal.valueOf(139.98), BigDecimal.ZERO)
+                        Price.withDefaultShipping(BigDecimal.valueOf(139.98), BigDecimal.ZERO)
                 ),
                 Arguments.of(
                         "With fixed amount type of applied coupon",
                         cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(),
-                        new PriceCalculationResult(BigDecimal.valueOf(134.98), BigDecimal.valueOf(5).setScale(2, RoundingMode.DOWN))
+                        Price.withDefaultShipping(BigDecimal.valueOf(134.98), BigDecimal.valueOf(5).setScale(1, RoundingMode.DOWN))
                 ),
                 Arguments.of(
                         "With percent off type of applied coupon",
                         cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(),
-                        new PriceCalculationResult(BigDecimal.valueOf(125.99), BigDecimal.valueOf(13.99))
+                        Price.withDefaultShipping(BigDecimal.valueOf(125.99), BigDecimal.valueOf(13.99))
+                ),
+                Arguments.of(
+                        "With free shipping type of applied coupon",
+                        cartWithTwoItemsAndFreeShippingTypeOfAppliedCoupon(),
+                        Price.withFreeShipping(BigDecimal.valueOf(139.98), BigDecimal.ZERO)
                 )
         );
     }
@@ -151,16 +157,17 @@ public class CartTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("cartTotalPriceCalculationParams")
-    public void calculateTotalPriceTests(
+    @MethodSource("cartTotalParams")
+    public void calculateTotalTests(
             String testCase,
             Cart cart,
-            PriceCalculationResult expectedResult
+            Price expectedResult
     ) {
-        var result = cart.calculateTotalPrice();
+        var result = cart.calculateTotal();
 
-        assertThat(result.totalPrice(), equalTo(expectedResult.totalPrice()));
-        assertThat(result.discountAmount(), equalTo(expectedResult.discountAmount()));
+        assertThat(result.getTotalPrice(), equalTo(expectedResult.getTotalPrice()));
+        assertThat(result.getDiscountAmount(), equalTo(expectedResult.getDiscountAmount()));
+        assertThat(result.getShippingCost(), equalTo(expectedResult.getShippingCost()));
     }
 
     @Test

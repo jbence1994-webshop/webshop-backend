@@ -9,6 +9,8 @@ import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_DESCRIPTION;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_3_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_3_DESCRIPTION;
+import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_4_CODE;
+import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_4_DESCRIPTION;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.EXPIRED_COUPON_EXPIRATION_DATE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.NOT_EXPIRED_COUPON_EXPIRATION_DATE;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
@@ -43,6 +45,17 @@ public final class CouponTestObject {
                 BigDecimal.valueOf(15.00),
                 COUPON_3_DESCRIPTION,
                 EXPIRED_COUPON_EXPIRATION_DATE,
+                Set.of(user())
+        );
+    }
+
+    public static Coupon coupon4() {
+        return new Coupon(
+                COUPON_4_CODE,
+                DiscountType.FREE_SHIPPING,
+                BigDecimal.ZERO,
+                COUPON_4_DESCRIPTION,
+                NOT_EXPIRED_COUPON_EXPIRATION_DATE,
                 Set.of(user())
         );
     }
