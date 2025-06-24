@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 @AllArgsConstructor
@@ -52,20 +53,38 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.clear();
 
-        // FIXME: Loyalty point earning values can be change in different, timely campaigns.
-        // TODO: For that feature gating can be implemented.
+        // TODO: Loyalty point earning values can be change in timely campaigns => Feature gating.
         var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
         user.increaseLoyaltyPoints(loyaltyPoints);
 
-        var tier = user.getMembershipTier();
-        // TODO: Increase rewards points in the action is "EARN"
-        var rewardPoints = rewardPointsCalculator.calculateRewardPoints(
-                order.getTotalPrice(),
-                tier.getRewardPointsMultiplier()
-        );
-        user.earnRewardPoints(rewardPoints);
-        // TODO: Subtract all the rewardPoints from the orderTotaPrice
-        var totalPriceAfterRewardPointsBurn = order.getTotalPrice().subtract(BigDecimal.ZERO);
+        if (RewardPointsAction.BURN.equals(request.getAction())) {
+            var totalPriceAsPoints = order.getTotalPrice()
+                    .setScale(0, RoundingMode.DOWN);
+
+            var availablePoints = user.getRewardPoints();
+
+            var totalPriceAfterBurn = BigDecimal.ZERO;
+            if (availablePoints <= totalPriceAsPoints.intValue()) {
+                totalPriceAfterBurn = order.getTotalPrice()
+                        .subtract(BigDecimal.valueOf(availablePoints))
+                        .max(BigDecimal.ZERO);
+                user.burnRewardPoints(availablePoints);
+            } else {
+                totalPriceAfterBurn = order.getTotalPrice()
+                        .subtract(totalPriceAsPoints)
+                        .max(BigDecimal.ZERO);
+                user.burnRewardPoints(totalPriceAsPoints.intValue());
+            }
+
+            order.setTotalPrice(totalPriceAfterBurn);
+        } else {
+            var tier = user.getMembershipTier();
+            var rewardPoints = rewardPointsCalculator.calculateRewardPoints(
+                    order.getTotalPrice(),
+                    tier.getRewardPointsMultiplier()
+            );
+            user.earnRewardPoints(rewardPoints);
+        }
 
         // TODO: Payment integration.
 

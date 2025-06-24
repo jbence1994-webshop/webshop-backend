@@ -76,6 +76,10 @@ public class User {
         return profile.getMembershipTier();
     }
 
+    public int getRewardPoints() {
+        return profile.getRewardPoints();
+    }
+
     public void earnRewardPoints(int value) {
         profile.setRewardPoints(profile.getRewardPoints() + value);
     }

@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.checkoutRequest;
+import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.earnRewardPointsCheckoutRequest;
 import static com.github.jbence1994.webshop.checkout.CheckoutResponseTestObject.checkoutResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -28,7 +28,7 @@ public class CheckoutControllerTests {
     public void checkoutTest() {
         when(checkoutService.checkout(any())).thenReturn(checkoutResponse());
 
-        var result = checkoutController.checkout(checkoutRequest());
+        var result = checkoutController.checkout(earnRewardPointsCheckoutRequest());
 
         assertThat(result, not(nullValue()));
         assertThat(result.orderId(), equalTo(1L));
