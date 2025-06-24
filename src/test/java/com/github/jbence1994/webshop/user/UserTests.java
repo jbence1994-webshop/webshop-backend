@@ -20,10 +20,17 @@ public class UserTests {
     private final User user1 = user();
     private final User user2 = userWithAvatar();
 
-    private static Stream<Arguments> userParams() {
+    private static Stream<Arguments> hasProfileAvatarTestParams() {
         return Stream.of(
                 Arguments.of("User with avatar", userWithAvatar(), true),
                 Arguments.of("User without avatar", user(), false)
+        );
+    }
+
+    private static Stream<Arguments> getMembershipTierTestParams() {
+        return Stream.of(
+                Arguments.of(MembershipTier.BRONZE.name(), user(), MembershipTier.BRONZE),
+                Arguments.of(MembershipTier.PLATINUM.name(), userWithAvatar(), MembershipTier.PLATINUM)
         );
     }
 
@@ -42,7 +49,7 @@ public class UserTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("userParams")
+    @MethodSource("hasProfileAvatarTestParams")
     public void hasProfileAvatarTests(
             String testCase,
             User user,
@@ -58,5 +65,17 @@ public class UserTests {
         user1.earnLoyaltyPoints(100);
 
         assertThat(100, equalTo(user1.getProfile().getLoyaltyPoints()));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("getMembershipTierTestParams")
+    public void getMembershipTierTests(
+            String testCase,
+            User user,
+            MembershipTier expectedResult
+    ) {
+        var result = user.getMembershipTier();
+
+        assertThat(result, equalTo(expectedResult));
     }
 }
