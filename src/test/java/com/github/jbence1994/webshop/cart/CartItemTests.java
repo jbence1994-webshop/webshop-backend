@@ -14,8 +14,8 @@ import static org.hamcrest.Matchers.equalTo;
 public class CartItemTests {
 
     @Test
-    public void calculateTotalPriceTest() {
-        var result = cartItem().calculateTotalPrice();
+    public void calculateSubTotalTest() {
+        var result = cartItem().calculateSubTotal();
 
         assertThat(result, equalTo(BigDecimal.valueOf(49.99)));
     }
