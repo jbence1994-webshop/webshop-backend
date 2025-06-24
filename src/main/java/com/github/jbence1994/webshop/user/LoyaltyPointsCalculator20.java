@@ -10,10 +10,10 @@ public class LoyaltyPointsCalculator20 implements LoyaltyPointsCalculator {
 
     @Override
     public int calculateLoyaltyPoints(BigDecimal orderTotalPrice) {
-        var points = orderTotalPrice
+        var earnedPoints = orderTotalPrice
                 .divide(BigDecimal.valueOf(20), RoundingMode.DOWN)
                 .setScale(0, RoundingMode.DOWN);
 
-        return points.intValue();
+        return earnedPoints.intValue();
     }
 }
