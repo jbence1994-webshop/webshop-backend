@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_CREATED_AT;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon1;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon2;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon4;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.freeshippingNotExpiredCoupon;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 
@@ -40,7 +40,7 @@ public final class CartTestObject {
         var cart = buildCart();
         cart.addItem(product1());
         cart.addItem(product2());
-        cart.setAppliedCoupon(coupon2());
+        cart.setAppliedCoupon(fixedAmountExpiredCoupon());
         return cart;
     }
 
@@ -48,7 +48,7 @@ public final class CartTestObject {
         var cart = buildCart();
         cart.addItem(product1());
         cart.addItem(product2());
-        cart.setAppliedCoupon(coupon1());
+        cart.setAppliedCoupon(percentOffNotExpiredCoupon());
         return cart;
     }
 
@@ -56,7 +56,7 @@ public final class CartTestObject {
         var cart = buildCart();
         cart.addItem(product1());
         cart.addItem(product2());
-        cart.setAppliedCoupon(coupon4());
+        cart.setAppliedCoupon(freeshippingNotExpiredCoupon());
         return cart;
     }
 

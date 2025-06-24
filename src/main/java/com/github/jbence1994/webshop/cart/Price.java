@@ -14,7 +14,7 @@ public class Price {
     private BigDecimal shippingCost;
 
     public static Price withDefaultShipping(BigDecimal total, BigDecimal discount) {
-        return new Price(total, discount, BigDecimal.valueOf(20));
+        return new Price(total, discount, BigDecimal.valueOf(20.00));
     }
 
     public static Price withFreeShipping(BigDecimal total, BigDecimal discount) {

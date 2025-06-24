@@ -6,9 +6,7 @@ public class FixedAmountPriceAdjustmentStrategy implements PriceAdjustmentStrate
 
     @Override
     public Price adjustPrice(BigDecimal totalPrice, BigDecimal discountValue) {
-        var discountedTotalPrice = totalPrice
-                .subtract(discountValue)
-                .max(BigDecimal.ZERO);
+        var discountedTotalPrice = totalPrice.subtract(discountValue);
 
         return Price.withDefaultShipping(discountedTotalPrice, discountValue);
     }

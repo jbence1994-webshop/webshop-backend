@@ -6,7 +6,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
@@ -52,7 +51,7 @@ public class CartTests {
                 Arguments.of(
                         "With fixed amount type of applied coupon",
                         cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(),
-                        Price.withDefaultShipping(BigDecimal.valueOf(134.98), BigDecimal.valueOf(5).setScale(1, RoundingMode.DOWN))
+                        Price.withDefaultShipping(BigDecimal.valueOf(124.98), BigDecimal.valueOf(15.00))
                 ),
                 Arguments.of(
                         "With percent off type of applied coupon",

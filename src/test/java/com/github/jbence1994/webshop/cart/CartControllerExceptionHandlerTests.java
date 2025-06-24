@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
-import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_3_CODE;
+import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.INVALID_COUPON_CODE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -78,7 +78,7 @@ public class CartControllerExceptionHandlerTests {
 
     @Test
     public void handleExpiredCouponExceptionTest() {
-        var result = cartControllerExceptionHandler.handleExpiredCouponException(new ExpiredCouponException(COUPON_3_CODE));
+        var result = cartControllerExceptionHandler.handleExpiredCouponException(new ExpiredCouponException(COUPON_2_CODE));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
@@ -87,7 +87,7 @@ public class CartControllerExceptionHandlerTests {
 
     @Test
     public void handleCouponAlreadyRedeemedExceptionTest() {
-        var result = cartControllerExceptionHandler.handleCouponAlreadyRedeemedException(new CouponAlreadyRedeemedException(COUPON_3_CODE));
+        var result = cartControllerExceptionHandler.handleCouponAlreadyRedeemedException(new CouponAlreadyRedeemedException(COUPON_2_CODE));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
         assertThat(result.getBody(), not(nullValue()));
