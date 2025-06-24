@@ -17,6 +17,7 @@ public final class OrderTestObject {
                 BigDecimal.ZERO,
                 BigDecimal.valueOf(20),
                 OrderStatus.COMPLETED,
+                2,
                 CREATED_AT,
                 List.of(orderItem())
         );
