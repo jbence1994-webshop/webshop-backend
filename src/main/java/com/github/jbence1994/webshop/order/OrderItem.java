@@ -39,12 +39,12 @@ public class OrderItem {
 
     private Integer quantity;
 
-    private BigDecimal totalPrice;
+    private BigDecimal subTotal;
 
     public OrderItem(Product product, Integer quantity) {
         this.product = product;
         this.unitPrice = product.getPrice();
         this.quantity = quantity;
-        this.totalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity));
+        this.subTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
 }

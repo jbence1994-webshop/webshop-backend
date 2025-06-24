@@ -97,13 +97,13 @@ public class Cart {
         return items.isEmpty();
     }
 
-    public BigDecimal calculateTotalPrice() {
+    public Price calculateTotal() {
         var totalPrice = items.stream()
-                .map(CartItem::calculateTotalPrice)
+                .map(CartItem::calculateSubTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (!hasCouponApplied()) {
-            return totalPrice;
+            return Price.withDefaultShipping(totalPrice, BigDecimal.ZERO);
         }
 
         return PriceAdjustmentStrategyFactory
@@ -111,7 +111,7 @@ public class Cart {
                 .adjustPrice(totalPrice, appliedCoupon.getValue());
     }
 
-    public List<OrderItem> fromItems() {
+    public List<OrderItem> mapCartItemsToOrderItems() {
         var orderItems = new ArrayList<OrderItem>();
 
         items.forEach(item -> {

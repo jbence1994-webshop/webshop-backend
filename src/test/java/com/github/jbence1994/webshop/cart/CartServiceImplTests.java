@@ -25,8 +25,8 @@ import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.CartTestObject.updatedCart;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon1;
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.coupon3;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -63,14 +63,14 @@ public class CartServiceImplTests {
                 Arguments.of(
                         "EmptyCartException",
                         emptyCart(),
-                        coupon1(),
+                        percentOffNotExpiredCoupon(),
                         EmptyCartException.class,
                         "Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."
                 ),
                 Arguments.of(
                         "ExpiredCouponException",
                         cartWithOneItem(),
-                        coupon3(),
+                        fixedAmountExpiredCoupon(),
                         ExpiredCouponException.class,
                         "Coupon with the given code: 'SPRING15' has expired."
                 )
@@ -95,7 +95,7 @@ public class CartServiceImplTests {
         var result = cartService.addProductToCart(CART_ID, 1L);
 
         assertThat(result.getQuantity(), equalTo(cartItem().getQuantity()));
-        assertThat(result.calculateTotalPrice(), equalTo(cartItem().calculateTotalPrice()));
+        assertThat(result.calculateSubTotal(), equalTo(cartItem().calculateSubTotal()));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class CartServiceImplTests {
         var result = cartService.updateCartItem(CART_ID, 1L, 2);
 
         assertThat(result.getQuantity(), equalTo(updatedCartItem().getQuantity()));
-        assertThat(result.calculateTotalPrice(), equalTo(updatedCartItem().calculateTotalPrice()));
+        assertThat(result.calculateSubTotal(), equalTo(updatedCartItem().calculateSubTotal()));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class CartServiceImplTests {
     @Test
     public void applyCouponToCartTest_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-        when(couponQueryService.getCoupon(any())).thenReturn(coupon1());
+        when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
         when(couponQueryService.isRedeemedCoupon(any())).thenReturn(false);
         when(cartRepository.save(any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
 
@@ -169,7 +169,7 @@ public class CartServiceImplTests {
     @Test
     public void applyCouponToCartTest_UnhappyPath_CouponAlreadyRedeemedException() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-        when(couponQueryService.getCoupon(any())).thenReturn(coupon1());
+        when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
         when(couponQueryService.isRedeemedCoupon(any())).thenReturn(true);
 
         var result = assertThrows(

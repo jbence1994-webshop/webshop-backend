@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.order.OrderItemTestObject.orderItem;
@@ -13,7 +14,9 @@ public final class OrderTestObject {
                 1L,
                 user(),
                 TOTAL_PRICE,
-                PaymentStatus.COMPLETED,
+                BigDecimal.ZERO,
+                BigDecimal.valueOf(20),
+                OrderStatus.COMPLETED,
                 CREATED_AT,
                 List.of(orderItem())
         );

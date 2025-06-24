@@ -6,8 +6,7 @@ import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
-import com.github.jbence1994.webshop.order.PaymentStatus;
-import com.github.jbence1994.webshop.user.LoyaltyPointsCalculator;
+import com.github.jbence1994.webshop.order.OrderStatus;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
-    private final LoyaltyPointsCalculator loyaltyPointsCalculator;
     private final CartQueryService cartQueryService;
     private final CouponService couponService;
     private final OrderService orderService;
@@ -34,7 +32,8 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var user = authService.getCurrentUser();
 
-        var order = Order.fromCart(cart, user);
+        var order = Order.from(cart);
+        order.setCustomer(user);
         orderService.createOrder(order);
 
         if (cart.hasCouponApplied()) {
@@ -47,17 +46,14 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.clear();
 
-        // FIXME: Loyalty point earning values can be change in different, timely campaigns.
-        // TODO: For that feature gating can be implemented.
-        var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
-        user.increaseLoyaltyPoints(loyaltyPoints);
+        user.earnLoyaltyPoints(order.calculateLoyaltyPoints());
 
         // TODO: Algorithm to reward points.
 
         // TODO: Payment integration.
 
         // 1) If payment was successful:
-        order.setStatus(PaymentStatus.COMPLETED);
+        order.setStatus(OrderStatus.COMPLETED);
 
         //2) If payment was failed:
         // order.setStatus(PaymentStatus.FAILED);
