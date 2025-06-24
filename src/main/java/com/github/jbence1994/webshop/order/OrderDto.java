@@ -16,6 +16,8 @@ import java.util.List;
 public class OrderDto {
     private Long id;
     private BigDecimal totalPrice;
+    private BigDecimal discountAmount;
+    private BigDecimal shippingCost;
     private String status;
     private LocalDateTime createdAt;
     private List<OrderItemDto> items;
