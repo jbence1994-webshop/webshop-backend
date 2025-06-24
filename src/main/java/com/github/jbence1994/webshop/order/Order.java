@@ -72,7 +72,7 @@ public class Order {
         order.setDiscountAmount(price.getDiscountAmount());
         order.setShippingCost(price.getShippingCost());
 
-        var items = cart.fromItems();
+        var items = cart.mapCartItemsToOrderItems();
 
         items.forEach(item -> {
                     item.setOrder(order);

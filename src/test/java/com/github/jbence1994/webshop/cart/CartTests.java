@@ -170,8 +170,8 @@ public class CartTests {
     }
 
     @Test
-    public void fromItemsTest() {
-        var result = cart.fromItems();
+    public void mapCartItemsToOrderItemsTest() {
+        var result = cart.mapCartItemsToOrderItems();
 
         assertThat(result, not(empty()));
         assertThat(result.size(), equalTo(2));
