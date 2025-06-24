@@ -62,11 +62,10 @@ public class Order {
         return customerEmail.equals(customer.getEmail());
     }
 
-    public static Order fromCart(Cart cart, User customer) {
+    public static Order from(Cart cart) {
         var price = cart.calculateTotal();
 
         var order = new Order();
-        order.setCustomer(customer);
         order.setStatus(OrderStatus.PENDING);
         order.setTotalPrice(price.getTotalPrice());
         order.setDiscountAmount(price.getDiscountAmount());
