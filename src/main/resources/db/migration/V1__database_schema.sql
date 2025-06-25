@@ -45,7 +45,6 @@ CREATE TABLE IF NOT EXISTS profiles
     phone_number     VARCHAR(25) UNIQUE,
     avatar_file_name VARCHAR(41) UNIQUE,
     loyalty_points   INT UNSIGNED NOT NULL DEFAULT 0,
-    reward_points    INT UNSIGNED NOT NULL DEFAULT 0,
     created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_profiles_users
@@ -72,17 +71,14 @@ CREATE TABLE IF NOT EXISTS addresses
 
 CREATE TABLE IF NOT EXISTS orders
 (
-    id                    BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    customer_id           BIGINT         NOT NULL,
-    total_price           DECIMAL(10, 2) NOT NULL,
-    payable_total_price   DECIMAL(10, 2) NOT NULL,
-    discount_amount       DECIMAL(10, 2) NOT NULL,
-    shipping_cost         DECIMAL(10, 2) NOT NULL,
-    status                VARCHAR(20)    NOT NULL DEFAULT 'PENDING',
-    earned_loyalty_points INT UNSIGNED   NOT NULL DEFAULT 0,
-    earned_reward_points  INT UNSIGNED   NOT NULL DEFAULT 0,
-    burned_reward_points  INT UNSIGNED   NOT NULL DEFAULT 0,
-    created_at            DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id              BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    customer_id     BIGINT         NOT NULL,
+    total_price     DECIMAL(10, 2) NOT NULL,
+    discount_amount DECIMAL(10, 2) NOT NULL,
+    shipping_cost   DECIMAL(10, 2) NOT NULL,
+    status          VARCHAR(20)    NOT NULL DEFAULT 'PENDING',
+    loyalty_points  INT UNSIGNED   NOT NULL DEFAULT 0,
+    created_at      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_orders_users
         FOREIGN KEY (customer_id) REFERENCES users (id)
             ON DELETE NO ACTION

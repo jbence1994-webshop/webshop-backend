@@ -7,7 +7,6 @@ import java.util.List;
 public record OrderDto(
         Long id,
         BigDecimal totalPrice,
-        BigDecimal payableTotalPrice,
         BigDecimal discountAmount,
         BigDecimal shippingCost,
         String status,

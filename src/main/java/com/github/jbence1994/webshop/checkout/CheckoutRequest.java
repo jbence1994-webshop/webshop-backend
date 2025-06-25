@@ -12,6 +12,4 @@ public class CheckoutRequest {
 
     @NotNull(message = "Cart ID must be provided.")
     private UUID cartId;
-
-    private boolean rewardPointsBurnActive;
 }
