@@ -45,6 +45,8 @@ public class Order {
 
     private BigDecimal totalPrice;
 
+    private BigDecimal payableTotalPrice;
+
     private BigDecimal discountAmount;
 
     private BigDecimal shippingCost;

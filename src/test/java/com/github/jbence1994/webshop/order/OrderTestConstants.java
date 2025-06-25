@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public interface OrderTestConstants {
     BigDecimal TOTAL_PRICE = BigDecimal.valueOf(49.99);
+    BigDecimal PAYABLE_TOTAL_PRICE = TOTAL_PRICE;
     BigDecimal DISCOUNT_AMOUNT = BigDecimal.ZERO;
     BigDecimal SHIPPING_COST = BigDecimal.valueOf(20);
     int EARNED_LOYALTY_POINTS = 2;
