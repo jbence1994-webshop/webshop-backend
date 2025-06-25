@@ -7,7 +7,6 @@ import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
 import com.github.jbence1994.webshop.order.OrderStatus;
-import com.github.jbence1994.webshop.user.RewardPointsCalculator;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import java.math.RoundingMode;
 @Service
 @AllArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
-    private final RewardPointsCalculator rewardPointsCalculator;
     private final CartQueryService cartQueryService;
     private final CouponService couponService;
     private final OrderService orderService;
@@ -77,8 +75,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             order.setTotalPrice(totalPriceAfterBurn);
         } else {
             var tier = user.getMembershipTier();
-            var rewardPoints = rewardPointsCalculator.calculateRewardPoints(
-                    order.getTotalPrice(),
+            var rewardPoints = order.calculateRewardPoints(
                     tier.getRewardPointsMultiplier()
             );
             user.earnRewardPoints(rewardPoints);

@@ -5,7 +5,6 @@ import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.OrderService;
-import com.github.jbence1994.webshop.user.RewardPointsCalculator;
 import com.github.jbence1994.webshop.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,6 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -40,9 +38,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CheckoutServiceImplTests {
-
-    @Mock
-    private RewardPointsCalculator rewardPointsCalculator;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -77,7 +72,6 @@ public class CheckoutServiceImplTests {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
-        when(rewardPointsCalculator.calculateRewardPoints(any(), anyDouble())).thenReturn(134);
 
         var result = checkoutService.checkout(earnRewardPointsCheckoutRequest());
 
@@ -86,7 +80,6 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
-        verify(rewardPointsCalculator, times(1)).calculateRewardPoints(any(), anyDouble());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
     }
 
@@ -95,7 +88,6 @@ public class CheckoutServiceImplTests {
         when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
-        when(rewardPointsCalculator.calculateRewardPoints(any(), anyDouble())).thenReturn(202);
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
 
         var result = checkoutService.checkout(earnRewardPointsCheckoutRequest());
@@ -105,7 +97,6 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
-        verify(rewardPointsCalculator, times(1)).calculateRewardPoints(any(), anyDouble());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
     }
 
@@ -144,7 +135,6 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
-        verify(rewardPointsCalculator, never()).calculateRewardPoints(any(), anyDouble());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
     }
 }

@@ -30,6 +30,27 @@ public class OrderTests {
         );
     }
 
+    private static Stream<Arguments> calculateRewardPointsTestParams() {
+        return Stream.of(
+                Arguments.of(
+                        "Total price: $20, tier multiplier: x1.5, reward points: 30",
+                        BigDecimal.valueOf(20.00), 1.5, 30
+                ),
+                Arguments.of(
+                        "Total price: $20, tier multiplier: x2, reward points: 40",
+                        BigDecimal.valueOf(20.00), 2, 40
+                ),
+                Arguments.of(
+                        "Total price: $20, tier multiplier: x2.5, reward points: 50",
+                        BigDecimal.valueOf(20.00), 2.5, 50
+                ),
+                Arguments.of(
+                        "Total price: $20, tier multiplier: x5, reward points: 100",
+                        BigDecimal.valueOf(20.00), 5, 100
+                )
+        );
+    }
+
     @Test
     public void fromTest() {
         var result = Order.from(cartWithTwoItems());
@@ -47,13 +68,29 @@ public class OrderTests {
     public void calculateLoyaltyPointsTest(
             String testCase,
             BigDecimal totalPrice,
-            int loyaltyPoints
+            int expectedLoyaltyPoints
     ) {
         var order = new Order();
         order.setTotalPrice(totalPrice);
 
         var result = order.calculateLoyaltyPoints();
 
-        assertThat(result, equalTo(loyaltyPoints));
+        assertThat(result, equalTo(expectedLoyaltyPoints));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("calculateRewardPointsTestParams")
+    public void calculateRewardPointsTest(
+            String testCase,
+            BigDecimal totalPrice,
+            double tierMultiplier,
+            int expectedRewardPoints
+    ) {
+        var order = new Order();
+        order.setTotalPrice(totalPrice);
+
+        var result = order.calculateRewardPoints(tierMultiplier);
+
+        assertThat(result, equalTo(expectedRewardPoints));
     }
 }

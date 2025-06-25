@@ -95,4 +95,11 @@ public class Order {
                 .setScale(0, RoundingMode.DOWN)
                 .intValue();
     }
+
+    public int calculateRewardPoints(double multiplier) {
+        return totalPrice
+                .multiply(BigDecimal.valueOf(multiplier))
+                .setScale(0, RoundingMode.DOWN)
+                .intValue();
+    }
 }
