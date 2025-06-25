@@ -8,14 +8,13 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Getter
 public enum MembershipTier {
-    BRONZE(0, 4_999, 1.5),
-    SILVER(5_000, 9_999, 2),
-    GOLD(10_000, 19_999, 2.5),
-    PLATINUM(20_000, Integer.MAX_VALUE, 5);
+    BRONZE(0, 4_999),
+    SILVER(5_000, 9_999),
+    GOLD(10_000, 19_999),
+    PLATINUM(20_000, Integer.MAX_VALUE);
 
     private final int minLoyaltyPoints;
     private final int maxLoyaltyPoints;
-    private final double multiplier;
 
     public static MembershipTier fromPoints(int points) {
         return Stream.of(values())

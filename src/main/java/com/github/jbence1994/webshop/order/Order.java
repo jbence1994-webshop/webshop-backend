@@ -45,8 +45,6 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    private BigDecimal payableTotalPrice;
-
     private BigDecimal discountAmount;
 
     private BigDecimal shippingCost;
@@ -54,11 +52,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    private int earnedLoyaltyPoints;
-
-    private int earnedRewardPoints;
-
-    private int burnedRewardPoints;
+    private int loyaltyPoints;
 
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
@@ -77,7 +71,6 @@ public class Order {
         var order = new Order();
         order.setStatus(OrderStatus.PENDING);
         order.setTotalPrice(price.getTotalPrice());
-        order.setPayableTotalPrice(price.getTotalPrice());
         order.setDiscountAmount(price.getDiscountAmount());
         order.setShippingCost(price.getShippingCost());
 
@@ -101,22 +94,5 @@ public class Order {
                 .divide(BigDecimal.valueOf(PER_EVERY_TWENTY_DOLLARS), RoundingMode.DOWN)
                 .setScale(0, RoundingMode.DOWN)
                 .intValue();
-    }
-
-    public int convertTotalPriceToRewardPoints() {
-        return totalPrice
-                .setScale(0, RoundingMode.DOWN)
-                .intValue();
-    }
-
-    public int calculateRewardPoints(double multiplier) {
-        return totalPrice
-                .multiply(BigDecimal.valueOf(multiplier))
-                .setScale(0, RoundingMode.DOWN)
-                .intValue();
-    }
-
-    public BigDecimal calculateTotalAmount() {
-        return payableTotalPrice.add(shippingCost);
     }
 }

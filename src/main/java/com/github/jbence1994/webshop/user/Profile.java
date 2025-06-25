@@ -48,8 +48,6 @@ public class Profile {
 
     private int loyaltyPoints;
 
-    private int rewardPoints;
-
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
