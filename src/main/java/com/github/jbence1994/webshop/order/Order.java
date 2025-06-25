@@ -54,6 +54,10 @@ public class Order {
 
     private int earnedLoyaltyPoints;
 
+    private int earnedRewardPoints;
+
+    private int burnedRewardPoints;
+
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;

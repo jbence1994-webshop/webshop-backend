@@ -7,6 +7,9 @@ public interface OrderTestConstants {
     BigDecimal TOTAL_PRICE = BigDecimal.valueOf(49.99);
     BigDecimal DISCOUNT_AMOUNT = BigDecimal.ZERO;
     BigDecimal SHIPPING_COST = BigDecimal.valueOf(20);
+    int EARNED_LOYALTY_POINTS = 2;
+    int EARNED_REWARD_POINTS = 74;
+    int BURNED_REWARD_POINTS = 0;
     BigDecimal SUB_TOTAL = TOTAL_PRICE;
     LocalDateTime CREATED_AT = LocalDateTime.of(2025, 6, 18, 16, 18, 59);
 }

@@ -50,6 +50,8 @@ public class CheckoutServiceImpl implements CheckoutService {
         user.earnLoyaltyPoints(earnedLoyaltyPoints);
         order.setEarnedLoyaltyPoints(earnedLoyaltyPoints);
 
+        // TODO: Burn reward points.
+
         var earnedRewardPoints = order.calculateRewardPoints(
                 user.getMembershipTierMultiplier()
         );
