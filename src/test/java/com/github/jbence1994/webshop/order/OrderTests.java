@@ -93,4 +93,16 @@ public class OrderTests {
 
         assertThat(result, equalTo(expectedRewardPoints));
     }
+
+    @Test
+    public void calculateTotalAmountTest() {
+        var order = new Order();
+        order.setTotalPrice(BigDecimal.valueOf(49.99));
+        order.setPayableTotalPrice(BigDecimal.valueOf(49.99));
+        order.setShippingCost(BigDecimal.valueOf(20.00));
+
+        var result = order.calculateTotalAmount();
+
+        assertThat(result, equalTo(BigDecimal.valueOf(69.99)));
+    }
 }
