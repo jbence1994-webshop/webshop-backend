@@ -56,7 +56,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                 user.getMembershipTierMultiplier()
         );
         user.earnRewardPoints(earnedRewardPoints);
-        // TODO: Later need to track earned and burned reward points.
+        order.setEarnedRewardPoints(earnedRewardPoints);
 
         // TODO: Payment integration.
 
