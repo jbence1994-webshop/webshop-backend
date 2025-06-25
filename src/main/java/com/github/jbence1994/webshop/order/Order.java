@@ -77,6 +77,7 @@ public class Order {
         var order = new Order();
         order.setStatus(OrderStatus.PENDING);
         order.setTotalPrice(price.getTotalPrice());
+        order.setPayableTotalPrice(price.getTotalPrice());
         order.setDiscountAmount(price.getDiscountAmount());
         order.setShippingCost(price.getShippingCost());
 
