@@ -109,4 +109,8 @@ public class Order {
                 .setScale(0, RoundingMode.DOWN)
                 .intValue();
     }
+
+    public BigDecimal calculateTotalAmount() {
+        return payableTotalPrice.add(shippingCost);
+    }
 }

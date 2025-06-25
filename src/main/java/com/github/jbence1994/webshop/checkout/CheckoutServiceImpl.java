@@ -58,7 +58,8 @@ public class CheckoutServiceImpl implements CheckoutService {
         user.earnRewardPoints(earnedRewardPoints);
         order.setEarnedRewardPoints(earnedRewardPoints);
 
-        // TODO: Payment integration: order.getPayableTotalPrice() + order.getShippingCost() will be passed to Payment Gateway.
+        var totalAmount = order.calculateTotalAmount();
+        // TODO: Payment integration.
 
         // 1) If payment was successful:
         order.setStatus(OrderStatus.COMPLETED);
