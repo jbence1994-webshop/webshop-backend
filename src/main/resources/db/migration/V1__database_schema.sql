@@ -79,6 +79,8 @@ CREATE TABLE IF NOT EXISTS orders
     shipping_cost         DECIMAL(10, 2) NOT NULL,
     status                VARCHAR(20)    NOT NULL DEFAULT 'PENDING',
     earned_loyalty_points INT UNSIGNED   NOT NULL DEFAULT 0,
+    earned_reward_points  INT UNSIGNED   NOT NULL DEFAULT 0,
+    burned_reward_points  INT UNSIGNED   NOT NULL DEFAULT 0,
     created_at            DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_orders_users
         FOREIGN KEY (customer_id) REFERENCES users (id)
