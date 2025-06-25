@@ -46,14 +46,14 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.clear();
 
-        var loyaltyPoints = order.calculateLoyaltyPoints();
-        user.earnLoyaltyPoints(loyaltyPoints);
-        order.setEarnedLoyaltyPoints(loyaltyPoints);
+        var earnedLoyaltyPoints = order.calculateLoyaltyPoints();
+        user.earnLoyaltyPoints(earnedLoyaltyPoints);
+        order.setEarnedLoyaltyPoints(earnedLoyaltyPoints);
 
-        var rewardPoints = order.calculateRewardPoints(
+        var earnedRewardPoints = order.calculateRewardPoints(
                 user.getMembershipTierMultiplier()
         );
-        user.earnRewardPoints(rewardPoints);
+        user.earnRewardPoints(earnedRewardPoints);
         // TODO: Later need to track earned and burned reward points.
 
         // TODO: Payment integration.
