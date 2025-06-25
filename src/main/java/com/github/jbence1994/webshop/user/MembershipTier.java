@@ -15,7 +15,7 @@ public enum MembershipTier {
 
     private final int minLoyaltyPoints;
     private final int maxLoyaltyPoints;
-    private final double rewardPointsMultiplier;
+    private final double multiplier;
 
     public static MembershipTier fromPoints(int points) {
         return Stream.of(values())

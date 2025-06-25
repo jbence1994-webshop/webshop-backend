@@ -11,9 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 @Service
 @AllArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
@@ -53,33 +50,11 @@ public class CheckoutServiceImpl implements CheckoutService {
         user.earnLoyaltyPoints(loyaltyPoints);
         order.setEarnedLoyaltyPoints(loyaltyPoints);
 
-        if (RewardPointsAction.BURN.equals(request.getAction())) {
-            var totalPriceAsPoints = order.getTotalPrice()
-                    .setScale(0, RoundingMode.DOWN);
-
-            var availablePoints = user.getRewardPoints();
-
-            var totalPriceAfterBurn = BigDecimal.ZERO;
-            if (availablePoints <= totalPriceAsPoints.intValue()) {
-                totalPriceAfterBurn = order.getTotalPrice()
-                        .subtract(BigDecimal.valueOf(availablePoints))
-                        .max(BigDecimal.ZERO);
-                user.burnRewardPoints(availablePoints);
-            } else {
-                totalPriceAfterBurn = order.getTotalPrice()
-                        .subtract(totalPriceAsPoints)
-                        .max(BigDecimal.ZERO);
-                user.burnRewardPoints(totalPriceAsPoints.intValue());
-            }
-
-            order.setTotalPrice(totalPriceAfterBurn);
-        } else {
-            var tier = user.getMembershipTier();
-            var rewardPoints = order.calculateRewardPoints(
-                    tier.getRewardPointsMultiplier()
-            );
-            user.earnRewardPoints(rewardPoints);
-        }
+        var rewardPoints = order.calculateRewardPoints(
+                user.getMembershipTierMultiplier()
+        );
+        user.earnRewardPoints(rewardPoints);
+        // TODO: Later need to track earned and burned reward points.
 
         // TODO: Payment integration.
 

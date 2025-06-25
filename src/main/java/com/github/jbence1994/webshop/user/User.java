@@ -72,19 +72,11 @@ public class User {
         profile.setLoyaltyPoints(profile.getLoyaltyPoints() + loyaltyPoints);
     }
 
-    public MembershipTier getMembershipTier() {
-        return profile.getMembershipTier();
-    }
-
-    public int getRewardPoints() {
-        return profile.getRewardPoints();
+    public double getMembershipTierMultiplier() {
+        return profile.getMembershipTier().getMultiplier();
     }
 
     public void earnRewardPoints(int value) {
         profile.setRewardPoints(profile.getRewardPoints() + value);
-    }
-
-    public void burnRewardPoints(int value) {
-        profile.setRewardPoints(profile.getRewardPoints() - value);
     }
 }

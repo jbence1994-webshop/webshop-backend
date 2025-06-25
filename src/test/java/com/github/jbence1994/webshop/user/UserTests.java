@@ -27,10 +27,10 @@ public class UserTests {
         );
     }
 
-    private static Stream<Arguments> getMembershipTierTestParams() {
+    private static Stream<Arguments> getMembershipTierMultiplierTests() {
         return Stream.of(
-                Arguments.of(MembershipTier.BRONZE.name(), user(), MembershipTier.BRONZE),
-                Arguments.of(MembershipTier.PLATINUM.name(), userWithAvatar(), MembershipTier.PLATINUM)
+                Arguments.of(MembershipTier.BRONZE.name(), user(), 1.5),
+                Arguments.of(MembershipTier.PLATINUM.name(), userWithAvatar(), 5)
         );
     }
 
@@ -68,14 +68,21 @@ public class UserTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("getMembershipTierTestParams")
-    public void getMembershipTierTests(
+    @MethodSource("getMembershipTierMultiplierTests")
+    public void getMembershipTierMultiplierTests(
             String testCase,
             User user,
-            MembershipTier expectedResult
+            double expectedMembershipTierMultiplier
     ) {
-        var result = user.getMembershipTier();
+        var result = user.getMembershipTierMultiplier();
 
-        assertThat(result, equalTo(expectedResult));
+        assertThat(result, equalTo(expectedMembershipTierMultiplier));
+    }
+
+    @Test
+    public void earnRewardPointsTest() {
+        user1.earnRewardPoints(100);
+
+        assertThat(100, equalTo(user1.getProfile().getRewardPoints()));
     }
 }

@@ -20,8 +20,7 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
-import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.burnRewardPointsCheckoutRequest;
-import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.earnRewardPointsCheckoutRequest;
+import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.checkoutRequest;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -73,7 +72,7 @@ public class CheckoutServiceImplTests {
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
 
-        var result = checkoutService.checkout(earnRewardPointsCheckoutRequest());
+        var result = checkoutService.checkout(checkoutRequest());
 
         assertThat(result, not(nullValue()));
 
@@ -90,7 +89,7 @@ public class CheckoutServiceImplTests {
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
 
-        var result = checkoutService.checkout(earnRewardPointsCheckoutRequest());
+        var result = checkoutService.checkout(checkoutRequest());
 
         assertThat(result, not(nullValue()));
 
@@ -111,7 +110,7 @@ public class CheckoutServiceImplTests {
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
 
-        var result = checkoutService.checkout(burnRewardPointsCheckoutRequest());
+        var result = checkoutService.checkout(checkoutRequest());
 
         assertThat(result, not(nullValue()));
 
@@ -127,7 +126,7 @@ public class CheckoutServiceImplTests {
 
         var result = assertThrows(
                 EmptyCartException.class,
-                () -> checkoutService.checkout(earnRewardPointsCheckoutRequest())
+                () -> checkoutService.checkout(checkoutRequest())
         );
 
         assertThat(result.getMessage(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
