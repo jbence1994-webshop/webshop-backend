@@ -103,6 +103,12 @@ public class Order {
                 .intValue();
     }
 
+    public int convertTotalPriceToRewardPoints() {
+        return totalPrice
+                .setScale(0, RoundingMode.DOWN)
+                .intValue();
+    }
+
     public int calculateRewardPoints(double multiplier) {
         return totalPrice
                 .multiply(BigDecimal.valueOf(multiplier))

@@ -78,6 +78,16 @@ public class OrderTests {
         assertThat(result, equalTo(expectedLoyaltyPoints));
     }
 
+    @Test
+    public void convertTotalPriceToRewardPointsTest() {
+        var order = new Order();
+        order.setTotalPrice(BigDecimal.valueOf(49.99));
+
+        var result = order.convertTotalPriceToRewardPoints();
+
+        assertThat(result, equalTo(49));
+    }
+
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("calculateRewardPointsTestParams")
     public void calculateRewardPointsTest(

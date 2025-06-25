@@ -67,6 +67,13 @@ public class UserTests {
         assertThat(100, equalTo(user1.getProfile().getLoyaltyPoints()));
     }
 
+    @Test
+    public void getRewardPointsTest() {
+        var result = user1.getRewardPoints();
+
+        assertThat(result, equalTo(0));
+    }
+
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("getMembershipTierMultiplierTests")
     public void getMembershipTierMultiplierTests(
@@ -83,6 +90,14 @@ public class UserTests {
     public void earnRewardPointsTest() {
         user1.earnRewardPoints(100);
 
-        assertThat(100, equalTo(user1.getProfile().getRewardPoints()));
+        assertThat(user1.getProfile().getRewardPoints(), equalTo(100));
+    }
+
+    @Test
+    public void burnRewardPointsTest() {
+        user1.earnRewardPoints(100);
+        user1.burnRewardPoints(10);
+
+        assertThat(user1.getProfile().getRewardPoints(), equalTo(90));
     }
 }
