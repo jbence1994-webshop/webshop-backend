@@ -90,6 +90,7 @@ public class Cart {
     }
 
     public void clear() {
+        appliedCoupon = null;
         items.clear();
     }
 

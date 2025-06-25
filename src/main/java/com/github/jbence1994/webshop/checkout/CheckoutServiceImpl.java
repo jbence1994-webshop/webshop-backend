@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
@@ -46,12 +48,41 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.clear();
 
-        var loyaltyPoints = order.calculateLoyaltyPoints();
-        user.earnLoyaltyPoints(loyaltyPoints);
-        order.setEarnedLoyaltyPoints(loyaltyPoints);
+        var earnedLoyaltyPoints = order.calculateLoyaltyPoints();
+        user.earnLoyaltyPoints(earnedLoyaltyPoints);
+        order.setEarnedLoyaltyPoints(earnedLoyaltyPoints);
 
-        // TODO: Algorithm to reward points.
+        if (request.isRewardPointsBurnActive()) {
+            var availablePoints = user.getRewardPoints();
+            var totalPriceAsPoints = order.convertTotalPriceToRewardPoints();
 
+            var burnedTotalPrice = BigDecimal.ZERO;
+            if (availablePoints <= totalPriceAsPoints) {
+                burnedTotalPrice = order.getTotalPrice()
+                        .subtract(BigDecimal.valueOf(availablePoints))
+                        .max(BigDecimal.ZERO);
+
+                user.burnRewardPoints(availablePoints);
+                order.setBurnedRewardPoints(availablePoints);
+            } else {
+                burnedTotalPrice = order.getTotalPrice()
+                        .subtract(BigDecimal.valueOf(totalPriceAsPoints))
+                        .max(BigDecimal.ZERO);
+
+                user.burnRewardPoints(totalPriceAsPoints);
+                order.setBurnedRewardPoints(totalPriceAsPoints);
+            }
+
+            order.setPayableTotalPrice(burnedTotalPrice);
+        }
+
+        var earnedRewardPoints = order.calculateRewardPoints(
+                user.getMembershipTierMultiplier()
+        );
+        user.earnRewardPoints(earnedRewardPoints);
+        order.setEarnedRewardPoints(earnedRewardPoints);
+
+        var totalAmount = order.calculateTotalAmount();
         // TODO: Payment integration.
 
         // 1) If payment was successful:

@@ -27,6 +27,13 @@ public class UserTests {
         );
     }
 
+    private static Stream<Arguments> getMembershipTierMultiplierTests() {
+        return Stream.of(
+                Arguments.of(MembershipTier.BRONZE.name(), user(), 1.5),
+                Arguments.of(MembershipTier.PLATINUM.name(), userWithAvatar(), 5)
+        );
+    }
+
     @Test
     public void setProfileAvatarTest() {
         user1.setProfileAvatar(AVATAR_FILE_NAME);
@@ -58,5 +65,39 @@ public class UserTests {
         user1.earnLoyaltyPoints(100);
 
         assertThat(100, equalTo(user1.getProfile().getLoyaltyPoints()));
+    }
+
+    @Test
+    public void getRewardPointsTest() {
+        var result = user1.getRewardPoints();
+
+        assertThat(result, equalTo(0));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("getMembershipTierMultiplierTests")
+    public void getMembershipTierMultiplierTests(
+            String testCase,
+            User user,
+            double expectedMembershipTierMultiplier
+    ) {
+        var result = user.getMembershipTierMultiplier();
+
+        assertThat(result, equalTo(expectedMembershipTierMultiplier));
+    }
+
+    @Test
+    public void earnRewardPointsTest() {
+        user1.earnRewardPoints(100);
+
+        assertThat(user1.getProfile().getRewardPoints(), equalTo(100));
+    }
+
+    @Test
+    public void burnRewardPointsTest() {
+        user1.earnRewardPoints(100);
+        user1.burnRewardPoints(10);
+
+        assertThat(user1.getProfile().getRewardPoints(), equalTo(90));
     }
 }
