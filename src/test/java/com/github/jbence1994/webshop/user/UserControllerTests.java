@@ -52,11 +52,11 @@ public class UserControllerTests {
         assertThat(result.profile().lastName(), equalTo(userDto().profile().lastName()));
         assertThat(result.profile().dateOfBirth(), equalTo(userDto().profile().dateOfBirth()));
         assertThat(result.profile().phoneNumber(), equalTo(userDto().profile().phoneNumber()));
-        assertThat(result.profile().address().addressLine(), equalTo(userDto().profile().address().addressLine()));
-        assertThat(result.profile().address().municipality(), equalTo(userDto().profile().address().municipality()));
-        assertThat(result.profile().address().province(), equalTo(userDto().profile().address().province()));
-        assertThat(result.profile().address().postalCode(), equalTo(userDto().profile().address().postalCode()));
-        assertThat(result.profile().address().country(), equalTo(userDto().profile().address().country()));
+        assertThat(result.profile().address().getAddressLine(), equalTo(userDto().profile().address().getAddressLine()));
+        assertThat(result.profile().address().getMunicipality(), equalTo(userDto().profile().address().getMunicipality()));
+        assertThat(result.profile().address().getProvince(), equalTo(userDto().profile().address().getProvince()));
+        assertThat(result.profile().address().getPostalCode(), equalTo(userDto().profile().address().getPostalCode()));
+        assertThat(result.profile().address().getCountry(), equalTo(userDto().profile().address().getCountry()));
     }
 
     @Test
