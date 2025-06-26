@@ -5,7 +5,7 @@ public interface UserService {
 
     Profile createProfile(Long userId, Profile profile);
 
-    Address createAddress(Long userId, Address address);
+    void createAddress(Long userId, Address address);
 
     void changePassword(Long userId, String oldPassword, String newPassword);
 

@@ -33,5 +33,5 @@ public interface UserMapper {
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Address toEntity(CreateAddressRequest request);
+    Address toEntity(AddressDto addressDto);
 }

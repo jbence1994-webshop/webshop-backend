@@ -54,13 +54,11 @@ public class UserController {
     @PostMapping("/{userId}/address")
     public ResponseEntity<AddressDto> createAddress(
             @PathVariable Long userId,
-            @Valid @RequestBody CreateAddressRequest request
+            @Valid @RequestBody AddressDto addressDto
     ) {
-        var address = userMapper.toEntity(request);
+        var address = userMapper.toEntity(addressDto);
 
-        var createdAddress = userService.createAddress(userId, address);
-
-        var addressDto = userMapper.toDto(createdAddress);
+        userService.createAddress(userId, address);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addressDto);
     }
