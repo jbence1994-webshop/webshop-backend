@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
         address.setCountry(address.getCountry().toUpperCase());
 
-        user.setAddress(address);
+        user.getProfile().setAddress(address);
         address.setProfile(user.getProfile());
 
         userRepository.save(user);
