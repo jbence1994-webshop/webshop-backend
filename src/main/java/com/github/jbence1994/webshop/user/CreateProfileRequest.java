@@ -11,9 +11,6 @@ import java.time.LocalDate;
 @Getter
 public class CreateProfileRequest {
 
-    @NotNull(message = "User ID must be provided.")
-    private int userId;
-
     @NotNull(message = "First name must be provided.")
     @NotBlank(message = "First name must be not empty.")
     private String firstName;

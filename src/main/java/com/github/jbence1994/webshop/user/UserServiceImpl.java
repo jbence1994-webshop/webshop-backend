@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Profile createProfile(Profile profile) {
-        var user = userQueryService.getUser(profile.getUserId());
+    public Profile createProfile(Long userId, Profile profile) {
+        var user = userQueryService.getUser(userId);
 
         user.setProfile(profile);
         userRepository.save(user);
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Address createAddress(Address address) {
+    public Address createAddress(Long userId, Address address) {
         var user = userQueryService.getUser(address.getProfileId());
 
         user.getProfile().setAddress(address);

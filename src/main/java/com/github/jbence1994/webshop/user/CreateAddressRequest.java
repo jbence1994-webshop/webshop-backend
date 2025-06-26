@@ -9,9 +9,6 @@ import lombok.Getter;
 @Getter
 public class CreateAddressRequest {
 
-    @NotNull(message = "Profile id must be provided.")
-    private Long profileId;
-
     @NotNull(message = "Address line must be provided.")
     @NotBlank(message = "Address line must be not empty.")
     private String addressLine;

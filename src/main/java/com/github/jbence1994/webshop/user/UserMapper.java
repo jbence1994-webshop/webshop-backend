@@ -20,6 +20,7 @@ public interface UserMapper {
     @Mapping(target = "coupons", ignore = true)
     User toEntity(RegisterUserRequest request);
 
+    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "avatarFileName", ignore = true)
     @Mapping(target = "loyaltyPoints", ignore = true)
@@ -28,6 +29,7 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     Profile toEntity(CreateProfileRequest request);
 
+    @Mapping(target = "profileId", ignore = true)
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

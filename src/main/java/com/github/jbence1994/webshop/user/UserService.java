@@ -3,9 +3,9 @@ package com.github.jbence1994.webshop.user;
 public interface UserService {
     User registerUser(User user);
 
-    Profile createProfile(Profile profile);
+    Profile createProfile(Long userId, Profile profile);
 
-    Address createAddress(Address address);
+    Address createAddress(Long userId, Address address);
 
     void changePassword(Long userId, String oldPassword, String newPassword);
 
