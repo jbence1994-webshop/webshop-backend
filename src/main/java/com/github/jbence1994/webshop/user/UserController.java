@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/profile")
-    public ResponseEntity<ProfileDto> createProfile(
+    public ResponseEntity<CreateProfileResponse> createProfile(
             @PathVariable Long userId,
             @Valid @RequestBody CreateProfileRequest request
     ) {
@@ -46,9 +46,16 @@ public class UserController {
 
         var createdProfile = userService.createProfile(userId, profile);
 
-        var profileDto = userMapper.toDto(createdProfile);
+        var createProfileResponse = new CreateProfileResponse(
+                createdProfile.getFirstName(),
+                createdProfile.getMiddleName(),
+                createdProfile.getLastName(),
+                createdProfile.getDateOfBirth(),
+                createdProfile.getPhoneNumber(),
+                createdProfile.getLoyaltyPoints()
+        );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(profileDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createProfileResponse);
     }
 
     @PostMapping("/{userId}/address")
