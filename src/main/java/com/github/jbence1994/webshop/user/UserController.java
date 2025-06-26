@@ -27,14 +27,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserRequest request) {
+    public ResponseEntity<RegisterUserResponse> registerUser(@Valid @RequestBody RegisterUserRequest request) {
         var user = userMapper.toEntity(request);
 
         var registeredUser = userService.registerUser(user);
 
-        var userDto = userMapper.toDto(registeredUser);
+        var registerUserResponse = new RegisterUserResponse(registeredUser.getId(), request.getEmail());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registerUserResponse);
     }
 
     @PostMapping("/{userId}/profile")
