@@ -75,7 +75,6 @@ public class UserControllerTests {
     public void registerUserTest() {
         when(userMapper.toEntity(any(RegisterUserRequest.class))).thenReturn(userAfterMappingFromDto());
         when(userService.registerUser(any())).thenReturn(user());
-        when(userMapper.toDto(any(User.class))).thenReturn(userDto());
 
         var result = userController.registerUser(registerUserRequest());
 
