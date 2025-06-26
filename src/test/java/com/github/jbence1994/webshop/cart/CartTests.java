@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class CartTests {
     private final Cart cart = cartWithTwoItems();
+    private final Cart cartWithAppliedCoupon = cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon();
     private final Cart emptyCart = emptyCart();
 
     private static Stream<Arguments> cartEmptyCheckParams() {
@@ -138,9 +139,10 @@ public class CartTests {
 
     @Test
     public void clearTest_HappyPath_CartIsEmpty() {
-        cart.clear();
+        cartWithAppliedCoupon.clear();
 
-        assertThat(cart.getItems(), is(empty()));
+        assertThat(cartWithAppliedCoupon.getItems(), is(empty()));
+        assertThat(cartWithAppliedCoupon.getAppliedCoupon(), is(nullValue()));
     }
 
     @ParameterizedTest(name = "{index} => {0}")
@@ -170,8 +172,8 @@ public class CartTests {
     }
 
     @Test
-    public void fromItemsTest() {
-        var result = cart.fromItems();
+    public void mapCartItemsToOrderItemsTest() {
+        var result = cart.mapCartItemsToOrderItems();
 
         assertThat(result, not(empty()));
         assertThat(result.size(), equalTo(2));

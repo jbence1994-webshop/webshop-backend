@@ -52,17 +52,14 @@ public final class ProfileTestObject {
     }
 
     public static Profile platinumProfile2() {
-        return buildProfile(null, 510_000);
+        return buildProfile(null, 2_550_000);
     }
 
     public static Profile platinumProfile3() {
         return buildProfile(AVATAR_FILE_NAME, 1_000_000);
     }
 
-    private static Profile buildProfile(
-            String avatarFileName,
-            int loyaltyPoints
-    ) {
+    private static Profile buildProfile(String avatarFileName, int loyaltyPoints) {
         return new Profile(
                 1L,
                 null,

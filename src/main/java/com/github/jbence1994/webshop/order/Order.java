@@ -22,6 +22,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    private int loyaltyPoints;
+
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
@@ -62,17 +65,16 @@ public class Order {
         return customerEmail.equals(customer.getEmail());
     }
 
-    public static Order fromCart(Cart cart, User customer) {
+    public static Order from(Cart cart) {
         var price = cart.calculateTotal();
 
         var order = new Order();
-        order.setCustomer(customer);
         order.setStatus(OrderStatus.PENDING);
         order.setTotalPrice(price.getTotalPrice());
         order.setDiscountAmount(price.getDiscountAmount());
         order.setShippingCost(price.getShippingCost());
 
-        var items = cart.fromItems();
+        var items = cart.mapCartItemsToOrderItems();
 
         items.forEach(item -> {
                     item.setOrder(order);
@@ -81,5 +83,16 @@ public class Order {
         );
 
         return order;
+    }
+
+    public int calculateLoyaltyPoints() {
+        // FIXME: Extract this value from here.
+        //  Earning values can be change in timely campaigns.
+        final int PER_EVERY_TWENTY_DOLLARS = 20;
+
+        return totalPrice
+                .divide(BigDecimal.valueOf(PER_EVERY_TWENTY_DOLLARS), RoundingMode.DOWN)
+                .setScale(0, RoundingMode.DOWN)
+                .intValue();
     }
 }

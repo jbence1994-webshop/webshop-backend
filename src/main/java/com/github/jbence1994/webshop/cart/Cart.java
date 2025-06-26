@@ -90,6 +90,7 @@ public class Cart {
     }
 
     public void clear() {
+        appliedCoupon = null;
         items.clear();
     }
 
@@ -111,7 +112,7 @@ public class Cart {
                 .adjustPrice(totalPrice, appliedCoupon.getValue());
     }
 
-    public List<OrderItem> fromItems() {
+    public List<OrderItem> mapCartItemsToOrderItems() {
         var orderItems = new ArrayList<OrderItem>();
 
         items.forEach(item -> {

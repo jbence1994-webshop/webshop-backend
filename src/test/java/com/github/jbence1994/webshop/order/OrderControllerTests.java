@@ -11,9 +11,7 @@ import java.util.List;
 import static com.github.jbence1994.webshop.order.OrderDtoTestObject.orderDto;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -46,11 +44,11 @@ public class OrderControllerTests {
 
         var result = orderController.getOrder(1L);
 
-        assertThat(result, allOf(
-                hasProperty("id", equalTo(orderDto().getId())),
-                hasProperty("totalPrice", equalTo(orderDto().getTotalPrice())),
-                hasProperty("status", equalTo(orderDto().getStatus())),
-                hasProperty("createdAt", equalTo(orderDto().getCreatedAt()))
-        ));
+        assertThat(result.id(), equalTo(orderDto().id()));
+        assertThat(result.totalPrice(), equalTo(orderDto().totalPrice()));
+        assertThat(result.discountAmount(), equalTo(orderDto().discountAmount()));
+        assertThat(result.shippingCost(), equalTo(orderDto().shippingCost()));
+        assertThat(result.status(), equalTo(orderDto().status()));
+        assertThat(result.createdAt(), equalTo(orderDto().createdAt()));
     }
 }
