@@ -31,6 +31,8 @@ public class UserServiceImpl implements UserService {
         var user = userQueryService.getUser(userId);
 
         user.setProfile(profile);
+        profile.setUser(user);
+
         userRepository.save(user);
 
         return profile;
