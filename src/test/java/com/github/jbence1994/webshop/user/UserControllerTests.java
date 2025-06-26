@@ -13,9 +13,7 @@ import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static com.github.jbence1994.webshop.user.UserTestObject.userAfterMappingFromDto;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -43,7 +41,7 @@ public class UserControllerTests {
     @Test
     public void getUserTest_HappyPath() {
         when(userQueryService.getUser(anyLong())).thenReturn(user());
-        when(userMapper.toDto(any())).thenReturn(userDto());
+        when(userMapper.toDto(any(User.class))).thenReturn(userDto());
 
         var result = userController.getUser(1L);
 
@@ -75,9 +73,9 @@ public class UserControllerTests {
 
     @Test
     public void registerUserTest() {
-        when(userMapper.toEntity(any())).thenReturn(userAfterMappingFromDto());
+        when(userMapper.toEntity(any(RegisterUserRequest.class))).thenReturn(userAfterMappingFromDto());
         when(userService.registerUser(any())).thenReturn(user());
-        when(userMapper.toDto(any())).thenReturn(userDto());
+        when(userMapper.toDto(any(User.class))).thenReturn(userDto());
 
         var result = userController.registerUser(registerUserRequest());
 
