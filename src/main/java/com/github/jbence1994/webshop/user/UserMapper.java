@@ -7,6 +7,10 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     UserDto toDto(User user);
 
+    ProfileDto toDto(Profile profile);
+
+    AddressDto toDto(Address address);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -15,4 +19,17 @@ public interface UserMapper {
     @Mapping(target = "profileAvatar", ignore = true)
     @Mapping(target = "coupons", ignore = true)
     User toEntity(RegisterUserRequest request);
+
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "avatarFileName", ignore = true)
+    @Mapping(target = "loyaltyPoints", ignore = true)
+    @Mapping(target = "address", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Profile toEntity(CreateProfileRequest request);
+
+    @Mapping(target = "profile", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Address toEntity(CreateAddressRequest request);
 }

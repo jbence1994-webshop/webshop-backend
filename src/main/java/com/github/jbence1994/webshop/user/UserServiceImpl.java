@@ -25,6 +25,26 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public Profile createProfile(Profile profile) {
+        var user = userQueryService.getUser(profile.getUserId());
+
+        user.setProfile(profile);
+        userRepository.save(user);
+
+        return profile;
+    }
+
+    @Override
+    public Address createAddress(Address address) {
+        var user = userQueryService.getUser(address.getProfileId());
+
+        user.getProfile().setAddress(address);
+        userRepository.save(user);
+
+        return address;
+    }
+
     // TODO: Later add option to change password when User is not logged in: e.g.: forgot password scenario.
     @Override
     public void changePassword(Long userId, String oldPassword, String newPassword) {

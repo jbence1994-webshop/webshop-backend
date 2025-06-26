@@ -37,6 +37,28 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
+    @PostMapping
+    public ResponseEntity<ProfileDto> createProfile(@Valid @RequestBody CreateProfileRequest request) {
+        var profile = userMapper.toEntity(request);
+
+        var createdProfile = userService.createProfile(profile);
+
+        var profileDto = userMapper.toDto(createdProfile);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(profileDto);
+    }
+
+    @PostMapping
+    public ResponseEntity<AddressDto> createAddress(@Valid @RequestBody CreateAddressRequest request) {
+        var address = userMapper.toEntity(request);
+
+        var createdAddress = userService.createAddress(address);
+
+        var addressDto = userMapper.toDto(createdAddress);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(addressDto);
+    }
+
     @PostMapping("/{userId}")
     public void changePassword(
             @PathVariable Long userId,
