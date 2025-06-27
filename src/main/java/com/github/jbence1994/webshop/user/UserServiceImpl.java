@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerUser(User user) {
         var email = user.getEmail();
-        var phoneNumber = user.getProfile().getPhoneNumber();
+        var phoneNumber = user.getPhoneNumber();
 
         if (userRepository.existsByEmail(email)) {
             throw new EmailAlreadyExistsException(email);
