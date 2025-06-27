@@ -28,8 +28,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
-        var address = userMapper.toEntity(request.getUser().getProfile().getAddress());
-        var profile = userMapper.toEntity(request.getUser().getProfile());
+        var address = userMapper.toEntity(request.getAddress());
+        var profile = userMapper.toEntity(request.getProfile());
         var user = userMapper.toEntity(request.getUser());
 
         address.setProfile(profile);

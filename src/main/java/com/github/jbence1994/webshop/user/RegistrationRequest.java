@@ -18,6 +18,14 @@ public class RegistrationRequest {
     @Valid
     private UserDto user;
 
+    public ProfileDto getProfile() {
+        return user.profile;
+    }
+
+    public AddressDto getAddress() {
+        return user.profile.address;
+    }
+
     @AllArgsConstructor
     @Getter
     public static class UserDto {
