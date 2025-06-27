@@ -40,13 +40,13 @@ public class UserController {
 
         var registeredUser = userService.registerUser(user);
 
-        // FIXME: Use MapStruct.
-        var registerUserResponse = new RegistrationResponse(
+        var response = new RegistrationResponse(
                 registeredUser.getId(),
-                registeredUser.getEmail()
+                registeredUser.getEmail(),
+                "Successful registration."
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(registerUserResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/{userId}")
