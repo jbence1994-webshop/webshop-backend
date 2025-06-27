@@ -19,8 +19,8 @@ public class UserControllerExceptionHandlerTests {
     private UserControllerExceptionHandler userControllerExceptionHandler;
 
     @Test
-    public void handleEmailAlreadyExistsExceptionTest() {
-        var result = userControllerExceptionHandler.handleEmailAlreadyExistsException(new EmailAlreadyExistsException(EMAIL));
+    public void handleEmailOrPhoneNumberAlreadyExistsExceptionTest() {
+        var result = userControllerExceptionHandler.handleEmailOrPhoneNumberAlreadyExistsException(new EmailAlreadyExistsException(EMAIL));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
         assertThat(result.getBody(), not(nullValue()));
