@@ -18,20 +18,19 @@ public interface UserMapper {
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "profileAvatar", ignore = true)
     @Mapping(target = "coupons", ignore = true)
-    User toEntity(RegisterUserRequest request);
+    User toEntity(RegistrationRequest.UserDto user);
 
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "avatarFileName", ignore = true)
     @Mapping(target = "loyaltyPoints", ignore = true)
-    @Mapping(target = "address", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Profile toEntity(CreateProfileRequest request);
+    Profile toEntity(RegistrationRequest.ProfileDto profile);
 
     @Mapping(target = "profileId", ignore = true)
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Address toEntity(AddressDto addressDto);
+    Address toEntity(RegistrationRequest.AddressDto address);
 }

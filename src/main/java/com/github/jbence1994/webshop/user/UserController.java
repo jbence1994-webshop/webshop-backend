@@ -27,47 +27,26 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<RegisterUserResponse> registerUser(@Valid @RequestBody RegisterUserRequest request) {
-        var user = userMapper.toEntity(request);
+    public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
+        var address = userMapper.toEntity(request.getUser().getProfile().getAddress());
+        var profile = userMapper.toEntity(request.getUser().getProfile());
+        var user = userMapper.toEntity(request.getUser());
+
+        address.setProfile(profile);
+        profile.setAddress(address);
+
+        profile.setUser(user);
+        user.setProfile(profile);
 
         var registeredUser = userService.registerUser(user);
 
-        var registerUserResponse = new RegisterUserResponse(registeredUser.getId(), request.getEmail());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(registerUserResponse);
-    }
-
-    @PostMapping("/{userId}/profile")
-    public ResponseEntity<CreateProfileResponse> createProfile(
-            @PathVariable Long userId,
-            @Valid @RequestBody CreateProfileRequest request
-    ) {
-        var profile = userMapper.toEntity(request);
-
-        var createdProfile = userService.createProfile(userId, profile);
-
-        var createProfileResponse = new CreateProfileResponse(
-                createdProfile.getFirstName(),
-                createdProfile.getMiddleName(),
-                createdProfile.getLastName(),
-                createdProfile.getDateOfBirth(),
-                createdProfile.getPhoneNumber(),
-                createdProfile.getLoyaltyPoints()
+        // FIXME: Use MapStruct.
+        var registerUserResponse = new RegistrationResponse(
+                registeredUser.getId(),
+                registeredUser.getEmail()
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createProfileResponse);
-    }
-
-    @PostMapping("/{userId}/address")
-    public ResponseEntity<AddressDto> createAddress(
-            @PathVariable Long userId,
-            @Valid @RequestBody AddressDto addressDto
-    ) {
-        var address = userMapper.toEntity(addressDto);
-
-        userService.createAddress(userId, address);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(addressDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registerUserResponse);
     }
 
     @PostMapping("/{userId}")

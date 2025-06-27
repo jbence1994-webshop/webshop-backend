@@ -1,7 +1,8 @@
 package com.github.jbence1994.webshop.user;
 
-public record RegisterUserResponse(
+public record RegistrationResponse(
         Long id,
         String email
+        // TODO: Add more fields.
 ) {
 }
