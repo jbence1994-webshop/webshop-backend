@@ -12,8 +12,7 @@ public class ConfirmUserPasswordValidator implements ConstraintValidator<Confirm
     @Override
     public boolean isValid(RegistrationRequest request, ConstraintValidatorContext constraintValidatorContext) {
         if (
-                request == null ||
-                        request.getUser() == null ||
+                request.getUser() == null ||
                         request.getUser().getPassword() == null ||
                         request.getUser().getConfirmPassword() == null
         ) {
