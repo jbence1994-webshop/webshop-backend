@@ -62,7 +62,7 @@ public class CartTests {
                 Arguments.of(
                         "With free shipping type of applied coupon",
                         cartWithTwoItemsAndFreeShippingTypeOfAppliedCoupon(),
-                        Price.withFreeShipping(BigDecimal.valueOf(139.98), BigDecimal.ZERO)
+                        Price.withFreeShipping(BigDecimal.valueOf(139.98))
                 )
         );
     }
