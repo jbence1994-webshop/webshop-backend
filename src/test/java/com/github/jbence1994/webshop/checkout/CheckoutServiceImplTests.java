@@ -4,6 +4,7 @@ import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
+import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.checkoutRequest;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionResponseTestObject.checkoutSessionResponse;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -36,10 +38,16 @@ import static org.mockito.Mockito.when;
 public class CheckoutServiceImplTests {
 
     @Mock
-    private LoyaltyConfig loyaltyConfig;
+    private OrderQueryService orderQueryService;
 
     @Mock
     private CartQueryService cartQueryService;
+
+    @Mock
+    private PaymentGateway paymentGateway;
+
+    @Mock
+    private LoyaltyConfig loyaltyConfig;
 
     @Mock
     private CouponService couponService;
@@ -63,6 +71,7 @@ public class CheckoutServiceImplTests {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
+        when(paymentGateway.createCheckoutSession(any())).thenReturn(checkoutSessionResponse());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -72,6 +81,8 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
+        verify(paymentGateway, times(1)).createCheckoutSession(any());
+        verify(orderService, never()).deleteOrder(any());
     }
 
     @Test
@@ -80,6 +91,7 @@ public class CheckoutServiceImplTests {
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
+        when(paymentGateway.createCheckoutSession(any())).thenReturn(checkoutSessionResponse());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -89,6 +101,8 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
+        verify(paymentGateway, times(1)).createCheckoutSession(any());
+        verify(orderService, never()).deleteOrder(any());
     }
 
     @Test
@@ -106,5 +120,7 @@ public class CheckoutServiceImplTests {
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
+        verify(paymentGateway, never()).createCheckoutSession(any());
+        verify(orderService, never()).deleteOrder(any());
     }
 }

@@ -5,8 +5,8 @@ import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.Order;
+import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
-import com.github.jbence1994.webshop.order.OrderStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
-    private final LoyaltyConfig loyaltyConfig;
+    private final OrderQueryService orderQueryService;
     private final CartQueryService cartQueryService;
+    private final PaymentGateway paymentGateway;
+    private final LoyaltyConfig loyaltyConfig;
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;
@@ -45,23 +47,42 @@ public class CheckoutServiceImpl implements CheckoutService {
             );
         }
 
-        cart.clear();
-
         var earnedLoyaltyPoints = order.calculateLoyaltyPoints(loyaltyConfig.pointsRate());
         user.earnLoyaltyPoints(earnedLoyaltyPoints);
         order.setLoyaltyPoints(earnedLoyaltyPoints);
 
-        // TODO: Payment integration.
+        try {
+            var checkoutSessionRequest = new CheckoutSessionRequest(
+                    order.getId(),
+                    order.getItems(),
+                    order.getTotalPrice(),
+                    order.getDiscountAmount(),
+                    order.getShippingCost(),
+                    cart.getCouponCode()
+            );
 
-        // 1) If payment was successful:
-        order.setStatus(OrderStatus.COMPLETED);
+            var checkoutSessionResponse = paymentGateway.createCheckoutSession(checkoutSessionRequest);
 
-        //2) If payment was failed:
-        // order.setStatus(PaymentStatus.FAILED);
+            cart.clear();
 
-        // 3) If payment aborted for a long time:
-        // order.setStatus(PaymentStatus.CANCELLED);
+            return new CheckoutResponse(
+                    order.getId(),
+                    checkoutSessionResponse.checkoutUrl()
+            );
+        } catch (PaymentException exception) {
+            orderService.deleteOrder(order);
+            throw exception;
+        }
+    }
 
-        return new CheckoutResponse(order.getId());
+    @Override
+    public void handleWebhookEvent(WebhookRequest request) {
+        paymentGateway
+                .parseWebhookRequest(request)
+                .ifPresent(paymentResult -> {
+                    var order = orderQueryService.getOrder(paymentResult.orderId());
+                    order.setStatus(paymentResult.status());
+                    orderService.updateOrder(order);
+                });
     }
 }
