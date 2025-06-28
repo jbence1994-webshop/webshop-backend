@@ -21,3 +21,9 @@ webshop:
 
   profile-avatar-upload-directory-config:
     path: ${PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH}
+
+  stripe:
+    secretKey: ${STRIPE_SECRET_KEY}
+    webhookSecretKey: ${STRIPE_WEBHOOK_SECRET_KEY}
+
+  clientAppUrl: ${CLIENT_APP_URL}

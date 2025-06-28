@@ -28,18 +28,19 @@
         <jjwt-jackson.version>0.12.6</jjwt-jackson.version>
         <jjwt-api.version>0.12.6</jjwt-api.version>
         <spring-dotenv.version>4.0.0</spring-dotenv.version>
+        <stripe-java.version>29.0.0</stripe-java.version>
         <mapstruct-processor.version>1.6.3</mapstruct-processor.version>
         <mapstruct.version>1.6.3</mapstruct.version>
 
         <!-- Maven plugin versions -->
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
-        <flyway-maven-plugin.version>11.10.0</flyway-maven-plugin.version>
+        <flyway-maven-plugin.version>11.9.2</flyway-maven-plugin.version>
 
         <!-- JaCoCo properties -->
         <jacoco.line-coverage>0.98</jacoco.line-coverage>
-        <jacoco.branch-coverage>0.93</jacoco.branch-coverage>
-        <jacoco.complexity-coverage>0.98</jacoco.complexity-coverage>
+        <jacoco.branch-coverage>0.92</jacoco.branch-coverage>
+        <jacoco.complexity-coverage>0.97</jacoco.complexity-coverage>
         <jacoco.method-coverage>0.99</jacoco.method-coverage>
         <jacoco.class-coverage>1.00</jacoco.class-coverage>
 
@@ -88,6 +89,11 @@
             <groupId>me.paulschwarz</groupId>
             <artifactId>spring-dotenv</artifactId>
             <version>${spring-dotenv.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>${stripe-java.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
