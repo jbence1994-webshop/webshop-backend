@@ -104,7 +104,7 @@ public class Cart {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (!hasCouponApplied()) {
-            return Price.withDefaultShipping(totalPrice, BigDecimal.ZERO);
+            return Price.withShippingCost(totalPrice, BigDecimal.ZERO);
         }
 
         return PriceAdjustmentStrategyFactory

@@ -47,17 +47,17 @@ public class CartTests {
                 Arguments.of(
                         "Without applied coupon",
                         cartWithTwoItems(),
-                        Price.withDefaultShipping(BigDecimal.valueOf(139.98), BigDecimal.ZERO)
+                        Price.withShippingCost(BigDecimal.valueOf(139.98), BigDecimal.ZERO)
                 ),
                 Arguments.of(
                         "With fixed amount type of applied coupon",
                         cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(),
-                        Price.withDefaultShipping(BigDecimal.valueOf(124.98), BigDecimal.valueOf(15.00))
+                        Price.withShippingCost(BigDecimal.valueOf(124.98), BigDecimal.valueOf(15.00))
                 ),
                 Arguments.of(
                         "With percent off type of applied coupon",
                         cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(),
-                        Price.withDefaultShipping(BigDecimal.valueOf(125.99), BigDecimal.valueOf(13.99))
+                        Price.withShippingCost(BigDecimal.valueOf(125.99), BigDecimal.valueOf(13.99))
                 ),
                 Arguments.of(
                         "With free shipping type of applied coupon",
