@@ -2,9 +2,9 @@ package com.github.jbence1994.webshop.auth;
 
 import com.github.jbence1994.webshop.user.Role;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.io.IOException;
 
 import static com.github.jbence1994.webshop.auth.AuthTestConstants.BEARER_TOKEN;
 import static com.github.jbence1994.webshop.auth.AuthTestConstants.INVALID_BEARER_TOKEN;
@@ -56,7 +54,8 @@ public class JwtAuthenticationFilterTests {
     }
 
     @Test
-    public void doFilterInternalTest_HappyPath() throws ServletException, IOException {
+    @SneakyThrows
+    public void doFilterInternalTest_HappyPath() {
         when(request.getHeader("Authorization")).thenReturn(BEARER_TOKEN);
 
         var parsedJwt = mock(Jwt.class);
@@ -81,7 +80,8 @@ public class JwtAuthenticationFilterTests {
     }
 
     @Test
-    public void doFilterInternalTest_UnhappyPath_NoAuthorizationHeader() throws ServletException, IOException {
+    @SneakyThrows
+    public void doFilterInternalTest_UnhappyPath_NoAuthorizationHeader() {
         when(request.getHeader("Authorization")).thenReturn(null);
 
         filter.doFilterInternal(request, response, filterChain);
@@ -93,7 +93,8 @@ public class JwtAuthenticationFilterTests {
     }
 
     @Test
-    public void doFilterInternalTest_UnhappyPath_MalformedAuthorizationHeader() throws ServletException, IOException {
+    @SneakyThrows
+    public void doFilterInternalTest_UnhappyPath_MalformedAuthorizationHeader() {
         when(request.getHeader("Authorization")).thenReturn(MALFORMED_BEARER_TOKEN);
 
         filter.doFilterInternal(request, response, filterChain);
@@ -105,7 +106,8 @@ public class JwtAuthenticationFilterTests {
     }
 
     @Test
-    public void doFilterInternalTest_UnhappyPath_parseTokenFailure() throws ServletException, IOException {
+    @SneakyThrows
+    public void doFilterInternalTest_UnhappyPath_parseTokenFailure() {
         when(request.getHeader("Authorization")).thenReturn(INVALID_BEARER_TOKEN);
 
         when(jwtService.parseToken(any())).thenReturn(null);
@@ -119,7 +121,8 @@ public class JwtAuthenticationFilterTests {
     }
 
     @Test
-    public void doFilterInternalTest_UnhappyPath_TokenIsExpired() throws ServletException, IOException {
+    @SneakyThrows
+    public void doFilterInternalTest_UnhappyPath_TokenIsExpired() {
         when(request.getHeader("Authorization")).thenReturn(BEARER_TOKEN);
 
         var parsedJwt = mock(Jwt.class);
