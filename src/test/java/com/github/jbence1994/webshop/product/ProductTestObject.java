@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
+import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_DESCRIPTION;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;
@@ -19,6 +20,7 @@ public final class ProductTestObject {
                 BigDecimal.valueOf(49.99),
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
+                category1(),
                 new HashSet<>()
         );
     }
@@ -30,6 +32,7 @@ public final class ProductTestObject {
                 BigDecimal.valueOf(49.99),
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
+                category1(),
                 new HashSet<>()
         );
     }
@@ -41,6 +44,7 @@ public final class ProductTestObject {
                 BigDecimal.valueOf(49.99),
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
+                category1(),
                 new HashSet<>()
         );
         product.addPhoto(PHOTO_FILE_NAME);
@@ -54,6 +58,7 @@ public final class ProductTestObject {
                 BigDecimal.valueOf(89.99),
                 PRODUCT_2_UNIT,
                 PRODUCT_2_DESCRIPTION,
+                category1(),
                 new HashSet<>()
         );
     }

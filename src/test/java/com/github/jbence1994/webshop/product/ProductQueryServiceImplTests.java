@@ -18,10 +18,11 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,7 +76,15 @@ public class ProductQueryServiceImplTests {
         var result = assertDoesNotThrow(() -> productQueryService.getProduct(1L));
 
         assertThat(result, not(nullValue()));
-        assertThat(result, samePropertyValuesAs(product1()));
+        assertThat(result, allOf(
+                hasProperty("id", equalTo(product1().getId())),
+                hasProperty("name", equalTo(product1().getName())),
+                hasProperty("price", equalTo(product1().getPrice())),
+                hasProperty("unit", equalTo(product1().getUnit())),
+                hasProperty("description", equalTo(product1().getDescription()))
+        ));
+        assertThat(result.getCategory().getId(), equalTo(product1().getCategory().getId()));
+        assertThat(result.getCategory().getName(), equalTo(product1().getCategory().getName()));
     }
 
     @Test

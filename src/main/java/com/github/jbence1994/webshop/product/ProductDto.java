@@ -35,4 +35,6 @@ public class ProductDto {
     private String unit;
 
     private String description;
+
+    private String category;
 }
