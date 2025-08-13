@@ -33,6 +33,9 @@ class ProductControllerTests {
     private ProductQueryService productQueryService;
 
     @Mock
+    private CategoryQueryService categoryQueryService;
+
+    @Mock
     private ProductService productService;
 
     @Mock
