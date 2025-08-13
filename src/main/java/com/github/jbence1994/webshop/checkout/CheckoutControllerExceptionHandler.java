@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CheckoutControllerExceptionHandler {
 
     @ExceptionHandler(exception = CartNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleCartNotFoundException(RuntimeException exception) {
+    public ResponseEntity<ErrorDto> handleCartNotFoundException(CartNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 }
