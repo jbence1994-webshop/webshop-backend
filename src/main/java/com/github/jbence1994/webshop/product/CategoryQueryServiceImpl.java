@@ -14,4 +14,11 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
     public List<Category> getCategories() {
         return categoryRepository.findAllByOrderByIdAsc();
     }
+
+    @Override
+    public Category getCategory(String name) {
+        return categoryRepository
+                .findByName(name)
+                .orElseThrow(() -> new InvalidCategoryException(name));
+    }
 }

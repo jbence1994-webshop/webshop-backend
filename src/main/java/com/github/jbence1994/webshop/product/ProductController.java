@@ -21,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductController {
     private final ProductQueryService productQueryService;
+    private final CategoryQueryService categoryQueryService;
     private final ProductService productService;
     private final ProductMapper productMapper;
 
@@ -44,7 +45,10 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
+        var category = categoryQueryService.getCategory(productDto.getCategory());
+
         var product = productMapper.toEntity(productDto);
+        product.setCategory(category);
 
         productService.createProduct(product);
         productDto.setId(product.getId());

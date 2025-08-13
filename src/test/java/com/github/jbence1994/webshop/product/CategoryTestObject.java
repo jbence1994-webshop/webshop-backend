@@ -6,10 +6,6 @@ public final class CategoryTestObject {
     public static Category category1() {
         byte id = 1;
 
-        return new Category(
-                id,
-                CATEGORY_1_NAME,
-                null
-        );
+        return new Category(id, CATEGORY_1_NAME);
     }
 }
