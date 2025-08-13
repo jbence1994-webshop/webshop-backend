@@ -63,7 +63,7 @@ public class ProductQueryServiceImplTests {
         var productsPage = new PageImpl<>(products, PageRequest.of(0, 20), products.size());
         when(productRepository.findAll(any(PageRequest.class))).thenReturn(productsPage);
 
-        var result = productQueryService.getProducts(sortBy, orderBy, page, size);
+        var result = productQueryService.getProducts(sortBy, orderBy, page, size, null);
 
         assertThat(result, not(empty()));
         assertThat(result.size(), equalTo(2));

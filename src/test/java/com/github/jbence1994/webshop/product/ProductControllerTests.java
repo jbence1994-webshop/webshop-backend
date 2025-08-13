@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyByte;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -46,9 +47,10 @@ class ProductControllerTests {
 
     @Test
     public void getProductsTest() {
-        when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt())).thenReturn(List.of(product1(), product2()));
+        when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
 
-        var result = productController.getProducts("id", "asc", 0, 20);
+        byte categoryId = 1;
+        var result = productController.getProducts("id", "asc", 0, 20, categoryId);
 
         assertThat(result.size(), equalTo(2));
     }
