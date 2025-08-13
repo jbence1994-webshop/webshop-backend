@@ -53,7 +53,7 @@ class ProductControllerTests {
     @Test
     public void getProductTest_HappyPath() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(productMapper.toDto(any())).thenReturn(productDto());
+        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
 
         var result = productController.getProduct(1L);
 
