@@ -3,10 +3,12 @@ package com.github.jbence1994.webshop.product;
 import com.github.jbence1994.webshop.image.ProductPhoto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +38,9 @@ public class Product {
     private String unit;
 
     private String description;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductPhoto> photos = new HashSet<>();
