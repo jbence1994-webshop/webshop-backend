@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullId;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
@@ -48,6 +49,7 @@ class ProductControllerTests {
     @Test
     public void getProductsTest() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
+        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
 
         byte categoryId = 1;
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);
@@ -73,6 +75,7 @@ class ProductControllerTests {
 
     @Test
     public void createProductTest() {
+        when(categoryQueryService.getCategory(any())).thenReturn(category1());
         when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());
 

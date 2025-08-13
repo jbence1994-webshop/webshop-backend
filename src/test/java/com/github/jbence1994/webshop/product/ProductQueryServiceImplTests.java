@@ -38,7 +38,7 @@ public class ProductQueryServiceImplTests {
     @InjectMocks
     private ProductQueryServiceImpl productQueryService;
 
-    private static Stream<Arguments> sortByParams() {
+    private static Stream<Arguments> sortByAndOrderByParams() {
         return Stream.of(
                 Arguments.of("SortBy and orderBy are null", null, null, -1, 20),
                 Arguments.of("SortBy and orderBy are empty", "", "", 0, 20),
@@ -50,8 +50,18 @@ public class ProductQueryServiceImplTests {
         );
     }
 
+    private static Stream<Arguments> categoryIdParams() {
+        byte categoryId1 = 1;
+        byte categoryId2 = 2;
+
+        return Stream.of(
+                Arguments.of("Electronics", categoryId1, 2),
+                Arguments.of("Home & Living", categoryId2, 0)
+        );
+    }
+
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("sortByParams")
+    @MethodSource("sortByAndOrderByParams")
     public void getProductsTests(
             String testCase,
             String sortBy,
@@ -67,6 +77,22 @@ public class ProductQueryServiceImplTests {
 
         assertThat(result, not(empty()));
         assertThat(result.size(), equalTo(2));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("categoryIdParams")
+    public void getProductsTest_ByCategoryId(
+            String testCase,
+            byte categoryId,
+            int expectedCount
+    ) {
+        var products = List.of(product1(), product2());
+        var productsPage = new PageImpl<>(products, PageRequest.of(0, 20), products.size());
+        when(productRepository.findAll(any(PageRequest.class))).thenReturn(productsPage);
+
+        var result = productQueryService.getProducts("", "", 0, 20, categoryId);
+
+        assertThat(result.size(), equalTo(expectedCount));
     }
 
     @Test

@@ -32,7 +32,7 @@ public final class ProductTestObject {
                 BigDecimal.valueOf(49.99),
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
-                category1(),
+                null,
                 new HashSet<>()
         );
     }
