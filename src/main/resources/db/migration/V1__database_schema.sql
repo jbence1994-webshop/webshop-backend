@@ -6,18 +6,18 @@ USE webshop;
 
 CREATE TABLE IF NOT EXISTS categories
 (
-    id   TINYINT     NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE
+    id   TINYINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50)      NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS products
 (
-    id          BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name        VARCHAR(255)   NOT NULL,
-    price       DECIMAL(10, 2) NOT NULL,
-    unit        VARCHAR(25)    NOT NULL,
+    id          BIGINT           NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name        VARCHAR(255)     NOT NULL,
+    price       DECIMAL(10, 2)   NOT NULL,
+    unit        VARCHAR(25)      NOT NULL,
     description TEXT,
-    category_id TINYINT        NOT NULL,
+    category_id TINYINT UNSIGNED NOT NULL,
     CONSTRAINT fk_categories_products
         FOREIGN KEY (category_id) REFERENCES categories (id)
             ON DELETE NO ACTION
