@@ -30,9 +30,10 @@ public class ProductController {
             @RequestParam(required = false, name = "sort") String sortBy,
             @RequestParam(required = false, name = "order") String orderBy,
             @RequestParam(required = false, defaultValue = "0", name = "page") int page,
-            @RequestParam(required = false, defaultValue = "20", name = "size") int size
+            @RequestParam(required = false, defaultValue = "20", name = "size") int size,
+            @RequestParam(required = false, name = "categoryId") Byte categoryId
     ) {
-        return productQueryService.getProducts(sortBy, orderBy, page, size).stream()
+        return productQueryService.getProducts(sortBy, orderBy, page, size, categoryId).stream()
                 .map(productMapper::toDto)
                 .toList();
     }
