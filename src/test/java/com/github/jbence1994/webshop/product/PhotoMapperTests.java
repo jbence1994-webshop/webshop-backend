@@ -32,7 +32,8 @@ public class PhotoMapperTests {
 
         var result = photoMapper.toDto(product1WithPhotos().getPhotos());
 
-        assertThat(result, not(nullValue()));
+        assertThat(result.fileName(), not(nullValue()));
+        assertThat(result.url(), not(nullValue()));
 
     }
 
