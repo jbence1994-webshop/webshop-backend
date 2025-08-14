@@ -8,6 +8,7 @@ public interface ProductMapper {
     CategoryDto toDto(Category category);
 
     @Mapping(target = "category", source = "category.name")
+    @Mapping(target = "photo", ignore = true)
     ProductDto toDto(Product product);
 
     @Mapping(target = "id", ignore = true)
