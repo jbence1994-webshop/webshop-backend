@@ -12,7 +12,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
 
     @Override
     public List<Category> getCategories() {
-        return categoryRepository.findAllByOrderByIdAsc();
+        return categoryRepository.findAll();
     }
 
     @Override

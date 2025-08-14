@@ -34,7 +34,7 @@ public class CategoryQueryServiceImplTests {
 
     @Test
     public void getCategoriesTest() {
-        when(categoryRepository.findAllByOrderByIdAsc()).thenReturn(List.of(category1()));
+        when(categoryRepository.findAll()).thenReturn(List.of(category1()));
 
         var result = categoryQueryService.getCategories();
 
