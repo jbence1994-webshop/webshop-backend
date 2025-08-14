@@ -21,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductController {
     private final ProductQueryService productQueryService;
+    private final CategoryQueryService categoryQueryService;
     private final ProductService productService;
     private final ProductMapper productMapper;
 
@@ -29,9 +30,10 @@ public class ProductController {
             @RequestParam(required = false, name = "sort") String sortBy,
             @RequestParam(required = false, name = "order") String orderBy,
             @RequestParam(required = false, defaultValue = "0", name = "page") int page,
-            @RequestParam(required = false, defaultValue = "20", name = "size") int size
+            @RequestParam(required = false, defaultValue = "20", name = "size") int size,
+            @RequestParam(required = false, name = "categoryId") Byte categoryId
     ) {
-        return productQueryService.getProducts(sortBy, orderBy, page, size).stream()
+        return productQueryService.getProducts(sortBy, orderBy, page, size, categoryId).stream()
                 .map(productMapper::toDto)
                 .toList();
     }
@@ -44,7 +46,10 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
+        var category = categoryQueryService.getCategory(productDto.getCategory());
+
         var product = productMapper.toEntity(productDto);
+        product.setCategory(category);
 
         productService.createProduct(product);
         productDto.setId(product.getId());

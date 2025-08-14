@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullId;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
@@ -21,6 +22,7 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyByte;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -33,6 +35,9 @@ class ProductControllerTests {
     private ProductQueryService productQueryService;
 
     @Mock
+    private CategoryQueryService categoryQueryService;
+
+    @Mock
     private ProductService productService;
 
     @Mock
@@ -43,9 +48,11 @@ class ProductControllerTests {
 
     @Test
     public void getProductsTest() {
-        when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt())).thenReturn(List.of(product1(), product2()));
+        when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
+        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
 
-        var result = productController.getProducts("id", "asc", 0, 20);
+        byte categoryId = 1;
+        var result = productController.getProducts("id", "asc", 0, 20, categoryId);
 
         assertThat(result.size(), equalTo(2));
     }
@@ -53,7 +60,7 @@ class ProductControllerTests {
     @Test
     public void getProductTest_HappyPath() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(productMapper.toDto(any())).thenReturn(productDto());
+        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
 
         var result = productController.getProduct(1L);
 
@@ -68,6 +75,7 @@ class ProductControllerTests {
 
     @Test
     public void createProductTest() {
+        when(categoryQueryService.getCategory(any())).thenReturn(category1());
         when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());
 

@@ -35,4 +35,9 @@ public class ProductDto {
     private String unit;
 
     private String description;
+
+    @NotNull(message = "Category must be provided.")
+    @NotBlank(message = "Category must be not empty.")
+    @Size(max = 50, message = "Category must be less than 50 characters.")
+    private String category;
 }

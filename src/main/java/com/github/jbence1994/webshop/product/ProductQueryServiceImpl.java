@@ -14,13 +14,26 @@ public class ProductQueryServiceImpl implements ProductQueryService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<Product> getProducts(String sortBy, String orderBy, int page, int size) {
+    public List<Product> getProducts(
+            String sortBy,
+            String orderBy,
+            int page,
+            int size,
+            Byte categoryId
+    ) {
         var sortProperties = getSortProperties(sortBy);
         var sortDirection = getSortDirection(orderBy);
         var pageNumber = getPageNumber(page);
 
-        return productRepository
-                .findAll(PageRequest.of(pageNumber, size, Sort.by(sortDirection, sortProperties)))
+        var products = productRepository
+                .findAll(PageRequest.of(pageNumber, size, Sort.by(sortDirection, sortProperties)));
+
+        if (categoryId == null) {
+            return products.toList();
+        }
+
+        return products.stream()
+                .filter(product -> categoryId.equals(product.getCategory().getId()))
                 .toList();
     }
 
