@@ -12,6 +12,7 @@ import java.util.List;
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullId;
+import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
@@ -43,6 +44,9 @@ class ProductControllerTests {
     @Mock
     private ProductMapper productMapper;
 
+    @Mock
+    private PhotoMapper photoMapper;
+
     @InjectMocks
     private ProductController productController;
 
@@ -50,6 +54,7 @@ class ProductControllerTests {
     public void getProductsTest() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
         when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+        when(photoMapper.toDto(any())).thenReturn(productPhotoDto());
 
         byte categoryId = 1;
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);

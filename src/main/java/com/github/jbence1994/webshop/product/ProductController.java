@@ -24,6 +24,7 @@ public class ProductController {
     private final CategoryQueryService categoryQueryService;
     private final ProductService productService;
     private final ProductMapper productMapper;
+    private final PhotoMapper photoMapper;
 
     @GetMapping
     public List<ProductDto> getProducts(
@@ -33,8 +34,14 @@ public class ProductController {
             @RequestParam(required = false, defaultValue = "20", name = "size") int size,
             @RequestParam(required = false, name = "categoryId") Byte categoryId
     ) {
-        return productQueryService.getProducts(sortBy, orderBy, page, size, categoryId).stream()
-                .map(productMapper::toDto)
+        var products = productQueryService.getProducts(sortBy, orderBy, page, size, categoryId);
+
+        return products.stream()
+                .map(product -> {
+                    var productDto = productMapper.toDto(product);
+                    productDto.setPhoto(photoMapper.toDto(product.getPhotos()));
+                    return productDto;
+                })
                 .toList();
     }
 

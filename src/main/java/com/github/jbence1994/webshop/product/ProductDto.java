@@ -40,4 +40,6 @@ public class ProductDto {
     @NotBlank(message = "Category must be not empty.")
     @Size(max = 50, message = "Category must be less than 50 characters.")
     private String category;
+
+    private ProductPhotoDto photo;
 }
