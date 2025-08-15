@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.product;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
@@ -21,7 +21,7 @@ public final class ProductTestObject {
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
                 category1(),
-                new HashSet<>()
+                new ArrayList<>()
         );
     }
 
@@ -33,7 +33,7 @@ public final class ProductTestObject {
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
                 null,
-                new HashSet<>()
+                new ArrayList<>()
         );
     }
 
@@ -45,7 +45,7 @@ public final class ProductTestObject {
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
                 category1(),
-                new HashSet<>()
+                new ArrayList<>()
         );
         product.addPhoto(PHOTO_FILE_NAME);
         return product;
@@ -59,7 +59,7 @@ public final class ProductTestObject {
                 PRODUCT_2_UNIT,
                 PRODUCT_2_DESCRIPTION,
                 category1(),
-                new HashSet<>()
+                new ArrayList<>()
         );
     }
 }

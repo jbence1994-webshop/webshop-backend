@@ -20,8 +20,8 @@ import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -54,7 +54,7 @@ public class User {
     private Profile profile;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private Set<Coupon> coupons = new HashSet<>();
+    private List<Coupon> coupons = new ArrayList<>();
 
     public String getPhoneNumber() {
         return profile.getPhoneNumber();
