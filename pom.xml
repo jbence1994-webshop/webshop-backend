@@ -24,9 +24,9 @@
 
         <!-- Project dependency versions -->
         <springdoc-openapi-starter-webmvc-ui.version>2.8.9</springdoc-openapi-starter-webmvc-ui.version>
-        <jjwt-impl.version>0.12.6</jjwt-impl.version>
-        <jjwt-jackson.version>0.12.6</jjwt-jackson.version>
-        <jjwt-api.version>0.12.6</jjwt-api.version>
+        <jjwt-impl.version>0.12.7</jjwt-impl.version>
+        <jjwt-jackson.version>0.12.7</jjwt-jackson.version>
+        <jjwt-api.version>0.12.7</jjwt-api.version>
         <spring-dotenv.version>4.0.0</spring-dotenv.version>
         <mapstruct-processor.version>1.6.3</mapstruct-processor.version>
         <mapstruct.version>1.6.3</mapstruct.version>
