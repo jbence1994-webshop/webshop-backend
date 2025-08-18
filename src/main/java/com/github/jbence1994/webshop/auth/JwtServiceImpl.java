@@ -3,13 +3,13 @@ package com.github.jbence1994.webshop.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
     private final JwtConfig jwtConfig;
 

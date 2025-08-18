@@ -1,13 +1,13 @@
 package com.github.jbence1994.webshop.coupon;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CouponQueryServiceImpl implements CouponQueryService {
     private final CouponRepository couponRepository;
     private final AuthService authService;

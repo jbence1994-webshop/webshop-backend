@@ -8,11 +8,11 @@ import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
 import com.github.jbence1994.webshop.order.OrderStatus;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
     private final CartQueryService cartQueryService;
     private final CouponService couponService;

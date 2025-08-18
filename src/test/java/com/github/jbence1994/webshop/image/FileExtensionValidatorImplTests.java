@@ -47,7 +47,7 @@ public class FileExtensionValidatorImplTests {
 
     @BeforeEach
     public void setUp() {
-        when(fileExtensionsConfig.getAllowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
+        when(fileExtensionsConfig.allowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
     }
 
     @ParameterizedTest(name = "{index} => {0}")

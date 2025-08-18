@@ -1,10 +1,10 @@
 package com.github.jbence1994.webshop.order;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 

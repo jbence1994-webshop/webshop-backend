@@ -1,12 +1,12 @@
 package com.github.jbence1994.webshop.cart;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CartQueryServiceImpl implements CartQueryService {
     private final CartRepository cartRepository;
 

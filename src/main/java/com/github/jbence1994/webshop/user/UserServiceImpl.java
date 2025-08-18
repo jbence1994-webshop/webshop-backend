@@ -1,11 +1,11 @@
 package com.github.jbence1994.webshop.user;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserQueryService userQueryService;
     private final PasswordManager passwordManager;
