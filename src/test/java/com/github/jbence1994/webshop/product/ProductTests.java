@@ -9,12 +9,28 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product1Wi
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class ProductTests {
     private final Product product = product1();
     private final Product productWithPhotos = product1WithPhotos();
+
+    @Test
+    public void getFirstProductPhotoTest_HappyPath_PhotoIsNotNull() {
+        var result = productWithPhotos.getFirstProductPhoto();
+
+        assertThat(result, not(nullValue()));
+    }
+
+    @Test
+    public void getFirstProductPhotoTest_UnhappyPath_PhotoIsNull() {
+        var result = product.getFirstProductPhoto();
+
+        assertThat(result, is(nullValue()));
+    }
 
     @Test
     public void addPhotoTest() {
