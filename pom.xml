@@ -193,7 +193,6 @@
                     <excludes>
                         <exclude>com/github/jbence1994/webshop/**/*Config*</exclude>
                         <exclude>com/github/jbence1994/webshop/**/*MapperImpl*</exclude>
-                        <exclude>com/github/jbence1994/webshop/**/*SecurityRules*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/FileSystemUtils*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/ImageUrlBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/Application*</exclude>
