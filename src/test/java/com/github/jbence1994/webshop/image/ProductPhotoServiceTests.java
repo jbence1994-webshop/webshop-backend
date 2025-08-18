@@ -64,7 +64,7 @@ public class ProductPhotoServiceTests {
         doNothing().when(fileExtensionValidator).validate(any());
         when(productQueryService.getProduct(any())).thenReturn(product);
         when(fileNameGenerator.generate(any())).thenReturn(PHOTO_FILE_NAME);
-        when(productPhotosUploadDirectoryConfig.getPath()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
+        when(productPhotosUploadDirectoryConfig.path()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
         when(image.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());
     }
@@ -81,7 +81,7 @@ public class ProductPhotoServiceTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
         verify(fileNameGenerator, times(1)).generate(any());
-        verify(productPhotosUploadDirectoryConfig, times(1)).getPath();
+        verify(productPhotosUploadDirectoryConfig, times(1)).path();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, times(1)).addPhoto(any());
@@ -102,7 +102,7 @@ public class ProductPhotoServiceTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
         verify(fileNameGenerator, times(1)).generate(any());
-        verify(productPhotosUploadDirectoryConfig, times(1)).getPath();
+        verify(productPhotosUploadDirectoryConfig, times(1)).path();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, never()).addPhoto(any());

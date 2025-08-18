@@ -1,11 +1,11 @@
 package com.github.jbence1994.webshop.user;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PasswordManagerImpl implements PasswordManager {
     private final PasswordEncoder passwordEncoder;
 

@@ -70,9 +70,9 @@ public class Order {
 
         var order = new Order();
         order.setStatus(OrderStatus.PENDING);
-        order.setTotalPrice(price.getTotalPrice());
-        order.setDiscountAmount(price.getDiscountAmount());
-        order.setShippingCost(price.getShippingCost());
+        order.setTotalPrice(price.totalPrice());
+        order.setDiscountAmount(price.discountAmount());
+        order.setShippingCost(price.shippingCost());
 
         var items = cart.mapCartItemsToOrderItems();
 

@@ -2,11 +2,11 @@ package com.github.jbence1994.webshop.image;
 
 import com.github.jbence1994.webshop.user.UserQueryService;
 import com.github.jbence1994.webshop.user.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProfileAvatarService implements ImageService {
     private final ProfileAvatarUploadDirectoryConfig profileAvatarUploadDirectoryConfig;
     private final UserQueryService userQueryService;
@@ -24,7 +24,7 @@ public class ProfileAvatarService implements ImageService {
 
             if (user.hasProfileAvatar()) {
                 fileUtils.remove(
-                        profileAvatarUploadDirectoryConfig.getPath(),
+                        profileAvatarUploadDirectoryConfig.path(),
                         user.getProfileAvatar()
                 );
             }
@@ -32,7 +32,7 @@ public class ProfileAvatarService implements ImageService {
             var fileName = fileNameGenerator.generate(image.getFileExtension());
 
             fileUtils.store(
-                    profileAvatarUploadDirectoryConfig.getPath(),
+                    profileAvatarUploadDirectoryConfig.path(),
                     fileName,
                     image.getInputStream()
             );
@@ -52,7 +52,7 @@ public class ProfileAvatarService implements ImageService {
             var user = userQueryService.getUser(userId);
 
             fileUtils.remove(
-                    profileAvatarUploadDirectoryConfig.getPath(),
+                    profileAvatarUploadDirectoryConfig.path(),
                     fileName
             );
 

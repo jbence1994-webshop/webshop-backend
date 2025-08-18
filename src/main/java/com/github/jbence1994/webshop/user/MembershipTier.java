@@ -1,11 +1,11 @@
 package com.github.jbence1994.webshop.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.stream.Stream;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public enum MembershipTier {
     BRONZE(0, 4_999),

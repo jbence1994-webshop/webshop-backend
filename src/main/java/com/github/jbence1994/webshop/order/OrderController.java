@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 @CrossOrigin
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderController {
     private final OrderQueryService orderQueryService;
     private final OrderMapper orderMapper;

@@ -2,13 +2,13 @@ package com.github.jbence1994.webshop.product;
 
 import com.github.jbence1994.webshop.image.ImageUrlBuilder;
 import com.github.jbence1994.webshop.image.ProductPhoto;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PhotoMapper {
     private final ImageUrlBuilder imageUrlBuilder;
 

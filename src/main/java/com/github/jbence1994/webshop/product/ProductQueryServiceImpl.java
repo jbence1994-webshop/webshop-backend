@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductQueryServiceImpl implements ProductQueryService {
     private final ProductRepository productRepository;
 

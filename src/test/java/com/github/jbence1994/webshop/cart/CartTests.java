@@ -166,9 +166,9 @@ public class CartTests {
     ) {
         var result = cart.calculateTotal();
 
-        assertThat(result.getTotalPrice(), equalTo(expectedResult.getTotalPrice()));
-        assertThat(result.getDiscountAmount(), equalTo(expectedResult.getDiscountAmount()));
-        assertThat(result.getShippingCost(), equalTo(expectedResult.getShippingCost()));
+        assertThat(result.totalPrice(), equalTo(expectedResult.totalPrice()));
+        assertThat(result.discountAmount(), equalTo(expectedResult.discountAmount()));
+        assertThat(result.shippingCost(), equalTo(expectedResult.shippingCost()));
     }
 
     @Test
