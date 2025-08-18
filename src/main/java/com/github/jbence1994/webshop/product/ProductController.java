@@ -49,7 +49,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public ProductDto getProduct(@PathVariable Long id) {
         var product = productQueryService.getProduct(id);
-        return productMapper.toDto(product);
+
+        var productDto = productMapper.toDto(product);
+        productDto.setPhoto(productMapper.toDto(product.getFirstPhoto(), imageUrlBuilder));
+
+        return productDto;
     }
 
     @PostMapping

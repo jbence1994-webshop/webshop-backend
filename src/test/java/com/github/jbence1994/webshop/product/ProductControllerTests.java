@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.product;
 
-import com.github.jbence1994.webshop.image.ImageUrlBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullId;
@@ -65,6 +63,7 @@ class ProductControllerTests {
     public void getProductTest_HappyPath() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
         when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
 
         var result = productController.getProduct(1L);
 
