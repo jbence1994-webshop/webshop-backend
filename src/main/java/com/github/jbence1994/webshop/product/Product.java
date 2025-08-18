@@ -46,7 +46,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductPhoto> photos = new ArrayList<>();
 
-    public ProductPhoto getFirstProductPhoto() {
+    public ProductPhoto getFirstPhoto() {
         return photos.stream()
                 .findFirst()
                 .orElse(null);

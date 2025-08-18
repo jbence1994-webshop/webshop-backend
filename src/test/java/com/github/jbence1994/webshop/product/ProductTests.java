@@ -19,15 +19,15 @@ public class ProductTests {
     private final Product productWithPhotos = product1WithPhotos();
 
     @Test
-    public void getFirstProductPhotoTest_HappyPath_PhotoIsNotNull() {
-        var result = productWithPhotos.getFirstProductPhoto();
+    public void getFirstPhotoTest_HappyPath_PhotoIsNotNull() {
+        var result = productWithPhotos.getFirstPhoto();
 
         assertThat(result, not(nullValue()));
     }
 
     @Test
-    public void getFirstProductPhotoTest_UnhappyPath_PhotoIsNull() {
-        var result = product.getFirstProductPhoto();
+    public void getFirstPhotoTest_UnhappyPath_PhotoIsNull() {
+        var result = product.getFirstPhoto();
 
         assertThat(result, is(nullValue()));
     }

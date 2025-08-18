@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
+import com.github.jbence1994.webshop.image.ImageUrlBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullId;
@@ -44,9 +46,6 @@ class ProductControllerTests {
     @Mock
     private ProductMapper productMapper;
 
-    @Mock
-    private PhotoMapper photoMapper;
-
     @InjectMocks
     private ProductController productController;
 
@@ -54,7 +53,7 @@ class ProductControllerTests {
     public void getProductsTest() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
         when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
-        when(photoMapper.toDto(any())).thenReturn(productPhotoDto());
+        when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
 
         byte categoryId = 1;
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);

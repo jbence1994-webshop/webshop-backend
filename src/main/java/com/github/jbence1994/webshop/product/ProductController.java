@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
+import com.github.jbence1994.webshop.image.ImageUrlBuilder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class ProductController {
     private final CategoryQueryService categoryQueryService;
     private final ProductService productService;
     private final ProductMapper productMapper;
-    private final PhotoMapper photoMapper;
+    private final ImageUrlBuilder imageUrlBuilder;
 
     @GetMapping
     public List<ProductDto> getProducts(
@@ -39,7 +40,7 @@ public class ProductController {
         return products.stream()
                 .map(product -> {
                     var productDto = productMapper.toDto(product);
-                    productDto.setPhoto(photoMapper.toDto(product.getFirstProductPhoto()));
+                    productDto.setPhoto(productMapper.toDto(product.getFirstPhoto(), imageUrlBuilder));
                     return productDto;
                 })
                 .toList();
