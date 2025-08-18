@@ -40,7 +40,8 @@ public class UserQueryServiceImplTests {
         assertThat(result, allOf(
                 hasProperty("id", equalTo(user().getId())),
                 hasProperty("email", equalTo(user().getEmail())),
-                hasProperty("password", equalTo(user().getPassword()))
+                hasProperty("password", equalTo(user().getPassword())),
+                hasProperty("role", equalTo(user().getRole()))
         ));
     }
 
@@ -66,7 +67,8 @@ public class UserQueryServiceImplTests {
         assertThat(result, allOf(
                 hasProperty("id", equalTo(user().getId())),
                 hasProperty("email", equalTo(user().getEmail())),
-                hasProperty("password", equalTo(user().getPassword()))
+                hasProperty("password", equalTo(user().getPassword())),
+                hasProperty("role", equalTo(user().getRole()))
         ));
     }
 
