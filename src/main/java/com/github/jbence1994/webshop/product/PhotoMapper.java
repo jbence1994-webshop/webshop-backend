@@ -5,16 +5,15 @@ import com.github.jbence1994.webshop.image.ProductPhoto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class PhotoMapper {
     private final ImageUrlBuilder imageUrlBuilder;
 
-    public ProductPhotoDto toDto(List<ProductPhoto> photos) {
-        return photos.stream()
-                .findFirst()
+    public ProductPhotoDto toDto(ProductPhoto photo) {
+        return Optional.ofNullable(photo)
                 .map(productPhoto ->
                         new ProductPhotoDto(
                                 productPhoto.getFileName(),

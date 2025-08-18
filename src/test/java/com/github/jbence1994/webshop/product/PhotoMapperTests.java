@@ -30,7 +30,7 @@ public class PhotoMapperTests {
     public void toDtoTest_HappyPath() {
         when(imageUrlBuilder.buildUrl(any())).thenReturn(PHOTO_URL);
 
-        var result = photoMapper.toDto(product1WithPhotos().getPhotos());
+        var result = photoMapper.toDto(product1WithPhotos().getFirstProductPhoto());
 
         assertThat(result.fileName(), not(nullValue()));
         assertThat(result.url(), not(nullValue()));
@@ -39,7 +39,7 @@ public class PhotoMapperTests {
 
     @Test
     public void toDtoTest_UnhappyPath() {
-        var result = photoMapper.toDto(product1().getPhotos());
+        var result = photoMapper.toDto(product1().getFirstProductPhoto());
 
         assertThat(result, is(nullValue()));
     }

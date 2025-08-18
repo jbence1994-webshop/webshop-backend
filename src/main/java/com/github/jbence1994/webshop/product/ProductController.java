@@ -39,7 +39,7 @@ public class ProductController {
         return products.stream()
                 .map(product -> {
                     var productDto = productMapper.toDto(product);
-                    productDto.setPhoto(photoMapper.toDto(product.getPhotos()));
+                    productDto.setPhoto(photoMapper.toDto(product.getFirstProductPhoto()));
                     return productDto;
                 })
                 .toList();
