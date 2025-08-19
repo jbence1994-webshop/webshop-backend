@@ -44,9 +44,6 @@ class ProductControllerTests {
     @Mock
     private ProductMapper productMapper;
 
-    @Mock
-    private PhotoMapper photoMapper;
-
     @InjectMocks
     private ProductController productController;
 
@@ -54,7 +51,7 @@ class ProductControllerTests {
     public void getProductsTest() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
         when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
-        when(photoMapper.toDto(any())).thenReturn(productPhotoDto());
+        when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
 
         byte categoryId = 1;
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);
@@ -66,6 +63,7 @@ class ProductControllerTests {
     public void getProductTest_HappyPath() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
         when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
 
         var result = productController.getProduct(1L);
 

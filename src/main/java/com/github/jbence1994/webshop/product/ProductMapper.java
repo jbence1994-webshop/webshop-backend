@@ -1,11 +1,17 @@
 package com.github.jbence1994.webshop.product;
 
+import com.github.jbence1994.webshop.image.ImageUrlBuilder;
+import com.github.jbence1994.webshop.image.ProductPhoto;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
     CategoryDto toDto(Category category);
+
+    @Mapping(target = "url", expression = "java(imageUrlBuilder.buildUrl(productPhoto.getFileName()))")
+    ProductPhotoDto toDto(ProductPhoto productPhoto, @Context ImageUrlBuilder imageUrlBuilder);
 
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "photo", ignore = true)
