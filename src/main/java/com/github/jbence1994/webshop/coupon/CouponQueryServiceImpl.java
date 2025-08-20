@@ -21,9 +21,10 @@ public class CouponQueryServiceImpl implements CouponQueryService {
 
     @Override
     public Coupon getCoupon(String code) {
-        // FIXME: Refactor later to a User wouldn't be able to apply another User's coupon to it's own cart.
+        var user = authService.getCurrentUser();
+
         return couponRepository
-                .findById(code)
+                .findByCouponCodeAndUserId(code, user.getId())
                 .orElseThrow(() -> new CouponNotFoundException(code));
     }
 
