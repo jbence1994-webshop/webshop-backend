@@ -14,6 +14,6 @@ public class ResetPasswordRequest {
 
     @NotNull(message = "Email must be provided.")
     @NotBlank(message = "Email must be not empty.")
-    @Email(message = "Email must be valid")
+    @Email(message = "Email must be valid.")
     private String email;
 }
