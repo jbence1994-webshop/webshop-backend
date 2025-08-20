@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.auth.AuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +19,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 public class UserServiceImplTests {
 
     @Mock
-    private UserQueryService userQueryService;
+    private AuthService authService;
 
     @Mock
     private UserRepository userRepository;
@@ -90,14 +90,14 @@ public class UserServiceImplTests {
 
     @Test
     public void changePasswordTest_HappyPath() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user());
 
-        assertDoesNotThrow(() -> userService.changePassword(1L, OLD_PASSWORD, NEW_PASSWORD));
+        assertDoesNotThrow(() -> userService.changePassword(OLD_PASSWORD, NEW_PASSWORD));
 
-        verify(userQueryService, times(1)).getUser(anyLong());
+        verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
         verify(passwordManager, times(1)).encode(any());
         verify(userRepository, times(1)).save(any());
@@ -105,17 +105,17 @@ public class UserServiceImplTests {
 
     @Test
     public void changePasswordTest_UnhappyPath_AccessDeniedException() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(false);
 
         var result = assertThrows(
                 AccessDeniedException.class,
-                () -> userService.changePassword(1L, INVALID_OLD_PASSWORD, NEW_PASSWORD)
+                () -> userService.changePassword(INVALID_OLD_PASSWORD, NEW_PASSWORD)
         );
 
         assertThat(result.getMessage(), equalTo("Invalid old password."));
 
-        verify(userQueryService, times(1)).getUser(anyLong());
+        verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());

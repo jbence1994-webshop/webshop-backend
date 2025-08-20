@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.user;
 
-
 import static com.github.jbence1994.webshop.user.UserTestConstants.CONFIRM_NEW_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_CONFIRM_NEW_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_PASSWORD;

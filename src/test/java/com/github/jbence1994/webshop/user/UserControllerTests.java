@@ -92,7 +92,7 @@ public class UserControllerTests {
 
     @Test
     public void changePasswordTest() {
-        assertDoesNotThrow(() -> userController.changePassword(1L, changePasswordRequest()));
+        assertDoesNotThrow(() -> userController.changePassword(changePasswordRequest()));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserQueryService userQueryService;
+    private final AuthService authService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
 
@@ -33,8 +34,8 @@ public class UserServiceImpl implements UserService {
 
     // TODO: Later add option to change password when User is not logged in: e.g.: forgot password scenario.
     @Override
-    public void changePassword(Long userId, String oldPassword, String newPassword) {
-        var user = userQueryService.getUser(userId);
+    public void changePassword(String oldPassword, String newPassword) {
+        var user = authService.getCurrentUser();
 
         if (!passwordManager.verify(oldPassword, user.getPassword())) {
             throw new AccessDeniedException("Invalid old password.");
