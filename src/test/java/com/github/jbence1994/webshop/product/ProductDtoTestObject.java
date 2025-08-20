@@ -9,15 +9,15 @@ import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;
 
 public final class ProductDtoTestObject {
-    public static ProductDto productDtoWithNullId() {
-        return buildProduct(null);
+    public static ProductDto productDtoToCreate() {
+        return buildProduct(null, null);
     }
 
     public static ProductDto productDto() {
-        return buildProduct(1L);
+        return buildProduct(1L, productPhotoDto());
     }
 
-    private static ProductDto buildProduct(Long id) {
+    private static ProductDto buildProduct(Long id, ProductPhotoDto photo) {
         return new ProductDto(
                 id,
                 PRODUCT_1_NAME,
@@ -25,7 +25,7 @@ public final class ProductDtoTestObject {
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
                 CATEGORY_1_NAME,
-                productPhotoDto()
+                photo
         );
     }
 }

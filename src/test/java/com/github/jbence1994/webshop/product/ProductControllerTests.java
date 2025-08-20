@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
-import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullId;
+import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoToCreate;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
@@ -20,6 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
@@ -72,7 +73,8 @@ class ProductControllerTests {
                 hasProperty("name", equalTo(productDto().getName())),
                 hasProperty("price", equalTo(productDto().getPrice())),
                 hasProperty("unit", equalTo(productDto().getUnit())),
-                hasProperty("description", equalTo(productDto().getDescription()))
+                hasProperty("description", equalTo(productDto().getDescription())),
+                hasProperty("photo", equalTo(productDto().getPhoto()))
         ));
     }
 
@@ -82,7 +84,7 @@ class ProductControllerTests {
         when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());
 
-        var result = productController.createProduct(productDtoWithNullId());
+        var result = productController.createProduct(productDtoToCreate());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
@@ -90,7 +92,8 @@ class ProductControllerTests {
                 hasProperty("name", equalTo(productDto().getName())),
                 hasProperty("price", equalTo(productDto().getPrice())),
                 hasProperty("unit", equalTo(productDto().getUnit())),
-                hasProperty("description", equalTo(productDto().getDescription()))
+                hasProperty("description", equalTo(productDto().getDescription())),
+                hasProperty("photo", is(nullValue()))
         ));
     }
 }
