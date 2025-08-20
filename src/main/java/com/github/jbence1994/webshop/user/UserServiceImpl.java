@@ -48,6 +48,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void resetPassword(String email) {
         var user = userQueryService.getUser(email);
+
+        // TODO:
+        //  1. Revoke password in the database
+        //  2. Generate a temp. password for log in and save it to database (with time and rate limit)
+        //  3. Force user to change password
+        //  4. Remove temp. password from database
     }
 
     @Override
