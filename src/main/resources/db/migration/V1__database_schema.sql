@@ -46,6 +46,18 @@ CREATE TABLE IF NOT EXISTS users
     updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS password_reset_tokens
+(
+    id              BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    token           VARCHAR(255) NOT NULL,
+    user_id         BIGINT       NOT NULL,
+    expiration_date DATETIME     NOT NULL,
+    CONSTRAINT fk_password_reset_tokens_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS profiles
 (
     user_id          BIGINT       NOT NULL PRIMARY KEY,
