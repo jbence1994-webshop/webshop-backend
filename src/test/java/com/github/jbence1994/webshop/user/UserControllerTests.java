@@ -12,6 +12,7 @@ import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profileAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.registrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationResponseTestObject.registrationResponse;
+import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequest;
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static com.github.jbence1994.webshop.user.UserTestObject.userAfterMappingFromDto;
@@ -93,6 +94,11 @@ public class UserControllerTests {
     @Test
     public void changePasswordTest() {
         assertDoesNotThrow(() -> userController.changePassword(changePasswordRequest()));
+    }
+
+    @Test
+    public void resetPasswordTest() {
+        assertDoesNotThrow(() -> userController.resetPassword(resetPasswordRequest()));
     }
 
     @Test

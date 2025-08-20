@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final UserQueryService userQueryService;
     private final AuthService authService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
@@ -44,7 +45,10 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    // TODO: Later add option to change password when User is not logged in: e.g.: forgot password scenario.
+    @Override
+    public void resetPassword(String email) {
+        var user = userQueryService.getUser(email);
+    }
 
     @Override
     public void updateUser(User user) {

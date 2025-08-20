@@ -5,6 +5,8 @@ public interface UserService {
 
     void changePassword(String oldPassword, String newPassword);
 
+    void resetPassword(String email);
+
     void updateUser(User user);
 
     void deleteUser(Long id);
