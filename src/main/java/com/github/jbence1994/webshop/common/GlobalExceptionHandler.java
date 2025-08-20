@@ -114,7 +114,7 @@ public class GlobalExceptionHandler {
     ) {
         var message = error.getDefaultMessage();
 
-        if (message != null && message.equals(expectedMessage)) {
+        if (expectedMessage.equals(message)) {
             validationErrors.add(new ValidationErrorDto(fieldName, message));
         }
     }
