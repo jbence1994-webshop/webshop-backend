@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserQueryService userQueryService;
-    private final AuthService authService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
     @Override
     public User registerUser(User user) {

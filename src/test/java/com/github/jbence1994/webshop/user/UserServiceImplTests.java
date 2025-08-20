@@ -34,13 +34,13 @@ public class UserServiceImplTests {
     private UserQueryService userQueryService;
 
     @Mock
-    private AuthService authService;
+    private PasswordManager passwordManager;
 
     @Mock
     private UserRepository userRepository;
 
     @Mock
-    private PasswordManager passwordManager;
+    private AuthService authService;
 
     @InjectMocks
     private UserServiceImpl userService;
