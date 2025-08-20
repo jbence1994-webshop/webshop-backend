@@ -64,7 +64,8 @@ public class CouponQueryServiceImplTests {
 
     @Test
     public void getCouponTest_HappyPath() {
-        when(couponRepository.findById(any())).thenReturn(Optional.of(percentOffNotExpiredCoupon()));
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(couponRepository.findByCouponCodeAndUserId(any(), any())).thenReturn(Optional.of(percentOffNotExpiredCoupon()));
 
         var result = assertDoesNotThrow(() -> couponQueryService.getCoupon(COUPON_1_CODE));
 
@@ -80,14 +81,15 @@ public class CouponQueryServiceImplTests {
 
     @Test
     public void getCouponTest_UnhappyPath_CouponNotFoundException() {
-        when(couponRepository.findById(any())).thenReturn(Optional.empty());
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(couponRepository.findByCouponCodeAndUserId(any(), any())).thenReturn(Optional.empty());
 
         var result = assertThrows(
                 CouponNotFoundException.class,
-                () -> couponQueryService.getCoupon(COUPON_1_CODE)
+                () -> couponQueryService.getCoupon(COUPON_2_CODE)
         );
 
-        assertThat(result.getMessage(), equalTo("No coupon was found with the given coupon code: 'WELCOME10'."));
+        assertThat(result.getMessage(), equalTo("No coupon was found with the given coupon code: 'SPRING15'."));
     }
 
     @ParameterizedTest(name = "{index} => {0}")

@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CouponRepository extends JpaRepository<Coupon, String> {
     @Query("SELECT c FROM Coupon c JOIN c.users u WHERE u.id = :userId AND c.expirationDate > CURRENT_TIMESTAMP ORDER BY c.expirationDate")
     List<Coupon> findAllByUser(@Param("userId") Long userId);
+
+    @Query("SELECT c FROM Coupon c JOIN c.users u WHERE c.code = :couponCode AND u.id = :userId")
+    Optional<Coupon> findByCouponCodeAndUserId(@Param("couponCode") String couponCode, @Param("userId") Long userId);
 
     @Query(
             value = "SELECT EXISTS (SELECT * FROM user_coupons WHERE coupon_code = :couponCode AND redeemed = 1);",
