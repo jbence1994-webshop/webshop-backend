@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
-import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoToCreate;
+import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
@@ -84,7 +84,7 @@ class ProductControllerTests {
         when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());
 
-        var result = productController.createProduct(productDtoToCreate());
+        var result = productController.createProduct(productDtoWithNullIdAndNullPhoto());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));

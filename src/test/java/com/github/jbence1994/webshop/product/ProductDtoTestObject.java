@@ -9,7 +9,7 @@ import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;
 
 public final class ProductDtoTestObject {
-    public static ProductDto productDtoToCreate() {
+    public static ProductDto productDtoWithNullIdAndNullPhoto() {
         return buildProduct(null, null);
     }
 
