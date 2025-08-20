@@ -51,7 +51,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/{userId}")
+    @PostMapping("/{userId}/change-password")
     public void changePassword(
             @PathVariable Long userId,
             @Valid @RequestBody ChangePasswordRequest request
