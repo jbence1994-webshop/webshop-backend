@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class ConfirmResetPasswordValidator implements ConstraintValidator<ConfirmResetPassword, ConfirmResetPasswordRequest> {
+
     @Override
     public void initialize(ConfirmResetPassword constraintAnnotation) {
     }

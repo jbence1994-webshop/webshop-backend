@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 
 import static com.github.jbence1994.webshop.user.AddressTestObject.addressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
+import static com.github.jbence1994.webshop.user.ConfirmResetPasswordRequestTestObject.confirmResetPasswordRequest;
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profileAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.registrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationResponseTestObject.registrationResponse;
@@ -99,6 +100,11 @@ public class UserControllerTests {
     @Test
     public void resetPasswordTest() {
         assertDoesNotThrow(() -> userController.resetPassword(resetPasswordRequest()));
+    }
+
+    @Test
+    public void confirmResetPasswordTest() {
+        assertDoesNotThrow(() -> userController.confirmResetPassword(confirmResetPasswordRequest()));
     }
 
     @Test
