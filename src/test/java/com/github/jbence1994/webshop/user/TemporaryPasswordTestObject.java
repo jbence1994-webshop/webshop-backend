@@ -3,8 +3,8 @@ package com.github.jbence1994.webshop.user;
 import java.time.LocalDateTime;
 
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.EXPIRED_TEMPORARY_PASSWORD;
+import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.HASHED_TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.NOT_EXPIRED_TEMPORARY_PASSWORD;
-import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 
 public final class TemporaryPasswordTestObject {
@@ -18,6 +18,6 @@ public final class TemporaryPasswordTestObject {
     }
 
     private static TemporaryPassword buildTemporaryPassword(LocalDateTime expirationDate) {
-        return new TemporaryPassword(1L, TEMPORARY_PASSWORD, user(), expirationDate);
+        return new TemporaryPassword(1L, HASHED_TEMPORARY_PASSWORD, user(), expirationDate);
     }
 }

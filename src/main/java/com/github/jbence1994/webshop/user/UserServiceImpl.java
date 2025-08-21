@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(hashedTemporaryPassword);
         userRepository.save(user);
 
-        emailService.sendEmail(email, "Reset your password", rawTemporaryPassword);
+        emailService.sendEmail(email, "Reset your password", "Your temporary password: " + rawTemporaryPassword);
     }
 
     @Override
