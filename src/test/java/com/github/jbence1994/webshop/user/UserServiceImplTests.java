@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +32,12 @@ import static org.mockito.Mockito.when;
 public class UserServiceImplTests {
 
     @Mock
+    private TemporaryPasswordRepository temporaryPasswordRepository;
+
+    @Mock
+    private TemporaryPasswordGenerator temporaryPasswordGenerator;
+
+    @Mock
     private UserQueryService userQueryService;
 
     @Mock
@@ -38,6 +45,9 @@ public class UserServiceImplTests {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private EmailService emailService;
 
     @Mock
     private AuthService authService;

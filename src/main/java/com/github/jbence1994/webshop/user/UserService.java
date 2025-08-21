@@ -7,6 +7,8 @@ public interface UserService {
 
     void resetPassword(String email);
 
+    void confirmResetPassword(String temporaryPassword, String newPassword);
+
     void updateUser(User user);
 
     void deleteUser(Long id);

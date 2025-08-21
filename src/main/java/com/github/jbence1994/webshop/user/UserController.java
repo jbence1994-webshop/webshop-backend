@@ -64,6 +64,14 @@ public class UserController {
         userService.resetPassword(request.getEmail());
     }
 
+    @PostMapping("/confirm-reset-password")
+    public void confirmResetPassword(@Valid @RequestBody ConfirmResetPasswordRequest request) {
+        userService.confirmResetPassword(
+                request.getTemporaryPassword(),
+                request.getNewPassword()
+        );
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

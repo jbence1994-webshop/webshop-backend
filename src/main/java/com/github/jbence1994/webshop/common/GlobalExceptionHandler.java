@@ -7,6 +7,8 @@ import com.github.jbence1994.webshop.image.InvalidFileExtensionException;
 import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import com.github.jbence1994.webshop.user.ChangePasswordRequest;
 import com.github.jbence1994.webshop.user.ConfirmNewPassword;
+import com.github.jbence1994.webshop.user.ConfirmResetPassword;
+import com.github.jbence1994.webshop.user.ConfirmResetPasswordRequest;
 import com.github.jbence1994.webshop.user.ConfirmUserPassword;
 import com.github.jbence1994.webshop.user.RegistrationRequest;
 import com.github.jbence1994.webshop.user.UserNotFoundException;
@@ -23,8 +25,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -88,8 +90,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(exception = MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ValidationErrorDto>> handleValidationErrors(MethodArgumentNotValidException exception) {
-        var validationErrors = new ArrayList<ValidationErrorDto>();
+    public ResponseEntity<Set<ValidationErrorDto>> handleValidationErrors(MethodArgumentNotValidException exception) {
+        var validationErrors = new HashSet<ValidationErrorDto>();
 
         exception.getBindingResult().getFieldErrors().forEach(error ->
                 validationErrors.add(new ValidationErrorDto(error.getField(), error.getDefaultMessage()))
@@ -97,17 +99,19 @@ public class GlobalExceptionHandler {
 
         var confirmPasswordDefaultMessage = RegistrationRequest.class.getAnnotation(ConfirmUserPassword.class).message();
         var confirmNewPasswordDefaultMessage = ChangePasswordRequest.class.getAnnotation(ConfirmNewPassword.class).message();
+        var confirmResetPasswordDefaultMessage = ConfirmResetPasswordRequest.class.getAnnotation(ConfirmResetPassword.class).message();
 
         exception.getBindingResult().getAllErrors().forEach(error -> {
             addIfMatches(validationErrors, error, "user.confirmPassword", confirmPasswordDefaultMessage);
             addIfMatches(validationErrors, error, "confirmNewPassword", confirmNewPasswordDefaultMessage);
+            addIfMatches(validationErrors, error, "confirmNewPassword", confirmResetPasswordDefaultMessage);
         });
 
         return ResponseEntity.badRequest().body(validationErrors);
     }
 
     private void addIfMatches(
-            List<ValidationErrorDto> validationErrors,
+            Set<ValidationErrorDto> validationErrors,
             ObjectError error,
             String fieldName,
             String expectedMessage

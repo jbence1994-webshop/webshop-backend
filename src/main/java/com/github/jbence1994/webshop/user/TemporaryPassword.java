@@ -15,24 +15,30 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "password_reset_tokens")
+@Table(name = "temporary_passwords")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class PasswordResetToken {
+public class TemporaryPassword {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String token;
+    private String password;
 
     @OneToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
     private LocalDateTime expirationDate;
+
+    public TemporaryPassword(String password, User user, LocalDateTime expirationDate) {
+        this.password = password;
+        this.user = user;
+        this.expirationDate = expirationDate;
+    }
 
     public boolean isExpired() {
         return expirationDate.isBefore(LocalDateTime.now());
