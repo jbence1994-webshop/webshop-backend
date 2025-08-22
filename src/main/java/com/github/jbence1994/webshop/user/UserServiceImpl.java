@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(InvalidTemporaryPasswordException::new);
 
         if (temporaryPassword.isExpired()) {
+            temporaryPasswordRepository.delete(temporaryPassword);
             throw new ExpiredTemporaryPasswordException();
         }
 

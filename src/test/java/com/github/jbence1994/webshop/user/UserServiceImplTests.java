@@ -226,6 +226,7 @@ public class UserServiceImplTests {
         when(authService.getCurrentUser()).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.of(expiredTemporaryPassword()));
+        doNothing().when(temporaryPasswordRepository).delete(any());
 
         var result = assertThrows(
                 ExpiredTemporaryPasswordException.class,
@@ -237,7 +238,7 @@ public class UserServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
         verify(temporaryPasswordRepository, times(1)).findByPassword(any());
-        verify(temporaryPasswordRepository, never()).delete(any());
+        verify(temporaryPasswordRepository, times(1)).delete(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
