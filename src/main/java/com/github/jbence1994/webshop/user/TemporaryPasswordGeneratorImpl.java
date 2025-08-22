@@ -14,8 +14,6 @@ public class TemporaryPasswordGeneratorImpl implements TemporaryPasswordGenerato
         var secureRandom = new SecureRandom();
         secureRandom.nextBytes(bytes);
 
-        return Base64.getEncoder()
-                .withoutPadding()
-                .encodeToString(bytes);
+        return Base64.getEncoder().withoutPadding().encodeToString(bytes);
     }
 }
