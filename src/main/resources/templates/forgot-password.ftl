@@ -8,6 +8,6 @@
 <p><strong>Note: This temporary password will expire in 10 minutes.</strong></p>
 <p>If you did not request this change, you can safely ignore this email.</p>
 <hr/>
-<p>— ${webshopName}</p>
+<p><i>${webshopName}</i></p>
 </body>
 </html>
