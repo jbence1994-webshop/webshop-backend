@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop;
 
+import com.github.jbence1994.webshop.common.EmailConfig;
 import com.github.jbence1994.webshop.image.FileExtensionsConfig;
 import com.github.jbence1994.webshop.image.ProductPhotosUploadDirectoryConfig;
 import com.github.jbence1994.webshop.image.ProfileAvatarUploadDirectoryConfig;
@@ -9,6 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties(value = {
+        EmailConfig.class,
         FileExtensionsConfig.class,
         ProductPhotosUploadDirectoryConfig.class,
         ProfileAvatarUploadDirectoryConfig.class
