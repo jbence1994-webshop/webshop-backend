@@ -1,25 +1,29 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import com.github.jbence1994.webshop.common.EmailContentBuilder;
+import com.github.jbence1994.webshop.common.EmailConfig;
 import com.github.jbence1994.webshop.common.EmailService;
+import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final TemporaryPasswordRepository temporaryPasswordRepository;
     private final TemporaryPasswordGenerator temporaryPasswordGenerator;
-    private final EmailContentBuilder emailContentBuilder;
+    private final EmailTemplateBuilder emailTemplateBuilder;
     private final UserQueryService userQueryService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final AuthService authService;
+    private final EmailConfig emailConfig;
 
     @Override
     public User registerUser(User user) {
@@ -54,6 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void forgotPassword(String email) {
         var user = userQueryService.getUser(email);
 
@@ -68,13 +73,18 @@ public class UserServiceImpl implements UserService {
         temporaryPasswordRepository.save(temporaryPassword);
 
         user.setPassword(hashedTemporaryPassword);
-        userRepository.save(user);
 
-        var emailContent = emailContentBuilder.buildForForgotPassword(
+        var emailContent = emailTemplateBuilder.buildForForgotPassword(
                 user.getFirstName(),
-                rawTemporaryPassword
+                rawTemporaryPassword,
+                Locale.ENGLISH
         );
-        emailService.sendEmail(email, emailContent.subject(), emailContent.body());
+        emailService.sendEmail(
+                emailConfig.username(),
+                email,
+                emailContent.subject(),
+                emailContent.body()
+        );
     }
 
     @Override

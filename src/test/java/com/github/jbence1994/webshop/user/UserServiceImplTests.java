@@ -1,8 +1,9 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import com.github.jbence1994.webshop.common.EmailContentBuilder;
+import com.github.jbence1994.webshop.common.EmailConfig;
 import com.github.jbence1994.webshop.common.EmailService;
+import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -46,7 +47,7 @@ public class UserServiceImplTests {
     private TemporaryPasswordGenerator temporaryPasswordGenerator;
 
     @Mock
-    private EmailContentBuilder emailContentBuilder;
+    private EmailTemplateBuilder emailTemplateBuilder;
 
     @Mock
     private UserQueryService userQueryService;
@@ -62,6 +63,9 @@ public class UserServiceImplTests {
 
     @Mock
     private AuthService authService;
+
+    @Mock
+    private EmailConfig emailConfig;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -153,9 +157,9 @@ public class UserServiceImplTests {
         when(temporaryPasswordGenerator.generate()).thenReturn(TEMPORARY_PASSWORD);
         when(passwordManager.encode(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
         when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
-        when(userRepository.save(any())).thenReturn(user());
-        when(emailContentBuilder.buildForForgotPassword(any(), any())).thenReturn(emailContent());
-        doNothing().when(emailService).sendEmail(any(), any(), any());
+        when(emailTemplateBuilder.buildForForgotPassword(any(), any(), any())).thenReturn(emailContent());
+        when(emailConfig.username()).thenReturn("from@example.com");
+        doNothing().when(emailService).sendEmail(any(), any(), any(), any());
 
         assertDoesNotThrow(() -> userService.forgotPassword(EMAIL));
 
@@ -163,9 +167,9 @@ public class UserServiceImplTests {
         verify(temporaryPasswordGenerator, times(1)).generate();
         verify(passwordManager, times(1)).encode(any());
         verify(temporaryPasswordRepository, times(1)).save(any());
-        verify(userRepository, times(1)).save(any());
-        verify(emailContentBuilder, times(1)).buildForForgotPassword(any(), any());
-        verify(emailService, times(1)).sendEmail(any(), any(), any());
+        verify(emailTemplateBuilder, times(1)).buildForForgotPassword(any(), any(), any());
+        verify(emailConfig, times(1)).username();
+        verify(emailService, times(1)).sendEmail(any(), any(), any(), any());
     }
 
     @Test
