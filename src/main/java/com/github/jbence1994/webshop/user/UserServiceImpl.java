@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         var temporaryPassword = new TemporaryPassword(
                 hashedTemporaryPassword,
                 user,
-                LocalDateTime.now().plusMinutes(10)
+                LocalDateTime.now().plusMinutes(15)
         );
         temporaryPasswordRepository.save(temporaryPassword);
 
