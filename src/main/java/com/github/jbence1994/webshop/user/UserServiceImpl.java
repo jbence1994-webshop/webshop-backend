@@ -1,16 +1,25 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.EmailContentBuilder;
+import com.github.jbence1994.webshop.common.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final AuthService authService;
+    private final TemporaryPasswordRepository temporaryPasswordRepository;
+    private final TemporaryPasswordGenerator temporaryPasswordGenerator;
+    private final EmailContentBuilder emailContentBuilder;
+    private final UserQueryService userQueryService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final AuthService authService;
 
     @Override
     public User registerUser(User user) {
@@ -32,7 +41,6 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    // TODO: Later add option to change password when User is not logged in: e.g.: forgot password scenario.
     @Override
     public void changePassword(String oldPassword, String newPassword) {
         var user = authService.getCurrentUser();
@@ -40,6 +48,53 @@ public class UserServiceImpl implements UserService {
         if (!passwordManager.verify(oldPassword, user.getPassword())) {
             throw new AccessDeniedException("Invalid old password.");
         }
+
+        user.setPassword(passwordManager.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        var user = userQueryService.getUser(email);
+
+        var rawTemporaryPassword = temporaryPasswordGenerator.generate();
+        var hashedTemporaryPassword = passwordManager.encode(rawTemporaryPassword);
+
+        var temporaryPassword = new TemporaryPassword(
+                hashedTemporaryPassword,
+                user,
+                LocalDateTime.now().plusMinutes(10)
+        );
+        temporaryPasswordRepository.save(temporaryPassword);
+
+        user.setPassword(hashedTemporaryPassword);
+        userRepository.save(user);
+
+        var emailContent = emailContentBuilder.buildForForgotPassword(
+                user.getFirstName(),
+                rawTemporaryPassword
+        );
+        emailService.sendEmail(email, emailContent.subject(), emailContent.body());
+    }
+
+    @Override
+    public void resetPassword(String rawTemporaryPassword, String newPassword) {
+        var user = authService.getCurrentUser();
+
+        if (!passwordManager.verify(rawTemporaryPassword, user.getPassword())) {
+            throw new AccessDeniedException("Invalid temporary password.");
+        }
+
+        var temporaryPassword = temporaryPasswordRepository
+                .findByPassword(user.getPassword())
+                .orElseThrow(InvalidTemporaryPasswordException::new);
+
+        if (temporaryPassword.isExpired()) {
+            temporaryPasswordRepository.delete(temporaryPassword);
+            throw new ExpiredTemporaryPasswordException();
+        }
+
+        temporaryPasswordRepository.delete(temporaryPassword);
 
         user.setPassword(passwordManager.encode(newPassword));
         userRepository.save(user);

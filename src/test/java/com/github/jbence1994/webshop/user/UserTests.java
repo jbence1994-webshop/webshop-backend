@@ -28,6 +28,13 @@ public class UserTests {
     }
 
     @Test
+    public void getFirstNameTest() {
+        var result = user1.getFirstName();
+
+        assertThat(result, equalTo("Bence"));
+    }
+
+    @Test
     public void getPhoneNumberTest() {
         var result = user1.getPhoneNumber();
 

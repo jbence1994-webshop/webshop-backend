@@ -1,6 +1,8 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.EmailContentBuilder;
+import com.github.jbence1994.webshop.common.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,6 +10,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.Optional;
+
+import static com.github.jbence1994.webshop.common.EmailContentTestObject.emailContent;
+import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.HASHED_TEMPORARY_PASSWORD;
+import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.TEMPORARY_PASSWORD;
+import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.expiredTemporaryPassword;
+import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.notExpiredTemporaryPassword;
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
 import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_OLD_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_HASHED_PASSWORD;
@@ -19,6 +29,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -29,13 +40,28 @@ import static org.mockito.Mockito.when;
 public class UserServiceImplTests {
 
     @Mock
-    private AuthService authService;
+    private TemporaryPasswordRepository temporaryPasswordRepository;
+
+    @Mock
+    private TemporaryPasswordGenerator temporaryPasswordGenerator;
+
+    @Mock
+    private EmailContentBuilder emailContentBuilder;
+
+    @Mock
+    private UserQueryService userQueryService;
+
+    @Mock
+    private PasswordManager passwordManager;
 
     @Mock
     private UserRepository userRepository;
 
     @Mock
-    private PasswordManager passwordManager;
+    private EmailService emailService;
+
+    @Mock
+    private AuthService authService;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -117,6 +143,109 @@ public class UserServiceImplTests {
 
         verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
+        verify(passwordManager, never()).encode(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    public void forgotPasswordTest() {
+        when(userQueryService.getUser(anyString())).thenReturn(user());
+        when(temporaryPasswordGenerator.generate()).thenReturn(TEMPORARY_PASSWORD);
+        when(passwordManager.encode(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
+        when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
+        when(userRepository.save(any())).thenReturn(user());
+        when(emailContentBuilder.buildForForgotPassword(any(), any())).thenReturn(emailContent());
+        doNothing().when(emailService).sendEmail(any(), any(), any());
+
+        assertDoesNotThrow(() -> userService.forgotPassword(EMAIL));
+
+        verify(userQueryService, times(1)).getUser(anyString());
+        verify(temporaryPasswordGenerator, times(1)).generate();
+        verify(passwordManager, times(1)).encode(any());
+        verify(temporaryPasswordRepository, times(1)).save(any());
+        verify(userRepository, times(1)).save(any());
+        verify(emailContentBuilder, times(1)).buildForForgotPassword(any(), any());
+        verify(emailService, times(1)).sendEmail(any(), any(), any());
+    }
+
+    @Test
+    public void resetPasswordTest_HappyPath() {
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(passwordManager.verify(any(), any())).thenReturn(true);
+        when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
+        doNothing().when(temporaryPasswordRepository).delete(any());
+        when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
+        when(userRepository.save(any())).thenReturn(user());
+
+        assertDoesNotThrow(() -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(passwordManager, times(1)).verify(any(), any());
+        verify(temporaryPasswordRepository, times(1)).findByPassword(any());
+        verify(temporaryPasswordRepository, times(1)).delete(any());
+        verify(passwordManager, times(1)).encode(any());
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void resetPasswordTest_UnhappyPath_AccessDeniedException() {
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(passwordManager.verify(any(), any())).thenReturn(false);
+
+        var result = assertThrows(
+                AccessDeniedException.class,
+                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+        );
+
+        assertThat(result.getMessage(), equalTo("Invalid temporary password."));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(passwordManager, times(1)).verify(any(), any());
+        verify(temporaryPasswordRepository, never()).findByPassword(any());
+        verify(temporaryPasswordRepository, never()).delete(any());
+        verify(passwordManager, never()).encode(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    public void resetPasswordTest_UnhappyPath_InvalidTemporaryPasswordException() {
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(passwordManager.verify(any(), any())).thenReturn(true);
+        when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.empty());
+
+        var result = assertThrows(
+                InvalidTemporaryPasswordException.class,
+                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+        );
+
+        assertThat(result.getMessage(), equalTo("Invalid temporary password."));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(passwordManager, times(1)).verify(any(), any());
+        verify(temporaryPasswordRepository, times(1)).findByPassword(any());
+        verify(temporaryPasswordRepository, never()).delete(any());
+        verify(passwordManager, never()).encode(any());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    public void resetPasswordTest_UnhappyPath_ExpiredTemporaryPasswordException() {
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(passwordManager.verify(any(), any())).thenReturn(true);
+        when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.of(expiredTemporaryPassword()));
+        doNothing().when(temporaryPasswordRepository).delete(any());
+
+        var result = assertThrows(
+                ExpiredTemporaryPasswordException.class,
+                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+        );
+
+        assertThat(result.getMessage(), equalTo("Temporary password has expired."));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(passwordManager, times(1)).verify(any(), any());
+        verify(temporaryPasswordRepository, times(1)).findByPassword(any());
+        verify(temporaryPasswordRepository, times(1)).delete(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }

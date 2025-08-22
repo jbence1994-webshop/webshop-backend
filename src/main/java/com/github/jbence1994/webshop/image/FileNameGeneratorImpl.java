@@ -9,6 +9,6 @@ public class FileNameGeneratorImpl implements FileNameGenerator {
 
     @Override
     public String generate(String extension) {
-        return UUID.randomUUID() + "." + extension;
+        return String.format("%s.%s", UUID.randomUUID(), extension);
     }
 }

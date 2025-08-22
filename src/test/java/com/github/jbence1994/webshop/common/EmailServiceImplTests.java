@@ -13,10 +13,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EmailServiceImplTests {
+
+    @Mock
+    private EmailConfig emailConfig;
 
     @Mock
     private JavaMailSender mailSender;
@@ -26,7 +29,7 @@ public class EmailServiceImplTests {
 
     @Test
     public void sendEmailTest() {
-        setField(emailService, "webshopEmailAddress", "webshop@example.com");
+        when(emailConfig.webshopEmailAddress()).thenReturn("webshop@example.com");
         doNothing().when(mailSender).send(any(SimpleMailMessage.class));
 
         assertDoesNotThrow(() -> emailService.sendEmail("to@example.com", "subject", "body"));
