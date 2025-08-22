@@ -5,9 +5,9 @@ public interface UserService {
 
     void changePassword(String oldPassword, String newPassword);
 
-    void resetPassword(String email);
+    void forgotPassword(String email);
 
-    void confirmResetPassword(String temporaryPassword, String newPassword);
+    void resetPassword(String temporaryPassword, String newPassword);
 
     void updateUser(User user);
 

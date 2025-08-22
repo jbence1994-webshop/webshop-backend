@@ -59,14 +59,14 @@ public class UserController {
         );
     }
 
-    @PostMapping("/reset-password")
-    public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
-        userService.resetPassword(request.getEmail());
+    @PostMapping("/forgot-password")
+    public void forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        userService.forgotPassword(request.getEmail());
     }
 
-    @PostMapping("/confirm-reset-password")
-    public void confirmResetPassword(@Valid @RequestBody ConfirmResetPasswordRequest request) {
-        userService.confirmResetPassword(
+    @PostMapping("/reset-password")
+    public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(
                 request.getTemporaryPassword(),
                 request.getNewPassword()
         );

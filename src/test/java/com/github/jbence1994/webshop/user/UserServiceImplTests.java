@@ -143,7 +143,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    public void resetPasswordTest() {
+    public void forgotPasswordTest() {
         when(userQueryService.getUser(anyString())).thenReturn(user());
         when(temporaryPasswordGenerator.generate()).thenReturn(TEMPORARY_PASSWORD);
         when(passwordManager.encode(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
@@ -151,7 +151,7 @@ public class UserServiceImplTests {
         when(userRepository.save(any())).thenReturn(user());
         doNothing().when(emailService).sendEmail(any(), any(), any());
 
-        assertDoesNotThrow(() -> userService.resetPassword(EMAIL));
+        assertDoesNotThrow(() -> userService.forgotPassword(EMAIL));
 
         verify(userQueryService, times(1)).getUser(anyString());
         verify(temporaryPasswordGenerator, times(1)).generate();
@@ -162,7 +162,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    public void confirmResetPasswordTest_HappyPath() {
+    public void resetPasswordTest_HappyPath() {
         when(authService.getCurrentUser()).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
@@ -170,7 +170,7 @@ public class UserServiceImplTests {
         when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user());
 
-        assertDoesNotThrow(() -> userService.confirmResetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD));
+        assertDoesNotThrow(() -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD));
 
         verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
@@ -181,13 +181,13 @@ public class UserServiceImplTests {
     }
 
     @Test
-    public void confirmResetPasswordTest_UnhappyPath_AccessDeniedException() {
+    public void resetPasswordTest_UnhappyPath_AccessDeniedException() {
         when(authService.getCurrentUser()).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(false);
 
         var result = assertThrows(
                 AccessDeniedException.class,
-                () -> userService.confirmResetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
         );
 
         assertThat(result.getMessage(), equalTo("Invalid temporary password."));
@@ -201,14 +201,14 @@ public class UserServiceImplTests {
     }
 
     @Test
-    public void confirmResetPasswordTest_UnhappyPath_InvalidTemporaryPasswordException() {
+    public void resetPasswordTest_UnhappyPath_InvalidTemporaryPasswordException() {
         when(authService.getCurrentUser()).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.empty());
 
         var result = assertThrows(
                 InvalidTemporaryPasswordException.class,
-                () -> userService.confirmResetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
         );
 
         assertThat(result.getMessage(), equalTo("Invalid temporary password."));
@@ -222,14 +222,14 @@ public class UserServiceImplTests {
     }
 
     @Test
-    public void confirmResetPasswordTest_UnhappyPath_ExpiredTemporaryPasswordException() {
+    public void resetPasswordTest_UnhappyPath_ExpiredTemporaryPasswordException() {
         when(authService.getCurrentUser()).thenReturn(user());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.of(expiredTemporaryPassword()));
 
         var result = assertThrows(
                 ExpiredTemporaryPasswordException.class,
-                () -> userService.confirmResetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
         );
 
         assertThat(result.getMessage(), equalTo("Temporary password has expired."));

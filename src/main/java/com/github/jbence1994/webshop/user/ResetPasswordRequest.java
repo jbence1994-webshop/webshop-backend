@@ -1,17 +1,26 @@
 package com.github.jbence1994.webshop.user;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
+@ConfirmResetPassword
 public class ResetPasswordRequest {
 
-    @NotNull(message = "Email must be provided.")
-    @NotBlank(message = "Email must be not empty.")
-    @Email(message = "Email must be valid.")
-    private String email;
+    @NotNull(message = "Temporary password must be provided.")
+    @NotBlank(message = "Temporary password must be not empty.")
+    private String temporaryPassword;
+
+    @NotNull(message = "New password must be provided.")
+    @NotBlank(message = "New password must be not empty.")
+    @Size(min = 8, max = 12, message = "Password must be between 8 to 12 characters long.")
+    private String newPassword;
+
+    @NotNull(message = "Confirm password must be provided.")
+    @NotBlank(message = "Confirm password must be not empty.")
+    private String confirmNewPassword;
 }

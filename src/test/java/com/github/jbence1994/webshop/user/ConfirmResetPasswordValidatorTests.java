@@ -13,12 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.user.ConfirmResetPasswordRequestTestObject.confirmResetPasswordRequest;
-import static com.github.jbence1994.webshop.user.ConfirmResetPasswordRequestTestObject.confirmResetPasswordRequestWithBlankConfirmPassword;
-import static com.github.jbence1994.webshop.user.ConfirmResetPasswordRequestTestObject.confirmResetPasswordRequestWithBlankPassword;
-import static com.github.jbence1994.webshop.user.ConfirmResetPasswordRequestTestObject.confirmResetPasswordRequestWithInvalidConfirmPassword;
-import static com.github.jbence1994.webshop.user.ConfirmResetPasswordRequestTestObject.confirmResetPasswordRequestWithNullConfirmPassword;
-import static com.github.jbence1994.webshop.user.ConfirmResetPasswordRequestTestObject.confirmResetPasswordRequestWithNullPassword;
+import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequest;
+import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequestWithBlankConfirmPassword;
+import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequestWithBlankPassword;
+import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequestWithInvalidConfirmPassword;
+import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequestWithNullConfirmPassword;
+import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequestWithNullPassword;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
@@ -40,17 +40,17 @@ public class ConfirmResetPasswordValidatorTests {
     private static Stream<Arguments> isNotValidParams() {
         return Stream.of(
                 Arguments.of("Request is null", null),
-                Arguments.of("Password is null", confirmResetPasswordRequestWithNullPassword()),
-                Arguments.of("Confirm password is null", confirmResetPasswordRequestWithNullConfirmPassword()),
-                Arguments.of("Password is blank", confirmResetPasswordRequestWithBlankPassword()),
-                Arguments.of("Confirm password is blank", confirmResetPasswordRequestWithBlankConfirmPassword()),
-                Arguments.of("Confirm password is invalid", confirmResetPasswordRequestWithInvalidConfirmPassword())
+                Arguments.of("Password is null", resetPasswordRequestWithNullPassword()),
+                Arguments.of("Confirm password is null", resetPasswordRequestWithNullConfirmPassword()),
+                Arguments.of("Password is blank", resetPasswordRequestWithBlankPassword()),
+                Arguments.of("Confirm password is blank", resetPasswordRequestWithBlankConfirmPassword()),
+                Arguments.of("Confirm password is invalid", resetPasswordRequestWithInvalidConfirmPassword())
         );
     }
 
     @Test
     public void isValidTest_HappyPath() {
-        var result = confirmResetPasswordValidator.isValid(confirmResetPasswordRequest(), context);
+        var result = confirmResetPasswordValidator.isValid(resetPasswordRequest(), context);
 
         assertThat(result, is(true));
     }
@@ -59,7 +59,7 @@ public class ConfirmResetPasswordValidatorTests {
     @MethodSource("isNotValidParams")
     public void isValidTest_UnhappyPaths(
             String testCase,
-            ConfirmResetPasswordRequest request
+            ResetPasswordRequest request
     ) {
         var result = confirmResetPasswordValidator.isValid(request, context);
 

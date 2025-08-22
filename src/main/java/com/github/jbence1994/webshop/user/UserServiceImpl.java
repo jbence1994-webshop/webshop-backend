@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String email) {
+    public void forgotPassword(String email) {
         var user = userQueryService.getUser(email);
 
         var rawTemporaryPassword = temporaryPasswordGenerator.generate();
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void confirmResetPassword(String rawTemporaryPassword, String newPassword) {
+    public void resetPassword(String rawTemporaryPassword, String newPassword) {
         var user = authService.getCurrentUser();
 
         if (!passwordManager.verify(rawTemporaryPassword, user.getPassword())) {

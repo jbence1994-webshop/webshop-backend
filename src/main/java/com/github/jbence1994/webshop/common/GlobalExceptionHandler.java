@@ -8,9 +8,9 @@ import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import com.github.jbence1994.webshop.user.ChangePasswordRequest;
 import com.github.jbence1994.webshop.user.ConfirmNewPassword;
 import com.github.jbence1994.webshop.user.ConfirmResetPassword;
-import com.github.jbence1994.webshop.user.ConfirmResetPasswordRequest;
 import com.github.jbence1994.webshop.user.ConfirmUserPassword;
 import com.github.jbence1994.webshop.user.RegistrationRequest;
+import com.github.jbence1994.webshop.user.ResetPasswordRequest;
 import com.github.jbence1994.webshop.user.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -99,7 +99,7 @@ public class GlobalExceptionHandler {
 
         var confirmPasswordDefaultMessage = RegistrationRequest.class.getAnnotation(ConfirmUserPassword.class).message();
         var confirmNewPasswordDefaultMessage = ChangePasswordRequest.class.getAnnotation(ConfirmNewPassword.class).message();
-        var confirmResetPasswordDefaultMessage = ConfirmResetPasswordRequest.class.getAnnotation(ConfirmResetPassword.class).message();
+        var confirmResetPasswordDefaultMessage = ResetPasswordRequest.class.getAnnotation(ConfirmResetPassword.class).message();
 
         exception.getBindingResult().getAllErrors().forEach(error -> {
             addIfMatches(validationErrors, error, "user.confirmPassword", confirmPasswordDefaultMessage);
