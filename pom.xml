@@ -71,6 +71,10 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
             <groupId>me.paulschwarz</groupId>
             <artifactId>spring-dotenv</artifactId>
             <version>${spring-dotenv.version}</version>
@@ -197,6 +201,8 @@
                     <excludes>
                         <exclude>com/github/jbence1994/webshop/**/*Config*</exclude>
                         <exclude>com/github/jbence1994/webshop/**/*MapperImpl*</exclude>
+                        <exclude>com/github/jbence1994/webshop/common/EmailServiceImpl*</exclude>
+                        <exclude>com/github/jbence1994/webshop/common/FreeMarkerEmailTemplateBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/FileSystemUtils*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/ImageUrlBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/Application*</exclude>
