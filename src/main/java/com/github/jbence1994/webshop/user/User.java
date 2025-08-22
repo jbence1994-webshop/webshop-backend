@@ -56,6 +56,10 @@ public class User {
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<Coupon> coupons = new ArrayList<>();
 
+    public String getFirstName() {
+        return profile.getFirstName();
+    }
+
     public String getPhoneNumber() {
         return profile.getPhoneNumber();
     }

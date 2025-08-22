@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.EmailContentBuilder;
 import com.github.jbence1994.webshop.common.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
     private final TemporaryPasswordRepository temporaryPasswordRepository;
     private final TemporaryPasswordGenerator temporaryPasswordGenerator;
+    private final EmailContentBuilder emailContentBuilder;
     private final UserQueryService userQueryService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
@@ -68,8 +70,11 @@ public class UserServiceImpl implements UserService {
         user.setPassword(hashedTemporaryPassword);
         userRepository.save(user);
 
-        // TODO: Create an HTML e-mail template.
-        emailService.sendEmail(email, "Reset your password", "Your temporary password: " + rawTemporaryPassword);
+        var emailContent = emailContentBuilder.buildForForgotPassword(
+                user.getFirstName(),
+                rawTemporaryPassword
+        );
+        emailService.sendEmail(email, emailContent.subject(), emailContent.body());
     }
 
     @Override

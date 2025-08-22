@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.EmailContentBuilder;
 import com.github.jbence1994.webshop.common.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Optional;
 
+import static com.github.jbence1994.webshop.common.EmailContentTestObject.emailContent;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.HASHED_TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.expiredTemporaryPassword;
@@ -42,6 +44,9 @@ public class UserServiceImplTests {
 
     @Mock
     private TemporaryPasswordGenerator temporaryPasswordGenerator;
+
+    @Mock
+    private EmailContentBuilder emailContentBuilder;
 
     @Mock
     private UserQueryService userQueryService;
@@ -149,6 +154,7 @@ public class UserServiceImplTests {
         when(passwordManager.encode(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
         when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
         when(userRepository.save(any())).thenReturn(user());
+        when(emailContentBuilder.buildForForgotPassword(any(), any())).thenReturn(emailContent());
         doNothing().when(emailService).sendEmail(any(), any(), any());
 
         assertDoesNotThrow(() -> userService.forgotPassword(EMAIL));
@@ -158,6 +164,7 @@ public class UserServiceImplTests {
         verify(passwordManager, times(1)).encode(any());
         verify(temporaryPasswordRepository, times(1)).save(any());
         verify(userRepository, times(1)).save(any());
+        verify(emailContentBuilder, times(1)).buildForForgotPassword(any(), any());
         verify(emailService, times(1)).sendEmail(any(), any(), any());
     }
 

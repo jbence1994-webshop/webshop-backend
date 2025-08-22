@@ -16,6 +16,9 @@ spring:
       mail.smtp.starttls.enable: true
 
 webshop:
+  name:
+    value: ${WEBSHOP_NAME}
+
   file-extensions-config:
     allowed-file-extensions: jpg,jpeg,png,bmp
 
