@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.cart;
 
+import com.github.jbence1994.webshop.common.InputSanitizer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,6 +36,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CartControllerTests {
+
+    @Mock
+    private InputSanitizer<ApplyCouponToCartRequest> inputSanitizer;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -122,6 +126,7 @@ public class CartControllerTests {
 
     @Test
     public void applyCouponToCartTest() {
+        when(inputSanitizer.sanitize(any())).thenReturn(applyCouponToCartRequest());
         when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon());
 

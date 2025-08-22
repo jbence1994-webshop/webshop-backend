@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.cart;
 
+import com.github.jbence1994.webshop.common.InputSanitizer;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @CrossOrigin
 @RequiredArgsConstructor
 public class CartController {
+    private final InputSanitizer<ApplyCouponToCartRequest> inputSanitizer;
     private final CartQueryService cartQueryService;
     private final CartService cartService;
     private final CartMapper cartMapper;
@@ -90,6 +92,8 @@ public class CartController {
             @PathVariable UUID id,
             @Valid @RequestBody ApplyCouponToCartRequest request
     ) {
+        request = inputSanitizer.sanitize(request);
+
         var cart = cartService.applyCouponToCart(id, request.getCouponCode());
 
         return cartMapper.toDto(cart);
