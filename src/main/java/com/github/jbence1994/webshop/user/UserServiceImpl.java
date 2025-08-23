@@ -1,9 +1,9 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import com.github.jbence1994.webshop.common.EmailConfig;
 import com.github.jbence1994.webshop.common.EmailService;
 import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
+import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -17,13 +17,13 @@ import java.util.Locale;
 public class UserServiceImpl implements UserService {
     private final TemporaryPasswordRepository temporaryPasswordRepository;
     private final TemporaryPasswordGenerator temporaryPasswordGenerator;
+    private final WebshopEmailAddressConfig webshopEmailAddressConfig;
     private final EmailTemplateBuilder emailTemplateBuilder;
     private final UserQueryService userQueryService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final AuthService authService;
-    private final EmailConfig emailConfig;
 
     @Override
     public User registerUser(User user) {
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
                 Locale.ENGLISH
         );
         emailService.sendEmail(
-                emailConfig.username(),
+                webshopEmailAddressConfig.username(),
                 email,
                 emailContent.subject(),
                 emailContent.body()
