@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         var temporaryPassword = new TemporaryPassword(
                 hashedTemporaryPassword,
                 user,
-                LocalDateTime.now().plusMinutes(10)
+                LocalDateTime.now().plusMinutes(15)
         );
         temporaryPasswordRepository.save(temporaryPassword);
 
@@ -88,26 +88,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String rawTemporaryPassword, String newPassword) {
+    public void resetPassword(String temporaryPassword, String newPassword) {
         var user = authService.getCurrentUser();
 
-        if (!passwordManager.verify(rawTemporaryPassword, user.getPassword())) {
+        var temporaryPasswords = temporaryPasswordRepository.findAllByUserId(user.getId());
+
+        var latestTemporaryPassword = temporaryPasswordRepository
+                .findTopByUserIdOrderByExpirationDateDesc(user.getId())
+                .orElseThrow(InvalidTemporaryPasswordException::new);
+
+        var temporaryPasswordsWithoutLatest = temporaryPasswords.stream()
+                .filter(tempPassword -> !tempPassword.getId().equals(latestTemporaryPassword.getId()))
+                .toList();
+
+        temporaryPasswordRepository.deleteAll(temporaryPasswordsWithoutLatest);
+
+        if (!passwordManager.verify(temporaryPassword, user.getPassword())) {
             throw new AccessDeniedException("Invalid temporary password.");
         }
 
-        var temporaryPassword = temporaryPasswordRepository
-                .findByPassword(user.getPassword())
-                .orElseThrow(InvalidTemporaryPasswordException::new);
-
-        if (temporaryPassword.isExpired()) {
-            temporaryPasswordRepository.delete(temporaryPassword);
+        if (latestTemporaryPassword.isExpired()) {
+            temporaryPasswordRepository.delete(latestTemporaryPassword);
             throw new ExpiredTemporaryPasswordException();
         }
 
-        temporaryPasswordRepository.delete(temporaryPassword);
-
         user.setPassword(passwordManager.encode(newPassword));
         userRepository.save(user);
+
+        temporaryPasswordRepository.delete(latestTemporaryPassword);
     }
 
     @Override
