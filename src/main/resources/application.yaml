@@ -19,6 +19,10 @@ webshop:
   name:
     value: ${WEBSHOP_NAME}
 
+  loyalty:
+    points-per-dollar:
+      value: ${LOYALTY_POINTS_PER_DOLLAR}
+
   file-extensions-config:
     allowed-file-extensions: jpg,jpeg,png,bmp
 
