@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS temporary_passwords
     expiration_date DATETIME     NOT NULL,
     CONSTRAINT fk_temporary_passwords_users
         FOREIGN KEY (user_id) REFERENCES users (id)
-            ON DELETE NO ACTION
+            ON DELETE CASCADE
             ON UPDATE CASCADE
 );
 
