@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
+import com.github.jbence1994.webshop.common.InputSanitizer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +33,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProductControllerTests {
+
+    @Mock
+    private InputSanitizer<ProductDto> inputSanitizer;
 
     @Mock
     private ProductQueryService productQueryService;
@@ -80,6 +84,7 @@ class ProductControllerTests {
 
     @Test
     public void createProductTest() {
+        when(inputSanitizer.sanitize(any())).thenReturn(productDtoWithNullIdAndNullPhoto());
         when(categoryQueryService.getCategory(any())).thenReturn(category1());
         when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());

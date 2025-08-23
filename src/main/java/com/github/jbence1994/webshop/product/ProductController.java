@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
+import com.github.jbence1994.webshop.common.InputSanitizer;
 import com.github.jbence1994.webshop.image.ImageUrlBuilder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.List;
 @CrossOrigin
 @RequiredArgsConstructor
 public class ProductController {
+    private final InputSanitizer<ProductDto> inputSanitizer;
     private final ProductQueryService productQueryService;
     private final CategoryQueryService categoryQueryService;
     private final ProductService productService;
@@ -58,14 +60,16 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
-        var category = categoryQueryService.getCategory(productDto.getCategory());
+        var sanitizedProductDto = inputSanitizer.sanitize(productDto);
 
-        var product = productMapper.toEntity(productDto);
+        var category = categoryQueryService.getCategory(sanitizedProductDto.getCategory());
+
+        var product = productMapper.toEntity(sanitizedProductDto);
         product.setCategory(category);
 
         productService.createProduct(product);
-        productDto.setId(product.getId());
+        sanitizedProductDto.setId(product.getId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(sanitizedProductDto);
     }
 }
