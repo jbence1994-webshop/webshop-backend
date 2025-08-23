@@ -92,9 +92,9 @@ public class CartController {
             @PathVariable UUID id,
             @Valid @RequestBody ApplyCouponToCartRequest request
     ) {
-        request = inputSanitizer.sanitize(request);
+        var sanitizedApplyCouponToCartRequest = inputSanitizer.sanitize(request);
 
-        var cart = cartService.applyCouponToCart(id, request.getCouponCode());
+        var cart = cartService.applyCouponToCart(id, sanitizedApplyCouponToCartRequest.getCouponCode());
 
         return cartMapper.toDto(cart);
     }
