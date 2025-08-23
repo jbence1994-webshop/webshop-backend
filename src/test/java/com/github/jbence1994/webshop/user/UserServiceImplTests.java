@@ -1,9 +1,9 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import com.github.jbence1994.webshop.common.EmailConfig;
 import com.github.jbence1994.webshop.common.EmailService;
 import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
+import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,6 +48,9 @@ public class UserServiceImplTests {
     private TemporaryPasswordGenerator temporaryPasswordGenerator;
 
     @Mock
+    private WebshopEmailAddressConfig webshopEmailAddressConfig;
+
+    @Mock
     private EmailTemplateBuilder emailTemplateBuilder;
 
     @Mock
@@ -64,9 +67,6 @@ public class UserServiceImplTests {
 
     @Mock
     private AuthService authService;
-
-    @Mock
-    private EmailConfig emailConfig;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -159,7 +159,7 @@ public class UserServiceImplTests {
         when(passwordManager.encode(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
         when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
         when(emailTemplateBuilder.buildForForgotPassword(any(), any(), any())).thenReturn(emailContent());
-        when(emailConfig.username()).thenReturn("from@example.com");
+        when(webshopEmailAddressConfig.username()).thenReturn("from@example.com");
         doNothing().when(emailService).sendEmail(any(), any(), any(), any());
 
         assertDoesNotThrow(() -> userService.forgotPassword(EMAIL));
@@ -169,7 +169,7 @@ public class UserServiceImplTests {
         verify(passwordManager, times(1)).encode(any());
         verify(temporaryPasswordRepository, times(1)).save(any());
         verify(emailTemplateBuilder, times(1)).buildForForgotPassword(any(), any(), any());
-        verify(emailConfig, times(1)).username();
+        verify(webshopEmailAddressConfig, times(1)).username();
         verify(emailService, times(1)).sendEmail(any(), any(), any(), any());
     }
 
