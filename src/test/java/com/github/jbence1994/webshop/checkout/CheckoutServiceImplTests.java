@@ -5,16 +5,20 @@ import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.OrderService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.checkoutRequest;
+import static com.github.jbence1994.webshop.checkout.LoyaltyPointsPerDollarTestConstants.LOYALTY_POINTS_PER_DOLLAR;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -29,7 +33,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class CheckoutServiceImplTests {
+
+    @Mock
+    private LoyaltyPointsPerDollarConfig loyaltyPointsPerDollarConfig;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -45,6 +53,11 @@ public class CheckoutServiceImplTests {
 
     @InjectMocks
     private CheckoutServiceImpl checkoutService;
+
+    @BeforeEach
+    public void setUp() {
+        when(loyaltyPointsPerDollarConfig.value()).thenReturn(LOYALTY_POINTS_PER_DOLLAR);
+    }
 
     @Test
     public void checkoutTest_HappyPath_WithoutAppliedCoupon() {

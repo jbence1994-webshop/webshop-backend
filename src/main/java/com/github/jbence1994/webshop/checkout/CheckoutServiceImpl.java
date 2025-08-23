@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
+    private final LoyaltyPointsPerDollarConfig loyaltyPointsPerDollarConfig;
     private final CartQueryService cartQueryService;
     private final CouponService couponService;
     private final OrderService orderService;
@@ -46,7 +47,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.clear();
 
-        var earnedLoyaltyPoints = order.calculateLoyaltyPoints();
+        var earnedLoyaltyPoints = order.calculateLoyaltyPoints(loyaltyPointsPerDollarConfig.value());
         user.earnLoyaltyPoints(earnedLoyaltyPoints);
         order.setLoyaltyPoints(earnedLoyaltyPoints);
 

@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop;
 
+import com.github.jbence1994.webshop.checkout.LoyaltyPointsPerDollarConfig;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
 import com.github.jbence1994.webshop.common.WebshopNameConfig;
 import com.github.jbence1994.webshop.image.FileExtensionsConfig;
@@ -11,11 +12,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties(value = {
-        WebshopEmailAddressConfig.class,
-        WebshopNameConfig.class,
-        FileExtensionsConfig.class,
         ProductPhotosUploadDirectoryConfig.class,
-        ProfileAvatarUploadDirectoryConfig.class
+        ProfileAvatarUploadDirectoryConfig.class,
+        LoyaltyPointsPerDollarConfig.class,
+        WebshopEmailAddressConfig.class,
+        FileExtensionsConfig.class,
+        WebshopNameConfig.class
 })
 public class Application {
 
