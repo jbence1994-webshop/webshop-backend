@@ -85,13 +85,9 @@ public class Order {
         return order;
     }
 
-    public int calculateLoyaltyPoints() {
-        // FIXME: Extract this value from here.
-        //  Earning values can be change in timely campaigns.
-        final int PER_EVERY_TWENTY_DOLLARS = 20;
-
+    public int calculateLoyaltyPoints(int pointsPerDollar) {
         return totalPrice
-                .divide(BigDecimal.valueOf(PER_EVERY_TWENTY_DOLLARS), RoundingMode.DOWN)
+                .divide(BigDecimal.valueOf(pointsPerDollar), RoundingMode.DOWN)
                 .setScale(0, RoundingMode.DOWN)
                 .intValue();
     }
