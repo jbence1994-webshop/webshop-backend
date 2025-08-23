@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.common.EmailContentTestObject.emailContent;
@@ -175,25 +176,32 @@ public class UserServiceImplTests {
     @Test
     public void resetPasswordTest_HappyPath() {
         when(authService.getCurrentUser()).thenReturn(user());
+        when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword(), notExpiredTemporaryPassword()));
+        when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
+        doNothing().when(temporaryPasswordRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(true);
-        when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
-        doNothing().when(temporaryPasswordRepository).delete(any());
         when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user());
+        doNothing().when(temporaryPasswordRepository).delete(any());
 
         assertDoesNotThrow(() -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD));
 
         verify(authService, times(1)).getCurrentUser();
+        verify(temporaryPasswordRepository, times(1)).findAllByUserId(any());
+        verify(temporaryPasswordRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
+        verify(temporaryPasswordRepository, times(1)).deleteAll(any());
         verify(passwordManager, times(1)).verify(any(), any());
-        verify(temporaryPasswordRepository, times(1)).findByPassword(any());
-        verify(temporaryPasswordRepository, times(1)).delete(any());
         verify(passwordManager, times(1)).encode(any());
         verify(userRepository, times(1)).save(any());
+        verify(temporaryPasswordRepository, times(1)).delete(any());
     }
 
     @Test
     public void resetPasswordTest_UnhappyPath_AccessDeniedException() {
         when(authService.getCurrentUser()).thenReturn(user());
+        when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword(), notExpiredTemporaryPassword()));
+        when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
+        doNothing().when(temporaryPasswordRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(false);
 
         var result = assertThrows(
@@ -204,30 +212,11 @@ public class UserServiceImplTests {
         assertThat(result.getMessage(), equalTo("Invalid temporary password."));
 
         verify(authService, times(1)).getCurrentUser();
-        verify(passwordManager, times(1)).verify(any(), any());
-        verify(temporaryPasswordRepository, never()).findByPassword(any());
+        verify(temporaryPasswordRepository, times(1)).findAllByUserId(any());
+        verify(temporaryPasswordRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
+        verify(temporaryPasswordRepository, times(1)).deleteAll(any());
         verify(temporaryPasswordRepository, never()).delete(any());
-        verify(passwordManager, never()).encode(any());
-        verify(userRepository, never()).save(any());
-    }
-
-    @Test
-    public void resetPasswordTest_UnhappyPath_InvalidTemporaryPasswordException() {
-        when(authService.getCurrentUser()).thenReturn(user());
-        when(passwordManager.verify(any(), any())).thenReturn(true);
-        when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.empty());
-
-        var result = assertThrows(
-                InvalidTemporaryPasswordException.class,
-                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
-        );
-
-        assertThat(result.getMessage(), equalTo("Invalid temporary password."));
-
-        verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
-        verify(temporaryPasswordRepository, times(1)).findByPassword(any());
-        verify(temporaryPasswordRepository, never()).delete(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
@@ -235,8 +224,10 @@ public class UserServiceImplTests {
     @Test
     public void resetPasswordTest_UnhappyPath_ExpiredTemporaryPasswordException() {
         when(authService.getCurrentUser()).thenReturn(user());
+        when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword()));
+        when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(expiredTemporaryPassword()));
+        doNothing().when(temporaryPasswordRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(true);
-        when(temporaryPasswordRepository.findByPassword(any())).thenReturn(Optional.of(expiredTemporaryPassword()));
         doNothing().when(temporaryPasswordRepository).delete(any());
 
         var result = assertThrows(
@@ -247,8 +238,10 @@ public class UserServiceImplTests {
         assertThat(result.getMessage(), equalTo("Temporary password has expired."));
 
         verify(authService, times(1)).getCurrentUser();
+        verify(temporaryPasswordRepository, times(1)).findAllByUserId(any());
+        verify(temporaryPasswordRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
+        verify(temporaryPasswordRepository, times(1)).deleteAll(any());
         verify(passwordManager, times(1)).verify(any(), any());
-        verify(temporaryPasswordRepository, times(1)).findByPassword(any());
         verify(temporaryPasswordRepository, times(1)).delete(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
