@@ -22,7 +22,7 @@ import java.util.List;
 @CrossOrigin
 @RequiredArgsConstructor
 public class ProductController {
-    private final InputSanitizer<ProductDto> inputSanitizer;
+    private final InputSanitizer<ProductDto> productDtoSanitizer;
     private final ProductQueryService productQueryService;
     private final CategoryQueryService categoryQueryService;
     private final ProductService productService;
@@ -60,16 +60,16 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
-        var sanitizedProductDto = inputSanitizer.sanitize(productDto);
+        var sanitizedDto = productDtoSanitizer.sanitize(productDto);
 
-        var category = categoryQueryService.getCategory(sanitizedProductDto.getCategory());
+        var category = categoryQueryService.getCategory(sanitizedDto.getCategory());
 
-        var product = productMapper.toEntity(sanitizedProductDto);
+        var product = productMapper.toEntity(sanitizedDto);
         product.setCategory(category);
 
         productService.createProduct(product);
-        sanitizedProductDto.setId(product.getId());
+        sanitizedDto.setId(product.getId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(sanitizedProductDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(sanitizedDto);
     }
 }

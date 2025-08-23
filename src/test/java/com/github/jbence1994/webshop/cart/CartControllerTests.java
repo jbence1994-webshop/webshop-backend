@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 public class CartControllerTests {
 
     @Mock
-    private InputSanitizer<ApplyCouponToCartRequest> inputSanitizer;
+    private InputSanitizer<ApplyCouponToCartRequest> applyCouponToCartRequestSanitizer;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -126,7 +126,7 @@ public class CartControllerTests {
 
     @Test
     public void applyCouponToCartTest() {
-        when(inputSanitizer.sanitize(any())).thenReturn(applyCouponToCartRequest());
+        when(applyCouponToCartRequestSanitizer.sanitize(any())).thenReturn(applyCouponToCartRequest());
         when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon());
 

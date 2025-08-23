@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 class ProductControllerTests {
 
     @Mock
-    private InputSanitizer<ProductDto> inputSanitizer;
+    private InputSanitizer<ProductDto> productDtoSanitizer;
 
     @Mock
     private ProductQueryService productQueryService;
@@ -84,7 +84,7 @@ class ProductControllerTests {
 
     @Test
     public void createProductTest() {
-        when(inputSanitizer.sanitize(any())).thenReturn(productDtoWithNullIdAndNullPhoto());
+        when(productDtoSanitizer.sanitize(any())).thenReturn(productDtoWithNullIdAndNullPhoto());
         when(categoryQueryService.getCategory(any())).thenReturn(category1());
         when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());
