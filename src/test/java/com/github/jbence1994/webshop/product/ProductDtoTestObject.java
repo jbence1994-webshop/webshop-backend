@@ -1,46 +1,31 @@
 package com.github.jbence1994.webshop.product;
 
+import java.math.BigDecimal;
+
 import static com.github.jbence1994.webshop.product.CategoryTestConstants.CATEGORY_1_NAME;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_DESCRIPTION;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_NAME;
-import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_PRICE;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;
 
 public final class ProductDtoTestObject {
-    public static ProductDto notSanitizedProductDto() {
-        return new ProductDto(
-                null,
-                " " + PRODUCT_1_NAME + " ",
-                PRODUCT_1_PRICE,
-                " " + PRODUCT_1_UNIT + " ",
-                " " + PRODUCT_1_DESCRIPTION + " ",
-                " " + CATEGORY_1_NAME + " ",
-                null
-        );
-    }
-
     public static ProductDto productDtoWithNullIdAndNullPhoto() {
-        return new ProductDto(
-                null,
-                PRODUCT_1_NAME,
-                PRODUCT_1_PRICE,
-                PRODUCT_1_UNIT,
-                PRODUCT_1_DESCRIPTION,
-                CATEGORY_1_NAME,
-                null
-        );
+        return buildProduct(null, null);
     }
 
     public static ProductDto productDto() {
+        return buildProduct(1L, productPhotoDto());
+    }
+
+    private static ProductDto buildProduct(Long id, ProductPhotoDto photo) {
         return new ProductDto(
-                1L,
+                id,
                 PRODUCT_1_NAME,
-                PRODUCT_1_PRICE,
+                BigDecimal.valueOf(49.99),
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
                 CATEGORY_1_NAME,
-                productPhotoDto()
+                photo
         );
     }
 }
