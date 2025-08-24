@@ -22,7 +22,7 @@ import java.util.UUID;
 @CrossOrigin
 @RequiredArgsConstructor
 public class CartController {
-    private final InputSanitizer<ApplyCouponToCartRequest> applyCouponToCartRequestSanitizer;
+    private final InputSanitizer<ApplyCouponToCartRequest> inputSanitizer;
     private final CartQueryService cartQueryService;
     private final CartService cartService;
     private final CartMapper cartMapper;
@@ -92,9 +92,9 @@ public class CartController {
             @PathVariable UUID id,
             @Valid @RequestBody ApplyCouponToCartRequest request
     ) {
-        var sanitizedRequest = applyCouponToCartRequestSanitizer.sanitize(request);
+        var sanitizedApplyCouponToCartRequest = inputSanitizer.sanitize(request);
 
-        var cart = cartService.applyCouponToCart(id, sanitizedRequest.getCouponCode());
+        var cart = cartService.applyCouponToCart(id, sanitizedApplyCouponToCartRequest.getCouponCode());
 
         return cartMapper.toDto(cart);
     }
