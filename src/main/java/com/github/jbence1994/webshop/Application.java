@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop;
 
 import com.github.jbence1994.webshop.checkout.LoyaltyPointsPerDollarConfig;
+import com.github.jbence1994.webshop.common.ClientAppUrlConfig;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
 import com.github.jbence1994.webshop.common.WebshopNameConfig;
 import com.github.jbence1994.webshop.image.FileExtensionsConfig;
@@ -17,6 +18,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
         LoyaltyPointsPerDollarConfig.class,
         WebshopEmailAddressConfig.class,
         FileExtensionsConfig.class,
+        ClientAppUrlConfig.class,
         WebshopNameConfig.class
 })
 public class Application {
