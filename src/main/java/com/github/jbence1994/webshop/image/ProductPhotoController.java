@@ -20,14 +20,14 @@ import java.util.List;
 @Validated
 public class ProductPhotoController {
     private final ProductPhotoQueryService productPhotoQueryService;
+    private final ImageUrlBuilder imageUrlBuilder;
     private final ImageService imageService;
     private final ImageMapper imageMapper;
-    private final ImageUrlBuilder imageUrlBuilder;
 
     public ProductPhotoController(
             final ProductPhotoQueryService productPhotoQueryService,
-            @Qualifier("productPhotoService") final ImageService imageService,
             @Qualifier("productPhotoUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
+            @Qualifier("productPhotoService") final ImageService imageService,
             final ImageMapper imageMapper
     ) {
         this.productPhotoQueryService = productPhotoQueryService;
