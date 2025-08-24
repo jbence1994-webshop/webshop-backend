@@ -16,22 +16,19 @@ spring:
       mail.smtp.starttls.enable: true
 
 webshop:
-  name:
-    value: ${WEBSHOP_NAME}
+  name: ${WEBSHOP_NAME}
 
   client-app:
-    url:
-      value: ${CLIENT_APP_URL}
+    url: ${CLIENT_APP_URL}
 
   loyalty:
-    points-per-dollar:
-      value: ${LOYALTY_POINTS_PER_DOLLAR}
+    points-rate: ${LOYALTY_POINTS_RATE}
 
-  file-extensions-config:
-    allowed-file-extensions: jpg,jpeg,png,bmp
-
-  product-photos-upload-directory-config:
-    path: ${PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH}
-
-  profile-avatar-upload-directory-config:
-    path: ${PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH}
+  image-uploads:
+    allowed-file-extensions:
+      - jpg
+      - jpeg
+      - png
+      - bmp
+    product-photos-directory: ${PRODUCT_PHOTOS_DIRECTORY}
+    profile-avatar-directory: ${PROFILE_AVATAR_DIRECTORY}
