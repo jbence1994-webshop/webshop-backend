@@ -19,20 +19,20 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public class ProfileAvatarController {
     private final UserQueryService userQueryService;
+    private final ImageUrlBuilder imageUrlBuilder;
     private final ImageService imageService;
     private final ImageMapper imageMapper;
-    private final ImageUrlBuilder imageUrlBuilder;
 
     public ProfileAvatarController(
             final UserQueryService userQueryService,
+            @Qualifier("profileAvatarUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
             @Qualifier("profileAvatarService") final ImageService imageService,
-            final ImageMapper imageMapper,
-            final ImageUrlBuilder imageUrlBuilder
+            final ImageMapper imageMapper
     ) {
         this.userQueryService = userQueryService;
+        this.imageUrlBuilder = imageUrlBuilder;
         this.imageService = imageService;
         this.imageMapper = imageMapper;
-        this.imageUrlBuilder = imageUrlBuilder;
     }
 
     @PostMapping

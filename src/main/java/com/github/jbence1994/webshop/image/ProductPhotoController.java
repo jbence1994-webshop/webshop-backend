@@ -27,13 +27,13 @@ public class ProductPhotoController {
     public ProductPhotoController(
             final ProductPhotoQueryService productPhotoQueryService,
             @Qualifier("productPhotoService") final ImageService imageService,
-            final ImageMapper imageMapper,
-            final ImageUrlBuilder imageUrlBuilder
+            @Qualifier("productPhotoUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
+            final ImageMapper imageMapper
     ) {
         this.productPhotoQueryService = productPhotoQueryService;
+        this.imageUrlBuilder = imageUrlBuilder;
         this.imageService = imageService;
         this.imageMapper = imageMapper;
-        this.imageUrlBuilder = imageUrlBuilder;
     }
 
     @PostMapping
