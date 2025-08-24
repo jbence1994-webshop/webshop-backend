@@ -19,6 +19,10 @@ webshop:
   name:
     value: ${WEBSHOP_NAME}
 
+  client-app:
+    url:
+      value: ${CLIENT_APP_URL}
+
   loyalty:
     points-per-dollar:
       value: ${LOYALTY_POINTS_PER_DOLLAR}
