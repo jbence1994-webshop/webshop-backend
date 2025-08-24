@@ -2,7 +2,7 @@ package com.github.jbence1994.webshop.product;
 
 import com.github.jbence1994.webshop.image.ImageUrlBuilder;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +17,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-@RequiredArgsConstructor
 public class ProductController {
-    private final ProductQueryService productQueryService;
     private final CategoryQueryService categoryQueryService;
+    private final ProductQueryService productQueryService;
+    private final ImageUrlBuilder imageUrlBuilder;
     private final ProductService productService;
     private final ProductMapper productMapper;
-    private final ImageUrlBuilder imageUrlBuilder;
+
+    public ProductController(
+            final CategoryQueryService categoryQueryService,
+            final ProductQueryService productQueryService,
+            @Qualifier("productPhotoUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
+            final ProductService productService,
+            final ProductMapper productMapper
+    ) {
+        this.categoryQueryService = categoryQueryService;
+        this.productQueryService = productQueryService;
+        this.imageUrlBuilder = imageUrlBuilder;
+        this.productService = productService;
+        this.productMapper = productMapper;
+    }
 
     @GetMapping
     public List<ProductDto> getProducts(

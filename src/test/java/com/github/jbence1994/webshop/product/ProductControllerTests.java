@@ -34,10 +34,10 @@ import static org.mockito.Mockito.when;
 class ProductControllerTests {
 
     @Mock
-    private ProductQueryService productQueryService;
+    private CategoryQueryService categoryQueryService;
 
     @Mock
-    private CategoryQueryService categoryQueryService;
+    private ProductQueryService productQueryService;
 
     @Mock
     private ProductService productService;
