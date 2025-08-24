@@ -50,11 +50,13 @@ public class ProfileAvatarController {
 
     @GetMapping
     public ResponseEntity<?> getProfileAvatar(@PathVariable Long userId) {
-        var profileAvatar = userQueryService.getUser(userId).getProfileAvatar();
+        var user = userQueryService.getUser(userId);
 
-        if (profileAvatar == null) {
+        if (!user.hasProfileAvatar()) {
             return ResponseEntity.noContent().build();
         }
+
+        var profileAvatar = user.getProfileAvatar();
 
         var url = imageUrlBuilder.buildUrl(profileAvatar);
 

@@ -13,6 +13,7 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpegImageUpload;
 import static com.github.jbence1994.webshop.image.MultipartFileTestObject.multipartFile;
+import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -57,13 +58,24 @@ public class ProfileAvatarControllerTests {
     }
 
     @Test
-    public void getProfileAvatarTest() {
+    public void getProfileAvatarTest_HappyPath_ProfileHaveAvatar() {
         when(userQueryService.getUser(anyLong())).thenReturn(userWithAvatar());
         when(imageUrlBuilder.buildUrl(any())).thenReturn(AVATAR_URL);
 
         var result = profileAvatarController.getProfileAvatar(1L);
 
-        assertThat(result, not(nullValue()));
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.OK));
+        assertThat(result.getBody(), not(nullValue()));
+    }
+
+    @Test
+    public void getProfileAvatarTest_UnhappyPath_ProfileDontHaveAvatar() {
+        when(userQueryService.getUser(anyLong())).thenReturn(user());
+
+        var result = profileAvatarController.getProfileAvatar(1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
