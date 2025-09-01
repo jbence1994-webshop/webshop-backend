@@ -18,7 +18,6 @@ import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.checkoutRequest;
-import static com.github.jbence1994.webshop.checkout.LoyaltyPointsPerDollarTestConstants.LOYALTY_POINTS_PER_DOLLAR;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -37,7 +36,7 @@ import static org.mockito.Mockito.when;
 public class CheckoutServiceImplTests {
 
     @Mock
-    private LoyaltyPointsPerDollarConfig loyaltyPointsPerDollarConfig;
+    private LoyaltyConfig loyaltyConfig;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -56,7 +55,7 @@ public class CheckoutServiceImplTests {
 
     @BeforeEach
     public void setUp() {
-        when(loyaltyPointsPerDollarConfig.value()).thenReturn(LOYALTY_POINTS_PER_DOLLAR);
+        when(loyaltyConfig.pointsRate()).thenReturn(20);
     }
 
     @Test

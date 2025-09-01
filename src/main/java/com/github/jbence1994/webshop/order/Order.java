@@ -85,9 +85,9 @@ public class Order {
         return order;
     }
 
-    public int calculateLoyaltyPoints(int pointsPerDollar) {
+    public int calculateLoyaltyPoints(int pointsRate) {
         return totalPrice
-                .divide(BigDecimal.valueOf(pointsPerDollar), RoundingMode.DOWN)
+                .divide(BigDecimal.valueOf(pointsRate), RoundingMode.DOWN)
                 .setScale(0, RoundingMode.DOWN)
                 .intValue();
     }

@@ -16,7 +16,7 @@ import java.io.ByteArrayInputStream;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.FILE_SIZE;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
-import static com.github.jbence1994.webshop.image.ImageTestConstants.PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.PRODUCT_PHOTOS_DIRECTORY;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 public class ProductPhotoServiceTests {
 
     @Mock
-    private ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
+    private ImageUploadsConfig imageUploadsConfig;
 
     @Mock
     private ProductQueryService productQueryService;
@@ -64,7 +64,7 @@ public class ProductPhotoServiceTests {
         doNothing().when(fileExtensionValidator).validate(any());
         when(productQueryService.getProduct(any())).thenReturn(product);
         when(fileNameGenerator.generate(any())).thenReturn(PHOTO_FILE_NAME);
-        when(productPhotosUploadDirectoryConfig.path()).thenReturn(PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH);
+        when(imageUploadsConfig.productPhotosDirectory()).thenReturn(PRODUCT_PHOTOS_DIRECTORY);
         when(image.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(productService).updateProduct(any());
     }
@@ -81,7 +81,7 @@ public class ProductPhotoServiceTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
         verify(fileNameGenerator, times(1)).generate(any());
-        verify(productPhotosUploadDirectoryConfig, times(1)).path();
+        verify(imageUploadsConfig, times(1)).productPhotosDirectory();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, times(1)).addPhoto(any());
@@ -102,7 +102,7 @@ public class ProductPhotoServiceTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(productQueryService, times(1)).getProduct(any());
         verify(fileNameGenerator, times(1)).generate(any());
-        verify(productPhotosUploadDirectoryConfig, times(1)).path();
+        verify(imageUploadsConfig, times(1)).productPhotosDirectory();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
         verify(product, never()).addPhoto(any());

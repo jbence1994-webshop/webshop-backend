@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProfileAvatarService implements ImageService {
-    private final ProfileAvatarUploadDirectoryConfig profileAvatarUploadDirectoryConfig;
+    private final ImageUploadsConfig imageUploadsConfig;
     private final UserQueryService userQueryService;
     private final UserService userService;
     private final FileExtensionValidator fileExtensionValidator;
@@ -24,7 +24,7 @@ public class ProfileAvatarService implements ImageService {
 
             if (user.hasProfileAvatar()) {
                 fileUtils.remove(
-                        profileAvatarUploadDirectoryConfig.path(),
+                        imageUploadsConfig.profileAvatarDirectory(),
                         user.getProfileAvatar()
                 );
             }
@@ -32,7 +32,7 @@ public class ProfileAvatarService implements ImageService {
             var fileName = fileNameGenerator.generate(image.getFileExtension());
 
             fileUtils.store(
-                    profileAvatarUploadDirectoryConfig.path(),
+                    imageUploadsConfig.profileAvatarDirectory(),
                     fileName,
                     image.getInputStream()
             );
@@ -52,7 +52,7 @@ public class ProfileAvatarService implements ImageService {
             var user = userQueryService.getUser(userId);
 
             fileUtils.remove(
-                    profileAvatarUploadDirectoryConfig.path(),
+                    imageUploadsConfig.profileAvatarDirectory(),
                     fileName
             );
 

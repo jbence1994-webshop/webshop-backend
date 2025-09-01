@@ -20,20 +20,20 @@ import java.util.List;
 @Validated
 public class ProductPhotoController {
     private final ProductPhotoQueryService productPhotoQueryService;
+    private final ImageUrlBuilder imageUrlBuilder;
     private final ImageService imageService;
     private final ImageMapper imageMapper;
-    private final ImageUrlBuilder imageUrlBuilder;
 
     public ProductPhotoController(
             final ProductPhotoQueryService productPhotoQueryService,
+            @Qualifier("productPhotoUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
             @Qualifier("productPhotoService") final ImageService imageService,
-            final ImageMapper imageMapper,
-            final ImageUrlBuilder imageUrlBuilder
+            final ImageMapper imageMapper
     ) {
         this.productPhotoQueryService = productPhotoQueryService;
+        this.imageUrlBuilder = imageUrlBuilder;
         this.imageService = imageService;
         this.imageMapper = imageMapper;
-        this.imageUrlBuilder = imageUrlBuilder;
     }
 
     @PostMapping

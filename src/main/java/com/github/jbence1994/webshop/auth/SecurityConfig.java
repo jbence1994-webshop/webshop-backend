@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.auth;
 
-import com.github.jbence1994.webshop.common.ClientAppUrlConfig;
+import com.github.jbence1994.webshop.common.ClientAppConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -21,13 +21,13 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final ClientAppUrlConfig clientAppUrlConfig;
+    private final ClientAppConfig clientAppConfig;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         var corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.setAllowedOrigins(List.of(clientAppUrlConfig.value()));
+        corsConfiguration.setAllowedOrigins(List.of(clientAppConfig.url()));
 
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));

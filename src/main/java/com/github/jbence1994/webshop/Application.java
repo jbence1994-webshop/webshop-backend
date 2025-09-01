@@ -1,25 +1,21 @@
 package com.github.jbence1994.webshop;
 
-import com.github.jbence1994.webshop.checkout.LoyaltyPointsPerDollarConfig;
-import com.github.jbence1994.webshop.common.ClientAppUrlConfig;
+import com.github.jbence1994.webshop.checkout.LoyaltyConfig;
+import com.github.jbence1994.webshop.common.ClientAppConfig;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
 import com.github.jbence1994.webshop.common.WebshopNameConfig;
-import com.github.jbence1994.webshop.image.FileExtensionsConfig;
-import com.github.jbence1994.webshop.image.ProductPhotosUploadDirectoryConfig;
-import com.github.jbence1994.webshop.image.ProfileAvatarUploadDirectoryConfig;
+import com.github.jbence1994.webshop.image.ImageUploadsConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(value = {
-        ProductPhotosUploadDirectoryConfig.class,
-        ProfileAvatarUploadDirectoryConfig.class,
-        LoyaltyPointsPerDollarConfig.class,
         WebshopEmailAddressConfig.class,
-        FileExtensionsConfig.class,
-        ClientAppUrlConfig.class,
-        WebshopNameConfig.class
+        ImageUploadsConfig.class,
+        WebshopNameConfig.class,
+        ClientAppConfig.class,
+        LoyaltyConfig.class,
 })
 public class Application {
 
