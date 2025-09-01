@@ -24,8 +24,8 @@ public interface ImageTestConstants {
     String PHOTO_FILE_NAME = "143a0db8-7c91-4573-8ad0-d41738af7580.jpg";
     String AVATAR_FILE_NAME = "9f42a4ea-37ba-402e-b165-1f9b2ba13e60.jpg";
     String PHOTO_NOT_EXISTING_FILE_NAME = "143a0db8-7c91-4573-8ad0-d41738af7580.bmp";
-    String PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH = "uploads/photos/products";
-    String PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH = "uploads/avatars/profiles";
-    String PHOTO_URL = String.format("%s/%s/%s", "www.example.com/uploads/photos/products", PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH, PHOTO_FILE_NAME);
-    String AVATAR_URL = String.format("%s/%s/%s", "www.example.com/uploads/avatars/profiles", PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH, AVATAR_FILE_NAME);
+    String PRODUCT_PHOTOS_DIRECTORY = "uploads/photos/products";
+    String PROFILE_AVATAR_DIRECTORY = "uploads/avatars/profiles";
+    String PHOTO_URL = String.format("%s/%s/%s", "www.example.com/uploads/photos/products", PRODUCT_PHOTOS_DIRECTORY, PHOTO_FILE_NAME);
+    String AVATAR_URL = String.format("%s/%s/%s", "www.example.com/uploads/avatars/profiles", PROFILE_AVATAR_DIRECTORY, AVATAR_FILE_NAME);
 }

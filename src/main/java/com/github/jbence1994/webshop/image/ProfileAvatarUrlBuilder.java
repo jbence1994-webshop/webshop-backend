@@ -7,13 +7,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Component
 @RequiredArgsConstructor
 public class ProfileAvatarUrlBuilder implements ImageUrlBuilder {
-    private final ProfileAvatarUploadDirectoryConfig profileAvatarUploadDirectoryConfig;
+    private final ImageUploadsConfig imageUploadsConfig;
 
     @Override
     public String buildUrl(String fileName) {
         return ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path(profileAvatarUploadDirectoryConfig.path() + "/")
+                .path(imageUploadsConfig.profileAvatarDirectory() + "/")
                 .path(fileName)
                 .toUriString();
     }

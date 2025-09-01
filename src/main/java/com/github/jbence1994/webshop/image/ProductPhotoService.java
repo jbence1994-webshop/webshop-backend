@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductPhotoService implements ImageService {
-    private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
+    private final ImageUploadsConfig imageUploadsConfig;
     private final ProductQueryService productQueryService;
     private final ProductService productService;
     private final FileExtensionValidator fileExtensionValidator;
@@ -25,7 +25,7 @@ public class ProductPhotoService implements ImageService {
             var fileName = fileNameGenerator.generate(image.getFileExtension());
 
             fileUtils.store(
-                    productPhotosUploadDirectoryConfig.path(),
+                    imageUploadsConfig.productPhotosDirectory(),
                     fileName,
                     image.getInputStream()
             );
@@ -45,7 +45,7 @@ public class ProductPhotoService implements ImageService {
             var product = productQueryService.getProduct(productId);
 
             fileUtils.remove(
-                    productPhotosUploadDirectoryConfig.path(),
+                    imageUploadsConfig.productPhotosDirectory(),
                     fileName
             );
 

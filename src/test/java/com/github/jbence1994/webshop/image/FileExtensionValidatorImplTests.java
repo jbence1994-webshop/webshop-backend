@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 public class FileExtensionValidatorImplTests {
 
     @Mock
-    private FileExtensionsConfig fileExtensionsConfig;
+    private ImageUploadsConfig imageUploadsConfig;
 
     @InjectMocks
     private FileExtensionValidatorImpl fileExtensionValidator;
@@ -47,7 +47,7 @@ public class FileExtensionValidatorImplTests {
 
     @BeforeEach
     public void setUp() {
-        when(fileExtensionsConfig.allowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
+        when(imageUploadsConfig.allowedFileExtensions()).thenReturn(ALLOWED_FILE_EXTENSIONS);
     }
 
     @ParameterizedTest(name = "{index} => {0}")

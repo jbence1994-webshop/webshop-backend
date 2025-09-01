@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
-import static com.github.jbence1994.webshop.checkout.LoyaltyPointsPerDollarTestConstants.LOYALTY_POINTS_PER_DOLLAR;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -53,7 +52,7 @@ public class OrderTests {
         var order = new Order();
         order.setTotalPrice(totalPrice);
 
-        var result = order.calculateLoyaltyPoints(LOYALTY_POINTS_PER_DOLLAR);
+        var result = order.calculateLoyaltyPoints(20);
 
         assertThat(result, equalTo(expectedLoyaltyPoints));
     }

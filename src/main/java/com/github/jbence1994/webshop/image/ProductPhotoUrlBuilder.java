@@ -7,13 +7,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Component
 @RequiredArgsConstructor
 public class ProductPhotoUrlBuilder implements ImageUrlBuilder {
-    private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
+    private final ImageUploadsConfig imageUploadsConfig;
 
     @Override
     public String buildUrl(String fileName) {
         return ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path(productPhotosUploadDirectoryConfig.path() + "/")
+                .path(imageUploadsConfig.productPhotosDirectory() + "/")
                 .path(fileName)
                 .toUriString();
     }
