@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.checkout;
 
+import com.github.jbence1994.webshop.common.ClientAppConfig;
 import com.github.jbence1994.webshop.order.OrderItem;
 import com.github.jbence1994.webshop.order.OrderStatus;
 import com.stripe.exception.SignatureVerificationException;
@@ -9,6 +10,7 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +18,9 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class StripePaymentGateway implements PaymentGateway {
-
-    @Value("${webshop.clientAppUrl}")
-    private String clientAppUrl;
+    private final ClientAppConfig clientAppConfig;
 
     @Value("${webshop.stripe.webhookSecretKey}")
     private String webhookSecretKey;
@@ -31,8 +32,8 @@ public class StripePaymentGateway implements PaymentGateway {
 
             var builder = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl(clientAppUrl + "/checkout-success?orderId=" + orderId)
-                    .setCancelUrl(clientAppUrl + "/checkout-cancel")
+                    .setSuccessUrl(clientAppConfig.url() + "/checkout-success?orderId=" + orderId)
+                    .setCancelUrl(clientAppConfig.url() + "/checkout-cancel")
                     .setPaymentIntentData(buildPaymentIntent(orderId));
 
             request.items().forEach(item -> {

@@ -58,7 +58,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                     order.getTotalPrice(),
                     order.getDiscountAmount(),
                     order.getShippingCost(),
-                    cart.getCouponCode()
+                    cart.hasCouponApplied() ? cart.getCouponCode() : null
             );
 
             var checkoutSessionResponse = paymentGateway.createCheckoutSession(checkoutSessionRequest);
