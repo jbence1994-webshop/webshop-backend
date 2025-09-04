@@ -4,7 +4,6 @@ import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
-import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,9 +35,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CheckoutServiceImplTests {
-
-    @Mock
-    private OrderQueryService orderQueryService;
 
     @Mock
     private CartQueryService cartQueryService;

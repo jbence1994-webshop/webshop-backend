@@ -5,7 +5,6 @@ import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.order.Order;
-import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
-    private final OrderQueryService orderQueryService;
     private final CartQueryService cartQueryService;
     private final PaymentGateway paymentGateway;
     private final LoyaltyConfig loyaltyConfig;
@@ -73,16 +71,5 @@ public class CheckoutServiceImpl implements CheckoutService {
             orderService.deleteOrder(order);
             throw exception;
         }
-    }
-
-    @Override
-    public void handleWebhookEvent(WebhookRequest request) {
-        paymentGateway
-                .parseWebhookRequest(request)
-                .ifPresent(paymentResult -> {
-                    var order = orderQueryService.getOrder(paymentResult.orderId());
-                    order.setStatus(paymentResult.status());
-                    orderService.updateOrder(order);
-                });
     }
 }
