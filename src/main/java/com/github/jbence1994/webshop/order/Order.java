@@ -22,7 +22,6 @@ import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,12 +82,5 @@ public class Order {
         );
 
         return order;
-    }
-
-    public int calculateLoyaltyPoints(int pointsRate) {
-        return totalPrice
-                .divide(BigDecimal.valueOf(pointsRate), RoundingMode.DOWN)
-                .setScale(0, RoundingMode.DOWN)
-                .intValue();
     }
 }

@@ -4,6 +4,7 @@ import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
+import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.when;
 public class CheckoutServiceImplTests {
 
     @Mock
-    private LoyaltyConfig loyaltyConfig;
+    private LoyaltyPointsCalculator loyaltyPointsCalculator;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -55,7 +56,7 @@ public class CheckoutServiceImplTests {
 
     @BeforeEach
     public void setUp() {
-        when(loyaltyConfig.pointsRate()).thenReturn(20);
+        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(20);
     }
 
     @Test
