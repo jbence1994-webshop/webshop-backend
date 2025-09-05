@@ -32,61 +32,61 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException() {
-        return ResponseEntity.badRequest().body(new ErrorResponse("Invalid request body."));
+    public ResponseEntity<ErrorDto> handleHttpMessageNotReadableException() {
+        return ResponseEntity.badRequest().body(new ErrorDto("Invalid request body."));
     }
 
     @ExceptionHandler(exception = MissingServletRequestPartException.class)
-    public ResponseEntity<ErrorResponse> handleMissingServletRequestPartException(MissingServletRequestPartException exception) {
+    public ResponseEntity<ErrorDto> handleMissingServletRequestPartException(MissingServletRequestPartException exception) {
         var fieldName = exception.getRequestPartName();
-        return ResponseEntity.badRequest().body(new ErrorResponse(String.format("Required part '%s' is missing.", fieldName)));
+        return ResponseEntity.badRequest().body(new ErrorDto(String.format("Required part '%s' is missing.", fieldName)));
     }
 
     @ExceptionHandler(exception = MaxUploadSizeExceededException.class)
-    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException exception) {
-        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException exception) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
+    public ResponseEntity<ErrorDto> handleConstraintViolationException(ConstraintViolationException exception) {
         var allMessages = exception.getConstraintViolations().stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining("; "));
 
-        return ResponseEntity.badRequest().body(new ErrorResponse(allMessages));
+        return ResponseEntity.badRequest().body(new ErrorDto(allMessages));
     }
 
     @ExceptionHandler(exception = ProductNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleUserNotFoundException(UserNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = EmptyCartException.class)
-    public ResponseEntity<ErrorResponse> handleEmptyCartException(EmptyCartException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleEmptyCartException(EmptyCartException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = InvalidFileExtensionException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidFileExtensionException(InvalidFileExtensionException exception) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleInvalidFileExtensionException(InvalidFileExtensionException exception) {
+        return ResponseEntity.badRequest().body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = {
             ImageUploadException.class,
             ImageDeletionException.class
     })
-    public ResponseEntity<ErrorResponse> handleImageUploadOrImageDeletionException(RuntimeException exception) {
-        return ResponseEntity.internalServerError().body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleImageUploadOrImageDeletionException(RuntimeException exception) {
+        return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = MethodArgumentNotValidException.class)

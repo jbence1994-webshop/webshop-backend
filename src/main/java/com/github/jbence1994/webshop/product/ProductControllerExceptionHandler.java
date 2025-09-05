@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
-import com.github.jbence1994.webshop.common.ErrorResponse;
+import com.github.jbence1994.webshop.common.ErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ProductControllerExceptionHandler {
 
     @ExceptionHandler(exception = InvalidCategoryException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidCategoryException(InvalidCategoryException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleInvalidCategoryException(InvalidCategoryException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 }
