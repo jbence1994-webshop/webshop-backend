@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
-import com.github.jbence1994.webshop.common.ErrorDto;
+import com.github.jbence1994.webshop.common.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,15 +13,15 @@ public class UserControllerExceptionHandler {
             EmailAlreadyExistsException.class,
             PhoneNumberAlreadyExistsException.class,
     })
-    public ResponseEntity<ErrorDto> handleEmailOrPhoneNumberAlreadyExistsException(RuntimeException exception) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
+    public ResponseEntity<ErrorResponse> handleEmailOrPhoneNumberAlreadyExistsException(RuntimeException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = {
             InvalidTemporaryPasswordException.class,
             ExpiredTemporaryPasswordException.class
     })
-    public ResponseEntity<ErrorDto> handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordException(RuntimeException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
+    public ResponseEntity<ErrorResponse> handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordException(RuntimeException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
     }
 }
