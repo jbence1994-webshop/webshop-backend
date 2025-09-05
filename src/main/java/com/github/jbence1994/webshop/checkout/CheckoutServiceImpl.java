@@ -4,6 +4,7 @@ import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
+import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
 import jakarta.transaction.Transactional;
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
+    private final LoyaltyPointsCalculator loyaltyPointsCalculator;
     private final CartQueryService cartQueryService;
     private final PaymentGateway paymentGateway;
-    private final LoyaltyConfig loyaltyConfig;
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;
@@ -45,7 +46,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             );
         }
 
-        var earnedLoyaltyPoints = order.calculateLoyaltyPoints(loyaltyConfig.pointsRate());
+        var earnedLoyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
         user.earnLoyaltyPoints(earnedLoyaltyPoints);
         order.setLoyaltyPoints(earnedLoyaltyPoints);
 
