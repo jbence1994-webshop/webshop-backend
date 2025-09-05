@@ -17,6 +17,8 @@ public interface CartService {
 
     void clearCart(UUID cartId);
 
+    void deleteCart(UUID cartId);
+
     Cart applyCouponToCart(UUID id, String couponCode);
 
     Cart removeCouponFromCart(UUID id);

@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
@@ -47,22 +48,26 @@ public class CartTests {
                 Arguments.of(
                         "Without applied coupon",
                         cartWithTwoItems(),
-                        Price.withShippingCost(BigDecimal.valueOf(139.98), BigDecimal.ZERO)
+                        BigDecimal.valueOf(139.98),
+                        BigDecimal.ZERO
                 ),
                 Arguments.of(
                         "With fixed amount type of applied coupon",
                         cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon(),
-                        Price.withShippingCost(BigDecimal.valueOf(124.98), BigDecimal.valueOf(15.00))
+                        BigDecimal.valueOf(124.98),
+                        BigDecimal.valueOf(15.00)
                 ),
                 Arguments.of(
                         "With percent off type of applied coupon",
                         cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(),
-                        Price.withShippingCost(BigDecimal.valueOf(125.99), BigDecimal.valueOf(13.99))
+                        BigDecimal.valueOf(125.98),
+                        BigDecimal.valueOf(14.00).setScale(2, RoundingMode.UP)
                 ),
                 Arguments.of(
                         "With free shipping type of applied coupon",
                         cartWithTwoItemsAndFreeShippingTypeOfAppliedCoupon(),
-                        Price.withFreeShipping(BigDecimal.valueOf(139.98))
+                        BigDecimal.valueOf(139.98),
+                        BigDecimal.ZERO
                 )
         );
     }
@@ -162,13 +167,13 @@ public class CartTests {
     public void calculateTotalTests(
             String testCase,
             Cart cart,
-            Price expectedResult
+            BigDecimal expectedTotalPrice,
+            BigDecimal expectedDiscountAmount
     ) {
         var result = cart.calculateTotal();
 
-        assertThat(result.getTotalPrice(), equalTo(expectedResult.getTotalPrice()));
-        assertThat(result.getDiscountAmount(), equalTo(expectedResult.getDiscountAmount()));
-        assertThat(result.getShippingCost(), equalTo(expectedResult.getShippingCost()));
+        assertThat(result.getTotalPrice(), equalTo(expectedTotalPrice));
+        assertThat(result.getDiscountAmount(), equalTo(expectedDiscountAmount));
     }
 
     @Test

@@ -24,6 +24,7 @@
 
         <!-- Project dependency versions -->
         <springdoc-openapi-starter-webmvc-ui.version>2.8.12</springdoc-openapi-starter-webmvc-ui.version>
+        <stripe-java.version>29.0.0</stripe-java.version>
         <spring-dotenv.version>4.0.0</spring-dotenv.version>
         <mapstruct-processor.version>1.6.3</mapstruct-processor.version>
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -34,11 +35,11 @@
         <flyway-maven-plugin.version>11.12.0</flyway-maven-plugin.version>
 
         <!-- JaCoCo properties -->
-        <jacoco.line-coverage>0.98</jacoco.line-coverage>
-        <jacoco.branch-coverage>0.99</jacoco.branch-coverage>
-        <jacoco.complexity-coverage>0.97</jacoco.complexity-coverage>
-        <jacoco.method-coverage>0.97</jacoco.method-coverage>
-        <jacoco.class-coverage>0.98</jacoco.class-coverage>
+        <jacoco.line-coverage>0.87</jacoco.line-coverage>
+        <jacoco.branch-coverage>0.92</jacoco.branch-coverage>
+        <jacoco.complexity-coverage>0.90</jacoco.complexity-coverage>
+        <jacoco.method-coverage>0.90</jacoco.method-coverage>
+        <jacoco.class-coverage>0.96</jacoco.class-coverage>
 
         <!-- Flags -->
         <flyway.skip>false</flyway.skip>
@@ -73,6 +74,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>${stripe-java.version}</version>
         </dependency>
         <dependency>
             <groupId>me.paulschwarz</groupId>

@@ -9,10 +9,10 @@ public class PercentOffPriceAdjustmentStrategy implements PriceAdjustmentStrateg
     public Price adjustPrice(BigDecimal totalPrice, BigDecimal discountValue) {
         var discount = totalPrice
                 .multiply(discountValue)
-                .setScale(2, RoundingMode.DOWN);
+                .setScale(2, RoundingMode.UP);
         var discountedTotalPrice = totalPrice.subtract(discount);
         var discountAmount = totalPrice.subtract(discountedTotalPrice);
 
-        return Price.withShippingCost(discountedTotalPrice, discountAmount);
+        return Price.of(discountedTotalPrice, discountAmount);
     }
 }

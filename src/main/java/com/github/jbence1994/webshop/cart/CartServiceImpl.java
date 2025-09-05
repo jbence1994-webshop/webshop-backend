@@ -68,6 +68,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public void deleteCart(UUID cartId) {
+        cartRepository.deleteById(cartId);
+    }
+
+    @Override
     public Cart applyCouponToCart(UUID id, String couponCode) {
         var cart = cartQueryService.getCart(id);
         var coupon = couponQueryService.getCoupon(couponCode);

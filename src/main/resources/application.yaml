@@ -32,3 +32,9 @@ webshop:
       - bmp
     product-photos-directory: ${PRODUCT_PHOTOS_DIRECTORY}
     profile-avatar-directory: ${PROFILE_AVATAR_DIRECTORY}
+
+  stripe:
+    secretKey: ${STRIPE_SECRET_KEY}
+    webhookSecretKey: ${STRIPE_WEBHOOK_SECRET_KEY}
+    shippingCostId: ${STRIPE_SHIPPING_COST_ID}
+    freeShippingId: ${STRIPE_FREE_SHIPPING_ID}
