@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.cart;
 
-import com.github.jbence1994.webshop.common.ErrorResponse;
+import com.github.jbence1994.webshop.common.ErrorDto;
 import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
 import com.github.jbence1994.webshop.coupon.CouponNotFoundException;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
@@ -17,27 +17,27 @@ public class CartControllerExceptionHandler {
             CartNotFoundException.class,
             CartItemNotFoundException.class
     })
-    public ResponseEntity<ErrorResponse> handleCartOrCartItemNotFoundException(RuntimeException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleCartOrCartItemNotFoundException(RuntimeException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = ProductNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleProductNotFoundException(ProductNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = CouponNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCouponNotFoundException(CouponNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleCouponNotFoundException(CouponNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = ExpiredCouponException.class)
-    public ResponseEntity<ErrorResponse> handleExpiredCouponException(ExpiredCouponException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleExpiredCouponException(ExpiredCouponException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = CouponAlreadyRedeemedException.class)
-    public ResponseEntity<ErrorResponse> handleCouponAlreadyRedeemedException(CouponAlreadyRedeemedException exception) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(exception.getMessage()));
+    public ResponseEntity<ErrorDto> handleCouponAlreadyRedeemedException(CouponAlreadyRedeemedException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
     }
 }
