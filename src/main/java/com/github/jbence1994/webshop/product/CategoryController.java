@@ -10,7 +10,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
-// TODO: Sanitization.
 public class CategoryController {
     private final CategoryQueryService categoryQueryService;
     private final ProductMapper productMapper;
