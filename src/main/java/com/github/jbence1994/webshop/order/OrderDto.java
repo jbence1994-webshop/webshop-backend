@@ -8,6 +8,7 @@ public record OrderDto(
         Long id,
         BigDecimal totalPrice,
         BigDecimal discountAmount,
+        BigDecimal shippingCost,
         String status,
         LocalDateTime createdAt,
         List<OrderItemDto> items

@@ -47,6 +47,7 @@ public class OrderControllerTests {
         assertThat(result.id(), equalTo(orderDto().id()));
         assertThat(result.totalPrice(), equalTo(orderDto().totalPrice()));
         assertThat(result.discountAmount(), equalTo(orderDto().discountAmount()));
+        assertThat(result.shippingCost(), equalTo(orderDto().shippingCost()));
         assertThat(result.status(), equalTo(orderDto().status()));
         assertThat(result.createdAt(), equalTo(orderDto().createdAt()));
     }

@@ -105,11 +105,11 @@ public class Cart {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (!hasCouponApplied()) {
-            return Price.of(totalPrice);
+            return Price.withShippingCost(totalPrice);
         }
 
         if (DiscountType.FREE_SHIPPING.equals(appliedCoupon.getType())) {
-            return Price.of(totalPrice);
+            return Price.withFreeShipping(totalPrice);
         }
 
         return PriceAdjustmentStrategyFactory

@@ -46,6 +46,8 @@ public class Order {
 
     private BigDecimal discountAmount;
 
+    private BigDecimal shippingCost;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
@@ -69,6 +71,7 @@ public class Order {
         order.setStatus(OrderStatus.PENDING);
         order.setTotalPrice(price.getTotalPrice());
         order.setDiscountAmount(price.getDiscountAmount());
+        order.setShippingCost(price.getShippingCost());
 
         var items = cart.mapCartItemsToOrderItems();
 
