@@ -47,8 +47,8 @@ public class SecurityConfig {
         http
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(registry -> registry.anyRequest().permitAll());
+                .authorizeHttpRequests(registry -> registry.anyRequest().permitAll())
+                .cors(Customizer.withDefaults());
 
         return http.build();
     }
