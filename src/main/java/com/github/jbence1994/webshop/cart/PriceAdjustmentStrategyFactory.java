@@ -9,12 +9,12 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PriceAdjustmentStrategyFactory {
 
-    private static final Map<DiscountType, PriceAdjustmentStrategy> priceAdjustmentStrategies = Map.of(
+    private static final Map<DiscountType, PriceAdjustmentStrategy> PRICE_ADJUSTMENT_STRATEGIES = Map.of(
             DiscountType.FIXED_AMOUNT, new FixedAmountPriceAdjustmentStrategy(),
             DiscountType.PERCENT_OFF, new PercentOffPriceAdjustmentStrategy()
     );
 
     public static PriceAdjustmentStrategy getPriceAdjustmentStrategy(DiscountType type) {
-        return priceAdjustmentStrategies.get(type);
+        return PRICE_ADJUSTMENT_STRATEGIES.get(type);
     }
 }
