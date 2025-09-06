@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/checkout")
 @RequiredArgsConstructor
+// TODO: Sanitization.
 public class CheckoutController {
     private final CheckoutService checkoutService;
 

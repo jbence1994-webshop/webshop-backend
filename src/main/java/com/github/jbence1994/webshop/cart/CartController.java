@@ -18,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/carts")
 @RequiredArgsConstructor
+// TODO: Sanitization.
 public class CartController {
     private final CartQueryService cartQueryService;
     private final CartService cartService;

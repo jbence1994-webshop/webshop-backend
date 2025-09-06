@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/coupons")
 @RequiredArgsConstructor
+// TODO: Sanitization.
 public class CouponController {
     private final CouponQueryService couponQueryService;
     private final CouponMapper couponMapper;
