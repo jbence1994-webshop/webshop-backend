@@ -34,11 +34,11 @@ public class CartController {
     }
 
     @PostMapping("/{id}/items")
-    public ResponseEntity<CartItemDto> addProductToCart(
+    public ResponseEntity<CartItemDto> addItemToCart(
             @PathVariable UUID id,
             @Valid @RequestBody AddItemToCartRequest request
     ) {
-        var cartItem = cartService.addProductToCart(id, request.getProductId());
+        var cartItem = cartService.addItemToCart(id, request.getProductId());
 
         var cartItemDto = cartMapper.toDto(cartItem);
 
