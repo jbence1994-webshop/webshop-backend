@@ -45,14 +45,10 @@ public class SecurityConfig {
     @SneakyThrows
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
-                .sessionManagement(configurer ->
-                        configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .cors(Customizer.withDefaults())
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(registry ->
-                        registry.anyRequest().permitAll()
-                );
+                .authorizeHttpRequests(registry -> registry.anyRequest().permitAll())
+                .cors(Customizer.withDefaults());
 
         return http.build();
     }
