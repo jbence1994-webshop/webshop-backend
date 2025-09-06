@@ -309,6 +309,7 @@
                     <linkXRef>false</linkXRef>
                     <violationSeverity>error</violationSeverity>
                     <propertyExpansion>basedir=${basedir}</propertyExpansion>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>
                 <executions>
                     <execution>
