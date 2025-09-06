@@ -87,12 +87,12 @@ public class CartServiceImplTests {
     }
 
     @Test
-    public void addProductToCartTest() {
+    public void addItemToCartTest() {
         when(cartQueryService.getCart(any())).thenReturn(emptyCart());
         when(productQueryService.getProduct(any())).thenReturn(product1());
         when(cartRepository.save(any())).thenReturn(cartWithOneItem());
 
-        var result = cartService.addProductToCart(CART_ID, 1L);
+        var result = cartService.addItemToCart(CART_ID, 1L);
 
         assertThat(result.getQuantity(), equalTo(cartItem().getQuantity()));
         assertThat(result.calculateSubTotal(), equalTo(cartItem().calculateSubTotal()));

@@ -64,11 +64,11 @@ public class CartControllerTests {
     }
 
     @Test
-    public void addProductToCartTest() {
-        when(cartService.addProductToCart(any(), anyLong())).thenReturn(cartItem());
+    public void addItemToCartTest() {
+        when(cartService.addItemToCart(any(), anyLong())).thenReturn(cartItem());
         when(cartMapper.toDto(any(CartItem.class))).thenReturn(cartItemDto());
 
-        var result = cartController.addProductToCart(CART_ID, addItemToCartRequest());
+        var result = cartController.addItemToCart(CART_ID, addItemToCartRequest());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));

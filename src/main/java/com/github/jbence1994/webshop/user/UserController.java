@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+// TODO: Sanitization.
 public class UserController {
     private final UserQueryService userQueryService;
     private final UserService userService;

@@ -20,6 +20,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
@@ -172,6 +173,17 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo(expectedExceptionMessage));
+    }
+
+    @Test
+    public void handleMethodArgumentTypeMismatchExceptionTest() {
+        var exception = mock(MethodArgumentTypeMismatchException.class);
+
+        var result = globalExceptionHandler.handleMethodArgumentTypeMismatchException(exception);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Invalid input."));
     }
 
     @Test

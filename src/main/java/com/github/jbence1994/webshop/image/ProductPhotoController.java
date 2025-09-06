@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/products/{productId}/photos")
 @Validated
+// TODO: Sanitization.
 public class ProductPhotoController {
     private final ProductPhotoQueryService productPhotoQueryService;
     private final ImageUrlBuilder imageUrlBuilder;

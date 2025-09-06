@@ -26,7 +26,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem addProductToCart(UUID id, Long productId) {
+    public CartItem addItemToCart(UUID id, Long productId) {
         var cart = cartQueryService.getCart(id);
         var product = productQueryService.getProduct(productId);
 

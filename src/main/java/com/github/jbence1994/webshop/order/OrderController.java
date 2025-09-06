@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
+// TODO: Sanitization.
 public class OrderController {
     private final OrderQueryService orderQueryService;
     private final OrderMapper orderMapper;
