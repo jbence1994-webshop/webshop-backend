@@ -22,6 +22,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
@@ -87,6 +88,11 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorDto> handleImageUploadOrImageDeletionException(RuntimeException exception) {
         return ResponseEntity.internalServerError().body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        return ResponseEntity.badRequest().body(new ErrorDto("Invalid input."));
     }
 
     @ExceptionHandler(exception = MethodArgumentNotValidException.class)
