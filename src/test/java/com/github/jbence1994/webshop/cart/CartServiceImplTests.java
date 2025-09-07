@@ -192,4 +192,11 @@ public class CartServiceImplTests {
 
         assertDoesNotThrow(() -> cartService.removeCouponFromCart(CART_ID));
     }
+
+    @Test
+    public void deleteCartTest() {
+        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
+
+        assertDoesNotThrow(() -> cartService.deleteCart(CART_ID));
+    }
 }
