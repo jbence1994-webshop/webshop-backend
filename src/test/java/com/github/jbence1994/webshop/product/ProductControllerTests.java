@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
+import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
@@ -38,6 +39,9 @@ class ProductControllerTests {
 
     @Mock
     private ProductQueryService productQueryService;
+
+    @Mock
+    private ProductDtoSanitizer productDtoSanitizer;
 
     @Mock
     private ProductService productService;
@@ -80,11 +84,12 @@ class ProductControllerTests {
 
     @Test
     public void createProductTest() {
+        when(productDtoSanitizer.sanitize(any())).thenReturn(productDtoWithNullIdAndNullPhoto());
         when(categoryQueryService.getCategory(any())).thenReturn(category1());
         when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());
 
-        var result = productController.createProduct(productDtoWithNullIdAndNullPhoto());
+        var result = productController.createProduct(notSanitizedProductDto());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
