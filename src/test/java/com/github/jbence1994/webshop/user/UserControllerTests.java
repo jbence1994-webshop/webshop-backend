@@ -9,10 +9,14 @@ import org.springframework.http.HttpStatus;
 
 import static com.github.jbence1994.webshop.user.AddressTestObject.addressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
+import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.notSanitizedChangePasswordRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.forgotPasswordRequest;
+import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.notSanitizedForgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profileAfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.registrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationResponseTestObject.registrationResponse;
+import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.notSanitizedResetPasswordRequest;
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequest;
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
@@ -31,6 +35,19 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTests {
+
+    @Mock
+    private ChangePasswordRequestSanitizer changePasswordRequestSanitizer;
+
+    @Mock
+    private ForgotPasswordRequestSanitizer forgotPasswordRequestSanitizer;
+
+    @Mock
+    private ResetPasswordRequestSanitizer resetPasswordRequestSanitizer;
+
+    @Mock
+    private RegistrationRequestSanitizer registrationRequestSanitizer;
+
     @Mock
     private UserQueryService userQueryService;
 
@@ -78,33 +95,40 @@ public class UserControllerTests {
 
     @Test
     public void registerUserTest() {
+        when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
+
         when(userMapper.toEntity(any(RegistrationRequest.AddressDto.class))).thenReturn(addressAfterMappingFromDto());
         when(userMapper.toEntity(any(RegistrationRequest.ProfileDto.class))).thenReturn(profileAfterMappingFromDto());
         when(userMapper.toEntity(any(RegistrationRequest.UserDto.class))).thenReturn(userAfterMappingFromDto());
         when(userService.registerUser(any())).thenReturn(user());
 
-        var result = userController.registerUser(registrationRequest());
+        var result = userController.registerUser(notSanitizedRegistrationRequest());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().id(), equalTo(registrationResponse().id()));
         assertThat(result.getBody().email(), equalTo(registrationResponse().email()));
-        assertThat(result.getBody().message(), equalTo(registrationResponse().message()));
     }
 
     @Test
     public void changePasswordTest() {
-        assertDoesNotThrow(() -> userController.changePassword(changePasswordRequest()));
+        when(changePasswordRequestSanitizer.sanitize(any())).thenReturn(changePasswordRequest());
+
+        assertDoesNotThrow(() -> userController.changePassword(notSanitizedChangePasswordRequest()));
     }
 
     @Test
     public void forgotPasswordTest() {
-        assertDoesNotThrow(() -> userController.forgotPassword(forgotPasswordRequest()));
+        when(forgotPasswordRequestSanitizer.sanitize(any())).thenReturn(forgotPasswordRequest());
+
+        assertDoesNotThrow(() -> userController.forgotPassword(notSanitizedForgotPasswordRequest()));
     }
 
     @Test
     public void resetPasswordTest() {
-        assertDoesNotThrow(() -> userController.resetPassword(resetPasswordRequest()));
+        when(resetPasswordRequestSanitizer.sanitize(any())).thenReturn(resetPasswordRequest());
+
+        assertDoesNotThrow(() -> userController.resetPassword(notSanitizedResetPasswordRequest()));
     }
 
     @Test

@@ -10,6 +10,13 @@ public final class ResetPasswordRequestTestObject {
         return buildResetPasswordRequest(NEW_PASSWORD, CONFIRM_NEW_PASSWORD);
     }
 
+    public static ResetPasswordRequest notSanitizedResetPasswordRequest() {
+        return buildResetPasswordRequest(
+                " " + NEW_PASSWORD + " ",
+                " " + CONFIRM_NEW_PASSWORD + " "
+        );
+    }
+
     public static ResetPasswordRequest resetPasswordRequestWithInvalidConfirmPassword() {
         return buildResetPasswordRequest(NEW_PASSWORD, INVALID_CONFIRM_NEW_PASSWORD);
     }

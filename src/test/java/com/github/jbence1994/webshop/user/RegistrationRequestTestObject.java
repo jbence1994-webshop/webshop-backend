@@ -17,35 +17,39 @@ import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
 
 public final class RegistrationRequestTestObject {
     public static RegistrationRequest registrationRequest() {
-        return buildRegistrationRequest(PASSWORD, CONFIRM_PASSWORD);
+        return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, CONFIRM_PASSWORD));
+    }
+
+    public static RegistrationRequest notSanitizedRegistrationRequest() {
+        return buildRegistrationRequest(UserDtoTestObject.notSanitizedUserDto());
     }
 
     public static RegistrationRequest registrationRequestWithInvalidConfirmPassword() {
-        return buildRegistrationRequest(PASSWORD, INVALID_CONFIRM_PASSWORD);
+        return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, INVALID_CONFIRM_PASSWORD));
     }
 
     public static RegistrationRequest registrationRequestWithNullUser() {
-        return new RegistrationRequest(null);
+        return buildRegistrationRequest(null);
     }
 
     public static RegistrationRequest registrationRequestWithNullPassword() {
-        return buildRegistrationRequest(null, INVALID_CONFIRM_PASSWORD);
+        return buildRegistrationRequest(UserDtoTestObject.userDto(null, INVALID_CONFIRM_PASSWORD));
     }
 
     public static RegistrationRequest registrationRequestWithNullConfirmPassword() {
-        return buildRegistrationRequest(PASSWORD, null);
+        return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, null));
     }
 
     public static RegistrationRequest registrationRequestWithBlankPassword() {
-        return buildRegistrationRequest(" ", INVALID_CONFIRM_PASSWORD);
+        return buildRegistrationRequest(UserDtoTestObject.userDto(" ", INVALID_CONFIRM_PASSWORD));
     }
 
     public static RegistrationRequest registrationRequestWithBlankConfirmPassword() {
-        return buildRegistrationRequest(PASSWORD, " ");
+        return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, " "));
     }
 
-    private static RegistrationRequest buildRegistrationRequest(String password, String confirmPassword) {
-        return new RegistrationRequest(UserDtoTestObject.userDto(password, confirmPassword));
+    private static RegistrationRequest buildRegistrationRequest(RegistrationRequest.UserDto userDto) {
+        return new RegistrationRequest(userDto);
     }
 
     private static final class UserDtoTestObject {
@@ -58,6 +62,15 @@ public final class RegistrationRequestTestObject {
                     password,
                     confirmPassword,
                     ProfileDtoTestObject.profileDto()
+            );
+        }
+
+        public static RegistrationRequest.UserDto notSanitizedUserDto() {
+            return new RegistrationRequest.UserDto(
+                    " " + EMAIL + " ",
+                    " " + PASSWORD + " ",
+                    " " + CONFIRM_PASSWORD + " ",
+                    ProfileDtoTestObject.notSanitizedProfileDto()
             );
         }
     }
@@ -73,6 +86,17 @@ public final class RegistrationRequestTestObject {
                     AddressDtoTestObject.addressDto()
             );
         }
+
+        public static RegistrationRequest.ProfileDto notSanitizedProfileDto() {
+            return new RegistrationRequest.ProfileDto(
+                    " " + FIRST_NAME + " ",
+                    " " + MIDDLE_NAME + " ",
+                    " " + LAST_NAME + " ",
+                    DATE_OF_BIRTH,
+                    " " + PHONE_NUMBER + " ",
+                    AddressDtoTestObject.notSanitizedAddressDto()
+            );
+        }
     }
 
     private static final class AddressDtoTestObject {
@@ -83,6 +107,16 @@ public final class RegistrationRequestTestObject {
                     PROVINCE,
                     POSTAL_CODE,
                     COUNTRY
+            );
+        }
+
+        public static RegistrationRequest.AddressDto notSanitizedAddressDto() {
+            return new RegistrationRequest.AddressDto(
+                    " " + ADDRESS_LINE + " ",
+                    " " + MUNICIPALITY + " ",
+                    " " + PROVINCE + " ",
+                    " " + POSTAL_CODE + " ",
+                    " " + COUNTRY + " "
             );
         }
     }
