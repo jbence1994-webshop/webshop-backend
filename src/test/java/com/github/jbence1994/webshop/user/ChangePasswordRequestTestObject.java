@@ -10,6 +10,13 @@ public final class ChangePasswordRequestTestObject {
         return buildChangePasswordRequest(NEW_PASSWORD, CONFIRM_NEW_PASSWORD);
     }
 
+    public static ChangePasswordRequest notSanitizedChangePasswordRequest() {
+        return buildChangePasswordRequest(
+                " " + NEW_PASSWORD + " ",
+                " " + CONFIRM_NEW_PASSWORD + " "
+        );
+    }
+
     public static ChangePasswordRequest changePasswordRequestWithInvalidConfirmPassword() {
         return buildChangePasswordRequest(NEW_PASSWORD, INVALID_CONFIRM_NEW_PASSWORD);
     }
