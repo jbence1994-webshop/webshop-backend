@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 
 import static com.github.jbence1994.webshop.cart.AddItemToCartRequestTestObject.addItemToCartRequest;
 import static com.github.jbence1994.webshop.cart.ApplyCouponToCartRequestTestObject.applyCouponToCartRequest;
+import static com.github.jbence1994.webshop.cart.ApplyCouponToCartRequestTestObject.notSantizedApplyCouponToCartRequest;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDto;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.emptyCartDto;
@@ -35,6 +36,9 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CartControllerTests {
+
+    @Mock
+    private ApplyCouponToCartRequestSanitizer applyCouponToCartRequestSanitizer;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -122,10 +126,11 @@ public class CartControllerTests {
 
     @Test
     public void applyCouponToCartTest() {
+        when(applyCouponToCartRequestSanitizer.sanitize(any())).thenReturn(applyCouponToCartRequest());
         when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
         when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon());
 
-        var result = cartController.applyCouponToCart(CART_ID, applyCouponToCartRequest());
+        var result = cartController.applyCouponToCart(CART_ID, notSantizedApplyCouponToCartRequest());
 
         assertThat(result.id(), equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().id()));
         assertThat(result.items().size(), equalTo(1));

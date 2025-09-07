@@ -6,4 +6,8 @@ public final class ApplyCouponToCartRequestTestObject {
     public static ApplyCouponToCartRequest applyCouponToCartRequest() {
         return new ApplyCouponToCartRequest(COUPON_1_CODE);
     }
+
+    public static ApplyCouponToCartRequest notSantizedApplyCouponToCartRequest() {
+        return new ApplyCouponToCartRequest(" " + COUPON_1_CODE + " ");
+    }
 }

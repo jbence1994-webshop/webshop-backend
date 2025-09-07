@@ -18,8 +18,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/carts")
 @RequiredArgsConstructor
-// TODO: Sanitization.
 public class CartController {
+    private final ApplyCouponToCartRequestSanitizer applyCouponToCartRequestSanitizer;
     private final CartQueryService cartQueryService;
     private final CartService cartService;
     private final CartMapper cartMapper;
@@ -89,7 +89,9 @@ public class CartController {
             @PathVariable UUID id,
             @Valid @RequestBody ApplyCouponToCartRequest request
     ) {
-        var cart = cartService.applyCouponToCart(id, request.getCouponCode());
+        var sanitizedRequest = applyCouponToCartRequestSanitizer.sanitize(request);
+
+        var cart = cartService.applyCouponToCart(id, sanitizedRequest.getCouponCode());
 
         return cartMapper.toDto(cart);
     }
