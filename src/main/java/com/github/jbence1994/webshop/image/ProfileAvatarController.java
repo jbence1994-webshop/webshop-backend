@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/users/{userId}/profile/avatar")
 @Validated
-// TODO: Sanitization.
 public class ProfileAvatarController {
     private final UserQueryService userQueryService;
     private final ImageUrlBuilder imageUrlBuilder;
