@@ -17,10 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-// TODO: Sanitization.
 public class ProductController {
     private final CategoryQueryService categoryQueryService;
     private final ProductQueryService productQueryService;
+    private final ProductDtoSanitizer productDtoSanitizer;
     private final ImageUrlBuilder imageUrlBuilder;
     private final ProductService productService;
     private final ProductMapper productMapper;
@@ -28,12 +28,14 @@ public class ProductController {
     public ProductController(
             final CategoryQueryService categoryQueryService,
             final ProductQueryService productQueryService,
+            final ProductDtoSanitizer productDtoSanitizer,
             @Qualifier("productPhotoUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
             final ProductService productService,
             final ProductMapper productMapper
     ) {
         this.categoryQueryService = categoryQueryService;
         this.productQueryService = productQueryService;
+        this.productDtoSanitizer = productDtoSanitizer;
         this.imageUrlBuilder = imageUrlBuilder;
         this.productService = productService;
         this.productMapper = productMapper;
@@ -70,14 +72,16 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
-        var category = categoryQueryService.getCategory(productDto.getCategory());
+        var sanitizedProductDto = productDtoSanitizer.sanitize(productDto);
 
-        var product = productMapper.toEntity(productDto);
+        var category = categoryQueryService.getCategory(sanitizedProductDto.getCategory());
+
+        var product = productMapper.toEntity(sanitizedProductDto);
         product.setCategory(category);
 
         productService.createProduct(product);
-        productDto.setId(product.getId());
+        sanitizedProductDto.setId(product.getId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(sanitizedProductDto);
     }
 }
