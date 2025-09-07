@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-// TODO: Sanitization.
 public class UserController {
+    private final ChangePasswordRequestSanitizer changePasswordRequestSanitizer;
+    private final ForgotPasswordRequestSanitizer forgotPasswordRequestSanitizer;
+    private final ResetPasswordRequestSanitizer resetPasswordRequestSanitizer;
+    private final RegistrationRequestSanitizer registrationRequestSanitizer;
     private final UserQueryService userQueryService;
     private final UserService userService;
     private final UserMapper userMapper;
@@ -29,9 +32,11 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
-        var address = userMapper.toEntity(request.getAddress());
-        var profile = userMapper.toEntity(request.getProfile());
-        var user = userMapper.toEntity(request.getUser());
+        var sanitizedRequest = registrationRequestSanitizer.sanitize(request);
+
+        var address = userMapper.toEntity(sanitizedRequest.getAddress());
+        var profile = userMapper.toEntity(sanitizedRequest.getProfile());
+        var user = userMapper.toEntity(sanitizedRequest.getUser());
 
         address.setProfile(profile);
         profile.setAddress(address);
@@ -41,33 +46,35 @@ public class UserController {
 
         var registeredUser = userService.registerUser(user);
 
-        var response = new RegistrationResponse(
-                registeredUser.getId(),
-                registeredUser.getEmail(),
-                "Successful registration."
-        );
+        var response = new RegistrationResponse(registeredUser.getId(), registeredUser.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/change-password")
     public void changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        var sanitizedRequest = changePasswordRequestSanitizer.sanitize(request);
+
         userService.changePassword(
-                request.getOldPassword(),
-                request.getNewPassword()
+                sanitizedRequest.getOldPassword(),
+                sanitizedRequest.getNewPassword()
         );
     }
 
     @PostMapping("/forgot-password")
     public void forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
-        userService.forgotPassword(request.getEmail());
+        var sanitizedRequest = forgotPasswordRequestSanitizer.sanitize(request);
+
+        userService.forgotPassword(sanitizedRequest.getEmail());
     }
 
     @PostMapping("/reset-password")
     public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        var sanitizedRequest = resetPasswordRequestSanitizer.sanitize(request);
+
         userService.resetPassword(
-                request.getTemporaryPassword(),
-                request.getNewPassword()
+                sanitizedRequest.getTemporaryPassword(),
+                sanitizedRequest.getNewPassword()
         );
     }
 
