@@ -33,8 +33,8 @@
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
         <flyway-maven-plugin.version>11.12.0</flyway-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-        <checkstyle.version>10.26.1</checkstyle.version>
-        <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
+        <checkstyle.version>11.0.1</checkstyle.version>
+        <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
 
         <!-- JaCoCo properties -->
         <jacoco.line-coverage>1.00</jacoco.line-coverage>
