@@ -7,7 +7,6 @@ import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
-import com.github.jbence1994.webshop.order.OrderStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;
+    // private final CartService cartService;
 
     @Override
     @Transactional
@@ -53,9 +53,8 @@ public class CheckoutServiceImpl implements CheckoutService {
         // TODO: Payment integration.
 
         // 1) If payment was successful:
-        order.setStatus(OrderStatus.COMPLETED);
-
-        cart.clear();
+        // order.setStatus(OrderStatus.COMPLETED);
+        // cartService.deleteCart(cartId);
 
         //2) If payment was failed:
         // order.setStatus(PaymentStatus.FAILED);

@@ -51,6 +51,9 @@ public class CheckoutServiceImplTests {
     @Mock
     private AuthService authService;
 
+    // @Mock
+    // private CartService cartService;
+
     @InjectMocks
     private CheckoutServiceImpl checkoutService;
 
