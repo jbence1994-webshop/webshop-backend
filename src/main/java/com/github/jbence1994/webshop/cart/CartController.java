@@ -19,6 +19,7 @@ import java.util.UUID;
 @RequestMapping("/carts")
 @RequiredArgsConstructor
 public class CartController {
+    private final ApplyCouponToCartRequestSanitizer applyCouponToCartRequestSanitizer;
     private final CartQueryService cartQueryService;
     private final CartService cartService;
     private final CartMapper cartMapper;
@@ -33,11 +34,11 @@ public class CartController {
     }
 
     @PostMapping("/{id}/items")
-    public ResponseEntity<CartItemDto> addProductToCart(
+    public ResponseEntity<CartItemDto> addItemToCart(
             @PathVariable UUID id,
             @Valid @RequestBody AddItemToCartRequest request
     ) {
-        var cartItem = cartService.addProductToCart(id, request.getProductId());
+        var cartItem = cartService.addItemToCart(id, request.getProductId());
 
         var cartItemDto = cartMapper.toDto(cartItem);
 
@@ -88,7 +89,9 @@ public class CartController {
             @PathVariable UUID id,
             @Valid @RequestBody ApplyCouponToCartRequest request
     ) {
-        var cart = cartService.applyCouponToCart(id, request.getCouponCode());
+        var sanitizedRequest = applyCouponToCartRequestSanitizer.sanitize(request);
+
+        var cart = cartService.applyCouponToCart(id, sanitizedRequest.getCouponCode());
 
         return cartMapper.toDto(cart);
     }

@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+// TODO: Sanitization.
 public class ProductController {
     private final CategoryQueryService categoryQueryService;
     private final ProductQueryService productQueryService;

@@ -5,7 +5,7 @@ import java.util.UUID;
 public interface CartService {
     Cart createCart();
 
-    CartItem addProductToCart(UUID id, Long productId);
+    CartItem addItemToCart(UUID id, Long productId);
 
     CartItem updateCartItem(
             UUID cartId,

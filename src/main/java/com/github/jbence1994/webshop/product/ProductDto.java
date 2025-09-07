@@ -21,7 +21,7 @@ public class ProductDto {
 
     @NotNull(message = "Name must be provided.")
     @NotBlank(message = "Name must be not empty.")
-    @Size(max = 255, message = "Name must be less than 255 characters.")
+    @Size(max = 255, message = "Name must be less than or equal to 255 characters.")
     private String name;
 
     @NotNull(message = "Price must not be null.")
@@ -31,14 +31,14 @@ public class ProductDto {
 
     @NotNull(message = "Unit must be provided.")
     @NotBlank(message = "Unit must be not empty.")
-    @Size(max = 25, message = "Unit must be less than 25 characters.")
+    @Size(max = 25, message = "Unit must be less than or equal to 25 characters.")
     private String unit;
 
     private String description;
 
     @NotNull(message = "Category must be provided.")
     @NotBlank(message = "Category must be not empty.")
-    @Size(max = 50, message = "Category must be less than 50 characters.")
+    @Size(max = 50, message = "Category must be less than or equals to 50 characters.")
     private String category;
 
     private ProductPhotoDto photo;
