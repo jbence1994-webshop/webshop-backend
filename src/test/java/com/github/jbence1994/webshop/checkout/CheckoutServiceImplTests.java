@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
+import com.github.jbence1994.webshop.cart.CartService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
@@ -43,6 +44,9 @@ public class CheckoutServiceImplTests {
     private CartQueryService cartQueryService;
 
     @Mock
+    private PaymentGateway paymentGateway;
+
+    @Mock
     private CouponService couponService;
 
     @Mock
@@ -51,8 +55,8 @@ public class CheckoutServiceImplTests {
     @Mock
     private AuthService authService;
 
-    // @Mock
-    // private CartService cartService;
+    @Mock
+    private CartService cartService;
 
     @InjectMocks
     private CheckoutServiceImpl checkoutService;

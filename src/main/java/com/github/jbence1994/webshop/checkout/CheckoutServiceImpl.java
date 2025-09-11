@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
+import com.github.jbence1994.webshop.cart.CartService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
@@ -16,10 +17,11 @@ import org.springframework.stereotype.Service;
 public class CheckoutServiceImpl implements CheckoutService {
     private final LoyaltyPointsCalculator loyaltyPointsCalculator;
     private final CartQueryService cartQueryService;
+    private final PaymentGateway paymentGateway;
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;
-    // private final CartService cartService;
+    private final CartService cartService;
 
     @Override
     @Transactional
