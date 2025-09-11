@@ -45,7 +45,6 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
 
-    // TODO: Remove this field.
     @ManyToOne
     @JoinColumn(name = "applied_coupon")
     private Coupon appliedCoupon;
