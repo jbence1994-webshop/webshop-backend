@@ -35,6 +35,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,13 +45,13 @@ import static org.mockito.Mockito.when;
 public class CartServiceImplTests {
 
     @Mock
-    private CartQueryService cartQueryService;
-
-    @Mock
     private ProductQueryService productQueryService;
 
     @Mock
     private CouponQueryService couponQueryService;
+
+    @Mock
+    private CartQueryService cartQueryService;
 
     @Mock
     private CartRepository cartRepository;
@@ -127,6 +128,13 @@ public class CartServiceImplTests {
     }
 
     @Test
+    public void deleteCartTest() {
+        doNothing().when(cartRepository).deleteById(any());
+
+        assertDoesNotThrow(() -> cartService.deleteCart(CART_ID));
+    }
+
+    @Test
     public void applyCouponToCartTest_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
@@ -191,12 +199,5 @@ public class CartServiceImplTests {
         when(cartRepository.save(any())).thenReturn(cartWithTwoItems());
 
         assertDoesNotThrow(() -> cartService.removeCouponFromCart(CART_ID));
-    }
-
-    @Test
-    public void deleteCartTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-
-        assertDoesNotThrow(() -> cartService.deleteCart(CART_ID));
     }
 }

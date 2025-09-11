@@ -7,19 +7,17 @@ import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.OrderService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.checkoutRequest;
+import static com.github.jbence1994.webshop.loyalty.LoyaltyTestConstants.POINTS_RATE;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -34,7 +32,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 public class CheckoutServiceImplTests {
 
     @Mock
@@ -61,16 +58,13 @@ public class CheckoutServiceImplTests {
     @InjectMocks
     private CheckoutServiceImpl checkoutService;
 
-    @BeforeEach
-    public void setUp() {
-        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(20);
-    }
-
     @Test
     public void checkoutTest_HappyPath_WithoutAppliedCoupon() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
+        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+        doNothing().when(cartService).deleteCart(any());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -79,6 +73,8 @@ public class CheckoutServiceImplTests {
         verify(cartQueryService, times(1)).getCart(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
+        verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
+        verify(cartService, times(1)).deleteCart(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
     }
 
@@ -88,6 +84,8 @@ public class CheckoutServiceImplTests {
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
+        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+        doNothing().when(cartService).deleteCart(any());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -97,6 +95,8 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
+        verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
+        verify(cartService, times(1)).deleteCart(any());
     }
 
     @Test
@@ -114,5 +114,7 @@ public class CheckoutServiceImplTests {
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
+        verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
+        verify(cartService, never()).deleteCart(any());
     }
 }
