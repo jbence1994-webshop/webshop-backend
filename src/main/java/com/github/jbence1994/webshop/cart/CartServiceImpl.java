@@ -12,9 +12,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
-    private final CartQueryService cartQueryService;
     private final ProductQueryService productQueryService;
     private final CouponQueryService couponQueryService;
+    private final CartQueryService cartQueryService;
     private final CartRepository cartRepository;
 
     @Override
@@ -26,8 +26,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem addItemToCart(UUID id, Long productId) {
-        var cart = cartQueryService.getCart(id);
+    public CartItem addItemToCart(UUID cartId, Long productId) {
+        var cart = cartQueryService.getCart(cartId);
         var product = productQueryService.getProduct(productId);
 
         var cartItem = cart.addItem(product);
@@ -60,11 +60,16 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void clearCart(UUID cartId) {
-        var cart = cartQueryService.getCart(cartId);
+    public void clearCart(UUID id) {
+        var cart = cartQueryService.getCart(id);
 
         cart.clear();
         cartRepository.save(cart);
+    }
+
+    @Override
+    public void deleteCart(UUID id) {
+        cartRepository.deleteById(id);
     }
 
     @Override
