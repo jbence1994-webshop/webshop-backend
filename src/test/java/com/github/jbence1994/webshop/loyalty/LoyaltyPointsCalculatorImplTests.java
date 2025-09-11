@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
+import static com.github.jbence1994.webshop.loyalty.LoyaltyTestConstants.POINTS_RATE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
@@ -43,7 +44,7 @@ public class LoyaltyPointsCalculatorImplTests {
             BigDecimal orderTotalPrice,
             int expectedLoyaltyPoints
     ) {
-        when(loyaltyConfig.pointsRate()).thenReturn(20);
+        when(loyaltyConfig.pointsRate()).thenReturn(POINTS_RATE);
         var result = loyaltyPointsCalculator.calculateLoyaltyPoints(orderTotalPrice);
 
         assertThat(result, equalTo(expectedLoyaltyPoints));
