@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.order;
 
 import com.github.jbence1994.webshop.cart.Cart;
+import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,6 +45,11 @@ public class Order {
 
     private BigDecimal totalPrice;
 
+    @ManyToOne
+    @JoinColumn(name = "applied_coupon")
+    private Coupon appliedCoupon;
+
+    // TODO: Remove this field.
     private BigDecimal discountAmount;
 
     private BigDecimal shippingCost;
