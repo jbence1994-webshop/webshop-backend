@@ -24,6 +24,9 @@ webshop:
   loyalty:
     points-rate: ${LOYALTY_POINTS_RATE}
 
+  free-shipping:
+    threshold: ${FREE_SHIPPING_THRESHOLD}
+
   image-uploads:
     allowed-file-extensions:
       - jpg
