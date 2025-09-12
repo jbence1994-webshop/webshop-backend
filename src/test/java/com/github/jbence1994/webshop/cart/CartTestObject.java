@@ -20,7 +20,7 @@ public final class CartTestObject {
 
     public static Cart cartWithOneItem() {
         var cart = buildCart();
-        cart.addItem(product2());
+        cart.addItem(product1());
         return cart;
     }
 
