@@ -128,7 +128,7 @@ public class CartServiceImplTests {
 
     @Test
     public void applyCouponToCartTest_HappyPath() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
+        when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItems());
         when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
         when(couponQueryService.isRedeemedCoupon(any())).thenReturn(false);
         when(cartRepository.save(any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
