@@ -14,7 +14,7 @@ public class CheckoutController {
     private final CheckoutService checkoutService;
 
     @PostMapping
-    public CheckoutResponse checkout(@Valid @RequestBody CheckoutRequest request) {
-        return checkoutService.checkout(request);
+    public CompleteCheckoutSessionResponse completeCheckoutSession(@Valid @RequestBody CompleteCheckoutSessionRequest request) {
+        return checkoutService.completeCheckoutSession(request);
     }
 }
