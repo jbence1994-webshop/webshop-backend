@@ -6,8 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.github.jbence1994.webshop.checkout.CheckoutRequestTestObject.checkoutRequest;
-import static com.github.jbence1994.webshop.checkout.CheckoutResponseTestObject.checkoutResponse;
+import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequest;
+import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionResponseTestObject.completeCheckoutSessionResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -25,10 +25,10 @@ public class CheckoutControllerTests {
     private CheckoutController checkoutController;
 
     @Test
-    public void checkoutTest() {
-        when(checkoutService.checkout(any())).thenReturn(checkoutResponse());
+    public void completeCheckoutSessionTest() {
+        when(checkoutService.completeCheckoutSession(any())).thenReturn(completeCheckoutSessionResponse());
 
-        var result = checkoutController.checkout(checkoutRequest());
+        var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequest());
 
         assertThat(result, not(nullValue()));
         assertThat(result.orderId(), equalTo(1L));
