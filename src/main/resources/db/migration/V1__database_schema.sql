@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS carts
     applied_coupon VARCHAR(25),
     CONSTRAINT fk_carts_coupons
         FOREIGN KEY (applied_coupon) REFERENCES coupons (code)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
             ON UPDATE CASCADE
 );
 

@@ -2,7 +2,6 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
-import com.github.jbence1994.webshop.cart.CartService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
@@ -52,9 +51,6 @@ public class CheckoutServiceImplTests {
     @Mock
     private AuthService authService;
 
-    @Mock
-    private CartService cartService;
-
     @InjectMocks
     private CheckoutServiceImpl checkoutService;
 
@@ -64,7 +60,6 @@ public class CheckoutServiceImplTests {
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
-        doNothing().when(cartService).deleteCart(any());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -74,7 +69,6 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
-        verify(cartService, times(1)).deleteCart(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
     }
 
@@ -85,7 +79,6 @@ public class CheckoutServiceImplTests {
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
-        doNothing().when(cartService).deleteCart(any());
 
         var result = checkoutService.checkout(checkoutRequest());
 
@@ -96,7 +89,6 @@ public class CheckoutServiceImplTests {
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
-        verify(cartService, times(1)).deleteCart(any());
     }
 
     @Test
@@ -115,6 +107,5 @@ public class CheckoutServiceImplTests {
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
-        verify(cartService, never()).deleteCart(any());
     }
 }
