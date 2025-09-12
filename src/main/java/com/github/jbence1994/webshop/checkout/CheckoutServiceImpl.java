@@ -24,7 +24,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     @Override
     @Transactional
-    public CheckoutResponse checkout(CheckoutRequest request) {
+    public CompleteCheckoutSessionResponse completeCheckoutSession(CompleteCheckoutSessionRequest request) {
         var cartId = request.getCartId();
 
         var cart = cartQueryService.getCart(cartId);
@@ -64,6 +64,6 @@ public class CheckoutServiceImpl implements CheckoutService {
         // 3) If payment aborted for a long time:
         // order.setStatus(PaymentStatus.CANCELLED);
 
-        return new CheckoutResponse(order.getId());
+        return new CompleteCheckoutSessionResponse(order.getId());
     }
 }

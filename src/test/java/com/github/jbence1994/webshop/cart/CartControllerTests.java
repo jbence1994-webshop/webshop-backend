@@ -11,9 +11,9 @@ import static com.github.jbence1994.webshop.cart.AddItemToCartRequestTestObject.
 import static com.github.jbence1994.webshop.cart.ApplyCouponToCartRequestTestObject.applyCouponToCartRequest;
 import static com.github.jbence1994.webshop.cart.ApplyCouponToCartRequestTestObject.notSantizedApplyCouponToCartRequest;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDto;
-import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDtoWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.emptyCartDto;
-import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemDto;
+import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemDto1;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.updatedCartItemDto;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
@@ -70,15 +70,15 @@ public class CartControllerTests {
     @Test
     public void addItemToCartTest() {
         when(cartService.addItemToCart(any(), anyLong())).thenReturn(cartItem());
-        when(cartMapper.toDto(any(CartItem.class))).thenReturn(cartItemDto());
+        when(cartMapper.toDto(any(CartItem.class))).thenReturn(cartItemDto1());
 
         var result = cartController.addItemToCart(CART_ID, addItemToCartRequest());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().product(), not(nullValue()));
-        assertThat(result.getBody().quantity(), equalTo(cartItemDto().quantity()));
-        assertThat(result.getBody().totalPrice(), equalTo(cartItemDto().totalPrice()));
+        assertThat(result.getBody().quantity(), equalTo(cartItemDto1().quantity()));
+        assertThat(result.getBody().totalPrice(), equalTo(cartItemDto1().totalPrice()));
     }
 
     @Test
@@ -128,14 +128,14 @@ public class CartControllerTests {
     public void applyCouponToCartTest() {
         when(applyCouponToCartRequestSanitizer.sanitize(any())).thenReturn(applyCouponToCartRequest());
         when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
-        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon());
+        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
 
         var result = cartController.applyCouponToCart(CART_ID, notSantizedApplyCouponToCartRequest());
 
-        assertThat(result.id(), equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().id()));
-        assertThat(result.items().size(), equalTo(1));
-        assertThat(result.appliedCoupon(), is(nullValue()));
-        assertThat(result.totalPrice(), equalTo(cartDtoWithOneItemAndPercentOffTypeOfAppliedCoupon().totalPrice()));
+        assertThat(result.items().size(), equalTo(2));
+        assertThat(result.id(), equalTo(cartDtoWithTwoItemsAndPercentOffTypeOfAppliedCoupon().id()));
+        assertThat(result.totalPrice(), equalTo(cartDtoWithTwoItemsAndPercentOffTypeOfAppliedCoupon().totalPrice()));
+        assertThat(result.appliedCoupon(), not(nullValue()));
     }
 
     @Test
@@ -145,8 +145,9 @@ public class CartControllerTests {
 
         var result = cartController.removeCouponFromCart(CART_ID);
 
+        assertThat(result.items().size(), equalTo(1));
         assertThat(result.id(), equalTo(cartDto().id()));
         assertThat(result.totalPrice(), equalTo(cartDto().totalPrice()));
-        assertThat(result.appliedCoupon(), equalTo(cartDto().appliedCoupon()));
+        assertThat(result.appliedCoupon(), is(nullValue()));
     }
 }
