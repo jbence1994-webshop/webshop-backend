@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
-public class CheckoutRequest {
+public class CompleteCheckoutSessionRequest {
 
     @NotNull(message = "Cart ID must be provided.")
     private UUID cartId;
