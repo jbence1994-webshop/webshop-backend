@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
+import com.github.jbence1994.webshop.cart.CartService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
@@ -20,6 +21,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;
+    private final CartService cartService;
 
     @Override
     @Transactional
@@ -55,7 +57,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         // 1) If payment was successful:
         order.setStatus(OrderStatus.COMPLETED);
 
-        cart.clear();
+        cartService.deleteCart(cartId);
 
         //2) If payment was failed:
         // order.setStatus(PaymentStatus.FAILED);
