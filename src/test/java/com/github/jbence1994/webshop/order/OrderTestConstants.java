@@ -9,5 +9,5 @@ public interface OrderTestConstants {
     BigDecimal SHIPPING_COST = BigDecimal.valueOf(20);
     int EARNED_LOYALTY_POINTS = 2;
     BigDecimal SUB_TOTAL = TOTAL_PRICE;
-    LocalDateTime CREATED_AT = LocalDateTime.of(2025, 6, 18, 16, 18, 59);
+    LocalDateTime CREATED_AT = LocalDateTime.of(2025, 9, 13, 11, 20, 11);
 }
