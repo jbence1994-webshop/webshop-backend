@@ -8,7 +8,6 @@ import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 
 public final class TemporaryPasswordTestObject {
-
     public static TemporaryPassword notExpiredTemporaryPassword() {
         return buildTemporaryPassword(NOT_EXPIRED_TEMPORARY_PASSWORD);
     }
