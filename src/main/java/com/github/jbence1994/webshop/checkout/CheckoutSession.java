@@ -30,6 +30,9 @@ import java.util.UUID;
 @Setter
 public class CheckoutSession {
 
+    // TODO: CheckoutPrice shall be persisted later.
+    // TODO: expiration shall be persisted later.
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -73,6 +76,3 @@ public class CheckoutSession {
                 .adjustCheckoutPrice(cartTotal, appliedCoupon.getValue());
     }
 }
-
-// TODO: CheckoutPrice shall be persisted later.
-// TODO: expiration shall be persisted later.
