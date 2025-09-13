@@ -56,7 +56,6 @@ public class CartControllerTests {
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().id(), equalTo(emptyCartDto().id()));
         assertThat(result.getBody().items(), is(empty()));
-        assertThat(result.getBody().appliedCoupon(), is(nullValue()));
         assertThat(result.getBody().totalPrice(), equalTo(emptyCartDto().totalPrice()));
     }
 

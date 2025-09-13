@@ -7,7 +7,6 @@ import java.util.UUID;
 public record CartDto(
         UUID id,
         List<CartItemDto> items,
-        String appliedCoupon,
         BigDecimal totalPrice
 ) {
 }

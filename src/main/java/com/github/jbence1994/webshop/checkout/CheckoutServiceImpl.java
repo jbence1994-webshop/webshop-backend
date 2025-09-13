@@ -94,8 +94,8 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var user = authService.getCurrentUser();
 
-        var order = Order.from(cart);
-        order.setCustomer(user);
+        var order = Order.from(user, checkoutSession, cart);
+
         orderService.createOrder(order);
 
         if (checkoutSession.hasCouponApplied()) {
