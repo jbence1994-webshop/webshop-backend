@@ -13,17 +13,7 @@ public class CheckoutPrice {
     private BigDecimal discountAmount;
     private BigDecimal shippingCost;
 
-    private static final BigDecimal DEFAULT_SHIPPING_COST = BigDecimal.valueOf(7.99);
-
-    public static CheckoutPrice withShippingCost(BigDecimal totalPrice) {
-        return new CheckoutPrice(totalPrice, BigDecimal.ZERO, DEFAULT_SHIPPING_COST);
-    }
-
-    public static CheckoutPrice withShippingCost(BigDecimal totalPrice, BigDecimal discountAmount) {
-        return new CheckoutPrice(totalPrice, discountAmount, DEFAULT_SHIPPING_COST);
-    }
-
-    public static CheckoutPrice withFreeShipping(BigDecimal totalPrice) {
-        return new CheckoutPrice(totalPrice, BigDecimal.ZERO, BigDecimal.ZERO);
+    public static CheckoutPrice of(BigDecimal totalPrice, BigDecimal discountAmount, BigDecimal shippingCost) {
+        return new CheckoutPrice(totalPrice, discountAmount, shippingCost);
     }
 }

@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -25,6 +26,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
     private final CartQueryService cartQueryService;
+    private final ShippingConfig shippingConfig;
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;
@@ -94,7 +96,33 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var user = authService.getCurrentUser();
 
-        var order = Order.from(user, checkoutSession, cart);
+        var cartTotal = cart.calculateTotal();
+
+        CheckoutPrice checkoutPrice;
+
+        if (!checkoutSession.hasCouponApplied()) {
+            checkoutPrice = CheckoutPrice.of(
+                    cartTotal,
+                    BigDecimal.ZERO,
+                    shippingConfig.shippingCost()
+            );
+        } else {
+            var appliedCoupon = checkoutSession.getAppliedCoupon();
+
+            checkoutPrice = CheckoutPriceAdjustmentStrategyFactory
+                    .getCheckoutPriceAdjustmentStrategy(appliedCoupon.getType())
+                    .adjustCheckoutPrice(
+                            cartTotal,
+                            appliedCoupon.getValue(),
+                            shippingConfig.shippingCost()
+                    );
+        }
+
+        var order = Order.from(user, checkoutPrice, cart);
+
+        if (order.isEligibleForFreeShipping(shippingConfig.freeShippingThreshold())) {
+            order.setShippingCost(BigDecimal.ZERO);
+        }
 
         orderService.createOrder(order);
 
@@ -106,9 +134,9 @@ public class CheckoutServiceImpl implements CheckoutService {
             );
         }
 
-        var earnedLoyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
-        user.earnLoyaltyPoints(earnedLoyaltyPoints);
-        order.setLoyaltyPoints(earnedLoyaltyPoints);
+        var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
+        user.earnLoyaltyPoints(loyaltyPoints);
+        order.setLoyaltyPoints(loyaltyPoints);
 
         // TODO: Payment integration.
 
