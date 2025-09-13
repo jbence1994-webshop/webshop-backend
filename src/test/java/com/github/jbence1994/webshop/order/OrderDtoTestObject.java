@@ -15,7 +15,7 @@ public final class OrderDtoTestObject {
                 TOTAL_PRICE,
                 DISCOUNT_AMOUNT,
                 SHIPPING_COST,
-                OrderStatus.COMPLETED.name(),
+                OrderStatus.CONFIRMED.name(),
                 CREATED_AT,
                 List.of(orderItemDto())
         );

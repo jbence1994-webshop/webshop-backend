@@ -18,7 +18,7 @@ public final class OrderTestObject {
                 TOTAL_PRICE,
                 BigDecimal.ZERO,
                 SHIPPING_COST,
-                OrderStatus.COMPLETED,
+                OrderStatus.CONFIRMED,
                 EARNED_LOYALTY_POINTS,
                 CREATED_AT,
                 List.of(orderItem())
