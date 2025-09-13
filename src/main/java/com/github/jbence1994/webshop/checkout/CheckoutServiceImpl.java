@@ -52,16 +52,20 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         // TODO: Payment integration.
 
-        // 1) If payment was successful:
+        // TODO: 1) If payment was successful:
         cart.clear();
 
-        order.setStatus(OrderStatus.COMPLETED);
+        order.setStatus(OrderStatus.CONFIRMED);
+        // TODO: CheckoutStatus.COMPLETED;
+        // TODO: Create on-stock schema to store products on stock, here: decrease available quantity.
 
-        //2) If payment was failed:
-        // order.setStatus(PaymentStatus.FAILED);
+        // TODO: 2) If payment was failed:
+        // TODO: order.setStatus(OrderStatus.CREATED);
+        // TODO: CheckoutStatus.FAILED;
 
         // 3) If payment aborted for a long time:
-        // order.setStatus(PaymentStatus.CANCELLED);
+        // TODO: order.setStatus(OrderStatus.CANCELLED);
+        // TODO: CheckoutStatus.CANCELLED;
 
         return new CompleteCheckoutSessionResponse(order.getId());
     }
