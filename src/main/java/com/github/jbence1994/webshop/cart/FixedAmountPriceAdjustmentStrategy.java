@@ -13,8 +13,8 @@ public class FixedAmountPriceAdjustmentStrategy implements PriceAdjustmentStrate
 
         discountedTotalPrice = discountedTotalPrice.setScale(2, RoundingMode.HALF_UP);
 
-        var discountAmount = discountValue.setScale(2, RoundingMode.HALF_UP);
+        var normalizedDiscountValue = discountValue.setScale(2, RoundingMode.HALF_UP);
 
-        return Price.withShippingCost(discountedTotalPrice, discountAmount);
+        return Price.withShippingCost(discountedTotalPrice, normalizedDiscountValue);
     }
 }
