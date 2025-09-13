@@ -8,8 +8,8 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
-public class CompleteCheckoutSessionRequest {
+public class CreateCheckoutSessionRequest {
 
-    @NotNull(message = "Checkout Session ID must be provided.")
-    private UUID checkoutSessionId;
+    @NotNull(message = "Cart ID must be provided.")
+    private UUID cartId;
 }

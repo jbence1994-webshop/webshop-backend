@@ -182,6 +182,23 @@ CREATE TABLE IF NOT EXISTS cart_items
             ON UPDATE CASCADE,
     CONSTRAINT fk_cart_items_products
         FOREIGN KEY (product_id) REFERENCES products (id)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS checkout_sessions
+(
+    id             BINARY(16)  NOT NULL PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+    cart_id        BINARY(16)  NOT NULL,
+    applied_coupon VARCHAR(25),
+    status         VARCHAR(20) NOT NULL             DEFAULT 'PENDING',
+    created_at     DATETIME    NOT NULL             DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_checkout_sessions_carts
+        FOREIGN KEY (cart_id) REFERENCES carts (id)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_checkout_sessions_coupons
+        FOREIGN KEY (applied_coupon) REFERENCES coupons (code)
+            ON DELETE NO ACTION
             ON UPDATE CASCADE
 );
