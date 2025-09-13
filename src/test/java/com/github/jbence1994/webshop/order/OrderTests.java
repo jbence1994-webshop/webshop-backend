@@ -22,7 +22,7 @@ public class OrderTests {
         assertThat(result.getItems().size(), equalTo(2));
         assertThat(result, allOf(
                 hasProperty("totalPrice", equalTo(BigDecimal.valueOf(139.98))),
-                hasProperty("status", equalTo(OrderStatus.PENDING))
+                hasProperty("status", equalTo(OrderStatus.CREATED))
         ));
     }
 }

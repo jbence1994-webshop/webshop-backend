@@ -68,7 +68,7 @@ public class Order {
         var price = cart.calculateTotal();
 
         var order = new Order();
-        order.setStatus(OrderStatus.PENDING);
+        order.setStatus(OrderStatus.CREATED);
         order.setTotalPrice(price.getTotalPrice());
         order.setDiscountAmount(price.getDiscountAmount());
         order.setShippingCost(price.getShippingCost());
