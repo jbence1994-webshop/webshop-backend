@@ -27,6 +27,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CouponQueryService couponQueryService;
     private final CartQueryService cartQueryService;
     private final ShippingConfig shippingConfig;
+    private final PaymentGateway paymentGateway;
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;

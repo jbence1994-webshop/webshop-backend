@@ -71,6 +71,9 @@ public class CheckoutServiceImplTests {
     private ShippingConfig shippingConfig;
 
     @Mock
+    private PaymentGateway paymentGateway;
+
+    @Mock
     private CouponService couponService;
 
     @Mock
