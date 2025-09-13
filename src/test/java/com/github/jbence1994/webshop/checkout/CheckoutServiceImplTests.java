@@ -60,9 +60,6 @@ public class CheckoutServiceImplTests {
     private CartQueryService cartQueryService;
 
     @Mock
-    private PaymentGateway paymentGateway;
-
-    @Mock
     private CouponService couponService;
 
     @Mock
