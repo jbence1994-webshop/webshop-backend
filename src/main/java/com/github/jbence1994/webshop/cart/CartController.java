@@ -19,7 +19,6 @@ import java.util.UUID;
 @RequestMapping("/carts")
 @RequiredArgsConstructor
 public class CartController {
-    private final ApplyCouponToCartRequestSanitizer applyCouponToCartRequestSanitizer;
     private final CartQueryService cartQueryService;
     private final CartService cartService;
     private final CartMapper cartMapper;
@@ -82,24 +81,5 @@ public class CartController {
         cartService.clearCart(id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{id}/coupon")
-    public CartDto applyCouponToCart(
-            @PathVariable UUID id,
-            @Valid @RequestBody ApplyCouponToCartRequest request
-    ) {
-        var sanitizedRequest = applyCouponToCartRequestSanitizer.sanitize(request);
-
-        var cart = cartService.applyCouponToCart(id, sanitizedRequest.getCouponCode());
-
-        return cartMapper.toDto(cart);
-    }
-
-    @DeleteMapping("/{id}/coupon")
-    public CartDto removeCouponFromCart(@PathVariable UUID id) {
-        var cart = cartService.removeCouponFromCart(id);
-
-        return cartMapper.toDto(cart);
     }
 }

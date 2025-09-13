@@ -3,7 +3,10 @@ package com.github.jbence1994.webshop.checkout;
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
+import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
+import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.coupon.CouponService;
+import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
@@ -20,6 +23,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final LoyaltyPointsCalculator loyaltyPointsCalculator;
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
+    private final CouponQueryService couponQueryService;
     private final CartQueryService cartQueryService;
     private final CouponService couponService;
     private final OrderService orderService;
@@ -43,6 +47,37 @@ public class CheckoutServiceImpl implements CheckoutService {
     }
 
     @Override
+    public CheckoutSession applyCouponToCheckoutSession(UUID id, String couponCode) {
+        var checkoutSession = checkoutQueryService.getCheckoutSession(id);
+        var coupon = couponQueryService.getCoupon(couponCode);
+
+        if (coupon.isExpired()) {
+            throw new ExpiredCouponException(couponCode);
+        }
+
+        if (couponQueryService.isRedeemedCoupon(couponCode)) {
+            throw new CouponAlreadyRedeemedException(couponCode);
+        }
+
+        checkoutSession.setAppliedCoupon(coupon);
+
+        checkoutRepository.save(checkoutSession);
+
+        return checkoutSession;
+    }
+
+    @Override
+    public CheckoutSession removeCouponFromCheckoutSession(UUID id) {
+        var checkoutSession = checkoutQueryService.getCheckoutSession(id);
+
+        checkoutSession.setAppliedCoupon(null);
+
+        checkoutRepository.save(checkoutSession);
+
+        return checkoutSession;
+    }
+
+    @Override
     @Transactional
     public CompleteCheckoutSessionResponse completeCheckoutSession(UUID checkoutSessionId) {
         var checkoutSession = checkoutQueryService.getCheckoutSession(checkoutSessionId);
@@ -51,7 +86,6 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new CheckoutSessionAlreadyCompletedException(checkoutSessionId);
         }
 
-        // TODO: Might need 'EAGER' loading.
         var cart = checkoutSession.getCart();
 
         if (cart.isEmpty()) {

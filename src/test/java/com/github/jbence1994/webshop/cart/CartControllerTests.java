@@ -8,10 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import static com.github.jbence1994.webshop.cart.AddItemToCartRequestTestObject.addItemToCartRequest;
-import static com.github.jbence1994.webshop.cart.ApplyCouponToCartRequestTestObject.applyCouponToCartRequest;
-import static com.github.jbence1994.webshop.cart.ApplyCouponToCartRequestTestObject.notSantizedApplyCouponToCartRequest;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDto;
-import static com.github.jbence1994.webshop.cart.CartDtoTestObject.cartDtoWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartDtoTestObject.emptyCartDto;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.cartItemDto1;
 import static com.github.jbence1994.webshop.cart.CartItemDtoTestObject.updatedCartItemDto;
@@ -19,7 +16,6 @@ import static com.github.jbence1994.webshop.cart.CartItemTestObject.cartItem;
 import static com.github.jbence1994.webshop.cart.CartItemTestObject.updatedCartItem;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.cart.UpdateCartItemRequestTestObject.updateCartItemRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,9 +32,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CartControllerTests {
-
-    @Mock
-    private ApplyCouponToCartRequestSanitizer applyCouponToCartRequestSanitizer;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -122,32 +115,5 @@ public class CartControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
-    }
-
-    @Test
-    public void applyCouponToCartTest() {
-        when(applyCouponToCartRequestSanitizer.sanitize(any())).thenReturn(applyCouponToCartRequest());
-        when(cartService.applyCouponToCart(any(), any())).thenReturn(cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
-        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDtoWithTwoItemsAndPercentOffTypeOfAppliedCoupon());
-
-        var result = cartController.applyCouponToCart(CART_ID, notSantizedApplyCouponToCartRequest());
-
-        assertThat(result.items().size(), equalTo(2));
-        assertThat(result.id(), equalTo(cartDtoWithTwoItemsAndPercentOffTypeOfAppliedCoupon().id()));
-        assertThat(result.totalPrice(), equalTo(cartDtoWithTwoItemsAndPercentOffTypeOfAppliedCoupon().totalPrice()));
-        assertThat(result.appliedCoupon(), not(nullValue()));
-    }
-
-    @Test
-    public void removeCouponFromCartTest() {
-        when(cartService.removeCouponFromCart(any())).thenReturn(cartWithOneItem());
-        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
-
-        var result = cartController.removeCouponFromCart(CART_ID);
-
-        assertThat(result.items().size(), equalTo(1));
-        assertThat(result.id(), equalTo(cartDto().id()));
-        assertThat(result.totalPrice(), equalTo(cartDto().totalPrice()));
-        assertThat(result.appliedCoupon(), is(nullValue()));
     }
 }
