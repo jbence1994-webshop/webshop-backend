@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public interface OrderTestConstants {
     BigDecimal TOTAL_PRICE = BigDecimal.valueOf(49.99);
     BigDecimal DISCOUNT_AMOUNT = BigDecimal.ZERO;
-    BigDecimal SHIPPING_COST = BigDecimal.valueOf(20);
+    BigDecimal SHIPPING_COST = BigDecimal.valueOf(7.99);
     int EARNED_LOYALTY_POINTS = 2;
     BigDecimal SUB_TOTAL = TOTAL_PRICE;
     LocalDateTime CREATED_AT = LocalDateTime.of(2025, 9, 13, 11, 20, 11);

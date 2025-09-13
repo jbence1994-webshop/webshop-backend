@@ -3,7 +3,10 @@ package com.github.jbence1994.webshop.checkout;
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
+import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
+import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.coupon.CouponService;
+import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.OrderService;
 import org.junit.jupiter.api.Test;
@@ -20,12 +23,16 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.c
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.completedCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
+import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static com.github.jbence1994.webshop.loyalty.LoyaltyTestConstants.POINTS_RATE;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -45,6 +52,9 @@ public class CheckoutServiceImplTests {
 
     @Mock
     private CheckoutRepository checkoutRepository;
+
+    @Mock
+    private CouponQueryService couponQueryService;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -90,6 +100,69 @@ public class CheckoutServiceImplTests {
 
         verify(cartQueryService, times(1)).getCart(any());
         verify(checkoutRepository, never()).save(any());
+    }
+
+    @Test
+    public void applyCouponToCheckoutSessionTest_HappyPath() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
+        when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
+        when(couponQueryService.isRedeemedCoupon(any())).thenReturn(false);
+        when(checkoutRepository.save(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
+
+        assertDoesNotThrow(() -> checkoutService.applyCouponToCheckoutSession(CART_ID, COUPON_1_CODE));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(couponQueryService, times(1)).getCoupon(any());
+        verify(couponQueryService, times(1)).isRedeemedCoupon(any());
+        verify(checkoutRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void applyCouponToCheckoutSessionTest_UnhappyPath_ExpiredCouponException() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
+        when(couponQueryService.getCoupon(any())).thenReturn(fixedAmountExpiredCoupon());
+
+        var result = assertThrows(
+                ExpiredCouponException.class,
+                () -> checkoutService.applyCouponToCheckoutSession(CART_ID, COUPON_1_CODE)
+        );
+
+        assertThat(result.getMessage(), equalTo("Coupon with the given code: 'WELCOME10' has expired."));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(couponQueryService, times(1)).getCoupon(any());
+        verify(couponQueryService, never()).isRedeemedCoupon(any());
+        verify(checkoutRepository, never()).save(any());
+    }
+
+    @Test
+    public void applyCouponToCheckoutSessionTest_UnhappyPath_CouponAlreadyRedeemedException() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
+        when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
+        when(couponQueryService.isRedeemedCoupon(any())).thenReturn(true);
+
+        var result = assertThrows(
+                CouponAlreadyRedeemedException.class,
+                () -> checkoutService.applyCouponToCheckoutSession(CART_ID, COUPON_1_CODE)
+        );
+
+        assertThat(result.getMessage(), equalTo("Coupon with the given code: 'WELCOME10' is already redeemed. Try another one."));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(couponQueryService, times(1)).getCoupon(any());
+        verify(couponQueryService, times(1)).isRedeemedCoupon(any());
+        verify(checkoutRepository, never()).save(any());
+    }
+
+    @Test
+    public void removeCouponFromCheckoutSessionTest() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
+        when(checkoutRepository.save(any())).thenReturn(checkoutSession());
+
+        assertDoesNotThrow(() -> checkoutService.removeCouponFromCheckoutSession(CART_ID));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(checkoutRepository, times(1)).save(any());
     }
 
     @Test
