@@ -16,4 +16,6 @@ public interface CartService {
     void deleteCartItem(UUID cartId, Long productId);
 
     void clearCart(UUID id);
+
+    void deleteCart(UUID id);
 }

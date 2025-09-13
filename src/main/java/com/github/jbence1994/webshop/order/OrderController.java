@@ -28,4 +28,6 @@ public class OrderController {
 
         return orderMapper.toDto(order);
     }
+
+    // TODO: endpoints for OrderStatus update: SHIPPED, DELIVERED, REFUNDED, RETURNED, etc.
 }

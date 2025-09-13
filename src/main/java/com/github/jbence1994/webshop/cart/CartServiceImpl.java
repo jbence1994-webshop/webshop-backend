@@ -62,4 +62,9 @@ public class CartServiceImpl implements CartService {
         cart.clear();
         cartRepository.save(cart);
     }
+
+    @Override
+    public void deleteCart(UUID id) {
+        cartRepository.deleteById(id);
+    }
 }

@@ -6,11 +6,7 @@ import java.math.RoundingMode;
 public class PercentOffCheckoutPriceAdjustmentStrategy implements CheckoutPriceAdjustmentStrategy {
 
     @Override
-    public CheckoutPrice adjustCheckoutPrice(
-            BigDecimal cartTotal,
-            BigDecimal discountValue,
-            BigDecimal shippingCost
-    ) {
+    public CheckoutPrice adjustCheckoutPrice(BigDecimal cartTotal, BigDecimal discountValue) {
         var discountAmount = cartTotal
                 .multiply(discountValue)
                 .setScale(2, RoundingMode.HALF_UP);
@@ -19,6 +15,6 @@ public class PercentOffCheckoutPriceAdjustmentStrategy implements CheckoutPriceA
                 .subtract(discountAmount)
                 .max(BigDecimal.ZERO);
 
-        return CheckoutPrice.of(discountedCartTotal, discountAmount, shippingCost);
+        return CheckoutPrice.of(discountedCartTotal, discountAmount);
     }
 }

@@ -1,4 +1,4 @@
 package com.github.jbence1994.webshop.checkout;
 
-public record CompleteCheckoutSessionResponse(Long orderId) {
+public record CompleteCheckoutSessionResponse(Long orderId, String checkoutUrl) {
 }

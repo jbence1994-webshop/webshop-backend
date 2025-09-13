@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItems;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order2;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
@@ -29,11 +28,11 @@ public class OrderTests {
         return Stream.of(
                 Arguments.of(
                         "With discount",
-                        CheckoutPrice.of(BigDecimal.valueOf(44.99), BigDecimal.valueOf(5.00), SHIPPING_COST)
+                        CheckoutPrice.of(BigDecimal.valueOf(44.99), BigDecimal.valueOf(5.00))
                 ),
                 Arguments.of(
                         "Without discount",
-                        CheckoutPrice.of(BigDecimal.valueOf(49.99), BigDecimal.ZERO, SHIPPING_COST)
+                        CheckoutPrice.of(BigDecimal.valueOf(49.99), BigDecimal.ZERO)
                 )
         );
     }
@@ -57,7 +56,6 @@ public class OrderTests {
         assertThat(result, allOf(
                 hasProperty("totalPrice", comparesEqualTo(checkoutPrice.getTotalPrice())),
                 hasProperty("discountAmount", comparesEqualTo(checkoutPrice.getDiscountAmount())),
-                hasProperty("shippingCost", comparesEqualTo(checkoutPrice.getShippingCost())),
                 hasProperty("status", equalTo(OrderStatus.CREATED))
         ));
         assertThat(result.getItems().size(), equalTo(2));
