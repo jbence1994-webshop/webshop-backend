@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.cart.Cart;
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.coupon.DiscountType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,6 +30,9 @@ import java.util.UUID;
 @Setter
 public class CheckoutSession {
 
+    // TODO: CheckoutPrice shall be persisted later.
+    // TODO: expiration shall be persisted later.
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -55,7 +59,20 @@ public class CheckoutSession {
     public String getCouponCode() {
         return appliedCoupon.getCode();
     }
-}
 
-// TODO: CheckoutPrice shall be persisted later.
-// TODO: expiration shall be persisted later.
+    public CheckoutPrice calculateCheckoutTotal() {
+        var cartTotal = cart.calculateTotal();
+
+        if (!hasCouponApplied()) {
+            return CheckoutPrice.withShippingCost(cartTotal);
+        }
+
+        if (DiscountType.FREE_SHIPPING.equals(appliedCoupon.getType())) {
+            return CheckoutPrice.withFreeShipping(cartTotal);
+        }
+
+        return CheckoutPriceAdjustmentStrategyFactory
+                .getCheckoutPriceAdjustmentStrategy(appliedCoupon.getType())
+                .adjustCheckoutPrice(cartTotal, appliedCoupon.getValue());
+    }
+}

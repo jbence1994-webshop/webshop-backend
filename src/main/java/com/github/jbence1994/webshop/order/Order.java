@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.order;
 
 import com.github.jbence1994.webshop.cart.Cart;
+import com.github.jbence1994.webshop.checkout.CheckoutSession;
 import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -64,14 +65,15 @@ public class Order {
         return customerEmail.equals(customer.getEmail());
     }
 
-    public static Order from(Cart cart) {
-        var price = cart.calculateTotal();
+    public static Order from(User customer, CheckoutSession checkoutSession, Cart cart) {
+        var checkoutTotal = checkoutSession.calculateCheckoutTotal();
 
         var order = new Order();
+        order.setCustomer(customer);
+        order.setTotalPrice(checkoutTotal.getTotalPrice());
+        order.setDiscountAmount(checkoutTotal.getDiscountAmount());
+        order.setShippingCost(checkoutTotal.getShippingCost());
         order.setStatus(OrderStatus.CREATED);
-        order.setTotalPrice(price.getTotalPrice());
-        order.setDiscountAmount(price.getDiscountAmount());
-        order.setShippingCost(price.getShippingCost());
 
         var items = cart.mapCartItemsToOrderItems();
 

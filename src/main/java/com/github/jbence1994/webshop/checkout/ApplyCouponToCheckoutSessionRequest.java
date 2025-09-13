@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.cart;
+package com.github.jbence1994.webshop.checkout;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ApplyCouponToCartRequest {
+public class ApplyCouponToCheckoutSessionRequest {
 
     @NotNull(message = "Coupon code must be provided.")
     @NotBlank(message = "Coupon code must be not empty.")

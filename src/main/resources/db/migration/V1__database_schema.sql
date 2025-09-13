@@ -160,13 +160,8 @@ CREATE TABLE IF NOT EXISTS user_coupons
 
 CREATE TABLE IF NOT EXISTS carts
 (
-    id             BINARY(16) NOT NULL PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
-    created_at     DATETIME   NOT NULL             DEFAULT CURRENT_TIMESTAMP,
-    applied_coupon VARCHAR(25),
-    CONSTRAINT fk_carts_coupons
-        FOREIGN KEY (applied_coupon) REFERENCES coupons (code)
-            ON DELETE NO ACTION
-            ON UPDATE CASCADE
+    id         BINARY(16) NOT NULL PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+    created_at DATETIME   NOT NULL             DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS cart_items
