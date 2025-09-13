@@ -10,4 +10,6 @@ public interface CheckoutService {
     CheckoutSession removeCouponFromCheckoutSession(UUID id);
 
     CompleteCheckoutSessionResponse completeCheckoutSession(UUID checkoutSessionId);
+
+    void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request);
 }

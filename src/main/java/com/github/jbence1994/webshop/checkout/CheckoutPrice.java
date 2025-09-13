@@ -11,9 +11,8 @@ import java.math.BigDecimal;
 public class CheckoutPrice {
     private BigDecimal totalPrice;
     private BigDecimal discountAmount;
-    private BigDecimal shippingCost;
 
-    public static CheckoutPrice of(BigDecimal totalPrice, BigDecimal discountAmount, BigDecimal shippingCost) {
-        return new CheckoutPrice(totalPrice, discountAmount, shippingCost);
+    public static CheckoutPrice of(BigDecimal totalPrice, BigDecimal discountAmount) {
+        return new CheckoutPrice(totalPrice, discountAmount);
     }
 }

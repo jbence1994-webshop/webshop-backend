@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
 
@@ -17,12 +16,10 @@ public class PercentOffCheckoutPriceAdjustmentStrategyTests {
                 .getCheckoutPriceAdjustmentStrategy(DiscountType.PERCENT_OFF)
                 .adjustCheckoutPrice(
                         BigDecimal.valueOf(49.99),
-                        BigDecimal.valueOf(0.10),
-                        SHIPPING_COST
+                        BigDecimal.valueOf(0.10)
                 );
 
         assertThat(result.getTotalPrice(), comparesEqualTo(BigDecimal.valueOf(44.99)));
         assertThat(result.getDiscountAmount(), comparesEqualTo(BigDecimal.valueOf(5.00)));
-        assertThat(result.getShippingCost(), comparesEqualTo(BigDecimal.valueOf(7.99)));
     }
 }

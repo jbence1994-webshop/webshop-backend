@@ -42,4 +42,6 @@ public class CheckoutControllerExceptionHandler {
     public ResponseEntity<ErrorDto> handleCartNotFoundException(CartNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
+
+    // FIXME: Need to refactor what kind of exception occurred => customize Http status codes.
 }

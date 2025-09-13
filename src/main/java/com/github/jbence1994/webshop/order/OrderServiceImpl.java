@@ -10,6 +10,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void createOrder(Order order) {
+        save(order);
+    }
+
+    @Override
+    public void updateOrder(Order order) {
+        save(order);
+    }
+
+    @Override
+    public void deleteOrder(Long id) {
+        orderRepository.deleteById(id);
+    }
+
+    private void save(Order order) {
         orderRepository.save(order);
     }
 }

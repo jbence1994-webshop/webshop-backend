@@ -24,9 +24,14 @@ webshop:
   loyalty:
     points-rate: ${LOYALTY_POINTS_RATE}
 
-  shipping:
-    shipping-cost: ${SHIPPING_COST}
-    free-shipping-threshold: ${FREE_SHIPPING_THRESHOLD}
+  free-shipping:
+    threshold: ${FREE_SHIPPING_THRESHOLD}
+
+  stripe:
+    secretKey: ${STRIPE_SECRET_KEY}
+    webhookSecretKey: ${STRIPE_WEBHOOK_SECRET_KEY}
+    shippingCostId: ${STRIPE_SHIPPING_COST_ID}
+    freeShippingId: ${STRIPE_FREE_SHIPPING_ID}
 
   image-uploads:
     allowed-file-extensions:
