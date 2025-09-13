@@ -12,7 +12,7 @@ import static com.github.jbence1994.webshop.checkout.ApplyCouponToCheckoutSessio
 import static com.github.jbence1994.webshop.checkout.ApplyCouponToCheckoutSessionRequestTestObject.notSanitizedApplyCouponToCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObject.checkoutSessionDto;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObject.checkoutSessionDtoWithPercentOffTypeOfAppliedCoupon;
-import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionResponseTestObject.completeCheckoutSessionResponse;
@@ -43,7 +43,7 @@ public class CheckoutControllerTests {
 
     @Test
     public void createCheckoutSessionTest() {
-        when(checkoutService.createCheckoutSession(any())).thenReturn(checkoutSession());
+        when(checkoutService.createCheckoutSession(any())).thenReturn(checkoutSession1());
         when(checkoutMapper.toDto(any())).thenReturn(checkoutSessionDto());
 
         var result = checkoutController.createCheckoutSession(createCheckoutSessionRequest());
@@ -72,7 +72,7 @@ public class CheckoutControllerTests {
 
     @Test
     public void removeCouponFromCheckoutSessionTest() {
-        when(checkoutService.removeCouponFromCheckoutSession(any())).thenReturn(checkoutSession());
+        when(checkoutService.removeCouponFromCheckoutSession(any())).thenReturn(checkoutSession1());
         when(checkoutMapper.toDto(any())).thenReturn(checkoutSessionDto());
 
         var result = checkoutController.removeCouponFromCheckoutSession(CART_ID);

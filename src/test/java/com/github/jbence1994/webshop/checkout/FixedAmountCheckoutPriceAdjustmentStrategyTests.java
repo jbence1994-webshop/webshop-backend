@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
 
@@ -16,7 +17,8 @@ public class FixedAmountCheckoutPriceAdjustmentStrategyTests {
                 .getCheckoutPriceAdjustmentStrategy(DiscountType.FIXED_AMOUNT)
                 .adjustCheckoutPrice(
                         BigDecimal.valueOf(49.99),
-                        BigDecimal.valueOf(15.00)
+                        BigDecimal.valueOf(15.00),
+                        SHIPPING_COST
                 );
 
         assertThat(result.getTotalPrice(), comparesEqualTo(BigDecimal.valueOf(34.99)));
