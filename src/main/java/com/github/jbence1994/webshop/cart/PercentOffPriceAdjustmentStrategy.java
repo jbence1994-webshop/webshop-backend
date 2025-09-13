@@ -7,11 +7,13 @@ public class PercentOffPriceAdjustmentStrategy implements PriceAdjustmentStrateg
 
     @Override
     public Price adjustPrice(BigDecimal totalPrice, BigDecimal discountValue) {
-        var discount = totalPrice
+        var discountAmount = totalPrice
                 .multiply(discountValue)
-                .setScale(2, RoundingMode.DOWN);
-        var discountedTotalPrice = totalPrice.subtract(discount);
-        var discountAmount = totalPrice.subtract(discountedTotalPrice);
+                .setScale(2, RoundingMode.HALF_UP);
+
+        var discountedTotalPrice = totalPrice
+                .subtract(discountAmount)
+                .max(BigDecimal.ZERO);
 
         return Price.withShippingCost(discountedTotalPrice, discountAmount);
     }
