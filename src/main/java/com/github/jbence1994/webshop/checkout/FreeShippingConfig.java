@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.cart;
+package com.github.jbence1994.webshop.checkout;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

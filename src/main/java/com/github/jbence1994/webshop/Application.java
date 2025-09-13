@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop;
 
-import com.github.jbence1994.webshop.cart.FreeShippingConfig;
+import com.github.jbence1994.webshop.checkout.FreeShippingConfig;
 import com.github.jbence1994.webshop.common.ClientAppConfig;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
 import com.github.jbence1994.webshop.common.WebshopNameConfig;
