@@ -10,6 +10,6 @@ import java.util.UUID;
 @Getter
 public class CompleteCheckoutSessionRequest {
 
-    @NotNull(message = "Cart ID must be provided.")
-    private UUID cartId;
+    @NotNull(message = "Checkout Session ID must be provided.")
+    private UUID checkoutSessionId;
 }

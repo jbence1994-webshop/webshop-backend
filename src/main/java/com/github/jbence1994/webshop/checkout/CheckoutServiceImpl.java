@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
@@ -24,7 +26,8 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Override
     @Transactional
     public CompleteCheckoutSessionResponse completeCheckoutSession(CompleteCheckoutSessionRequest request) {
-        var cartId = request.getCartId();
+        // FIXME: Get 'checkoutSession' from database and get 'cartId'.
+        var cartId = UUID.fromString("00492884-e657-4c6a-abaa-aef8f4240a69");
 
         var cart = cartQueryService.getCart(cartId);
 
