@@ -56,7 +56,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         cart.clear();
 
         order.setStatus(OrderStatus.CONFIRMED);
-        // TODO: CheckoutStatus.COMPLETED;
+        var checkoutStatus = CheckoutStatus.COMPLETED;
         // TODO: Create on-stock schema to store products on stock, here: decrease available quantity.
 
         // TODO: 2) If payment was failed:
