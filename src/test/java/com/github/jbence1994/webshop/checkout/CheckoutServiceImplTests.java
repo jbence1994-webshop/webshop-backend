@@ -12,10 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
-import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
-import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequest;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithEmptyCart;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.completedCheckoutSession;
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
 import static com.github.jbence1994.webshop.loyalty.LoyaltyTestConstants.POINTS_RATE;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,6 +41,12 @@ public class CheckoutServiceImplTests {
     private LoyaltyPointsCalculator loyaltyPointsCalculator;
 
     @Mock
+    private CheckoutQueryService checkoutQueryService;
+
+    @Mock
+    private CheckoutRepository checkoutRepository;
+
+    @Mock
     private CartQueryService cartQueryService;
 
     @Mock
@@ -55,17 +65,45 @@ public class CheckoutServiceImplTests {
     private CheckoutServiceImpl checkoutService;
 
     @Test
-    public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon() {
+    public void createCheckoutSession_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-        when(authService.getCurrentUser()).thenReturn(user());
-        doNothing().when(orderService).createOrder(any());
-        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+        when(checkoutRepository.save(any())).thenReturn(checkoutSession());
 
-        var result = checkoutService.completeCheckoutSession(completeCheckoutSessionRequest());
+        var result = checkoutService.createCheckoutSession(CART_ID);
 
         assertThat(result, not(nullValue()));
 
         verify(cartQueryService, times(1)).getCart(any());
+        verify(checkoutRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void createCheckoutSession_UnhappyPath_EmptyCartException() {
+        when(cartQueryService.getCart(any())).thenReturn(emptyCart());
+
+        var result = assertThrows(
+                EmptyCartException.class,
+                () -> checkoutService.createCheckoutSession(CART_ID)
+        );
+
+        assertThat(result.getMessage(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
+
+        verify(cartQueryService, times(1)).getCart(any());
+        verify(checkoutRepository, never()).save(any());
+    }
+
+    @Test
+    public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
+        when(authService.getCurrentUser()).thenReturn(user());
+        doNothing().when(orderService).createOrder(any());
+        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+
+        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
+
+        assertThat(result, not(nullValue()));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
@@ -74,17 +112,17 @@ public class CheckoutServiceImplTests {
 
     @Test
     public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithTwoItemsAndFixedAmountTypeOfAppliedCoupon());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
 
-        var result = checkoutService.completeCheckoutSession(completeCheckoutSessionRequest());
+        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
 
         assertThat(result, not(nullValue()));
 
-        verify(cartQueryService, times(1)).getCart(any());
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
@@ -92,17 +130,35 @@ public class CheckoutServiceImplTests {
     }
 
     @Test
+    public void completeCheckoutSessionTest_UnhappyPath_CheckoutSessionAlreadyCompletedException() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(completedCheckoutSession());
+
+        var result = assertThrows(
+                CheckoutSessionAlreadyCompletedException.class,
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
+        );
+
+        assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 already completed."));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(authService, never()).getCurrentUser();
+        verify(orderService, never()).createOrder(any());
+        verify(couponService, never()).redeemCoupon(any(), any(), any());
+        verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
+    }
+
+    @Test
     public void completeCheckoutSessionTest_UnhappyPath_EmptyCartException() {
-        when(cartQueryService.getCart(any())).thenReturn(emptyCart());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithEmptyCart());
 
         var result = assertThrows(
                 EmptyCartException.class,
-                () -> checkoutService.completeCheckoutSession(completeCheckoutSessionRequest())
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
         );
 
         assertThat(result.getMessage(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
 
-        verify(cartQueryService, times(1)).getCart(any());
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
