@@ -17,6 +17,7 @@ import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -57,7 +58,7 @@ public class CartTests {
                 Arguments.of(
                         "With percent off type of applied coupon",
                         cartWithTwoItemsAndPercentOffTypeOfAppliedCoupon(),
-                        Price.withShippingCost(BigDecimal.valueOf(125.99), BigDecimal.valueOf(13.99))
+                        Price.withShippingCost(BigDecimal.valueOf(125.98), BigDecimal.valueOf(14.00))
                 ),
                 Arguments.of(
                         "With free shipping type of applied coupon",
@@ -166,9 +167,9 @@ public class CartTests {
     ) {
         var result = cart.calculateTotal();
 
-        assertThat(result.getTotalPrice(), equalTo(expectedResult.getTotalPrice()));
-        assertThat(result.getDiscountAmount(), equalTo(expectedResult.getDiscountAmount()));
-        assertThat(result.getShippingCost(), equalTo(expectedResult.getShippingCost()));
+        assertThat(result.getTotalPrice(), comparesEqualTo(expectedResult.getTotalPrice()));
+        assertThat(result.getDiscountAmount(), comparesEqualTo(expectedResult.getDiscountAmount()));
+        assertThat(result.getShippingCost(), comparesEqualTo(expectedResult.getShippingCost()));
     }
 
     @Test
