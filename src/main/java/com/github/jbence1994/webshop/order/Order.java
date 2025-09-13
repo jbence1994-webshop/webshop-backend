@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.order;
 
 import com.github.jbence1994.webshop.cart.Cart;
-import com.github.jbence1994.webshop.checkout.CheckoutSession;
+import com.github.jbence1994.webshop.checkout.CheckoutPrice;
 import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -65,14 +65,16 @@ public class Order {
         return customerEmail.equals(customer.getEmail());
     }
 
-    public static Order from(User customer, CheckoutSession checkoutSession, Cart cart) {
-        var checkoutTotal = checkoutSession.calculateCheckoutTotal();
-
+    public static Order from(
+            User customer,
+            CheckoutPrice checkoutPrice,
+            Cart cart
+    ) {
         var order = new Order();
         order.setCustomer(customer);
-        order.setTotalPrice(checkoutTotal.getTotalPrice());
-        order.setDiscountAmount(checkoutTotal.getDiscountAmount());
-        order.setShippingCost(checkoutTotal.getShippingCost());
+        order.setTotalPrice(checkoutPrice.getTotalPrice());
+        order.setDiscountAmount(checkoutPrice.getDiscountAmount());
+        order.setShippingCost(checkoutPrice.getShippingCost());
         order.setStatus(OrderStatus.CREATED);
 
         var items = cart.mapCartItemsToOrderItems();
@@ -84,5 +86,9 @@ public class Order {
         );
 
         return order;
+    }
+
+    public boolean isEligibleForFreeShipping(BigDecimal threshold) {
+        return totalPrice.compareTo(threshold) >= 0;
     }
 }

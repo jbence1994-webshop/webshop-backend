@@ -12,8 +12,8 @@ public class LoyaltyPointsCalculatorImpl implements LoyaltyPointsCalculator {
     private final LoyaltyConfig loyaltyConfig;
 
     @Override
-    public int calculateLoyaltyPoints(BigDecimal orderTotalPrice) {
-        return orderTotalPrice
+    public int calculateLoyaltyPoints(BigDecimal orderTotal) {
+        return orderTotal
                 .divide(BigDecimal.valueOf(loyaltyConfig.pointsRate()), 0, RoundingMode.DOWN)
                 .intValue();
     }

@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop;
 
+import com.github.jbence1994.webshop.checkout.ShippingConfig;
 import com.github.jbence1994.webshop.common.ClientAppConfig;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
 import com.github.jbence1994.webshop.common.WebshopNameConfig;
@@ -15,7 +16,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
         ImageUploadsConfig.class,
         WebshopNameConfig.class,
         ClientAppConfig.class,
-        LoyaltyConfig.class,
+        ShippingConfig.class,
+        LoyaltyConfig.class
 })
 public class Application {
 

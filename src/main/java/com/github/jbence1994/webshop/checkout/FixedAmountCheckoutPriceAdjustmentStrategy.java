@@ -6,15 +6,19 @@ import java.math.RoundingMode;
 public class FixedAmountCheckoutPriceAdjustmentStrategy implements CheckoutPriceAdjustmentStrategy {
 
     @Override
-    public CheckoutPrice adjustCheckoutPrice(BigDecimal cartTotal, BigDecimal discountValue) {
-        var discountedTotalPrice = cartTotal
+    public CheckoutPrice adjustCheckoutPrice(
+            BigDecimal cartTotal,
+            BigDecimal discountValue,
+            BigDecimal shippingCost
+    ) {
+        var discountedCartTotal = cartTotal
                 .subtract(discountValue)
                 .max(BigDecimal.ZERO);
 
-        discountedTotalPrice = discountedTotalPrice.setScale(2, RoundingMode.HALF_UP);
+        discountedCartTotal = discountedCartTotal.setScale(2, RoundingMode.HALF_UP);
 
         var normalizedDiscountValue = discountValue.setScale(2, RoundingMode.HALF_UP);
 
-        return CheckoutPrice.withShippingCost(discountedTotalPrice, normalizedDiscountValue);
+        return CheckoutPrice.of(discountedCartTotal, normalizedDiscountValue, shippingCost);
     }
 }
