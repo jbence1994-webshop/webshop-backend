@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -29,7 +30,6 @@ import java.util.UUID;
 @Setter
 public class CheckoutSession {
 
-    // TODO: CheckoutPrice shall be persisted later.
     // TODO: expiration shall be persisted later.
 
     @Id
@@ -39,6 +39,14 @@ public class CheckoutSession {
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    private BigDecimal originalCartTotal;
+
+    private BigDecimal cartTotal;
+
+    private BigDecimal discountAmount;
+
+    private BigDecimal shippingCost;
 
     @ManyToOne
     @JoinColumn(name = "applied_coupon")
