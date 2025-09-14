@@ -59,6 +59,21 @@ public class CheckoutSession {
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
+    public static CheckoutSession from(Cart cart, BigDecimal shippingCost) {
+        var cartTotal = cart.calculateTotal();
+
+        var checkoutSession = new CheckoutSession();
+
+        checkoutSession.setCart(cart);
+        checkoutSession.setOriginalCartTotal(cartTotal);
+        checkoutSession.setCartTotal(cartTotal);
+        checkoutSession.setDiscountAmount(BigDecimal.ZERO);
+        checkoutSession.setShippingCost(shippingCost);
+        checkoutSession.setStatus(CheckoutStatus.PENDING);
+
+        return checkoutSession;
+    }
+
     public boolean hasCouponApplied() {
         return appliedCoupon != null;
     }
