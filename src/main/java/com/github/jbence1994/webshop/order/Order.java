@@ -69,6 +69,7 @@ public class Order {
             Cart cart
     ) {
         var order = new Order();
+
         order.setCustomer(customer);
         order.setTotalPrice(checkoutPrice.getTotalPrice());
         order.setDiscountAmount(checkoutPrice.getDiscountAmount());

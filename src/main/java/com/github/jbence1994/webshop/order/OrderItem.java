@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
+import com.github.jbence1994.webshop.cart.CartItem;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,10 +42,14 @@ public class OrderItem {
 
     private BigDecimal subTotal;
 
-    public OrderItem(Product product, Integer quantity) {
-        this.product = product;
-        this.unitPrice = product.getPrice();
-        this.quantity = quantity;
-        this.subTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
+    public static OrderItem from(CartItem cartItem) {
+        var orderItem = new OrderItem();
+
+        orderItem.setProduct(cartItem.getProduct());
+        orderItem.setUnitPrice(cartItem.getProduct().getPrice());
+        orderItem.setQuantity(cartItem.getQuantity());
+        orderItem.setSubTotal(cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+
+        return orderItem;
     }
 }
