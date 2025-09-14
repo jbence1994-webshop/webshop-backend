@@ -16,10 +16,10 @@ public interface CouponRepository extends JpaRepository<Coupon, String> {
     Optional<Coupon> findByCouponCodeAndUserId(@Param("couponCode") String couponCode, @Param("userId") Long userId);
 
     @Query(
-            value = "SELECT EXISTS (SELECT * FROM user_coupons WHERE coupon_code = :couponCode AND redeemed = 1);",
+            value = "SELECT EXISTS (SELECT * FROM user_coupons WHERE user_id = :userId AND coupon_code = :couponCode AND redeemed = 1);",
             nativeQuery = true
     )
-    int isRedeemedCoupon(@Param("couponCode") String couponCode);
+    int isCouponRedeemed(@Param("userId") Long userId, @Param("couponCode") String couponCode);
 
     @Modifying
     @Query(

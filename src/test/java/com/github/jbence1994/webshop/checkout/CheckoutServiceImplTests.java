@@ -121,14 +121,14 @@ public class CheckoutServiceImplTests {
     public void applyCouponToCheckoutSessionTest_HappyPath() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
         when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
-        when(couponQueryService.isRedeemedCoupon(any())).thenReturn(false);
+        when(couponQueryService.isCouponRedeemed(any())).thenReturn(false);
         when(checkoutRepository.save(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
 
         assertDoesNotThrow(() -> checkoutService.applyCouponToCheckoutSession(CART_ID, COUPON_1_CODE));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(couponQueryService, times(1)).getCoupon(any());
-        verify(couponQueryService, times(1)).isRedeemedCoupon(any());
+        verify(couponQueryService, times(1)).isCouponRedeemed(any());
         verify(checkoutRepository, times(1)).save(any());
     }
 
@@ -146,7 +146,7 @@ public class CheckoutServiceImplTests {
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(couponQueryService, times(1)).getCoupon(any());
-        verify(couponQueryService, never()).isRedeemedCoupon(any());
+        verify(couponQueryService, never()).isCouponRedeemed(any());
         verify(checkoutRepository, never()).save(any());
     }
 
@@ -154,7 +154,7 @@ public class CheckoutServiceImplTests {
     public void applyCouponToCheckoutSessionTest_UnhappyPath_CouponAlreadyRedeemedException() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
         when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
-        when(couponQueryService.isRedeemedCoupon(any())).thenReturn(true);
+        when(couponQueryService.isCouponRedeemed(any())).thenReturn(true);
 
         var result = assertThrows(
                 CouponAlreadyRedeemedException.class,
@@ -165,7 +165,7 @@ public class CheckoutServiceImplTests {
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(couponQueryService, times(1)).getCoupon(any());
-        verify(couponQueryService, times(1)).isRedeemedCoupon(any());
+        verify(couponQueryService, times(1)).isCouponRedeemed(any());
         verify(checkoutRepository, never()).save(any());
     }
 
