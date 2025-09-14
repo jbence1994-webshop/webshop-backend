@@ -46,8 +46,6 @@ public class CheckoutSession {
 
     private BigDecimal discountAmount;
 
-    private BigDecimal shippingCost;
-
     @ManyToOne
     @JoinColumn(name = "applied_coupon")
     private Coupon appliedCoupon;
@@ -59,7 +57,7 @@ public class CheckoutSession {
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
-    public static CheckoutSession from(Cart cart, BigDecimal shippingCost) {
+    public static CheckoutSession from(Cart cart) {
         var cartTotal = cart.calculateTotal();
 
         var checkoutSession = new CheckoutSession();
@@ -68,7 +66,6 @@ public class CheckoutSession {
         checkoutSession.setOriginalCartTotal(cartTotal);
         checkoutSession.setCartTotal(cartTotal);
         checkoutSession.setDiscountAmount(BigDecimal.ZERO);
-        checkoutSession.setShippingCost(shippingCost);
         checkoutSession.setStatus(CheckoutStatus.PENDING);
 
         return checkoutSession;

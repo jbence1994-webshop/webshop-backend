@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -32,14 +31,13 @@ public class CheckoutSessionTests {
 
     @Test
     public void fromTest() {
-        var result = CheckoutSession.from(cartWithOneItem(), SHIPPING_COST);
+        var result = CheckoutSession.from(cartWithOneItem());
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
                 hasProperty("originalCartTotal", comparesEqualTo(checkoutSession1().getOriginalCartTotal())),
                 hasProperty("cartTotal", comparesEqualTo(checkoutSession1().getCartTotal())),
                 hasProperty("discountAmount", comparesEqualTo(checkoutSession1().getDiscountAmount())),
-                hasProperty("shippingCost", comparesEqualTo(checkoutSession1().getShippingCost())),
                 hasProperty("status", equalTo(CheckoutStatus.PENDING))
         ));
     }

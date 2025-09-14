@@ -10,7 +10,6 @@ import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CREATED_AT;
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 
 public final class CheckoutSessionTestObject {
@@ -83,7 +82,6 @@ public final class CheckoutSessionTestObject {
                 originalCartTotal,
                 cartTotal,
                 discountAmount,
-                SHIPPING_COST,
                 appliedCoupon,
                 status,
                 CREATED_AT
