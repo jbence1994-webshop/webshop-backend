@@ -15,7 +15,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -96,11 +95,13 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var order = Order.from(user, checkoutSession);
 
+        /*
         if (order.isEligibleForFreeShipping(shippingConfig.freeShippingThreshold())) {
             order.setShippingCost(BigDecimal.ZERO);
         } else {
             order.setShippingCost(shippingConfig.shippingCost());
         }
+         */
 
         orderService.createOrder(order);
 
