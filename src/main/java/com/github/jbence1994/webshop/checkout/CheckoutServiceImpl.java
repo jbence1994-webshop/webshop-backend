@@ -59,7 +59,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new CouponAlreadyRedeemedException(couponCode);
         }
 
-        checkoutSession.setAppliedCoupon(coupon);
+        checkoutSession.applyCoupon(coupon);
 
         checkoutRepository.save(checkoutSession);
 
@@ -70,7 +70,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     public CheckoutSession removeCouponFromCheckoutSession(UUID id) {
         var checkoutSession = checkoutQueryService.getCheckoutSession(id);
 
-        checkoutSession.setAppliedCoupon(null);
+        checkoutSession.removeCoupon();
 
         checkoutRepository.save(checkoutSession);
 
@@ -94,42 +94,18 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var user = authService.getCurrentUser();
 
-        var cartTotal = cart.calculateTotal();
-
-        CheckoutPrice checkoutPrice;
-
-        if (!checkoutSession.hasCouponApplied()) {
-            checkoutPrice = CheckoutPrice.of(
-                    cartTotal,
-                    BigDecimal.ZERO,
-                    shippingConfig.shippingCost()
-            );
-        } else {
-            var appliedCoupon = checkoutSession.getAppliedCoupon();
-
-            checkoutPrice = CheckoutPriceAdjustmentStrategyFactory
-                    .getCheckoutPriceAdjustmentStrategy(appliedCoupon.getType())
-                    .adjustCheckoutPrice(
-                            cartTotal,
-                            appliedCoupon.getValue(),
-                            shippingConfig.shippingCost()
-                    );
-        }
-
-        var order = Order.from(user, checkoutPrice, cart);
+        var order = Order.from(user, checkoutSession);
 
         if (order.isEligibleForFreeShipping(shippingConfig.freeShippingThreshold())) {
             order.setShippingCost(BigDecimal.ZERO);
+        } else {
+            order.setShippingCost(shippingConfig.shippingCost());
         }
 
         orderService.createOrder(order);
 
         if (checkoutSession.hasCouponApplied()) {
-            couponService.redeemCoupon(
-                    user.getId(),
-                    checkoutSession.getCouponCode(),
-                    order.getId()
-            );
+            couponService.redeemCoupon(user.getId(), checkoutSession.getCouponCode(), order.getId());
         }
 
         var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());

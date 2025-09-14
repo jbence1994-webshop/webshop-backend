@@ -3,14 +3,10 @@ package com.github.jbence1994.webshop.checkout;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class PercentOffCheckoutPriceAdjustmentStrategy implements CheckoutPriceAdjustmentStrategy {
+public class PercentOffCartTotalAdjustmentStrategy implements CartTotalAdjustmentStrategy {
 
     @Override
-    public CheckoutPrice adjustCheckoutPrice(
-            BigDecimal cartTotal,
-            BigDecimal discountValue,
-            BigDecimal shippingCost
-    ) {
+    public AdjustedCartTotal adjustCartTotal(BigDecimal cartTotal, BigDecimal discountValue) {
         var discountAmount = cartTotal
                 .multiply(discountValue)
                 .setScale(2, RoundingMode.HALF_UP);
@@ -19,6 +15,6 @@ public class PercentOffCheckoutPriceAdjustmentStrategy implements CheckoutPriceA
                 .subtract(discountAmount)
                 .max(BigDecimal.ZERO);
 
-        return CheckoutPrice.of(discountedCartTotal, discountAmount, shippingCost);
+        return new AdjustedCartTotal(discountedCartTotal, discountAmount);
     }
 }
