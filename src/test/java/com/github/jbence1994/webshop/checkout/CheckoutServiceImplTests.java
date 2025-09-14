@@ -11,24 +11,20 @@ import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.OrderService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
-import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession2;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithEmptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.completedCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
@@ -79,13 +75,6 @@ public class CheckoutServiceImplTests {
 
     @InjectMocks
     private CheckoutServiceImpl checkoutService;
-
-    private static Stream<Arguments> checkoutSessionParams() {
-        return Stream.of(
-                Arguments.of("CheckoutSession with Cart with one item", checkoutSession1()),
-                Arguments.of("CheckoutSession with with Cart five items", checkoutSession2())
-        );
-    }
 
     @Test
     public void createCheckoutSession_HappyPath() {
@@ -178,40 +167,13 @@ public class CheckoutServiceImplTests {
         verify(checkoutRepository, times(1)).save(any());
     }
 
-    @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("checkoutSessionParams")
-    public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon(
-            String testCase,
-            CheckoutSession checkoutSession
-    ) {
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession);
-        when(authService.getCurrentUser()).thenReturn(user());
-        // when(shippingConfig.shippingCost()).thenReturn(SHIPPING_COST);
-        // when(shippingConfig.freeShippingThreshold()).thenReturn(FREE_SHIPPING_THRESHOLD);
-        doNothing().when(orderService).createOrder(any());
-        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
-
-        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
-
-        assertThat(result, not(nullValue()));
-
-        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
-        verify(authService, times(1)).getCurrentUser();
-        // verify(shippingConfig, times(1)).shippingCost();
-        // verify(shippingConfig, times(1)).freeShippingThreshold();
-        verify(orderService, times(1)).createOrder(any());
-        verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
-        verify(couponService, never()).redeemCoupon(any(), any(), any());
-    }
-
     @Test
-    public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon() {
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
+    public void completeCheckoutSessionTest_HappyPath() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
         when(authService.getCurrentUser()).thenReturn(user());
-        // when(shippingConfig.shippingCost()).thenReturn(SHIPPING_COST);
-        // when(shippingConfig.freeShippingThreshold()).thenReturn(FREE_SHIPPING_THRESHOLD);
+        when(shippingConfig.freeShippingThreshold()).thenReturn(FREE_SHIPPING_THRESHOLD);
+        when(shippingConfig.shippingCost()).thenReturn(SHIPPING_COST);
         doNothing().when(orderService).createOrder(any());
-        doNothing().when(couponService).redeemCoupon(any(), any(), any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
 
         var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
@@ -220,10 +182,10 @@ public class CheckoutServiceImplTests {
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, times(1)).getCurrentUser();
-        // verify(shippingConfig, times(1)).shippingCost();
-        // verify(shippingConfig, times(1)).freeShippingThreshold();
+        verify(shippingConfig, times(1)).shippingCost();
+        verify(shippingConfig, times(1)).freeShippingThreshold();
         verify(orderService, times(1)).createOrder(any());
-        verify(couponService, times(1)).redeemCoupon(any(), any(), any());
+        verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
     }
 

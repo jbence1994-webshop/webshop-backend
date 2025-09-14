@@ -83,7 +83,15 @@ public class Order {
         return order;
     }
 
-    public boolean isEligibleForFreeShipping(BigDecimal threshold) {
+    public void setShippingCost(BigDecimal threshold, BigDecimal shippingCost) {
+        if (isEligibleForFreeShipping(threshold)) {
+            setShippingCost(BigDecimal.ZERO);
+        } else {
+            setShippingCost(shippingCost);
+        }
+    }
+
+    private boolean isEligibleForFreeShipping(BigDecimal threshold) {
         return totalPrice.compareTo(threshold) >= 0;
     }
 }
