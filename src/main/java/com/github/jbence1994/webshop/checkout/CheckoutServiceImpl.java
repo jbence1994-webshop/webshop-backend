@@ -57,7 +57,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new ExpiredCouponException(couponCode);
         }
 
-        if (couponQueryService.isRedeemedCoupon(couponCode)) {
+        if (couponQueryService.isCouponRedeemed(couponCode)) {
             throw new CouponAlreadyRedeemedException(couponCode);
         }
 

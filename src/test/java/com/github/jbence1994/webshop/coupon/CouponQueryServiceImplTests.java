@@ -43,7 +43,7 @@ public class CouponQueryServiceImplTests {
     @InjectMocks
     private CouponQueryServiceImpl couponQueryService;
 
-    private static Stream<Arguments> isRedeemedCouponTestParams() {
+    private static Stream<Arguments> isCouponRedeemedTestParams() {
         return Stream.of(
                 Arguments.of("Coupon is redeemed", COUPON_1_CODE, 1, true),
                 Arguments.of("Coupon is not yet redeemed", COUPON_2_CODE, 0, false)
@@ -93,16 +93,16 @@ public class CouponQueryServiceImplTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("isRedeemedCouponTestParams")
-    public void isRedeemedCouponTests(
+    @MethodSource("isCouponRedeemedTestParams")
+    public void isCouponRedeemedTests(
             String testCase,
             String couponCode,
             int returnValueFromRepository,
             boolean expectedResult
     ) {
-        when(couponRepository.isRedeemedCoupon(any())).thenReturn(returnValueFromRepository);
+        when(couponRepository.isCouponRedeemed(any())).thenReturn(returnValueFromRepository);
 
-        var result = couponQueryService.isRedeemedCoupon(couponCode);
+        var result = couponQueryService.isCouponRedeemed(couponCode);
 
         assertThat(result, equalTo(expectedResult));
     }

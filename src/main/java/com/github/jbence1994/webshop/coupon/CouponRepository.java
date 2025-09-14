@@ -19,7 +19,7 @@ public interface CouponRepository extends JpaRepository<Coupon, String> {
             value = "SELECT EXISTS (SELECT * FROM user_coupons WHERE coupon_code = :couponCode AND redeemed = 1);",
             nativeQuery = true
     )
-    int isRedeemedCoupon(@Param("couponCode") String couponCode);
+    int isCouponRedeemed(@Param("couponCode") String couponCode);
 
     @Modifying
     @Query(
