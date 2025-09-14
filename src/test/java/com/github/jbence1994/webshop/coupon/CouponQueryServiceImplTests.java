@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.coupon;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,21 +51,25 @@ public class CouponQueryServiceImplTests {
         );
     }
 
+    @BeforeEach
+    public void setUp() {
+        when(authService.getCurrentUser()).thenReturn(user());
+    }
+
     @Test
     public void getCouponsTest() {
-        when(authService.getCurrentUser()).thenReturn(user());
         when(couponRepository.findAllByUser(any())).thenReturn(List.of(percentOffNotExpiredCoupon()));
 
         var result = couponQueryService.getCoupons();
 
         assertThat(result.size(), equalTo(1));
 
+        verify(authService, times(1)).getCurrentUser();
         verify(couponRepository, times(1)).findAllByUser(any());
     }
 
     @Test
     public void getCouponTest_HappyPath() {
-        when(authService.getCurrentUser()).thenReturn(user());
         when(couponRepository.findByCouponCodeAndUserId(any(), any())).thenReturn(Optional.of(percentOffNotExpiredCoupon()));
 
         var result = assertDoesNotThrow(() -> couponQueryService.getCoupon(COUPON_1_CODE));
@@ -77,11 +82,13 @@ public class CouponQueryServiceImplTests {
                 hasProperty("description", equalTo(percentOffNotExpiredCoupon().getDescription())),
                 hasProperty("expirationDate", equalTo(percentOffNotExpiredCoupon().getExpirationDate()))
         ));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(couponRepository, times(1)).findByCouponCodeAndUserId(any(), any());
     }
 
     @Test
     public void getCouponTest_UnhappyPath_CouponNotFoundException() {
-        when(authService.getCurrentUser()).thenReturn(user());
         when(couponRepository.findByCouponCodeAndUserId(any(), any())).thenReturn(Optional.empty());
 
         var result = assertThrows(
@@ -90,6 +97,9 @@ public class CouponQueryServiceImplTests {
         );
 
         assertThat(result.getMessage(), equalTo("No coupon was found with the given coupon code: 'SPRING15'."));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(couponRepository, times(1)).findByCouponCodeAndUserId(any(), any());
     }
 
     @ParameterizedTest(name = "{index} => {0}")
@@ -100,10 +110,13 @@ public class CouponQueryServiceImplTests {
             int returnValueFromRepository,
             boolean expectedResult
     ) {
-        when(couponRepository.isCouponRedeemed(any())).thenReturn(returnValueFromRepository);
+        when(couponRepository.isCouponRedeemed(any(), any())).thenReturn(returnValueFromRepository);
 
         var result = couponQueryService.isCouponRedeemed(couponCode);
 
         assertThat(result, equalTo(expectedResult));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(couponRepository, times(1)).isCouponRedeemed(any(), any());
     }
 }

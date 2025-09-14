@@ -30,6 +30,8 @@ public class CouponQueryServiceImpl implements CouponQueryService {
 
     @Override
     public boolean isCouponRedeemed(String code) {
-        return couponRepository.isCouponRedeemed(code) == 1;
+        var user = authService.getCurrentUser();
+
+        return couponRepository.isCouponRedeemed(user.getId(), code) == 1;
     }
 }
