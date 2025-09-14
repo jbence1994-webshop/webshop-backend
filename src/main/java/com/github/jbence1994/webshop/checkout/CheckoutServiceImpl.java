@@ -39,7 +39,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new EmptyCartException(cartId);
         }
 
-        var checkoutSession = CheckoutSession.from(cart, shippingConfig.shippingCost());
+        var checkoutSession = CheckoutSession.from(cart);
 
         checkoutRepository.save(checkoutSession);
 

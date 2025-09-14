@@ -9,7 +9,6 @@ public record CheckoutSessionDto(
         UUID cartId,
         BigDecimal cartTotal,
         BigDecimal discountAmount,
-        BigDecimal shippingCost,
         String appliedCoupon,
         String status,
         LocalDateTime createdAt

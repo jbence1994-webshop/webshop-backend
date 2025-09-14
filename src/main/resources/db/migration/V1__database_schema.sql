@@ -188,7 +188,6 @@ CREATE TABLE IF NOT EXISTS checkout_sessions
     original_cart_total DECIMAL(10, 2) NOT NULL,
     cart_total          DECIMAL(10, 2) NOT NULL,
     discount_amount     DECIMAL(10, 2) NOT NULL,
-    shipping_cost       DECIMAL(10, 2) NOT NULL,
     applied_coupon      VARCHAR(25),
     status              VARCHAR(20)    NOT NULL             DEFAULT 'PENDING',
     created_at          DATETIME       NOT NULL             DEFAULT CURRENT_TIMESTAMP,
