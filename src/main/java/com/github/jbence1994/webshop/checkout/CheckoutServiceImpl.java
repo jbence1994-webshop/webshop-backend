@@ -39,9 +39,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new EmptyCartException(cartId);
         }
 
-        var checkoutSession = new CheckoutSession();
-        checkoutSession.setCart(cart);
-        checkoutSession.setStatus(CheckoutStatus.PENDING);
+        var checkoutSession = CheckoutSession.from(cart, shippingConfig.shippingCost());
 
         checkoutRepository.save(checkoutSession);
 

@@ -1,8 +1,11 @@
 package com.github.jbence1994.webshop.checkout;
 
+import java.math.BigDecimal;
+
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CREATED_AT;
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 
 public final class CheckoutSessionDtoTestObject {
@@ -18,6 +21,9 @@ public final class CheckoutSessionDtoTestObject {
         return new CheckoutSessionDto(
                 CHECKOUT_SESSION_ID,
                 CART_ID,
+                BigDecimal.valueOf(49.99),
+                BigDecimal.valueOf(49.99),
+                SHIPPING_COST,
                 appliedCoupon,
                 CheckoutStatus.PENDING.name(),
                 CREATED_AT
