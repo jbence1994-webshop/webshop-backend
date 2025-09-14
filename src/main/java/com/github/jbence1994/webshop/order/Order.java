@@ -67,10 +67,10 @@ public class Order {
     public static Order from(User customer, CheckoutSession checkoutSession) {
         var order = new Order();
 
-        order.setCustomer(customer);
-        order.setTotalPrice(checkoutSession.getCartTotal());
-        order.setDiscountAmount(checkoutSession.getDiscountAmount());
-        order.setStatus(OrderStatus.CREATED);
+        order.customer = customer;
+        order.totalPrice = checkoutSession.getCartTotal();
+        order.discountAmount = checkoutSession.getDiscountAmount();
+        order.status = OrderStatus.CREATED;
 
         var items = checkoutSession.getCart().mapCartItemsToOrderItems();
 
