@@ -78,4 +78,22 @@ public class CheckoutSession {
     public String getCouponCode() {
         return appliedCoupon.getCode();
     }
+
+    public void applyCoupon(Coupon coupon) {
+        this.appliedCoupon = coupon;
+        this.cartTotal = originalCartTotal;
+
+        var adjustedCartTotal = CartTotalAdjustmentStrategyFactory
+                .getCartTotalAdjustmentStrategy(appliedCoupon.getType())
+                .adjustCartTotal(cartTotal, appliedCoupon.getValue());
+
+        this.cartTotal = adjustedCartTotal.cartTotal();
+        this.discountAmount = adjustedCartTotal.discountAmount();
+    }
+
+    public void removeCoupon() {
+        this.appliedCoupon = null;
+        this.cartTotal = originalCartTotal;
+        this.discountAmount = BigDecimal.ZERO;
+    }
 }
