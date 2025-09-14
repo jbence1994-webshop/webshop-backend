@@ -29,6 +29,7 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.c
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.completedCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
+import static com.github.jbence1994.webshop.checkout.PaymentSessionResponseTestObject.paymentSessionResponse;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
@@ -188,6 +189,7 @@ public class CheckoutServiceImplTests {
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+        when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
         var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
 
@@ -198,6 +200,7 @@ public class CheckoutServiceImplTests {
         verify(orderService, times(1)).createOrder(any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
+        verify(paymentGateway, times(1)).createPaymentSession(any());
     }
 
     @Test
@@ -207,6 +210,7 @@ public class CheckoutServiceImplTests {
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+        when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
         var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
 
@@ -217,6 +221,7 @@ public class CheckoutServiceImplTests {
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
+        verify(paymentGateway, times(1)).createPaymentSession(any());
     }
 
     @Test
@@ -235,6 +240,7 @@ public class CheckoutServiceImplTests {
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
+        verify(paymentGateway, never()).createPaymentSession(any());
     }
 
     @Test
@@ -253,5 +259,6 @@ public class CheckoutServiceImplTests {
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
+        verify(paymentGateway, never()).createPaymentSession(any());
     }
 }
