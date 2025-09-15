@@ -67,10 +67,10 @@ public class Order {
     public static Order from(User customer, CheckoutSession checkoutSession) {
         var order = new Order();
 
-        order.setCustomer(customer);
-        order.setTotalPrice(checkoutSession.getCartTotal());
-        order.setDiscountAmount(checkoutSession.getDiscountAmount());
-        order.setStatus(OrderStatus.CREATED);
+        order.customer = customer;
+        order.totalPrice = checkoutSession.getCartTotal();
+        order.discountAmount = checkoutSession.getDiscountAmount();
+        order.status = OrderStatus.CREATED;
 
         var items = checkoutSession.getCart().mapCartItemsToOrderItems();
 
@@ -83,7 +83,15 @@ public class Order {
         return order;
     }
 
-    public boolean isEligibleForFreeShipping(BigDecimal threshold) {
+    public void setShippingCost(BigDecimal threshold, BigDecimal shippingCost) {
+        if (isEligibleForFreeShipping(threshold)) {
+            setShippingCost(BigDecimal.ZERO);
+        } else {
+            setShippingCost(shippingCost);
+        }
+    }
+
+    private boolean isEligibleForFreeShipping(BigDecimal threshold) {
         return totalPrice.compareTo(threshold) >= 0;
     }
 }

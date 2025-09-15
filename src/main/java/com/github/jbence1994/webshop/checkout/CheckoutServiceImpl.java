@@ -95,13 +95,10 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var order = Order.from(user, checkoutSession);
 
-        /*
-        if (order.isEligibleForFreeShipping(shippingConfig.freeShippingThreshold())) {
-            order.setShippingCost(BigDecimal.ZERO);
-        } else {
-            order.setShippingCost(shippingConfig.shippingCost());
-        }
-         */
+        order.setShippingCost(
+                shippingConfig.freeShippingThreshold(),
+                shippingConfig.shippingCost()
+        );
 
         orderService.createOrder(order);
 

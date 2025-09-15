@@ -5,7 +5,6 @@ import com.github.jbence1994.webshop.coupon.Coupon;
 
 import java.math.BigDecimal;
 
-import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithFiveItems;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
@@ -18,17 +17,6 @@ public final class CheckoutSessionTestObject {
                 cartWithOneItem(),
                 BigDecimal.valueOf(49.99),
                 BigDecimal.valueOf(49.99),
-                BigDecimal.ZERO,
-                null,
-                CheckoutStatus.PENDING
-        );
-    }
-
-    public static CheckoutSession checkoutSession2() {
-        return buildCheckoutSession(
-                cartWithFiveItems(),
-                BigDecimal.valueOf(249.95),
-                BigDecimal.valueOf(249.95),
                 BigDecimal.ZERO,
                 null,
                 CheckoutStatus.PENDING
