@@ -31,8 +31,6 @@ import java.util.UUID;
 @Setter
 public class CheckoutSession {
 
-    // TODO: expiration shall be persisted later.
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -57,6 +55,8 @@ public class CheckoutSession {
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
+
+    private LocalDateTime expirationDate;
 
     public static CheckoutSession from(Cart cart) {
         var cartTotal = cart.calculateTotal();
@@ -92,5 +92,9 @@ public class CheckoutSession {
         this.appliedCoupon = null;
         this.cartTotal = originalCartTotal;
         this.discountAmount = BigDecimal.ZERO;
+    }
+
+    public boolean isExpired() {
+        return expirationDate.isBefore(LocalDateTime.now());
     }
 }
