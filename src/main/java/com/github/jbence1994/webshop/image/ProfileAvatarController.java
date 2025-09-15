@@ -50,17 +50,12 @@ public class ProfileAvatarController {
 
     @GetMapping
     public ResponseEntity<?> getProfileAvatar(@PathVariable Long userId) {
-        var user = userQueryService.getUser(userId);
-
-        if (!user.hasProfileAvatar()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        var profileAvatar = user.getProfileAvatar();
-
-        var url = imageUrlBuilder.buildUrl(profileAvatar);
-
-        return ResponseEntity.ok(new ImageResponse(profileAvatar, url));
+        return userQueryService.getUser(userId).getProfileAvatar()
+                .map(profileAvatar -> {
+                    var url = imageUrlBuilder.buildUrl(profileAvatar);
+                    return ResponseEntity.ok(new ImageResponse(profileAvatar, url));
+                })
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @DeleteMapping("/{fileName}")

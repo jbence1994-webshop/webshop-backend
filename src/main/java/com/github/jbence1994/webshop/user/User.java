@@ -22,6 +22,7 @@ import org.hibernate.annotations.GeneratedColumn;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "users")
@@ -68,12 +69,8 @@ public class User {
         profile.setAvatarFileName(fileName);
     }
 
-    public String getProfileAvatar() {
-        return profile.getAvatarFileName();
-    }
-
-    public boolean hasProfileAvatar() {
-        return profile.getAvatarFileName() != null;
+    public Optional<String> getProfileAvatar() {
+        return Optional.ofNullable(profile.getAvatarFileName());
     }
 
     public void earnLoyaltyPoints(int loyaltyPoints) {
