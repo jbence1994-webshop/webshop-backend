@@ -3,7 +3,6 @@ package com.github.jbence1994.webshop.order;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static com.github.jbence1994.webshop.order.OrderItemTestObject.orderItem;
 import static com.github.jbence1994.webshop.order.OrderTestConstants.CREATED_AT;
 import static com.github.jbence1994.webshop.order.OrderTestConstants.DISCOUNT_AMOUNT;
@@ -25,7 +24,6 @@ public final class OrderTestObject {
                 user(),
                 totalPrice,
                 DISCOUNT_AMOUNT,
-                SHIPPING_COST,
                 OrderStatus.CREATED,
                 EARNED_LOYALTY_POINTS,
                 CREATED_AT,

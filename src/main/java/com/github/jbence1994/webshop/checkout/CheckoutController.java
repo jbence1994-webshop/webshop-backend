@@ -53,4 +53,12 @@ public class CheckoutController {
     public CompleteCheckoutSessionResponse completeCheckoutSession(@Valid @RequestBody CompleteCheckoutSessionRequest request) {
         return checkoutService.completeCheckoutSession(request.getCheckoutSessionId());
     }
+
+    /*@PostMapping("/complete/webhook")
+    public void handleCompleteCheckoutSessionWebhook(
+            @RequestHeader Map<String, String> headers,
+            @RequestBody String payload
+    ) {
+        checkoutService.handleCompleteCheckoutSessionWebhookEvent(new WebhookRequest(headers, payload));
+    }*/
 }

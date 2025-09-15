@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order2;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
@@ -18,14 +17,14 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.hamcrest.Matchers.is;
 
 public class OrderTests {
 
-    private static Stream<Arguments> setShippingCostParams() {
+    private static Stream<Arguments> isEligibleForFreeShippingTestParams() {
         return Stream.of(
-                Arguments.of("Not eligible for free shipping", order1()),
-                Arguments.of("Eligible for free shipping", order2())
+                Arguments.of("Not eligible for free shipping", order1(), false),
+                Arguments.of("Eligible for free shipping", order2(), true)
         );
     }
 
@@ -36,18 +35,20 @@ public class OrderTests {
         assertThat(result, allOf(
                 hasProperty("totalPrice", comparesEqualTo(checkoutSession1().getCartTotal())),
                 hasProperty("discountAmount", comparesEqualTo(checkoutSession1().getDiscountAmount())),
-                hasProperty("shippingCost", equalTo(null)),
                 hasProperty("status", equalTo(OrderStatus.CREATED))
         ));
         assertThat(result.getItems().size(), equalTo(1));
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("setShippingCostParams")
-    public void setShippingCostTests(
+    @MethodSource("isEligibleForFreeShippingTestParams")
+    public void isEligibleForFreeShippingTest(
             String testCase,
-            Order order
+            Order order,
+            boolean expectedResult
     ) {
-        assertDoesNotThrow(() -> order.setShippingCost(FREE_SHIPPING_THRESHOLD, SHIPPING_COST));
+        var result = order.isEligibleForFreeShipping(FREE_SHIPPING_THRESHOLD);
+
+        assertThat(result, is(expectedResult));
     }
 }
