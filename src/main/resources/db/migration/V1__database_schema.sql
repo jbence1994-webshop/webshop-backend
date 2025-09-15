@@ -190,6 +190,7 @@ CREATE TABLE IF NOT EXISTS checkout_sessions
     applied_coupon      VARCHAR(25),
     status              VARCHAR(20)    NOT NULL             DEFAULT 'PENDING',
     created_at          DATETIME       NOT NULL             DEFAULT CURRENT_TIMESTAMP,
+    expiration_date     DATETIME       NOT NULL,
     CONSTRAINT fk_checkout_sessions_carts
         FOREIGN KEY (cart_id) REFERENCES carts (id)
             ON DELETE NO ACTION

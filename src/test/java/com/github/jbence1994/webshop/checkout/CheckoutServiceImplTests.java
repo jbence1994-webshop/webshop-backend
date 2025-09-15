@@ -22,6 +22,8 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.c
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithEmptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.completedCheckoutSession;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSession;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
 import static com.github.jbence1994.webshop.checkout.PaymentSessionResponseTestObject.paymentSessionResponse;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
@@ -120,6 +122,23 @@ public class CheckoutServiceImplTests {
     }
 
     @Test
+    public void applyCouponToCheckoutSessionTest_UnhappyPath_ExpiredCheckoutSessionException() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(expiredCheckoutSession());
+
+        var result = assertThrows(
+                ExpiredCheckoutSessionException.class,
+                () -> checkoutService.applyCouponToCheckoutSession(CART_ID, COUPON_1_CODE)
+        );
+
+        assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 has expired."));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(couponQueryService, never()).getCoupon(any());
+        verify(couponQueryService, never()).isCouponRedeemed(any());
+        verify(checkoutRepository, never()).save(any());
+    }
+
+    @Test
     public void applyCouponToCheckoutSessionTest_UnhappyPath_ExpiredCouponException() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
         when(couponQueryService.getCoupon(any())).thenReturn(fixedAmountExpiredCoupon());
@@ -157,7 +176,7 @@ public class CheckoutServiceImplTests {
     }
 
     @Test
-    public void removeCouponFromCheckoutSessionTest() {
+    public void removeCouponFromCheckoutSessionTest_HappyPath() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
         when(checkoutRepository.save(any())).thenReturn(checkoutSession1());
 
@@ -165,6 +184,21 @@ public class CheckoutServiceImplTests {
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(checkoutRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void removeCouponFromCheckoutSessionTest_UnhappyPath_ExpiredCheckoutSessionException() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(expiredCheckoutSessionWithPercentOffTypeOfAppliedCoupon());
+
+        var result = assertThrows(
+                ExpiredCheckoutSessionException.class,
+                () -> checkoutService.removeCouponFromCheckoutSession(CART_ID)
+        );
+
+        assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 has expired."));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(checkoutRepository, never()).save(any());
     }
 
     @Test
@@ -208,6 +242,26 @@ public class CheckoutServiceImplTests {
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
+        verify(orderService, never()).deleteOrder(any());
+    }
+
+    @Test
+    public void completeCheckoutSessionTest_UnhappyPath_ExpiredCheckoutSessionException() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(expiredCheckoutSession());
+
+        var result = assertThrows(
+                ExpiredCheckoutSessionException.class,
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
+        );
+
+        assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 has expired."));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(authService, never()).getCurrentUser();
+        verify(orderService, never()).createOrder(any());
+        verify(couponService, never()).redeemCoupon(any(), any(), any());
+        verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
+        verify(paymentGateway, never()).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
 

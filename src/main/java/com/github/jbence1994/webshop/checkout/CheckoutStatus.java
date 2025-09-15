@@ -4,5 +4,6 @@ public enum CheckoutStatus {
     PENDING,
     CANCELLED,
     COMPLETED,
-    FAILED
+    FAILED,
+    EXPIRED
 }

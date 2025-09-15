@@ -26,15 +26,6 @@ public class CheckoutControllerExceptionHandlerTests {
     private CheckoutControllerExceptionHandler checkoutControllerExceptionHandler;
 
     @Test
-    public void handleCheckoutSessionNotFoundExceptionTest() {
-        var result = checkoutControllerExceptionHandler.handleCheckoutSessionNotFoundException(new CheckoutSessionNotFoundException(CHECKOUT_SESSION_ID));
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("No checkout session was found with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2."));
-    }
-
-    @Test
     public void handleCouponNotFoundExceptionTest() {
         var result = checkoutControllerExceptionHandler.handleCouponNotFoundException(new CouponNotFoundException(INVALID_COUPON_CODE));
 
@@ -68,6 +59,24 @@ public class CheckoutControllerExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 already completed."));
+    }
+
+    @Test
+    public void handleCheckoutSessionNotFoundExceptionTest() {
+        var result = checkoutControllerExceptionHandler.handleCheckoutSessionNotFoundException(new CheckoutSessionNotFoundException(CHECKOUT_SESSION_ID));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("No checkout session was found with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2."));
+    }
+
+    @Test
+    public void handleExpiredCheckoutSessionExceptionTest() {
+        var result = checkoutControllerExceptionHandler.handleExpiredCheckoutSessionException(new ExpiredCheckoutSessionException(CHECKOUT_SESSION_ID));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.GONE));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 has expired."));
     }
 
     @Test
