@@ -210,6 +210,7 @@
                     <excludes>
                         <exclude>com/github/jbence1994/webshop/**/*Config*</exclude>
                         <exclude>com/github/jbence1994/webshop/**/*MapperImpl*</exclude>
+                        <exclude>com/github/jbence1994/webshop/checkout/StripePaymentGateway*</exclude>
                         <exclude>com/github/jbence1994/webshop/common/EmailServiceImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/common/FreeMarkerEmailTemplateBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/FileSystemUtils*</exclude>

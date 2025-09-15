@@ -46,8 +46,6 @@ public class Order {
 
     private BigDecimal discountAmount;
 
-    private BigDecimal shippingCost;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
@@ -83,15 +81,7 @@ public class Order {
         return order;
     }
 
-    public void setShippingCost(BigDecimal threshold, BigDecimal shippingCost) {
-        if (isEligibleForFreeShipping(threshold)) {
-            setShippingCost(BigDecimal.ZERO);
-        } else {
-            setShippingCost(shippingCost);
-        }
-    }
-
-    private boolean isEligibleForFreeShipping(BigDecimal threshold) {
+    public boolean isEligibleForFreeShipping(BigDecimal threshold) {
         return totalPrice.compareTo(threshold) >= 0;
     }
 }

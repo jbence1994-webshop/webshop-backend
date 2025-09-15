@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
+import com.github.jbence1994.webshop.cart.CartService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
 import com.github.jbence1994.webshop.coupon.CouponQueryService;
@@ -9,8 +10,8 @@ import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.Order;
+import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
-import com.github.jbence1994.webshop.order.OrderStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,14 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
+    private final FreeShippingConfig freeShippingConfig;
+    private final OrderQueryService orderQueryService;
     private final CartQueryService cartQueryService;
-    private final ShippingConfig shippingConfig;
+    private final PaymentGateway paymentGateway;
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;
+    private final CartService cartService;
 
     @Override
     public CheckoutSession createCheckoutSession(UUID cartId) {
@@ -86,19 +90,15 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
 
         var cart = checkoutSession.getCart();
+        var cartId = cart.getId();
 
         if (cart.isEmpty()) {
-            throw new EmptyCartException(cart.getId());
+            throw new EmptyCartException(cartId);
         }
 
         var user = authService.getCurrentUser();
 
         var order = Order.from(user, checkoutSession);
-
-        order.setShippingCost(
-                shippingConfig.freeShippingThreshold(),
-                shippingConfig.shippingCost()
-        );
 
         orderService.createOrder(order);
 
@@ -110,23 +110,43 @@ public class CheckoutServiceImpl implements CheckoutService {
         user.earnLoyaltyPoints(loyaltyPoints);
         order.setLoyaltyPoints(loyaltyPoints);
 
-        // TODO: Payment integration.
+        try {
+            var paymentSessionRequest = new PaymentSessionRequest(
+                    cartId,
+                    order,
+                    checkoutSessionId,
+                    checkoutSession.hasCouponApplied() ? checkoutSession.getAppliedCoupon() : null
+            );
 
-        // TODO: 1) If payment was successful:
-        cart.clear();
+            var paymentSessionResponse = paymentGateway.createPaymentSession(paymentSessionRequest);
 
-        order.setStatus(OrderStatus.CONFIRMED);
-        checkoutSession.setStatus(CheckoutStatus.COMPLETED);
-        // TODO: Create on-stock schema to store products on stock, here: decrease available quantity.
+            cart.clear();
 
-        // TODO: 2) If payment was failed:
-        // TODO: order.setStatus(OrderStatus.CREATED);
-        // TODO: CheckoutStatus.FAILED;
+            return new CompleteCheckoutSessionResponse(
+                    order.getId(),
+                    paymentSessionResponse.checkoutUrl()
+            );
+        } catch (PaymentException exception) {
+            orderService.deleteOrder(order.getId());
+            throw exception;
+        }
+    }
 
-        // TODO: 3) If payment aborted for a long time:
-        // TODO: order.setStatus(OrderStatus.CANCELLED);
-        // TODO: CheckoutStatus.CANCELLED;
+    @Override
+    public void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request) {
+        paymentGateway
+                .parseWebhookRequest(request)
+                .ifPresent(paymentResult -> {
+                    var order = orderQueryService.getOrder(paymentResult.orderId());
+                    order.setStatus(paymentResult.orderStatus());
+                    orderService.updateOrder(order);
 
-        return new CompleteCheckoutSessionResponse(order.getId());
+                    var checkoutSession = checkoutQueryService.getCheckoutSession(paymentResult.checkoutSessionId());
+                    checkoutSession.setStatus(paymentResult.checkoutStatus());
+                    checkoutRepository.save(checkoutSession);
+
+                    var cart = cartQueryService.getCart(paymentResult.cartId());
+                    cartService.deleteCart(cart.getId());
+                });
     }
 }
