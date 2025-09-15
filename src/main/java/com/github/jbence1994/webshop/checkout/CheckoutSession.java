@@ -84,8 +84,8 @@ public class CheckoutSession {
                 .getCartTotalAdjustmentStrategy(appliedCoupon.getType())
                 .adjustCartTotal(cartTotal, appliedCoupon.getValue());
 
-        this.cartTotal = adjustedCartTotal.cartTotal();
-        this.discountAmount = adjustedCartTotal.discountAmount();
+        this.cartTotal = adjustedCartTotal.getLeft();
+        this.discountAmount = adjustedCartTotal.getRight();
     }
 
     public void removeCoupon() {
