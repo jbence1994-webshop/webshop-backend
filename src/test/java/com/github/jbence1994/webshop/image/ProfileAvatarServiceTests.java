@@ -74,7 +74,6 @@ public class ProfileAvatarServiceTests {
 
     @Test
     public void uploadImageTest_HappyPath_UserDoNotHaveAvatarUploadedYet() {
-        when(userWithoutAvatar.hasProfileAvatar()).thenReturn(false);
         doNothing().when(fileUtils).store(any(), any(), any());
         doNothing().when(userWithoutAvatar).setProfileAvatar(any());
 
@@ -84,7 +83,6 @@ public class ProfileAvatarServiceTests {
 
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(userQueryService, times(1)).getUser(anyLong());
-        verify(userWithoutAvatar, times(1)).hasProfileAvatar();
         verify(fileUtils, never()).remove(any(), any());
         verify(fileNameGenerator, times(1)).generate(any());
         verify(imageUploadsConfig, times(1)).profileAvatarDirectory();
@@ -97,7 +95,6 @@ public class ProfileAvatarServiceTests {
     @Test
     public void uploadImageTest_HappyPath_UserDoesHaveAvatarUploadedAlready() {
         when(userQueryService.getUser(anyLong())).thenReturn(user);
-        when(user.hasProfileAvatar()).thenReturn(true);
         doNothing().when(fileUtils).remove(any(), any());
         doNothing().when(fileUtils).store(any(), any(), any());
         doNothing().when(userWithoutAvatar).setProfileAvatar(any());
@@ -109,7 +106,6 @@ public class ProfileAvatarServiceTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(fileUtils, times(1)).remove(any(), any());
         verify(userQueryService, times(1)).getUser(anyLong());
-        verify(user, times(1)).hasProfileAvatar();
         verify(fileNameGenerator, times(1)).generate(any());
         verify(imageUploadsConfig, times(2)).profileAvatarDirectory();
         verify(image, times(1)).getInputStream();

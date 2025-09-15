@@ -20,10 +20,10 @@ public class UserTests {
     private final User user1 = user();
     private final User user2 = userWithAvatar();
 
-    private static Stream<Arguments> hasProfileAvatarTestParams() {
+    private static Stream<Arguments> getProfileAvatarTestParams() {
         return Stream.of(
-                Arguments.of("User with avatar", userWithAvatar(), true),
-                Arguments.of("User without avatar", user(), false)
+                Arguments.of("User with avatar", userWithAvatar(), true, false),
+                Arguments.of("User without avatar", user(), false, true)
         );
     }
 
@@ -56,15 +56,17 @@ public class UserTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("hasProfileAvatarTestParams")
-    public void hasProfileAvatarTests(
+    @MethodSource("getProfileAvatarTestParams")
+    public void getProfileAvatarTests(
             String testCase,
             User user,
-            boolean expectedResult
+            boolean isPresent,
+            boolean isEmpty
     ) {
-        var result = user.hasProfileAvatar();
+        var result = user.getProfileAvatar();
 
-        assertThat(result, is(expectedResult));
+        assertThat(result.isPresent(), is(isPresent));
+        assertThat(result.isEmpty(), is(isEmpty));
     }
 
     @Test
