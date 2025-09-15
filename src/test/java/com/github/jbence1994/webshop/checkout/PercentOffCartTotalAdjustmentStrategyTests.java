@@ -16,7 +16,7 @@ public class PercentOffCartTotalAdjustmentStrategyTests {
                 .getCartTotalAdjustmentStrategy(DiscountType.PERCENT_OFF)
                 .adjustCartTotal(BigDecimal.valueOf(49.99), BigDecimal.valueOf(0.10));
 
-        assertThat(result.cartTotal(), comparesEqualTo(BigDecimal.valueOf(44.99)));
-        assertThat(result.discountAmount(), comparesEqualTo(BigDecimal.valueOf(5.00)));
+        assertThat(result.getLeft(), comparesEqualTo(BigDecimal.valueOf(44.99)));
+        assertThat(result.getRight(), comparesEqualTo(BigDecimal.valueOf(5.00)));
     }
 }
