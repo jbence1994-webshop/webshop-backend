@@ -21,16 +21,6 @@ public final class CartTestObject {
         return cart;
     }
 
-    public static Cart cartWithFiveItems() {
-        var cart = buildCart();
-        cart.addItem(product1());
-        cart.addItem(product1());
-        cart.addItem(product1());
-        cart.addItem(product1());
-        cart.addItem(product1());
-        return cart;
-    }
-
     public static Cart updatedCart() {
         var cart = buildCart();
         cart.addItem(product1());

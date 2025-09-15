@@ -168,7 +168,31 @@ public class CheckoutServiceImplTests {
     }
 
     @Test
-    public void completeCheckoutSessionTest_HappyPath() {
+    public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(shippingConfig.freeShippingThreshold()).thenReturn(FREE_SHIPPING_THRESHOLD);
+        when(shippingConfig.shippingCost()).thenReturn(SHIPPING_COST);
+        doNothing().when(orderService).createOrder(any());
+        doNothing().when(couponService).redeemCoupon(any(), any(), any());
+        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+
+        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
+
+        assertThat(result, not(nullValue()));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(authService, times(1)).getCurrentUser();
+        verify(shippingConfig, times(1)).shippingCost();
+        verify(shippingConfig, times(1)).freeShippingThreshold();
+        verify(orderService, times(1)).createOrder(any());
+        verify(couponService, times(1)).redeemCoupon(any(), any(), any());
+        verify(couponService, times(1)).redeemCoupon(any(), any(), any());
+        verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
+    }
+
+    @Test
+    public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
         when(authService.getCurrentUser()).thenReturn(user());
         when(shippingConfig.freeShippingThreshold()).thenReturn(FREE_SHIPPING_THRESHOLD);
