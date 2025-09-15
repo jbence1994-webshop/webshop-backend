@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -226,6 +227,8 @@ public class CheckoutServiceImplTests {
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
+        verify(paymentGateway, never()).createPaymentSession(any());
+        verify(orderService, never()).deleteOrder(any());
     }
 
     @Test
@@ -244,5 +247,31 @@ public class CheckoutServiceImplTests {
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
+        verify(paymentGateway, never()).createPaymentSession(any());
+        verify(orderService, never()).deleteOrder(any());
+    }
+
+    @Test
+    public void completeCheckoutSessionTest_UnhappyPath_PaymentException() {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(authService.getCurrentUser()).thenReturn(user());
+        doNothing().when(orderService).createOrder(any());
+        when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+        doThrow(new PaymentException("Payment exception.")).when(paymentGateway).createPaymentSession(any());
+
+        var result = assertThrows(
+                PaymentException.class,
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
+        );
+
+        assertThat(result.getMessage(), equalTo("Payment exception."));
+
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(authService, times(1)).getCurrentUser();
+        verify(orderService, times(1)).createOrder(any());
+        verify(couponService, never()).redeemCoupon(any(), any(), any());
+        verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
+        verify(paymentGateway, times(1)).createPaymentSession(any());
+        verify(orderService, times(1)).deleteOrder(any());
     }
 }

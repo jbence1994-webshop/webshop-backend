@@ -78,4 +78,13 @@ public class CheckoutControllerExceptionHandlerTests {
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("No cart was found with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69."));
     }
+
+    @Test
+    public void handlePaymentExceptionTest() {
+        var result = checkoutControllerExceptionHandler.handlePaymentException(new PaymentException("Payment exception."));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.PAYMENT_REQUIRED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Payment exception."));
+    }
 }

@@ -128,9 +128,9 @@ public class CheckoutServiceImpl implements CheckoutService {
     }
 
     // TODO: Refactor this.
-    @Override
+    /*@Override
     public void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request) {
-        /*paymentGateway
+        paymentGateway
                 .parseWebhookRequest(request)
                 .ifPresent(paymentResult -> {
                     var order = orderQueryService.getOrder(paymentResult.orderId());
@@ -143,6 +143,6 @@ public class CheckoutServiceImpl implements CheckoutService {
 
                     var cart = cartQueryService.getCart(paymentResult.cartId());
                     cartService.deleteCart(cart.getId());
-                });*/
-    }
+                });
+    }*/
 }

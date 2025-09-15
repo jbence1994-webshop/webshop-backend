@@ -17,5 +17,5 @@ public interface CartService {
 
     void clearCart(UUID id);
 
-    void deleteCart(UUID id);
+    // void deleteCart(UUID id);
 }

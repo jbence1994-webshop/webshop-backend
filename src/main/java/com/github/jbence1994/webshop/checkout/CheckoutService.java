@@ -11,5 +11,5 @@ public interface CheckoutService {
 
     CompleteCheckoutSessionResponse completeCheckoutSession(UUID checkoutSessionId);
 
-    void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request);
+    // void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request);
 }
