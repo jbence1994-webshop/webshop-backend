@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
-import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.comparesEqualTo;
@@ -22,10 +21,10 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class CheckoutSessionTests {
 
-    private static Stream<Arguments> checkoutSessionHasCouponAppliedParams() {
+    private static Stream<Arguments> checkoutSessionGetAppliedCouponParams() {
         return Stream.of(
-                Arguments.of("Checkout session has coupon applied", checkoutSessionWithPercentOffTypeOfAppliedCoupon(), true),
-                Arguments.of("Checkout session does not have a coupon applied", checkoutSession1(), false)
+                Arguments.of("Checkout session has coupon applied", checkoutSessionWithPercentOffTypeOfAppliedCoupon(), true, false),
+                Arguments.of("Checkout session does not have a coupon applied", checkoutSession1(), false, true)
         );
     }
 
@@ -43,21 +42,16 @@ public class CheckoutSessionTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("checkoutSessionHasCouponAppliedParams")
-    public void hasCouponAppliedTests(
+    @MethodSource("checkoutSessionGetAppliedCouponParams")
+    public void getAppliedCouponTests(
             String testCase,
             CheckoutSession checkoutSession,
-            boolean expectedResult
+            boolean isPresent,
+            boolean isEmpty
     ) {
-        var result = checkoutSession.hasCouponApplied();
+        var result = checkoutSession.getAppliedCoupon();
 
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void getCouponCodeTest() {
-        var result = checkoutSessionWithPercentOffTypeOfAppliedCoupon().getCouponCode();
-
-        assertThat(result, equalTo(COUPON_1_CODE));
+        assertThat(result.isPresent(), is(isPresent));
+        assertThat(result.isEmpty(), is(isEmpty));
     }
 }

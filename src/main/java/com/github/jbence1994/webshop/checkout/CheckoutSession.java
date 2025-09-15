@@ -20,6 +20,7 @@ import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -71,12 +72,8 @@ public class CheckoutSession {
         return checkoutSession;
     }
 
-    public boolean hasCouponApplied() {
-        return appliedCoupon != null;
-    }
-
-    public String getCouponCode() {
-        return appliedCoupon.getCode();
+    public Optional<Coupon> getAppliedCoupon() {
+        return Optional.ofNullable(appliedCoupon);
     }
 
     public void applyCoupon(Coupon coupon) {

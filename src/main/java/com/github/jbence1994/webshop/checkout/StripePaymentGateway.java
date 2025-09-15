@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.common.ClientAppConfig;
+import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.order.OrderItem;
 import com.github.jbence1994.webshop.order.OrderStatus;
 import com.stripe.exception.SignatureVerificationException;
@@ -37,6 +38,7 @@ public class StripePaymentGateway implements PaymentGateway {
     @Override
     public PaymentSessionResponse createPaymentSession(PaymentSessionRequest request) {
         try {
+            var checkoutSession = request.checkoutSession();
             var order = request.order();
 
             var builder = SessionCreateParams.builder()
@@ -44,13 +46,12 @@ public class StripePaymentGateway implements PaymentGateway {
                     .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                     .setSuccessUrl(clientAppConfig.url() + "/checkout-success?orderId=" + order.getId())
                     .setCancelUrl(clientAppConfig.url() + "/checkout-cancel")
-                    .setPaymentIntentData(buildPaymentIntent(request.cartId(), order.getId(), request.checkoutSessionId()));
+                    .setPaymentIntentData(buildPaymentIntent(checkoutSession.getCart().getId(), order.getId(), checkoutSession.getId()));
 
-            var coupon = request.appliedCoupon();
-
-            if (coupon != null) {
-                builder.addAllDiscount(buildDiscounts(coupon.getCode()));
-            }
+            checkoutSession.getAppliedCoupon()
+                    .map(Coupon::getCode)
+                    .map(this::buildDiscounts)
+                    .ifPresent(builder::addAllDiscount);
 
             if (order.isEligibleForFreeShipping(freeShippingConfig.threshold())) {
                 builder.addAllShippingOption(buildShippingOptions(freeShippingId));

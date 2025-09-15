@@ -97,30 +97,21 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         orderService.createOrder(order);
 
-        if (checkoutSession.hasCouponApplied()) {
-            couponService.redeemCoupon(user.getId(), checkoutSession.getCouponCode(), order.getId());
-        }
+        checkoutSession.getAppliedCoupon()
+                .ifPresent(coupon -> couponService.redeemCoupon(user.getId(), coupon.getCode(), order.getId()));
 
         var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
         user.earnLoyaltyPoints(loyaltyPoints);
         order.setLoyaltyPoints(loyaltyPoints);
 
         try {
-            var paymentSessionRequest = new PaymentSessionRequest(
-                    cartId,
-                    order,
-                    checkoutSessionId,
-                    checkoutSession.hasCouponApplied() ? checkoutSession.getAppliedCoupon() : null
-            );
+            var paymentSessionRequest = new PaymentSessionRequest(checkoutSession, order);
 
             var paymentSessionResponse = paymentGateway.createPaymentSession(paymentSessionRequest);
 
             cart.clear();
 
-            return new CompleteCheckoutSessionResponse(
-                    order.getId(),
-                    paymentSessionResponse.checkoutUrl()
-            );
+            return new CompleteCheckoutSessionResponse(order.getId(), paymentSessionResponse.checkoutUrl());
         } catch (PaymentException exception) {
             orderService.deleteOrder(order.getId());
             throw exception;
