@@ -13,10 +13,10 @@ public class OrderServiceImpl implements OrderService {
         save(order);
     }
 
-    @Override
+    /*@Override
     public void updateOrder(Order order) {
         save(order);
-    }
+    }*/
 
     @Override
     public void deleteOrder(Long id) {

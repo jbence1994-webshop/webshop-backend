@@ -23,8 +23,7 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.c
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.completedCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.SHIPPING_COST;
+import static com.github.jbence1994.webshop.checkout.PaymentSessionResponseTestObject.paymentSessionResponse;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
@@ -62,7 +61,7 @@ public class CheckoutServiceImplTests {
     private CartQueryService cartQueryService;
 
     @Mock
-    private ShippingConfig shippingConfig;
+    private PaymentGateway paymentGateway;
 
     @Mock
     private CouponService couponService;
@@ -171,11 +170,10 @@ public class CheckoutServiceImplTests {
     public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
         when(authService.getCurrentUser()).thenReturn(user());
-        when(shippingConfig.freeShippingThreshold()).thenReturn(FREE_SHIPPING_THRESHOLD);
-        when(shippingConfig.shippingCost()).thenReturn(SHIPPING_COST);
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+        when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
         var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
 
@@ -183,22 +181,21 @@ public class CheckoutServiceImplTests {
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, times(1)).getCurrentUser();
-        verify(shippingConfig, times(1)).shippingCost();
-        verify(shippingConfig, times(1)).freeShippingThreshold();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
+        verify(paymentGateway, times(1)).createPaymentSession(any());
+        verify(orderService, never()).deleteOrder(any());
     }
 
     @Test
     public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
         when(authService.getCurrentUser()).thenReturn(user());
-        when(shippingConfig.freeShippingThreshold()).thenReturn(FREE_SHIPPING_THRESHOLD);
-        when(shippingConfig.shippingCost()).thenReturn(SHIPPING_COST);
         doNothing().when(orderService).createOrder(any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
+        when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
         var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
 
@@ -206,11 +203,11 @@ public class CheckoutServiceImplTests {
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, times(1)).getCurrentUser();
-        verify(shippingConfig, times(1)).shippingCost();
-        verify(shippingConfig, times(1)).freeShippingThreshold();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
+        verify(paymentGateway, times(1)).createPaymentSession(any());
+        verify(orderService, never()).deleteOrder(any());
     }
 
     @Test
@@ -226,7 +223,6 @@ public class CheckoutServiceImplTests {
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, never()).getCurrentUser();
-        verify(shippingConfig, never()).freeShippingThreshold();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());
@@ -245,7 +241,6 @@ public class CheckoutServiceImplTests {
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, never()).getCurrentUser();
-        verify(shippingConfig, never()).freeShippingThreshold();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
         verify(loyaltyPointsCalculator, never()).calculateLoyaltyPoints(any());

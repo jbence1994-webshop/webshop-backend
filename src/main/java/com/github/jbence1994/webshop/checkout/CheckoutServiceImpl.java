@@ -2,7 +2,6 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.cart.CartQueryService;
-import com.github.jbence1994.webshop.cart.CartService;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
 import com.github.jbence1994.webshop.coupon.CouponQueryService;
@@ -10,7 +9,6 @@ import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.Order;
-import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +23,11 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
-    private final FreeShippingConfig freeShippingConfig;
-    private final OrderQueryService orderQueryService;
     private final CartQueryService cartQueryService;
     private final PaymentGateway paymentGateway;
     private final CouponService couponService;
     private final OrderService orderService;
     private final AuthService authService;
-    private final CartService cartService;
 
     @Override
     public CheckoutSession createCheckoutSession(UUID cartId) {
@@ -132,9 +127,10 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
+    // TODO: Refactor this.
     @Override
     public void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request) {
-        paymentGateway
+        /*paymentGateway
                 .parseWebhookRequest(request)
                 .ifPresent(paymentResult -> {
                     var order = orderQueryService.getOrder(paymentResult.orderId());
@@ -147,6 +143,6 @@ public class CheckoutServiceImpl implements CheckoutService {
 
                     var cart = cartQueryService.getCart(paymentResult.cartId());
                     cartService.deleteCart(cart.getId());
-                });
+                });*/
     }
 }
