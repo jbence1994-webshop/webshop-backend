@@ -47,6 +47,12 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Override
     public CheckoutSession applyCouponToCheckoutSession(UUID id, String couponCode) {
         var checkoutSession = checkoutQueryService.getCheckoutSession(id);
+
+        if (checkoutSession.isExpired()) {
+            checkoutSession.setStatus(CheckoutStatus.EXPIRED);
+            throw new ExpiredCheckoutSessionException(id);
+        }
+
         var coupon = couponQueryService.getCoupon(couponCode);
 
         if (coupon.isExpired()) {
@@ -68,6 +74,11 @@ public class CheckoutServiceImpl implements CheckoutService {
     public CheckoutSession removeCouponFromCheckoutSession(UUID id) {
         var checkoutSession = checkoutQueryService.getCheckoutSession(id);
 
+        if (checkoutSession.isExpired()) {
+            checkoutSession.setStatus(CheckoutStatus.EXPIRED);
+            throw new ExpiredCheckoutSessionException(id);
+        }
+
         checkoutSession.removeCoupon();
 
         checkoutRepository.save(checkoutSession);
@@ -79,6 +90,11 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Transactional
     public CompleteCheckoutSessionResponse completeCheckoutSession(UUID checkoutSessionId) {
         var checkoutSession = checkoutQueryService.getCheckoutSession(checkoutSessionId);
+
+        if (checkoutSession.isExpired()) {
+            checkoutSession.setStatus(CheckoutStatus.EXPIRED);
+            throw new ExpiredCheckoutSessionException(checkoutSessionId);
+        }
 
         if (CheckoutStatus.COMPLETED.equals(checkoutSession.getStatus())) {
             throw new CheckoutSessionAlreadyCompletedException(checkoutSessionId);

@@ -63,11 +63,12 @@ public class CheckoutSession {
 
         var checkoutSession = new CheckoutSession();
 
-        checkoutSession.setCart(cart);
-        checkoutSession.setOriginalCartTotal(cartTotal);
-        checkoutSession.setCartTotal(cartTotal);
-        checkoutSession.setDiscountAmount(BigDecimal.ZERO);
-        checkoutSession.setStatus(CheckoutStatus.PENDING);
+        checkoutSession.cart = cart;
+        checkoutSession.originalCartTotal = cartTotal;
+        checkoutSession.cartTotal = cartTotal;
+        checkoutSession.discountAmount = BigDecimal.ZERO;
+        checkoutSession.status = CheckoutStatus.PENDING;
+        checkoutSession.expirationDate = LocalDateTime.now().plusMinutes(60);
 
         return checkoutSession;
     }

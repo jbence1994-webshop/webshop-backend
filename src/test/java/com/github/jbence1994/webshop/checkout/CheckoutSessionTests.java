@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSession;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.comparesEqualTo;
@@ -25,6 +26,13 @@ public class CheckoutSessionTests {
         return Stream.of(
                 Arguments.of("Checkout session has coupon applied", checkoutSessionWithPercentOffTypeOfAppliedCoupon(), true, false),
                 Arguments.of("Checkout session does not have a coupon applied", checkoutSession1(), false, true)
+        );
+    }
+
+    private static Stream<Arguments> checkoutSessionParams() {
+        return Stream.of(
+                Arguments.of("Checkout session is not expired", checkoutSession1(), false),
+                Arguments.of("Checkout session is expired", expiredCheckoutSession(), true)
         );
     }
 
@@ -53,5 +61,17 @@ public class CheckoutSessionTests {
 
         assertThat(result.isPresent(), is(isPresent));
         assertThat(result.isEmpty(), is(isEmpty));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("checkoutSessionParams")
+    public void isExpiredTests(
+            String testCase,
+            CheckoutSession checkoutSession,
+            boolean expectedResult
+    ) {
+        var result = checkoutSession.isExpired();
+
+        assertThat(result, is(expectedResult));
     }
 }

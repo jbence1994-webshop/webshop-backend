@@ -13,11 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class CheckoutControllerExceptionHandler {
 
-    @ExceptionHandler(exception = CheckoutSessionNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleCheckoutSessionNotFoundException(CheckoutSessionNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
-    }
-
     @ExceptionHandler(exception = CouponNotFoundException.class)
     public ResponseEntity<ErrorDto> handleCouponNotFoundException(CouponNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
@@ -36,6 +31,16 @@ public class CheckoutControllerExceptionHandler {
     @ExceptionHandler(exception = CheckoutSessionAlreadyCompletedException.class)
     public ResponseEntity<ErrorDto> handleCheckoutSessionAlreadyCompletedException(CheckoutSessionAlreadyCompletedException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = CheckoutSessionNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleCheckoutSessionNotFoundException(CheckoutSessionNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = ExpiredCheckoutSessionException.class)
+    public ResponseEntity<ErrorDto> handleExpiredCheckoutSessionException(ExpiredCheckoutSessionException exception) {
+        return ResponseEntity.status(HttpStatus.GONE).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = CartNotFoundException.class)

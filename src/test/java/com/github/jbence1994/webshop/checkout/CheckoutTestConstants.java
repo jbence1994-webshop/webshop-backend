@@ -7,6 +7,8 @@ import java.util.UUID;
 public interface CheckoutTestConstants {
     UUID CHECKOUT_SESSION_ID = UUID.fromString("401c3a9e-c1ae-4a39-956b-9af3ed28a4e2");
     LocalDateTime CREATED_AT = LocalDateTime.of(2025, 9, 13, 11, 11, 11);
+    LocalDateTime NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
+    LocalDateTime EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE = LocalDateTime.of(2025, 9, 14, 23, 59, 59);
     BigDecimal FREE_SHIPPING_THRESHOLD = BigDecimal.valueOf(199.99);
     String CHECKOUT_URL = "CHECKOUT_URL";
 }
