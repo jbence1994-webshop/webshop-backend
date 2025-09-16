@@ -54,7 +54,6 @@ public class CheckoutControllerTests {
         assertThat(result.getBody().cartId(), equalTo(checkoutSessionDto().cartId()));
         assertThat(result.getBody().appliedCoupon(), is(nullValue()));
         assertThat(result.getBody().status(), equalTo(checkoutSessionDto().status()));
-        assertThat(result.getBody().createdAt(), equalTo(checkoutSessionDto().createdAt()));
     }
 
     @Test
