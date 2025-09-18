@@ -18,6 +18,11 @@ spring:
 webshop:
   name: ${WEBSHOP_NAME}
 
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    accessTokenExpiration: 300 # 5m
+    refreshTokenExpiration: 604800 # 7d
+
   client-app:
     url: ${CLIENT_APP_URL}
 
