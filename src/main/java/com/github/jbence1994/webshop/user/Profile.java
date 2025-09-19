@@ -59,6 +59,10 @@ public class Profile {
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
 
+    public void earnLoyaltyPoints(int value) {
+        this.loyaltyPoints += value;
+    }
+
     public MembershipTier getMembershipTier() {
         return MembershipTier.fromPoints(loyaltyPoints);
     }
