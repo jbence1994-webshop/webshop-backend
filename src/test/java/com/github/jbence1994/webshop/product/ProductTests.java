@@ -9,28 +9,12 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product1Wi
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class ProductTests {
     private final Product product = product1();
     private final Product productWithPhotos = product1WithPhotos();
-
-    @Test
-    public void getFirstPhotoTest_HappyPath_PhotoIsNotNull() {
-        var result = productWithPhotos.getFirstPhoto();
-
-        assertThat(result, not(nullValue()));
-    }
-
-    @Test
-    public void getFirstPhotoTest_UnhappyPath_PhotoIsNull() {
-        var result = product.getFirstPhoto();
-
-        assertThat(result, is(nullValue()));
-    }
 
     @Test
     public void addPhotoTest() {
@@ -40,16 +24,30 @@ public class ProductTests {
     }
 
     @Test
-    public void removePhotoTest_HappyPath_PhotoIsNotNull() {
+    public void removePhotoTest_HappyPath_PhotoIsExists() {
         productWithPhotos.removePhoto(PHOTO_FILE_NAME);
 
         assertThat(productWithPhotos.getPhotos(), is(empty()));
     }
 
     @Test
-    public void removePhotoTest_HappyPath_PhotoIsNull() {
+    public void removePhotoTest_HappyPath_PhotoIsNotExists() {
         productWithPhotos.removePhoto(PHOTO_NOT_EXISTING_FILE_NAME);
 
         assertDoesNotThrow(() -> productWithPhotos.removePhoto(PHOTO_NOT_EXISTING_FILE_NAME));
+    }
+
+    @Test
+    public void getFirstPhotoTest_HappyPath_PhotoIsPresent() {
+        var result = productWithPhotos.getFirstPhoto();
+
+        assertThat(result.isPresent(), is(true));
+    }
+
+    @Test
+    public void getFirstPhotoTest_UnhappyPath_PhotoIsEmpty() {
+        var result = product.getFirstPhoto();
+
+        assertThat(result.isEmpty(), is(true));
     }
 }

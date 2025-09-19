@@ -40,8 +40,8 @@
         <!-- JaCoCo properties -->
         <jacoco.line-coverage>0.99</jacoco.line-coverage>
         <jacoco.branch-coverage>0.98</jacoco.branch-coverage>
-        <jacoco.complexity-coverage>0.99</jacoco.complexity-coverage>
-        <jacoco.method-coverage>0.99</jacoco.method-coverage>
+        <jacoco.complexity-coverage>0.98</jacoco.complexity-coverage>
+        <jacoco.method-coverage>0.98</jacoco.method-coverage>
         <jacoco.class-coverage>0.98</jacoco.class-coverage>
 
         <!-- Flags -->

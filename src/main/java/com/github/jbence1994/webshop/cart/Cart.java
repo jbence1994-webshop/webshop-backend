@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -41,37 +42,31 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
 
-    public CartItem getItem(Long productId) {
+    public Optional<CartItem> getItem(Long productId) {
         return items.stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     public CartItem addItem(Product product) {
-        var cartItem = getItem(product.getId());
+        var cartItem = getItem(product.getId())
+                .orElseGet(() -> {
+                    var newItem = new CartItem(product, 0, this);
+                    items.add(newItem);
+                    return newItem;
+                });
 
-        if (cartItem != null) {
-            cartItem.setQuantity(cartItem.getQuantity() + 1);
-        } else {
-            cartItem = new CartItem();
-            cartItem.setProduct(product);
-            cartItem.setQuantity(1);
-            cartItem.setCart(this);
-
-            items.add(cartItem);
-        }
+        cartItem.setQuantity(cartItem.getQuantity() + 1);
 
         return cartItem;
     }
 
     public void removeItem(Long productId) {
-        var cartItem = getItem(productId);
-
-        if (cartItem != null) {
-            items.remove(cartItem);
-            cartItem.setCart(null);
-        }
+        getItem(productId)
+                .ifPresent(cartItem -> {
+                    items.remove(cartItem);
+                    cartItem.setCart(null);
+                });
     }
 
     public void clear() {
