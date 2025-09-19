@@ -19,20 +19,6 @@ public class ProductTests {
     private final Product productWithPhotos = product1WithPhotos();
 
     @Test
-    public void getFirstPhotoTest_HappyPath_PhotoIsNotNull() {
-        var result = productWithPhotos.getFirstPhoto();
-
-        assertThat(result, not(nullValue()));
-    }
-
-    @Test
-    public void getFirstPhotoTest_UnhappyPath_PhotoIsNull() {
-        var result = product.getFirstPhoto();
-
-        assertThat(result, is(nullValue()));
-    }
-
-    @Test
     public void addPhotoTest() {
         product.addPhoto(PHOTO_FILE_NAME);
 
@@ -51,5 +37,19 @@ public class ProductTests {
         productWithPhotos.removePhoto(PHOTO_NOT_EXISTING_FILE_NAME);
 
         assertDoesNotThrow(() -> productWithPhotos.removePhoto(PHOTO_NOT_EXISTING_FILE_NAME));
+    }
+
+    @Test
+    public void getFirstPhotoTest_HappyPath_PhotoIsNotNull() {
+        var result = productWithPhotos.getFirstPhoto();
+
+        assertThat(result, not(nullValue()));
+    }
+
+    @Test
+    public void getFirstPhotoTest_UnhappyPath_PhotoIsNull() {
+        var result = product.getFirstPhoto();
+
+        assertThat(result, is(nullValue()));
     }
 }

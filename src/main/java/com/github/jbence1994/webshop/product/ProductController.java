@@ -54,7 +54,9 @@ public class ProductController {
         return products.stream()
                 .map(product -> {
                     var productDto = productMapper.toDto(product);
-                    productDto.setPhoto(productMapper.toDto(product.getFirstPhoto(), imageUrlBuilder));
+                    product.getFirstPhoto()
+                            .map(photo -> productMapper.toDto(photo, imageUrlBuilder))
+                            .ifPresent(productDto::setPhoto);
                     return productDto;
                 })
                 .toList();
@@ -65,7 +67,9 @@ public class ProductController {
         var product = productQueryService.getProduct(id);
 
         var productDto = productMapper.toDto(product);
-        productDto.setPhoto(productMapper.toDto(product.getFirstPhoto(), imageUrlBuilder));
+        product.getFirstPhoto()
+                .map(photo -> productMapper.toDto(photo, imageUrlBuilder))
+                .ifPresent(productDto::setPhoto);
 
         return productDto;
     }

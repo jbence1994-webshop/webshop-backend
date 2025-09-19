@@ -18,6 +18,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "products")
@@ -46,12 +47,6 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductPhoto> photos = new ArrayList<>();
 
-    public ProductPhoto getFirstPhoto() {
-        return photos.stream()
-                .findFirst()
-                .orElse(null);
-    }
-
     public void addPhoto(String fileName) {
         var photo = new ProductPhoto();
         photo.setProduct(this);
@@ -61,18 +56,20 @@ public class Product {
     }
 
     public void removePhoto(String fileName) {
-        var photo = getPhoto(fileName);
-
-        if (photo != null) {
+        getPhoto(fileName).ifPresent(photo -> {
             photos.remove(photo);
             photo.setProduct(null);
-        }
+        });
     }
 
-    private ProductPhoto getPhoto(String fileName) {
+    public Optional<ProductPhoto> getFirstPhoto() {
+        return photos.stream()
+                .findFirst();
+    }
+
+    private Optional<ProductPhoto> getPhoto(String fileName) {
         return photos.stream()
                 .filter(photo -> photo.getFileName().equals(fileName))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 }
