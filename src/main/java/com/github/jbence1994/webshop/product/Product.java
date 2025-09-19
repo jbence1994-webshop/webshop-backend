@@ -56,10 +56,11 @@ public class Product {
     }
 
     public void removePhoto(String fileName) {
-        getPhoto(fileName).ifPresent(photo -> {
-            photos.remove(photo);
-            photo.setProduct(null);
-        });
+        getPhoto(fileName)
+                .ifPresent(photo -> {
+                    photos.remove(photo);
+                    photo.setProduct(null);
+                });
     }
 
     public Optional<ProductPhoto> getFirstPhoto() {
