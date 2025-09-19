@@ -18,7 +18,6 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 
 public class CartTests {
     private final Cart cart = cartWithTwoItems();
@@ -32,18 +31,18 @@ public class CartTests {
     }
 
     @Test
-    public void getItemTest_HappyPath_CartItemIsNotNull() {
+    public void getItemTest_HappyPath_CartItemIsPresent() {
         var result = cart.getItem(1L);
 
-        assertThat(result, not(nullValue()));
-        assertThat(result.getProduct().getId(), equalTo(1L));
+        assertThat(result.isPresent(), is(true));
+        assertThat(result.get().getProduct().getId(), equalTo(1L));
     }
 
     @Test
-    public void getItemTest_UnhappyPath_CartItemIsNull() {
+    public void getItemTest_UnhappyPath_CartItemIsEmpty() {
         var result = cart.getItem(3L);
 
-        assertThat(result, is(nullValue()));
+        assertThat(result.isEmpty(), is(true));
     }
 
     @Test
