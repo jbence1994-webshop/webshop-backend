@@ -51,15 +51,13 @@ public class Cart {
     public CartItem addItem(Product product) {
         var cartItem = getItem(product.getId())
                 .orElseGet(() -> {
-                    var newItem = new CartItem();
-                    newItem.setProduct(product);
-                    newItem.setQuantity(0);
-                    newItem.setCart(this);
+                    var newItem = new CartItem(product, 0, this);
                     items.add(newItem);
                     return newItem;
                 });
 
         cartItem.setQuantity(cartItem.getQuantity() + 1);
+
         return cartItem;
     }
 
