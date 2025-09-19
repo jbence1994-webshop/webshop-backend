@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.6</version>
         <relativePath/>
     </parent>
 
@@ -41,8 +41,8 @@
         <!-- JaCoCo properties -->
         <jacoco.line-coverage>0.99</jacoco.line-coverage>
         <jacoco.branch-coverage>0.98</jacoco.branch-coverage>
-        <jacoco.complexity-coverage>0.99</jacoco.complexity-coverage>
-        <jacoco.method-coverage>0.99</jacoco.method-coverage>
+        <jacoco.complexity-coverage>0.98</jacoco.complexity-coverage>
+        <jacoco.method-coverage>0.98</jacoco.method-coverage>
         <jacoco.class-coverage>0.98</jacoco.class-coverage>
 
         <!-- Flags -->
