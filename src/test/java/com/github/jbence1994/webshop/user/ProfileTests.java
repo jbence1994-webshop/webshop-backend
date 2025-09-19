@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -26,6 +27,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ProfileTests {
+    private final Profile profile = bronzeProfile1();
+
     private static Stream<Arguments> profileParams() {
         return Stream.of(
                 Arguments.of(String.format("%s profile with %d loyalty points", BRONZE.name(), bronzeProfile1().getLoyaltyPoints()), bronzeProfile1(), BRONZE),
@@ -53,5 +56,12 @@ public class ProfileTests {
         var result = profile.getMembershipTier();
 
         assertThat(result, equalTo(expectedMembershipTier));
+    }
+
+    @Test
+    public void earnLoyaltyPointsTest() {
+        profile.earnLoyaltyPoints(100);
+
+        assertThat(100, equalTo(profile.getLoyaltyPoints()));
     }
 }

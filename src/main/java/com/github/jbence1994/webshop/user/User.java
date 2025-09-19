@@ -73,7 +73,7 @@ public class User {
         return Optional.ofNullable(profile.getAvatarFileName());
     }
 
-    public void earnLoyaltyPoints(int loyaltyPoints) {
-        profile.setLoyaltyPoints(profile.getLoyaltyPoints() + loyaltyPoints);
+    public void earnLoyaltyPoints(int value) {
+        profile.earnLoyaltyPoints(value);
     }
 }
