@@ -64,7 +64,7 @@ public class Profile {
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "wishlist",
             joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "user_id"),
