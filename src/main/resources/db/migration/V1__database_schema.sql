@@ -107,6 +107,23 @@ CREATE TABLE IF NOT EXISTS wishlist
             ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS product_ratings
+(
+    id         BIGINT           NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    product_id BIGINT           NOT NULL,
+    profile_id BIGINT           NOT NULL,
+    value      TINYINT UNSIGNED NOT NULL,
+    CONSTRAINT unique_product_id_profile_id UNIQUE (product_id, profile_id),
+    CONSTRAINT fk_product_ratings_products
+        FOREIGN KEY (product_id) REFERENCES products (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_product_ratings_profiles
+        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS orders
 (
     id              BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,

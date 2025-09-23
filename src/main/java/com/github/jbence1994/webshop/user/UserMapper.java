@@ -27,6 +27,7 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
+    @Mapping(target = "ratings", ignore = true)
     Profile toEntity(RegistrationRequest.ProfileDto profile);
 
     @Mapping(target = "profileId", ignore = true)

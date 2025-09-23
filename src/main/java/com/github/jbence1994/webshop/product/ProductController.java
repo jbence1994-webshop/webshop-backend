@@ -88,4 +88,14 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(sanitizedProductDto);
     }
+
+    @PostMapping("{id}/rate")
+    public ResponseEntity<RateProductResponse> rateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody RateProductRequest request
+    ) {
+        var productRating = productService.rateProduct(id, request.getRateValue());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productRating);
+    }
 }
