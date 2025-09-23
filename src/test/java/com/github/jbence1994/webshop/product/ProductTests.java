@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_NOT_EXISTING_FILE_NAME;
+import static com.github.jbence1994.webshop.product.ProductRatingTestObject.productRating;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,5 +50,29 @@ public class ProductTests {
         var result = product.getFirstPhoto();
 
         assertThat(result.isEmpty(), is(true));
+    }
+
+    @Test
+    public void addRatingTest() {
+        product.addRating(productRating((byte) 1));
+        product.addRating(productRating((byte) 2));
+        product.addRating(productRating((byte) 3));
+        product.addRating(productRating((byte) 4));
+        product.addRating(productRating((byte) 5));
+
+        assertThat(product.getRatings().size(), equalTo(5));
+    }
+
+    @Test
+    public void calculateAverageRatingTest() {
+        product.addRating(productRating((byte) 1));
+        product.addRating(productRating((byte) 2));
+        product.addRating(productRating((byte) 3));
+        product.addRating(productRating((byte) 4));
+        product.addRating(productRating((byte) 5));
+
+        var result = product.calculateAverageRating();
+
+        assertThat(result, equalTo(3.0));
     }
 }
