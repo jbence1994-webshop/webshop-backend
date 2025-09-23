@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.user.MembershipTier.BRONZE;
 import static com.github.jbence1994.webshop.user.MembershipTier.GOLD;
 import static com.github.jbence1994.webshop.user.MembershipTier.PLATINUM;
@@ -50,7 +52,7 @@ public class ProfileTests {
     public void earnLoyaltyPointsTest() {
         profile.earnLoyaltyPoints(100);
 
-        assertThat(100, equalTo(profile.getLoyaltyPoints()));
+        assertThat(profile.getLoyaltyPoints(), equalTo(100));
     }
 
     @ParameterizedTest(name = "{index} => {0}")
@@ -63,5 +65,22 @@ public class ProfileTests {
         var result = profile.getMembershipTier();
 
         assertThat(result, equalTo(expectedMembershipTier));
+    }
+
+    @Test
+    public void addFavoriteProductTest() {
+        profile.addFavoriteProduct(product1());
+
+        assertThat(profile.getFavoriteProducts().size(), equalTo(1));
+    }
+
+    @Test
+    public void removeFavoriteProductTest() {
+        profile.addFavoriteProduct(product1());
+        profile.addFavoriteProduct(product2());
+
+        profile.removeFavoriteProduct(1L);
+
+        assertThat(profile.getFavoriteProducts().size(), equalTo(1));
     }
 }

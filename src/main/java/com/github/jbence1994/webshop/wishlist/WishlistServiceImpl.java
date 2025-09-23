@@ -19,7 +19,7 @@ public class WishlistServiceImpl implements WishlistService {
         var user = authService.getCurrentUser();
         var product = productQueryService.getProduct(productId);
 
-        user.addFavouriteProduct(product);
+        user.addFavoriteProduct(product);
 
         userService.updateUser(user);
 
@@ -30,7 +30,7 @@ public class WishlistServiceImpl implements WishlistService {
     public void deleteProductFromWishlist(Long productId) {
         var user = authService.getCurrentUser();
 
-        user.removeFavouriteProduct(productId);
+        user.removeFavoriteProduct(productId);
 
         userService.updateUser(user);
     }

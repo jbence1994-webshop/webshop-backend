@@ -84,7 +84,7 @@ public class Profile {
         favoriteProducts.add(product);
     }
 
-    public void removeFavouriteProduct(Long productId) {
+    public void removeFavoriteProduct(Long productId) {
         favoriteProducts.removeIf(product -> productId.equals(product.getId()));
     }
 }

@@ -78,11 +78,11 @@ public class User {
         profile.earnLoyaltyPoints(value);
     }
 
-    public void addFavouriteProduct(Product product) {
+    public void addFavoriteProduct(Product product) {
         profile.addFavoriteProduct(product);
     }
 
-    public void removeFavouriteProduct(Long productId) {
-        profile.removeFavouriteProduct(productId);
+    public void removeFavoriteProduct(Long productId) {
+        profile.removeFavoriteProduct(productId);
     }
 }
