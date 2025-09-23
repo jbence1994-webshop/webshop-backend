@@ -46,6 +46,13 @@ public class ProfileTests {
         );
     }
 
+    @Test
+    public void earnLoyaltyPointsTest() {
+        profile.earnLoyaltyPoints(100);
+
+        assertThat(100, equalTo(profile.getLoyaltyPoints()));
+    }
+
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("profileParams")
     public void getMembershipTierTests(
@@ -56,12 +63,5 @@ public class ProfileTests {
         var result = profile.getMembershipTier();
 
         assertThat(result, equalTo(expectedMembershipTier));
-    }
-
-    @Test
-    public void earnLoyaltyPointsTest() {
-        profile.earnLoyaltyPoints(100);
-
-        assertThat(100, equalTo(profile.getLoyaltyPoints()));
     }
 }

@@ -76,6 +76,10 @@ public class Profile {
         this.loyaltyPoints += value;
     }
 
+    public MembershipTier getMembershipTier() {
+        return MembershipTier.fromPoints(loyaltyPoints);
+    }
+
     public void addFavoriteProduct(Product product) {
         favoriteProducts.add(product);
     }
