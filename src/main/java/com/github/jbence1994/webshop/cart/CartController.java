@@ -32,6 +32,13 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartDto);
     }
 
+    @GetMapping("/{id}")
+    public CartDto getCart(@PathVariable UUID id) {
+        var cart = cartQueryService.getCart(id);
+
+        return cartMapper.toDto(cart);
+    }
+
     @PostMapping("/{id}/items")
     public ResponseEntity<CartItemDto> addItemToCart(
             @PathVariable UUID id,
@@ -42,13 +49,6 @@ public class CartController {
         var cartItemDto = cartMapper.toDto(cartItem);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cartItemDto);
-    }
-
-    @GetMapping("/{id}")
-    public CartDto getCart(@PathVariable UUID id) {
-        var cart = cartQueryService.getCart(id);
-
-        return cartMapper.toDto(cart);
     }
 
     @PutMapping("/{cartId}/items/{productId}")

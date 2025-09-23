@@ -60,6 +60,17 @@ public class CartControllerTests {
     }
 
     @Test
+    public void getCartTest() {
+        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
+        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
+
+        var result = cartController.getCart(CART_ID);
+
+        assertThat(result.id(), equalTo(cartDto().id()));
+        assertThat(result.totalPrice(), equalTo(cartDto().totalPrice()));
+    }
+
+    @Test
     public void addItemToCartTest() {
         when(cartService.addItemToCart(any(), anyLong())).thenReturn(cartItem());
         when(cartMapper.toDto(any(CartItem.class))).thenReturn(cartItemDto1());
@@ -71,17 +82,6 @@ public class CartControllerTests {
         assertThat(result.getBody().product(), not(nullValue()));
         assertThat(result.getBody().quantity(), equalTo(cartItemDto1().quantity()));
         assertThat(result.getBody().totalPrice(), equalTo(cartItemDto1().totalPrice()));
-    }
-
-    @Test
-    public void getCartTest() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-        when(cartMapper.toDto(any(Cart.class))).thenReturn(cartDto());
-
-        var result = cartController.getCart(CART_ID);
-
-        assertThat(result.id(), equalTo(cartDto().id()));
-        assertThat(result.totalPrice(), equalTo(cartDto().totalPrice()));
     }
 
     @Test
