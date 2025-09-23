@@ -12,9 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.stream.Stream;
 
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
-import static com.github.jbence1994.webshop.product.RateProductResponseTestObject.rateProductResponse;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -63,17 +63,17 @@ public class ProductServiceImplTests {
     }
 
     @Test
-    public void rateProductTest_HappyPath() {
+    public void createProductRatingTest_HappyPath() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
         when(authService.getCurrentUser()).thenReturn(user());
         when(productRepository.save(any())).thenReturn(product1WithRating());
 
-        var result = productService.rateProduct(1L, (byte) 5);
+        var result = productService.createProductRating(1L, (byte) 5);
 
-        assertThat(result.productId(), equalTo(rateProductResponse().productId()));
-        assertThat(result.yourRating(), equalTo(rateProductResponse().yourRating()));
-        assertThat(result.averageRating(), equalTo(rateProductResponse().averageRating()));
-        assertThat(result.totalRatings(), equalTo(rateProductResponse().totalRatings()));
+        assertThat(result.productId(), equalTo(productRatingResponse().productId()));
+        assertThat(result.yourRating(), equalTo(productRatingResponse().yourRating()));
+        assertThat(result.averageRating(), equalTo(productRatingResponse().averageRating()));
+        assertThat(result.totalRatings(), equalTo(productRatingResponse().totalRatings()));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();
@@ -82,13 +82,13 @@ public class ProductServiceImplTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("rateParams")
-    public void rateProductTest_UnhappyPath_InvalidProductRateValueException(
+    public void createProductRatingTest_UnhappyPath_InvalidProductRateValueException(
             String testCase,
             byte rateValue
     ) {
         var result = assertThrows(
                 InvalidProductRateValueException.class,
-                () -> productService.rateProduct(1L, rateValue)
+                () -> productService.createProductRating(1L, rateValue)
         );
 
         assertThat(result.getMessage(), equalTo("Rating must be between 1 and 5."));

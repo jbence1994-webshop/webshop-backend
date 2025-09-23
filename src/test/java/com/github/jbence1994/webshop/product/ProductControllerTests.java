@@ -12,15 +12,15 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
+import static com.github.jbence1994.webshop.product.CreateProductRatingRequestTestObject.createProductRatingRequest;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
-import static com.github.jbence1994.webshop.product.RateProductRequestTestObject.rateProductRequest;
-import static com.github.jbence1994.webshop.product.RateProductResponseTestObject.rateProductResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -108,10 +108,10 @@ class ProductControllerTests {
     }
 
     @Test
-    public void rateProductTest() {
-        when(productService.rateProduct(any(), any())).thenReturn(rateProductResponse());
+    public void createProductRatingTest() {
+        when(productService.createProductRating(any(), any())).thenReturn(productRatingResponse());
 
-        var result = productController.rateProduct(1L, rateProductRequest());
+        var result = productController.createProductRating(1L, createProductRatingRequest());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));

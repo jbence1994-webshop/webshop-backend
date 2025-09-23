@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class RateProductRequest {
+public class UpdateProductRatingRequest {
 
     @NotNull(message = "Product rate value must be provided.")
     private Byte rateValue;

@@ -75,6 +75,11 @@ public class Product {
         ratings.add(productRating);
     }
 
+    public void updateRating(Long profileId, Byte value) {
+        getRating(profileId)
+                .ifPresent(productRating -> productRating.setValue(value));
+    }
+
     public double calculateAverageRating() {
         return ratings.stream()
                 .mapToInt(ProductRating::getValue)
@@ -85,6 +90,12 @@ public class Product {
     private Optional<ProductPhoto> getPhoto(String fileName) {
         return photos.stream()
                 .filter(photo -> photo.getFileName().equals(fileName))
+                .findFirst();
+    }
+
+    private Optional<ProductRating> getRating(Long profileId) {
+        return ratings.stream()
+                .filter(rating -> rating.getProfile().getUserId().equals(profileId))
                 .findFirst();
     }
 }

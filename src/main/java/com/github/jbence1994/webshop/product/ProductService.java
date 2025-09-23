@@ -5,5 +5,7 @@ public interface ProductService {
 
     void updateProduct(Product product);
 
-    RateProductResponse rateProduct(Long id, Byte value);
+    ProductRatingResponse createProductRating(Long id, Byte rateValue);
+
+    ProductRatingResponse updateProductRating(Long id, Byte rateValue);
 }

@@ -22,10 +22,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public RateProductResponse rateProduct(Long id, Byte rateValue) {
-        if (rateValue < 1 || rateValue > 5) {
-            throw new InvalidProductRateValueException();
-        }
+    public ProductRatingResponse createProductRating(Long id, Byte rateValue) {
+        validate(rateValue);
 
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
@@ -36,10 +34,30 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.save(product);
 
-        return new RateProductResponse(id, rateValue, product.calculateAverageRating(), product.getRatings().size());
+        return new ProductRatingResponse(id, rateValue, product.calculateAverageRating(), product.getRatings().size());
+    }
+
+    @Override
+    public ProductRatingResponse updateProductRating(Long id, Byte rateValue) {
+        validate(rateValue);
+
+        var product = productQueryService.getProduct(id);
+        var user = authService.getCurrentUser();
+
+        product.updateRating(user.getId(), rateValue);
+
+        productRepository.save(product);
+
+        return new ProductRatingResponse(id, rateValue, product.calculateAverageRating(), product.getRatings().size());
     }
 
     private void save(Product product) {
         productRepository.save(product);
+    }
+
+    private void validate(int rateValue) {
+        if (rateValue < 1 || rateValue > 5) {
+            throw new InvalidProductRateValueException();
+        }
     }
 }
