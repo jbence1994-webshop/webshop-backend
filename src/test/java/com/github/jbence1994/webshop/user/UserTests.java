@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -73,6 +75,23 @@ public class UserTests {
     public void earnLoyaltyPointsTest() {
         user1.earnLoyaltyPoints(100);
 
-        assertThat(100, equalTo(user1.getProfile().getLoyaltyPoints()));
+        assertThat(user1.getProfile().getLoyaltyPoints(), equalTo(100));
+    }
+
+    @Test
+    public void addFavoriteProductTest() {
+        user1.addFavoriteProduct(product1());
+
+        assertThat(user1.getProfile().getFavoriteProducts().size(), equalTo(1));
+    }
+
+    @Test
+    public void removeFavoriteProductTest() {
+        user1.addFavoriteProduct(product1());
+        user1.addFavoriteProduct(product2());
+
+        user1.removeFavoriteProduct(1L);
+
+        assertThat(user1.getProfile().getFavoriteProducts().size(), equalTo(1));
     }
 }

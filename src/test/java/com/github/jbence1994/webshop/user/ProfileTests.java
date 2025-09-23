@@ -1,11 +1,14 @@
 package com.github.jbence1994.webshop.user;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.user.MembershipTier.BRONZE;
 import static com.github.jbence1994.webshop.user.MembershipTier.GOLD;
 import static com.github.jbence1994.webshop.user.MembershipTier.PLATINUM;
@@ -26,6 +29,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ProfileTests {
+    private final Profile profile = bronzeProfile1();
+
     private static Stream<Arguments> profileParams() {
         return Stream.of(
                 Arguments.of(String.format("%s profile with %d loyalty points", BRONZE.name(), bronzeProfile1().getLoyaltyPoints()), bronzeProfile1(), BRONZE),
@@ -43,6 +48,13 @@ public class ProfileTests {
         );
     }
 
+    @Test
+    public void earnLoyaltyPointsTest() {
+        profile.earnLoyaltyPoints(100);
+
+        assertThat(profile.getLoyaltyPoints(), equalTo(100));
+    }
+
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("profileParams")
     public void getMembershipTierTests(
@@ -53,5 +65,22 @@ public class ProfileTests {
         var result = profile.getMembershipTier();
 
         assertThat(result, equalTo(expectedMembershipTier));
+    }
+
+    @Test
+    public void addFavoriteProductTest() {
+        profile.addFavoriteProduct(product1());
+
+        assertThat(profile.getFavoriteProducts().size(), equalTo(1));
+    }
+
+    @Test
+    public void removeFavoriteProductTest() {
+        profile.addFavoriteProduct(product1());
+        profile.addFavoriteProduct(product2());
+
+        profile.removeFavoriteProduct(1L);
+
+        assertThat(profile.getFavoriteProducts().size(), equalTo(1));
     }
 }

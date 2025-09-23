@@ -26,6 +26,7 @@ public interface UserMapper {
     @Mapping(target = "loyaltyPoints", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "favoriteProducts", ignore = true)
     Profile toEntity(RegistrationRequest.ProfileDto profile);
 
     @Mapping(target = "profileId", ignore = true)

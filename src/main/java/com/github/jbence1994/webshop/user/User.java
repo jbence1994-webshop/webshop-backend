@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -73,7 +74,15 @@ public class User {
         return Optional.ofNullable(profile.getAvatarFileName());
     }
 
-    public void earnLoyaltyPoints(int loyaltyPoints) {
-        profile.setLoyaltyPoints(profile.getLoyaltyPoints() + loyaltyPoints);
+    public void earnLoyaltyPoints(int value) {
+        profile.earnLoyaltyPoints(value);
+    }
+
+    public void addFavoriteProduct(Product product) {
+        profile.addFavoriteProduct(product);
+    }
+
+    public void removeFavoriteProduct(Long productId) {
+        profile.removeFavoriteProduct(productId);
     }
 }
