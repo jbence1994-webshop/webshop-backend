@@ -16,6 +16,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart createCart() {
         var cart = new Cart();
+
         cartRepository.save(cart);
 
         return cart;
@@ -27,6 +28,7 @@ public class CartServiceImpl implements CartService {
         var product = productQueryService.getProduct(productId);
 
         var cartItem = cart.addItem(product);
+
         cartRepository.save(cart);
 
         return cartItem;
@@ -42,6 +44,7 @@ public class CartServiceImpl implements CartService {
         var cartItem = cartQueryService.getCartItem(cartId, productId);
 
         cartItem.setQuantity(quantity);
+
         cartRepository.save(cart);
 
         return cartItem;
@@ -52,6 +55,7 @@ public class CartServiceImpl implements CartService {
         var cart = cartQueryService.getCart(cartId);
 
         cart.removeItem(productId);
+
         cartRepository.save(cart);
     }
 
