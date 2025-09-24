@@ -41,6 +41,19 @@ public final class ProductTestObject {
         );
     }
 
+    public static Product product1WithUpdatedRating() {
+        return new Product(
+                1L,
+                PRODUCT_1_NAME,
+                BigDecimal.valueOf(49.99),
+                PRODUCT_1_UNIT,
+                PRODUCT_1_DESCRIPTION,
+                category1(),
+                new ArrayList<>(),
+                List.of(productRating((byte) 4))
+        );
+    }
+
     public static Product product1AfterMappingFromDto() {
         return new Product(
                 null,

@@ -13,8 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithUpdatedRating;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -89,6 +91,42 @@ public class ProductServiceImplTests {
         var result = assertThrows(
                 InvalidProductRateValueException.class,
                 () -> productService.createProductRating(1L, rateValue)
+        );
+
+        assertThat(result.getMessage(), equalTo("Rating must be between 1 and 5."));
+
+        verify(productQueryService, never()).getProduct(any());
+        verify(authService, never()).getCurrentUser();
+        verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    public void updateProductRatingTest_HappyPath() {
+        when(productQueryService.getProduct(any())).thenReturn(product1WithRating());
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(productRepository.save(any())).thenReturn(product1WithUpdatedRating());
+
+        var result = productService.updateProductRating(1L, (byte) 4);
+
+        assertThat(result.productId(), equalTo(updatedProductRatingResponse().productId()));
+        assertThat(result.yourRating(), equalTo(updatedProductRatingResponse().yourRating()));
+        assertThat(result.averageRating(), equalTo(updatedProductRatingResponse().averageRating()));
+        assertThat(result.totalRatings(), equalTo(updatedProductRatingResponse().totalRatings()));
+
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(authService, times(1)).getCurrentUser();
+        verify(productRepository, times(1)).save(any());
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("rateParams")
+    public void updateProductRatingTest_UnhappyPath_InvalidProductRateValueException(
+            String testCase,
+            byte rateValue
+    ) {
+        var result = assertThrows(
+                InvalidProductRateValueException.class,
+                () -> productService.updateProductRating(1L, rateValue)
         );
 
         assertThat(result.getMessage(), equalTo("Rating must be between 1 and 5."));
