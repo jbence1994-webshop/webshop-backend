@@ -22,19 +22,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductRatingResponse createProductRating(Long id, Byte rateValue) {
-        validate(rateValue);
+    public ProductRatingResponse createProductRating(Long id, Byte value) {
+        validate(value);
 
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        var productRating = new ProductRating(product, user.getProfile(), rateValue);
+        var productRating = new ProductRating(product, user.getProfile(), value);
 
         product.addRating(productRating);
 
         productRepository.save(product);
 
-        return new ProductRatingResponse(id, rateValue, product.calculateAverageRating(), product.getRatings().size());
+        return new ProductRatingResponse(id, value, product.calculateAverageRating(), product.getRatings().size());
     }
 
     @Override

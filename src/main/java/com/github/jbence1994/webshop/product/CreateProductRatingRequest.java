@@ -8,6 +8,6 @@ import lombok.Getter;
 @Getter
 public class CreateProductRatingRequest {
 
-    @NotNull(message = "Product rate value must be provided.")
-    private Byte rateValue;
+    @NotNull(message = "Product rating value must be provided.")
+    private Byte value;
 }

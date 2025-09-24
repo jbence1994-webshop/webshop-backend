@@ -98,7 +98,7 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRatingRequest request
     ) {
-        var productRating = productService.createProductRating(id, request.getRateValue());
+        var productRating = productService.createProductRating(id, request.getValue());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productRating);
     }

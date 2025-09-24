@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_NOT_EXISTING_FILE_NAME;
+import static com.github.jbence1994.webshop.product.ProductFeedbackTestObject.productFeedback;
 import static com.github.jbence1994.webshop.product.ProductRatingTestObject.productRating;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
@@ -99,5 +100,13 @@ public class ProductTests {
         var result = product.calculateAverageRating();
 
         assertThat(result, equalTo(3.0));
+    }
+
+    @Test
+    public void addFeedbackTest() {
+        product.addFeedback(productFeedback());
+        product.addFeedback(productFeedback());
+
+        assertThat(product.getFeedbacks().size(), equalTo(2));
     }
 }
