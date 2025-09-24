@@ -115,4 +115,20 @@ public final class ProductTestObject {
                 new ArrayList<>()
         );
     }
+
+    public static Product product2WithPhotos() {
+        var product = new Product(
+                2L,
+                PRODUCT_2_NAME,
+                BigDecimal.valueOf(89.99),
+                PRODUCT_2_UNIT,
+                PRODUCT_2_DESCRIPTION,
+                category1(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
+        product.addPhoto(PHOTO_FILE_NAME);
+        return product;
+    }
 }
