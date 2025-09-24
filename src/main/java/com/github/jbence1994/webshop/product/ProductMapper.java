@@ -15,6 +15,7 @@ public interface ProductMapper {
 
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "photo", ignore = true)
+    @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
     ProductDto toDto(Product product);
 
     @Mapping(target = "id", ignore = true)

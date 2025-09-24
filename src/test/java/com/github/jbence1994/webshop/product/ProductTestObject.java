@@ -24,6 +24,7 @@ public final class ProductTestObject {
                 PRODUCT_1_DESCRIPTION,
                 category1(),
                 new ArrayList<>(),
+                new ArrayList<>(),
                 new ArrayList<>()
         );
     }
@@ -37,7 +38,8 @@ public final class ProductTestObject {
                 PRODUCT_1_DESCRIPTION,
                 category1(),
                 new ArrayList<>(),
-                List.of(productRating((byte) 5))
+                List.of(productRating((byte) 5)),
+                new ArrayList<>()
         );
     }
 
@@ -50,7 +52,8 @@ public final class ProductTestObject {
                 PRODUCT_1_DESCRIPTION,
                 category1(),
                 new ArrayList<>(),
-                List.of(productRating((byte) 4))
+                List.of(productRating((byte) 4)),
+                new ArrayList<>()
         );
     }
 
@@ -62,6 +65,7 @@ public final class ProductTestObject {
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
                 null,
+                new ArrayList<>(),
                 new ArrayList<>(),
                 new ArrayList<>()
         );
@@ -75,6 +79,7 @@ public final class ProductTestObject {
                 PRODUCT_1_UNIT,
                 PRODUCT_1_DESCRIPTION,
                 category1(),
+                new ArrayList<>(),
                 new ArrayList<>(),
                 new ArrayList<>()
         );
@@ -90,6 +95,7 @@ public final class ProductTestObject {
                 PRODUCT_2_UNIT,
                 PRODUCT_2_DESCRIPTION,
                 category1(),
+                new ArrayList<>(),
                 new ArrayList<>(),
                 new ArrayList<>()
         );
