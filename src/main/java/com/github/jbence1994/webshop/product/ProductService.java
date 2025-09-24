@@ -8,4 +8,6 @@ public interface ProductService {
     ProductRatingResponse createProductRating(Long id, Byte rateValue);
 
     ProductRatingResponse updateProductRating(Long id, Byte rateValue);
+
+    ProductFeedbackResponse createProductFeedback(Long id, String feedback);
 }

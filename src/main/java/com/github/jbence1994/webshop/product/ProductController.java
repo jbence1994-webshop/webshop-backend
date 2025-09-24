@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private final CreateProductFeedbackRequestSanitizer createProductFeedbackRequestSanitizer;
     private final CategoryQueryService categoryQueryService;
     private final ProductQueryService productQueryService;
     private final ProductDtoSanitizer productDtoSanitizer;
@@ -27,6 +28,7 @@ public class ProductController {
     private final ProductMapper productMapper;
 
     public ProductController(
+            final CreateProductFeedbackRequestSanitizer createProductFeedbackRequestSanitizer,
             final CategoryQueryService categoryQueryService,
             final ProductQueryService productQueryService,
             final ProductDtoSanitizer productDtoSanitizer,
@@ -34,6 +36,7 @@ public class ProductController {
             final ProductService productService,
             final ProductMapper productMapper
     ) {
+        this.createProductFeedbackRequestSanitizer = createProductFeedbackRequestSanitizer;
         this.categoryQueryService = categoryQueryService;
         this.productQueryService = productQueryService;
         this.productDtoSanitizer = productDtoSanitizer;
@@ -106,5 +109,17 @@ public class ProductController {
             @Valid @RequestBody UpdateProductRatingRequest request
     ) {
         return productService.updateProductRating(id, request.getRateValue());
+    }
+
+    @PostMapping("{id}/feedback")
+    public ResponseEntity<ProductFeedbackResponse> createProductFeedback(
+            @PathVariable Long id,
+            @Valid @RequestBody CreateProductFeedbackRequest request
+    ) {
+        var sanitizedRequest = createProductFeedbackRequestSanitizer.sanitize(request);
+
+        var productFeedback = productService.createProductFeedback(id, sanitizedRequest.getFeedback());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productFeedback);
     }
 }

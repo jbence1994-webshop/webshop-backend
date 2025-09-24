@@ -51,6 +51,20 @@ public class ProductServiceImpl implements ProductService {
         return new ProductRatingResponse(id, rateValue, product.calculateAverageRating(), product.getRatings().size());
     }
 
+    @Override
+    public ProductFeedbackResponse createProductFeedback(Long id, String feedback) {
+        var product = productQueryService.getProduct(id);
+        var user = authService.getCurrentUser();
+
+        var productFeedback = new ProductFeedback(product, user.getProfile(), feedback);
+
+        product.addFeedback(productFeedback);
+
+        productRepository.save(product);
+
+        return new ProductFeedbackResponse(id, feedback);
+    }
+
     private void save(Product product) {
         productRepository.save(product);
     }
