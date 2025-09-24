@@ -55,6 +55,22 @@ public class ProfileTests {
         assertThat(profile.getLoyaltyPoints(), equalTo(100));
     }
 
+    @Test
+    public void earnRewardPointsTest() {
+        profile.earnRewardPoints(100);
+
+        assertThat(profile.getRewardPoints(), equalTo(100));
+    }
+
+    @Test
+    public void burnRewardPointsTest() {
+        profile.earnRewardPoints(100);
+
+        profile.burnRewardPoints(50);
+
+        assertThat(profile.getRewardPoints(), equalTo(50));
+    }
+
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("profileParams")
     public void getMembershipTierTests(
