@@ -1,6 +1,5 @@
-package com.github.jbence1994.webshop.wishlist;
+package com.github.jbence1994.webshop.product;
 
-import com.github.jbence1994.webshop.product.Product;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductControllerExceptionHandlerTests {
+
     @InjectMocks
     private ProductControllerExceptionHandler productControllerExceptionHandler;
 
@@ -24,5 +25,14 @@ public class ProductControllerExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("Invalid category with the following name: 'Electronics'."));
+    }
+
+    @Test
+    public void handleInvalidProductRateValueExceptionTest() {
+        var result = productControllerExceptionHandler.handleInvalidProductRateValueException(new InvalidProductRateValueException());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Rating must be between 1 and 5."));
     }
 }

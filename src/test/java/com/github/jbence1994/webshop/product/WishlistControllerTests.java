@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.wishlist;
+package com.github.jbence1994.webshop.product;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,10 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import static com.github.jbence1994.webshop.product.AddProductToWishlistRequestTestObject.addProductToWishlistRequest;
+import static com.github.jbence1994.webshop.product.DeleteProductFromWishlistRequestTestObject.deleteProductFromWishlistRequest;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
-import static com.github.jbence1994.webshop.wishlist.AddProductToWishlistRequestTestObject.addProductToWishlistRequest;
-import static com.github.jbence1994.webshop.wishlist.DeleteProductFromWishlistRequestTestObject.deleteProductFromWishlistRequest;
-import static com.github.jbence1994.webshop.wishlist.WishlistProductDtoTestObject.wishlistProductDto;
+import static com.github.jbence1994.webshop.product.WishlistProductDtoTestObject.wishlistProductDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;

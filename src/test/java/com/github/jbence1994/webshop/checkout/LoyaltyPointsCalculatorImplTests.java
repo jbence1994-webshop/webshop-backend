@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.loyalty;
+package com.github.jbence1994.webshop.checkout;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.loyalty.LoyaltyTestConstants.POINTS_RATE;
+import static com.github.jbence1994.webshop.checkout.LoyaltyTestConstants.POINTS_RATE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;

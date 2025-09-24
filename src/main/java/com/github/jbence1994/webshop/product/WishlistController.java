@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.wishlist;
+package com.github.jbence1994.webshop.product;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

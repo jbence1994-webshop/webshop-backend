@@ -7,7 +7,6 @@ import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
 import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
-import com.github.jbence1994.webshop.loyalty.LoyaltyPointsCalculator;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderService;
 import jakarta.transaction.Transactional;

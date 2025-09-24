@@ -15,10 +15,13 @@ public interface ProductMapper {
 
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "photo", ignore = true)
+    @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
     ProductDto toDto(Product product);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "photos", ignore = true)
     @Mapping(target = "category", ignore = true)
+    @Mapping(target = "ratings", ignore = true)
+    @Mapping(target = "feedbacks", ignore = true)
     Product toEntity(ProductDto productDto);
 }

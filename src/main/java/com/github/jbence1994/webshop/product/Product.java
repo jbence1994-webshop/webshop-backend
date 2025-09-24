@@ -47,6 +47,12 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductPhoto> photos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductRating> ratings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductFeedback> feedbacks = new ArrayList<>();
+
     public void addPhoto(String fileName) {
         var photo = new ProductPhoto();
         photo.setProduct(this);
@@ -68,9 +74,35 @@ public class Product {
                 .findFirst();
     }
 
+    public void addRating(ProductRating productRating) {
+        ratings.add(productRating);
+    }
+
+    public void updateRating(Long profileId, Byte value) {
+        getRating(profileId)
+                .ifPresent(productRating -> productRating.setValue(value));
+    }
+
+    public double calculateAverageRating() {
+        return ratings.stream()
+                .mapToInt(ProductRating::getValue)
+                .average()
+                .orElse(0.0);
+    }
+
+    public void addFeedback(ProductFeedback productFeedback) {
+        feedbacks.add(productFeedback);
+    }
+
     private Optional<ProductPhoto> getPhoto(String fileName) {
         return photos.stream()
                 .filter(photo -> photo.getFileName().equals(fileName))
+                .findFirst();
+    }
+
+    private Optional<ProductRating> getRating(Long profileId) {
+        return ratings.stream()
+                .filter(rating -> rating.getProfile().getUserId().equals(profileId))
                 .findFirst();
     }
 }

@@ -12,13 +12,23 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
+import static com.github.jbence1994.webshop.product.CreateProductFeedbackRequestTestObject.createProductFeedbackRequest;
+import static com.github.jbence1994.webshop.product.CreateProductFeedbackRequestTestObject.notSanitizedCreateProductFeedbackRequest;
+import static com.github.jbence1994.webshop.product.CreateProductRatingRequestTestObject.createProductRatingRequest;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
+import static com.github.jbence1994.webshop.product.ProductFeedbackResponseTestObject.productFeedbackResponse;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_FEEDBACK;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product2WithPhotos;
+import static com.github.jbence1994.webshop.product.UpdateProductRatingRequestTestObject.updateProductRatingRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -31,11 +41,17 @@ import static org.mockito.ArgumentMatchers.anyByte;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ProductControllerTests {
+
+    @Mock
+    private CreateProductFeedbackRequestSanitizer createProductFeedbackRequestSanitizer;
 
     @Mock
     private CategoryQueryService categoryQueryService;
@@ -56,8 +72,23 @@ class ProductControllerTests {
     private ProductController productController;
 
     @Test
-    public void getProductsTest() {
+    public void getProductsTest_ProductsWithoutPhotos() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
+        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+
+        byte categoryId = 1;
+        var result = productController.getProducts("id", "asc", 0, 20, categoryId);
+
+        assertThat(result.size(), equalTo(2));
+
+        verify(productQueryService, times(1)).getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte());
+        verify(productMapper, times(2)).toDto(any(Product.class));
+        verify(productMapper, never()).toDto(any(), any());
+    }
+
+    @Test
+    public void getProductsTest_ProductsWithPhotos() {
+        when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1WithPhotos(), product2WithPhotos()));
         when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
         when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
 
@@ -65,11 +96,36 @@ class ProductControllerTests {
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);
 
         assertThat(result.size(), equalTo(2));
+
+        verify(productQueryService, times(1)).getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte());
+        verify(productMapper, times(2)).toDto(any(Product.class));
+        verify(productMapper, times(2)).toDto(any(), any());
     }
 
     @Test
-    public void getProductTest_HappyPath() {
+    public void getProductTest_HappyPath_ProductWithoutPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
+        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+
+        var result = productController.getProduct(1L);
+
+        assertThat(result, allOf(
+                hasProperty("id", equalTo(productDto().getId())),
+                hasProperty("name", equalTo(productDto().getName())),
+                hasProperty("price", equalTo(productDto().getPrice())),
+                hasProperty("unit", equalTo(productDto().getUnit())),
+                hasProperty("description", equalTo(productDto().getDescription())),
+                hasProperty("photo", equalTo(productDto().getPhoto()))
+        ));
+
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(productMapper, times(1)).toDto(any(Product.class));
+        verify(productMapper, never()).toDto(any(), any());
+    }
+
+    @Test
+    public void getProductTest_HappyPath_ProductWithPhoto() {
+        when(productQueryService.getProduct(any())).thenReturn(product1WithPhotos());
         when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
         when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
 
@@ -83,6 +139,10 @@ class ProductControllerTests {
                 hasProperty("description", equalTo(productDto().getDescription())),
                 hasProperty("photo", equalTo(productDto().getPhoto()))
         ));
+
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(productMapper, times(1)).toDto(any(Product.class));
+        verify(productMapper, times(1)).toDto(any(), any());
     }
 
     @Test
@@ -103,5 +163,44 @@ class ProductControllerTests {
                 hasProperty("description", equalTo(productDto().getDescription())),
                 hasProperty("photo", is(nullValue()))
         ));
+    }
+
+    @Test
+    public void createProductRatingTest() {
+        when(productService.createProductRating(any(), any())).thenReturn(productRatingResponse());
+
+        var result = productController.createProductRating(1L, createProductRatingRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().productId(), equalTo(1L));
+        assertThat(result.getBody().yourRating(), equalTo((byte) 5));
+        assertThat(result.getBody().averageRating(), equalTo(5.0));
+        assertThat(result.getBody().totalRatings(), equalTo(1));
+    }
+
+    @Test
+    public void updateProductRatingTest() {
+        when(productService.updateProductRating(any(), any())).thenReturn(updatedProductRatingResponse());
+
+        var result = productController.updateProductRating(1L, updateProductRatingRequest());
+
+        assertThat(result.productId(), equalTo(1L));
+        assertThat(result.yourRating(), equalTo((byte) 4));
+        assertThat(result.averageRating(), equalTo(4.0));
+        assertThat(result.totalRatings(), equalTo(1));
+    }
+
+    @Test
+    public void createProductFeedbackTest() {
+        when(createProductFeedbackRequestSanitizer.sanitize(any())).thenReturn(createProductFeedbackRequest());
+        when(productService.createProductFeedback(any(), any())).thenReturn(productFeedbackResponse());
+
+        var result = productController.createProductFeedback(1L, notSanitizedCreateProductFeedbackRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().productId(), equalTo(1L));
+        assertThat(result.getBody().feedback(), equalTo(PRODUCT_1_FEEDBACK));
     }
 }
