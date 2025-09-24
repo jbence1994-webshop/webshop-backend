@@ -12,13 +12,17 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
+import static com.github.jbence1994.webshop.product.CreateProductFeedbackRequestTestObject.createProductFeedbackRequest;
+import static com.github.jbence1994.webshop.product.CreateProductFeedbackRequestTestObject.notSanitizedCreateProductFeedbackRequest;
 import static com.github.jbence1994.webshop.product.CreateProductRatingRequestTestObject.createProductRatingRequest;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
+import static com.github.jbence1994.webshop.product.ProductFeedbackResponseTestObject.productFeedbackResponse;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
 import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_FEEDBACK;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
@@ -40,6 +44,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ProductControllerTests {
+
+    @Mock
+    private CreateProductFeedbackRequestSanitizer createProductFeedbackRequestSanitizer;
 
     @Mock
     private CategoryQueryService categoryQueryService;
@@ -133,5 +140,18 @@ class ProductControllerTests {
         assertThat(result.yourRating(), equalTo((byte) 4));
         assertThat(result.averageRating(), equalTo(4.0));
         assertThat(result.totalRatings(), equalTo(1));
+    }
+
+    @Test
+    public void createProductFeedbackTest() {
+        when(createProductFeedbackRequestSanitizer.sanitize(any())).thenReturn(createProductFeedbackRequest());
+        when(productService.createProductFeedback(any(), any())).thenReturn(productFeedbackResponse());
+
+        var result = productController.createProductFeedback(1L, notSanitizedCreateProductFeedbackRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().productId(), equalTo(1L));
+        assertThat(result.getBody().feedback(), equalTo(PRODUCT_1_FEEDBACK));
     }
 }

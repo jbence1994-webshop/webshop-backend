@@ -42,4 +42,6 @@ public class ProductDto {
     private String category;
 
     private ProductPhotoDto photo;
+
+    private double averageRating;
 }

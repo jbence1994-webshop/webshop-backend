@@ -18,7 +18,8 @@ public class ProductDtoSanitizer {
                 sanitizedUnit,
                 sanitizedDescription,
                 sanitizedCategory,
-                productDto.getPhoto()
+                productDto.getPhoto(),
+                productDto.getAverageRating()
         );
     }
 }

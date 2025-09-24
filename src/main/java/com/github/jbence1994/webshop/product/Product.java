@@ -50,6 +50,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductRating> ratings = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductFeedback> feedbacks = new ArrayList<>();
+
     public void addPhoto(String fileName) {
         var photo = new ProductPhoto();
         photo.setProduct(this);
@@ -85,6 +88,10 @@ public class Product {
                 .mapToInt(ProductRating::getValue)
                 .average()
                 .orElse(0.0);
+    }
+
+    public void addFeedback(ProductFeedback productFeedback) {
+        feedbacks.add(productFeedback);
     }
 
     private Optional<ProductPhoto> getPhoto(String fileName) {
