@@ -12,13 +12,17 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
+import static com.github.jbence1994.webshop.product.CreateProductRatingRequestTestObject.createProductRatingRequest;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
+import static com.github.jbence1994.webshop.product.UpdateProductRatingRequestTestObject.updateProductRatingRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -103,5 +107,31 @@ class ProductControllerTests {
                 hasProperty("description", equalTo(productDto().getDescription())),
                 hasProperty("photo", is(nullValue()))
         ));
+    }
+
+    @Test
+    public void createProductRatingTest() {
+        when(productService.createProductRating(any(), any())).thenReturn(productRatingResponse());
+
+        var result = productController.createProductRating(1L, createProductRatingRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().productId(), equalTo(1L));
+        assertThat(result.getBody().yourRating(), equalTo((byte) 5));
+        assertThat(result.getBody().averageRating(), equalTo(5.0));
+        assertThat(result.getBody().totalRatings(), equalTo(1));
+    }
+
+    @Test
+    public void updateProductRatingTest() {
+        when(productService.updateProductRating(any(), any())).thenReturn(updatedProductRatingResponse());
+
+        var result = productController.updateProductRating(1L, updateProductRatingRequest());
+
+        assertThat(result.productId(), equalTo(1L));
+        assertThat(result.yourRating(), equalTo((byte) 4));
+        assertThat(result.averageRating(), equalTo(4.0));
+        assertThat(result.totalRatings(), equalTo(1));
     }
 }

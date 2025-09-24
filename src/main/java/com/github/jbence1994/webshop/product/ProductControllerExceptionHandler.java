@@ -13,4 +13,9 @@ public class ProductControllerExceptionHandler {
     public ResponseEntity<ErrorDto> handleInvalidCategoryException(InvalidCategoryException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
+
+    @ExceptionHandler(exception = InvalidProductRateValueException.class)
+    public ResponseEntity<ErrorDto> handleInvalidProductRateValueException(InvalidProductRateValueException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
+    }
 }
