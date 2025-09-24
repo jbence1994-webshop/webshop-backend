@@ -1,6 +1,11 @@
 package com.github.jbence1994.webshop.product;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_NOT_EXISTING_FILE_NAME;
@@ -16,6 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 public class ProductTests {
     private final Product product = product1();
     private final Product productWithPhotos = product1WithPhotos();
+
+    private static Stream<Arguments> ratingIdParams() {
+        return Stream.of(
+                Arguments.of("Rating ID: 1", 1L),
+                Arguments.of("Rating ID: 2", 2L)
+        );
+    }
 
     @Test
     public void addPhotoTest() {
@@ -61,6 +73,19 @@ public class ProductTests {
         product.addRating(productRating((byte) 5));
 
         assertThat(product.getRatings().size(), equalTo(5));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("ratingIdParams")
+    public void updateRatingTest(
+            String testCase,
+            Long ratingId
+    ) {
+        product.addRating(productRating((byte) 1));
+
+        assertDoesNotThrow(() -> product.updateRating(ratingId, (byte) 1));
+
+        assertThat(product.getRatings().size(), equalTo(1));
     }
 
     @Test

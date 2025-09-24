@@ -18,9 +18,11 @@ import static com.github.jbence1994.webshop.product.ProductDtoTestObject.product
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
 import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
+import static com.github.jbence1994.webshop.product.UpdateProductRatingRequestTestObject.updateProductRatingRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -119,5 +121,17 @@ class ProductControllerTests {
         assertThat(result.getBody().yourRating(), equalTo((byte) 5));
         assertThat(result.getBody().averageRating(), equalTo(5.0));
         assertThat(result.getBody().totalRatings(), equalTo(1));
+    }
+
+    @Test
+    public void updateProductRatingTest() {
+        when(productService.updateProductRating(any(), any())).thenReturn(updatedProductRatingResponse());
+
+        var result = productController.updateProductRating(1L, updateProductRatingRequest());
+
+        assertThat(result.productId(), equalTo(1L));
+        assertThat(result.yourRating(), equalTo((byte) 4));
+        assertThat(result.averageRating(), equalTo(4.0));
+        assertThat(result.totalRatings(), equalTo(1));
     }
 }
