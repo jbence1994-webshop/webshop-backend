@@ -98,9 +98,16 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRatingRequest request
     ) {
-        var productRating = productService.createProductRating(id, request.getValue());
+        var product = productService.createProductRating(id, request.getValue());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productRating);
+        var productRatingResponse = new ProductRatingResponse(
+                id,
+                request.getValue(),
+                product.calculateAverageRating(),
+                product.getRatings().size()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productRatingResponse);
     }
 
     @PutMapping("{id}/rating")
@@ -108,7 +115,9 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateProductRatingRequest request
     ) {
-        return productService.updateProductRating(id, request.getValue());
+        var product = productService.updateProductRating(id, request.getValue());
+
+        return new ProductRatingResponse(id, request.getValue(), product.calculateAverageRating(), product.getRatings().size());
     }
 
     @PostMapping("{id}/feedback")
@@ -118,8 +127,10 @@ public class ProductController {
     ) {
         var sanitizedRequest = createProductFeedbackRequestSanitizer.sanitize(request);
 
-        var productFeedback = productService.createProductFeedback(id, sanitizedRequest.getFeedback());
+        var product = productService.createProductFeedback(id, sanitizedRequest.getFeedback());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productFeedback);
+        var productFeedbackResponse = new ProductFeedbackResponse(product.getId(), sanitizedRequest.getFeedback());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productFeedbackResponse);
     }
 }

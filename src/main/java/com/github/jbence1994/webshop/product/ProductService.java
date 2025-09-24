@@ -5,9 +5,9 @@ public interface ProductService {
 
     void updateProduct(Product product);
 
-    ProductRatingResponse createProductRating(Long id, Byte value);
+    Product createProductRating(Long id, Byte value);
 
-    ProductRatingResponse updateProductRating(Long id, Byte value);
+    Product updateProductRating(Long id, Byte value);
 
-    ProductFeedbackResponse createProductFeedback(Long id, String feedback);
+    Product createProductFeedback(Long id, String feedback);
 }
