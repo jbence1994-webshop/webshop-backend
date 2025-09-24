@@ -1,7 +1,6 @@
-package com.github.jbence1994.webshop.wishlist;
+package com.github.jbence1994.webshop.product;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import com.github.jbence1994.webshop.product.ProductQueryService;
 import com.github.jbence1994.webshop.user.User;
 import com.github.jbence1994.webshop.user.UserService;
 import org.junit.jupiter.api.BeforeEach;

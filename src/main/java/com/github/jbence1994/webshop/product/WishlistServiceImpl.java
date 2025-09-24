@@ -1,8 +1,6 @@
-package com.github.jbence1994.webshop.wishlist;
+package com.github.jbence1994.webshop.product;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import com.github.jbence1994.webshop.product.Product;
-import com.github.jbence1994.webshop.product.ProductQueryService;
 import com.github.jbence1994.webshop.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

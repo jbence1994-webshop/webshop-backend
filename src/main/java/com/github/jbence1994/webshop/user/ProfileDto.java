@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
-import com.github.jbence1994.webshop.wishlist.WishlistProductDto;
+import com.github.jbence1994.webshop.product.WishlistProductDto;
 
 import java.time.LocalDate;
 import java.util.List;
