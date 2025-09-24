@@ -108,7 +108,7 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateProductRatingRequest request
     ) {
-        return productService.updateProductRating(id, request.getRateValue());
+        return productService.updateProductRating(id, request.getValue());
     }
 
     @PostMapping("{id}/feedback")
