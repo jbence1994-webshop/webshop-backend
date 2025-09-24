@@ -3,13 +3,10 @@ package com.github.jbence1994.webshop.checkout;
 import com.github.jbence1994.webshop.common.ClientAppConfig;
 import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.order.OrderItem;
-import com.github.jbence1994.webshop.order.OrderStatus;
-import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
-import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -84,7 +80,7 @@ public class StripePaymentGateway implements PaymentGateway {
                 .build();
     }
 
-    @Override
+    /*@Override
     public Optional<PaymentResult> parseWebhookRequest(WebhookRequest request) {
         try {
             var payload = request.payload();
@@ -123,7 +119,7 @@ public class StripePaymentGateway implements PaymentGateway {
         } catch (SignatureVerificationException exception) {
             throw new PaymentException(exception.getMessage());
         }
-    }
+    }*/
 
     private UUID extractCartId(Event event) {
         var paymentIntent = getPaymentIntent(event);

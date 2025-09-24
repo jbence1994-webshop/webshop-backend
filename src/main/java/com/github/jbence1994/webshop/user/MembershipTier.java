@@ -16,10 +16,10 @@ public enum MembershipTier {
     private final int minLoyaltyPoints;
     private final int maxLoyaltyPoints;
 
-    public static MembershipTier fromPoints(int points) {
+    public static MembershipTier fromPoints(int value) {
         return Stream.of(values())
-                .filter(tier -> points >= tier.minLoyaltyPoints && points <= tier.maxLoyaltyPoints)
+                .filter(tier -> value >= tier.minLoyaltyPoints && value <= tier.maxLoyaltyPoints)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid value: %d.", points)));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid value: %d.", value)));
     }
 }
