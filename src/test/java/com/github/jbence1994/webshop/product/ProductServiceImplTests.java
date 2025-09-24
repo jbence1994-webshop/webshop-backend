@@ -12,9 +12,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.stream.Stream;
 
+import static com.github.jbence1994.webshop.product.ProductFeedbackResponseTestObject.productFeedbackResponse;
 import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_FEEDBACK;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithFeedback;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithUpdatedRating;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
@@ -134,5 +137,21 @@ public class ProductServiceImplTests {
         verify(productQueryService, never()).getProduct(any());
         verify(authService, never()).getCurrentUser();
         verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    public void createProductFeedbackTest() {
+        when(productQueryService.getProduct(any())).thenReturn(product1());
+        when(authService.getCurrentUser()).thenReturn(user());
+        when(productRepository.save(any())).thenReturn(product1WithFeedback());
+
+        var result = productService.createProductFeedback(1L, PRODUCT_1_FEEDBACK);
+
+        assertThat(result.productId(), equalTo(productRatingResponse().productId()));
+        assertThat(result.feedback(), equalTo(productFeedbackResponse().feedback()));
+
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(authService, times(1)).getCurrentUser();
+        verify(productRepository, times(1)).save(any());
     }
 }
