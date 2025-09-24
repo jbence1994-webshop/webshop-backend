@@ -6,18 +6,38 @@ spring:
   servlet:
     multipart:
       max-file-size: 1048576 # 1MB
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 webshop:
-  jwt:
-    secret: ${JWT_SECRET_KEY}
-    accessTokenExpiration: 300 # 5m
-    refreshTokenExpiration: 604800 # 7d
+  name: ${WEBSHOP_NAME}
 
-  file-extensions-config:
-    allowed-file-extensions: jpg,jpeg,png,bmp
+  client-app:
+    url: ${CLIENT_APP_URL}
 
-  product-photos-upload-directory-config:
-    path: ${PRODUCT_PHOTOS_UPLOAD_DIRECTORY_PATH}
+  loyalty:
+    points-rate: ${LOYALTY_POINTS_RATE}
 
-  profile-avatar-upload-directory-config:
-    path: ${PROFILE_AVATAR_UPLOAD_DIRECTORY_PATH}
+  free-shipping:
+    threshold: ${FREE_SHIPPING_THRESHOLD}
+
+  image-uploads:
+    allowed-file-extensions:
+      - jpg
+      - jpeg
+      - png
+      - bmp
+    product-photos-directory: ${PRODUCT_PHOTOS_DIRECTORY}
+    profile-avatar-directory: ${PROFILE_AVATAR_DIRECTORY}
+
+  stripe:
+    secretKey: ${STRIPE_SECRET_KEY}
+    webhookSecretKey: ${STRIPE_WEBHOOK_SECRET_KEY}
+    shippingCostId: ${STRIPE_SHIPPING_COST_ID}
+    freeShippingId: ${STRIPE_FREE_SHIPPING_ID}

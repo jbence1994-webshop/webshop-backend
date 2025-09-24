@@ -2,13 +2,13 @@ package com.github.jbence1994.webshop.image;
 
 import com.github.jbence1994.webshop.product.ProductQueryService;
 import com.github.jbence1994.webshop.product.ProductService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductPhotoService implements ImageService {
-    private final ProductPhotosUploadDirectoryConfig productPhotosUploadDirectoryConfig;
+    private final ImageUploadsConfig imageUploadsConfig;
     private final ProductQueryService productQueryService;
     private final ProductService productService;
     private final FileExtensionValidator fileExtensionValidator;
@@ -25,7 +25,7 @@ public class ProductPhotoService implements ImageService {
             var fileName = fileNameGenerator.generate(image.getFileExtension());
 
             fileUtils.store(
-                    productPhotosUploadDirectoryConfig.getPath(),
+                    imageUploadsConfig.productPhotosDirectory(),
                     fileName,
                     image.getInputStream()
             );
@@ -45,7 +45,7 @@ public class ProductPhotoService implements ImageService {
             var product = productQueryService.getProduct(productId);
 
             fileUtils.remove(
-                    productPhotosUploadDirectoryConfig.getPath(),
+                    imageUploadsConfig.productPhotosDirectory(),
                     fileName
             );
 

@@ -1,12 +1,12 @@
 package com.github.jbence1994.webshop.user;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserQueryServiceImpl implements UserQueryService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public User getUser(Long id) {

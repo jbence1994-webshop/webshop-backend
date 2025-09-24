@@ -16,4 +16,11 @@ public final class ObjectErrorTestObject {
                 "Confirm new password does not match the new password."
         );
     }
+
+    public static ObjectError objectError3() {
+        return new ObjectError(
+                "confirmResetPasswordRequest",
+                "Confirm new password does not match the new password."
+        );
+    }
 }

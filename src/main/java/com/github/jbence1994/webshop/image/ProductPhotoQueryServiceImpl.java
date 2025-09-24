@@ -1,13 +1,13 @@
 package com.github.jbence1994.webshop.image;
 
 import com.github.jbence1994.webshop.product.ProductQueryService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductPhotoQueryServiceImpl implements ProductPhotoQueryService {
     private final ProductQueryService productQueryService;
     private final ProductPhotoRepository productPhotoRepository;

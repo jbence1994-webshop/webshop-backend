@@ -39,6 +39,12 @@ public class CartItem {
     @Column(name = "quantity")
     private Integer quantity;
 
+    public CartItem(Product product, Integer quantity, Cart cart) {
+        this.product = product;
+        this.quantity = quantity;
+        this.cart = cart;
+    }
+
     public BigDecimal calculateSubTotal() {
         return product.getPrice().multiply(BigDecimal.valueOf(quantity));
     }

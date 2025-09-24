@@ -1,7 +1,5 @@
 package com.github.jbence1994.webshop.cart;
 
-import com.github.jbence1994.webshop.coupon.Coupon;
-import com.github.jbence1994.webshop.coupon.DiscountType;
 import com.github.jbence1994.webshop.order.OrderItem;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
@@ -10,8 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -24,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -45,53 +42,34 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "applied_coupon")
-    private Coupon appliedCoupon;
-
-    public CartItem getItem(Long productId) {
+    public Optional<CartItem> getItem(Long productId) {
         return items.stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     public CartItem addItem(Product product) {
-        var cartItem = getItem(product.getId());
+        var cartItem = getItem(product.getId())
+                .orElseGet(() -> {
+                    var newItem = new CartItem(product, 0, this);
+                    items.add(newItem);
+                    return newItem;
+                });
 
-        if (cartItem != null) {
-            cartItem.setQuantity(cartItem.getQuantity() + 1);
-        } else {
-            cartItem = new CartItem();
-            cartItem.setProduct(product);
-            cartItem.setQuantity(1);
-            cartItem.setCart(this);
-
-            items.add(cartItem);
-        }
+        cartItem.setQuantity(cartItem.getQuantity() + 1);
 
         return cartItem;
     }
 
     public void removeItem(Long productId) {
-        var cartItem = getItem(productId);
-
-        if (cartItem != null) {
-            items.remove(cartItem);
-            cartItem.setCart(null);
-        }
-    }
-
-    public boolean hasCouponApplied() {
-        return appliedCoupon != null;
-    }
-
-    public String getCouponCode() {
-        return appliedCoupon.getCode();
+        getItem(productId)
+                .ifPresent(cartItem -> {
+                    items.remove(cartItem);
+                    cartItem.setCart(null);
+                });
     }
 
     public void clear() {
-        appliedCoupon = null;
         items.clear();
     }
 
@@ -99,31 +77,16 @@ public class Cart {
         return items.isEmpty();
     }
 
-    public Price calculateTotal() {
-        var totalPrice = items.stream()
+    public BigDecimal calculateTotal() {
+        return items.stream()
                 .map(CartItem::calculateSubTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        if (!hasCouponApplied()) {
-            return Price.withShippingCost(totalPrice);
-        }
-
-        if (DiscountType.FREE_SHIPPING.equals(appliedCoupon.getType())) {
-            return Price.withFreeShipping(totalPrice);
-        }
-
-        return PriceAdjustmentStrategyFactory
-                .getPriceAdjustmentStrategy(appliedCoupon.getType())
-                .adjustPrice(totalPrice, appliedCoupon.getValue());
     }
 
     public List<OrderItem> mapCartItemsToOrderItems() {
         var orderItems = new ArrayList<OrderItem>();
 
-        items.forEach(item -> {
-            var orderItem = new OrderItem(item.getProduct(), item.getQuantity());
-            orderItems.add(orderItem);
-        });
+        items.forEach(item -> orderItems.add(OrderItem.from(item)));
 
         return orderItems;
     }

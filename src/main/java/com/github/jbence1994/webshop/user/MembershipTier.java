@@ -1,11 +1,11 @@
 package com.github.jbence1994.webshop.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.stream.Stream;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public enum MembershipTier {
     BRONZE(0, 4_999),
@@ -16,10 +16,10 @@ public enum MembershipTier {
     private final int minLoyaltyPoints;
     private final int maxLoyaltyPoints;
 
-    public static MembershipTier fromPoints(int points) {
+    public static MembershipTier fromPoints(int value) {
         return Stream.of(values())
-                .filter(tier -> points >= tier.minLoyaltyPoints && points <= tier.maxLoyaltyPoints)
+                .filter(tier -> value >= tier.minLoyaltyPoints && value <= tier.maxLoyaltyPoints)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid value: %d.", points)));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid value: %d.", value)));
     }
 }

@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.order;
 
-import static com.github.jbence1994.webshop.order.OrderTestConstants.SUB_TOTAL;
-import static com.github.jbence1994.webshop.order.OrderTestConstants.TOTAL_PRICE;
+import java.math.BigDecimal;
+
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 
 public final class OrderItemTestObject {
@@ -10,9 +10,9 @@ public final class OrderItemTestObject {
                 1L,
                 null,
                 product1(),
-                SUB_TOTAL,
-                1,
-                TOTAL_PRICE
+                BigDecimal.valueOf(49.99),
+                5,
+                BigDecimal.valueOf(249.95)
         );
     }
 }

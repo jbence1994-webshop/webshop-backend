@@ -20,6 +20,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
@@ -32,6 +33,7 @@ import static com.github.jbence1994.webshop.common.FieldErrorTestObject.fieldErr
 import static com.github.jbence1994.webshop.common.FileTestConstants.MAX_UPLOAD_SIZE;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError1;
 import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError2;
+import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectError3;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -49,7 +51,8 @@ public class GlobalExceptionHandlerTests {
     private static Stream<Arguments> objectErrorParams() {
         return Stream.of(
                 Arguments.of("ConfirmPassword", objectError1(), "user.confirmPassword", "Confirm password does not match the password."),
-                Arguments.of("ConfirmNewPassword", objectError2(), "confirmNewPassword", "Confirm new password does not match the new password.")
+                Arguments.of("ConfirmNewPassword", objectError2(), "confirmNewPassword", "Confirm new password does not match the new password."),
+                Arguments.of("ConfirmNewPassword", objectError3(), "confirmNewPassword", "Confirm new password does not match the new password.")
         );
     }
 
@@ -173,6 +176,17 @@ public class GlobalExceptionHandlerTests {
     }
 
     @Test
+    public void handleMethodArgumentTypeMismatchExceptionTest() {
+        var exception = mock(MethodArgumentTypeMismatchException.class);
+
+        var result = globalExceptionHandler.handleMethodArgumentTypeMismatchException(exception);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Invalid input."));
+    }
+
+    @Test
     public void handleValidationErrorsTest_WithFieldError() {
         var bindingResult = mock(BindingResult.class);
         var exception = mock(MethodArgumentNotValidException.class);
@@ -185,8 +199,8 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().size(), equalTo(1));
-        assertThat(result.getBody().getFirst().field(), equalTo("name"));
-        assertThat(result.getBody().getFirst().message(), equalTo("Name must be not empty."));
+        assertThat(result.getBody().stream().toList().getFirst().field(), equalTo("name"));
+        assertThat(result.getBody().stream().toList().getFirst().message(), equalTo("Name must be not empty."));
     }
 
     @ParameterizedTest(name = "{index} => {0}")
@@ -208,7 +222,7 @@ public class GlobalExceptionHandlerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().size(), equalTo(1));
-        assertThat(result.getBody().getFirst().field(), equalTo(fieldName));
-        assertThat(result.getBody().getFirst().message(), equalTo(message));
+        assertThat(result.getBody().stream().toList().getFirst().field(), equalTo(fieldName));
+        assertThat(result.getBody().stream().toList().getFirst().message(), equalTo(message));
     }
 }

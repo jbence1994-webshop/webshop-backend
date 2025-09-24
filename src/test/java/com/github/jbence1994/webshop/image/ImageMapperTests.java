@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.image;
 
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,8 @@ public class ImageMapperTests {
     private final MultipartFile multipartFile = mock(MultipartFile.class);
 
     @Test
-    public void toImageUploadTest_HappyPath() throws IOException {
+    @SneakyThrows
+    public void toImageUploadTest_HappyPath() {
         var expectedBytes = new byte[]{1, 2, 3, 4, 5};
         when(multipartFile.getBytes()).thenReturn(expectedBytes);
 
@@ -33,11 +35,12 @@ public class ImageMapperTests {
     }
 
     @Test
-    public void toImageUploadTest_UnhappyPath_ImageUploadException() throws IOException {
-        when(multipartFile.getBytes()).thenThrow(new IOException("Disk error."));
+    @SneakyThrows
+    public void toImageUploadTest_UnhappyPath_ImageUploadException() {
+        when(multipartFile.getBytes()).thenThrow(new IOException());
 
         var result = assertThrows(
-                ImageUploadException.class,
+                IOException.class,
                 () -> imageMapper.toImageUpload(multipartFile)
         );
 

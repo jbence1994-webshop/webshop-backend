@@ -1,13 +1,13 @@
 package com.github.jbence1994.webshop.coupon;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CouponQueryServiceImpl implements CouponQueryService {
     private final CouponRepository couponRepository;
     private final AuthService authService;
@@ -21,14 +21,17 @@ public class CouponQueryServiceImpl implements CouponQueryService {
 
     @Override
     public Coupon getCoupon(String code) {
-        // FIXME: Refactor later to a User wouldn't be able to apply another User's coupon to it's own cart.
+        var user = authService.getCurrentUser();
+
         return couponRepository
-                .findById(code)
+                .findByCouponCodeAndUserId(code, user.getId())
                 .orElseThrow(() -> new CouponNotFoundException(code));
     }
 
     @Override
-    public boolean isRedeemedCoupon(String code) {
-        return couponRepository.isRedeemedCoupon(code) == 1;
+    public boolean isCouponRedeemed(String code) {
+        var user = authService.getCurrentUser();
+
+        return couponRepository.isCouponRedeemed(user.getId(), code) == 1;
     }
 }

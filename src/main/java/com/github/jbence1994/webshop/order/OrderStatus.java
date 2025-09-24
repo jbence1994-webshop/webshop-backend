@@ -1,8 +1,12 @@
 package com.github.jbence1994.webshop.order;
 
 public enum OrderStatus {
-    PENDING,
+    CREATED,
     CANCELLED,
-    COMPLETED,
-    FAILED
+    CONFIRMED,
+    FAILED,
+    SHIPPED,
+    DELIVERED,
+    RETURNED,
+    REFUNDED
 }

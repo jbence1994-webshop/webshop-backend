@@ -16,8 +16,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "coupons")
@@ -45,7 +45,7 @@ public class Coupon {
             joinColumns = @JoinColumn(name = "coupon_code", referencedColumnName = "code"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
     )
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>();
 
     public boolean isExpired() {
         return expirationDate.isBefore(LocalDateTime.now());

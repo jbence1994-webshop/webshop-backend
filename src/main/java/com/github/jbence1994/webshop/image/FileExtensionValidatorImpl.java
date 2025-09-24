@@ -1,12 +1,12 @@
 package com.github.jbence1994.webshop.image;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FileExtensionValidatorImpl implements FileExtensionValidator {
-    private final FileExtensionsConfig fileExtensionsConfig;
+    private final ImageUploadsConfig imageUploadsConfig;
 
     @Override
     public void validate(ImageUpload image) {
@@ -18,7 +18,7 @@ public class FileExtensionValidatorImpl implements FileExtensionValidator {
     }
 
     private boolean hasValidExtension(String fileExtension) {
-        return fileExtensionsConfig.getAllowedFileExtensions()
+        return imageUploadsConfig.allowedFileExtensions()
                 .stream()
                 .anyMatch(extension -> extension.equals(fileExtension));
     }

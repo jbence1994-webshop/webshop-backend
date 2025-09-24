@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,8 +21,9 @@ import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "users")
@@ -54,7 +56,11 @@ public class User {
     private Profile profile;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private Set<Coupon> coupons = new HashSet<>();
+    private List<Coupon> coupons = new ArrayList<>();
+
+    public String getFirstName() {
+        return profile.getFirstName();
+    }
 
     public String getPhoneNumber() {
         return profile.getPhoneNumber();
@@ -64,15 +70,19 @@ public class User {
         profile.setAvatarFileName(fileName);
     }
 
-    public String getProfileAvatar() {
-        return profile.getAvatarFileName();
+    public Optional<String> getProfileAvatar() {
+        return Optional.ofNullable(profile.getAvatarFileName());
     }
 
-    public boolean hasProfileAvatar() {
-        return profile.getAvatarFileName() != null;
+    public void earnLoyaltyPoints(int value) {
+        profile.earnLoyaltyPoints(value);
     }
 
-    public void earnLoyaltyPoints(int loyaltyPoints) {
-        profile.setLoyaltyPoints(profile.getLoyaltyPoints() + loyaltyPoints);
+    public void addFavoriteProduct(Product product) {
+        profile.addFavoriteProduct(product);
+    }
+
+    public void removeFavoriteProduct(Long productId) {
+        profile.removeFavoriteProduct(productId);
     }
 }

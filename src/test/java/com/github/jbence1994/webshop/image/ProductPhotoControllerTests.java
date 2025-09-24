@@ -31,13 +31,13 @@ public class ProductPhotoControllerTests {
     private ProductPhotoQueryService productPhotoQueryService;
 
     @Mock
+    private ImageUrlBuilder imageUrlBuilder;
+
+    @Mock
     private ImageService imageService;
 
     @Mock
     private ImageMapper imageMapper;
-
-    @Mock
-    private ImageUrlBuilder imageUrlBuilder;
 
     @InjectMocks
     private ProductPhotoController productPhotoController;

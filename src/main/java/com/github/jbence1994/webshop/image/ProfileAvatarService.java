@@ -2,13 +2,13 @@ package com.github.jbence1994.webshop.image;
 
 import com.github.jbence1994.webshop.user.UserQueryService;
 import com.github.jbence1994.webshop.user.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProfileAvatarService implements ImageService {
-    private final ProfileAvatarUploadDirectoryConfig profileAvatarUploadDirectoryConfig;
+    private final ImageUploadsConfig imageUploadsConfig;
     private final UserQueryService userQueryService;
     private final UserService userService;
     private final FileExtensionValidator fileExtensionValidator;
@@ -22,17 +22,16 @@ public class ProfileAvatarService implements ImageService {
 
             var user = userQueryService.getUser(userId);
 
-            if (user.hasProfileAvatar()) {
-                fileUtils.remove(
-                        profileAvatarUploadDirectoryConfig.getPath(),
-                        user.getProfileAvatar()
-                );
-            }
+            user.getProfileAvatar()
+                    .ifPresent(profileAvatarFileName -> fileUtils.remove(
+                            imageUploadsConfig.profileAvatarDirectory(),
+                            profileAvatarFileName)
+                    );
 
             var fileName = fileNameGenerator.generate(image.getFileExtension());
 
             fileUtils.store(
-                    profileAvatarUploadDirectoryConfig.getPath(),
+                    imageUploadsConfig.profileAvatarDirectory(),
                     fileName,
                     image.getInputStream()
             );
@@ -52,7 +51,7 @@ public class ProfileAvatarService implements ImageService {
             var user = userQueryService.getUser(userId);
 
             fileUtils.remove(
-                    profileAvatarUploadDirectoryConfig.getPath(),
+                    imageUploadsConfig.profileAvatarDirectory(),
                     fileName
             );
 

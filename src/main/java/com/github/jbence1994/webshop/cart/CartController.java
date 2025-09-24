@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.cart;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/carts")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CartController {
     private final CartQueryService cartQueryService;
     private final CartService cartService;
@@ -32,23 +32,23 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartDto);
     }
 
-    @PostMapping("/{id}/items")
-    public ResponseEntity<CartItemDto> addProductToCart(
-            @PathVariable UUID id,
-            @Valid @RequestBody AddItemToCartRequest request
-    ) {
-        var cartItem = cartService.addProductToCart(id, request.getProductId());
-
-        var cartItemDto = cartMapper.toDto(cartItem);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartItemDto);
-    }
-
     @GetMapping("/{id}")
     public CartDto getCart(@PathVariable UUID id) {
         var cart = cartQueryService.getCart(id);
 
         return cartMapper.toDto(cart);
+    }
+
+    @PostMapping("/{id}/items")
+    public ResponseEntity<CartItemDto> addItemToCart(
+            @PathVariable UUID id,
+            @Valid @RequestBody AddItemToCartRequest request
+    ) {
+        var cartItem = cartService.addItemToCart(id, request.getProductId());
+
+        var cartItemDto = cartMapper.toDto(cartItem);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartItemDto);
     }
 
     @PutMapping("/{cartId}/items/{productId}")
@@ -81,22 +81,5 @@ public class CartController {
         cartService.clearCart(id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/{id}/coupon")
-    public CartDto applyCouponToCart(
-            @PathVariable UUID id,
-            @Valid @RequestBody ApplyCouponToCartRequest request
-    ) {
-        var cart = cartService.applyCouponToCart(id, request.getCouponCode());
-
-        return cartMapper.toDto(cart);
-    }
-
-    @DeleteMapping("/{id}/coupon")
-    public CartDto removeCouponFromCart(@PathVariable UUID id) {
-        var cart = cartService.removeCouponFromCart(id);
-
-        return cartMapper.toDto(cart);
     }
 }

@@ -6,9 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.github.jbence1994.webshop.order.OrderTestObject.order;
+import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,8 +23,15 @@ public class OrderServiceImplTests {
 
     @Test
     public void createOrderTest() {
-        when(orderRepository.save(any())).thenReturn(order());
+        when(orderRepository.save(any())).thenReturn(order1());
 
-        assertDoesNotThrow(() -> orderService.createOrder(order()));
+        assertDoesNotThrow(() -> orderService.createOrder(order1()));
+    }
+
+    @Test
+    public void deleteCartTest() {
+        doNothing().when(orderRepository).deleteById(any());
+
+        assertDoesNotThrow(() -> orderService.deleteOrder(1L));
     }
 }

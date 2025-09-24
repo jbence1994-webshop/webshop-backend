@@ -1,5 +1,15 @@
 package com.github.jbence1994.webshop.checkout;
 
+import java.util.UUID;
+
 public interface CheckoutService {
-    CheckoutResponse checkout(CheckoutRequest request);
+    CheckoutSession createCheckoutSession(UUID cartId);
+
+    CheckoutSession applyCouponToCheckoutSession(UUID id, String couponCode);
+
+    CheckoutSession removeCouponFromCheckoutSession(UUID id);
+
+    CompleteCheckoutSessionResponse completeCheckoutSession(UUID checkoutSessionId);
+
+    // void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request);
 }

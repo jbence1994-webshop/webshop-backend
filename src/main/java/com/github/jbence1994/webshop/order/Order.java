@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
-import com.github.jbence1994.webshop.cart.Cart;
+import com.github.jbence1994.webshop.checkout.CheckoutSession;
 import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,7 +22,6 @@ import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +46,6 @@ public class Order {
 
     private BigDecimal discountAmount;
 
-    private BigDecimal shippingCost;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
@@ -65,16 +62,15 @@ public class Order {
         return customerEmail.equals(customer.getEmail());
     }
 
-    public static Order from(Cart cart) {
-        var price = cart.calculateTotal();
-
+    public static Order from(User customer, CheckoutSession checkoutSession) {
         var order = new Order();
-        order.setStatus(OrderStatus.PENDING);
-        order.setTotalPrice(price.getTotalPrice());
-        order.setDiscountAmount(price.getDiscountAmount());
-        order.setShippingCost(price.getShippingCost());
 
-        var items = cart.mapCartItemsToOrderItems();
+        order.customer = customer;
+        order.totalPrice = checkoutSession.getCartTotal();
+        order.discountAmount = checkoutSession.getDiscountAmount();
+        order.status = OrderStatus.CREATED;
+
+        var items = checkoutSession.getCart().mapCartItemsToOrderItems();
 
         items.forEach(item -> {
                     item.setOrder(order);
@@ -85,14 +81,7 @@ public class Order {
         return order;
     }
 
-    public int calculateLoyaltyPoints() {
-        // FIXME: Extract this value from here.
-        //  Earning values can be change in timely campaigns.
-        final int PER_EVERY_TWENTY_DOLLARS = 20;
-
-        return totalPrice
-                .divide(BigDecimal.valueOf(PER_EVERY_TWENTY_DOLLARS), RoundingMode.DOWN)
-                .setScale(0, RoundingMode.DOWN)
-                .intValue();
+    public boolean isEligibleForFreeShipping(BigDecimal threshold) {
+        return totalPrice.compareTo(threshold) >= 0;
     }
 }

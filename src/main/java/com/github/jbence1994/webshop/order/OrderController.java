@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderController {
     private final OrderQueryService orderQueryService;
     private final OrderMapper orderMapper;
@@ -28,4 +28,6 @@ public class OrderController {
 
         return orderMapper.toDto(order);
     }
+
+    // TODO: endpoints for OrderStatus update: SHIPPED, DELIVERED, REFUNDED, RETURNED, etc.
 }

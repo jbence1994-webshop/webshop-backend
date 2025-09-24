@@ -38,6 +38,21 @@ public class UserControllerExceptionHandlerTests {
         );
     }
 
+    private static Stream<Arguments> handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionParams() {
+        return Stream.of(
+                Arguments.of(
+                        "InvalidTemporaryPasswordException",
+                        new InvalidTemporaryPasswordException(),
+                        "Invalid temporary password."
+                ),
+                Arguments.of(
+                        "ExpiredTemporaryPasswordException",
+                        new ExpiredTemporaryPasswordException(),
+                        "Temporary password has expired."
+                )
+        );
+    }
+
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("handleEmailOrPhoneNumberAlreadyExistsExceptionParams")
     public void handleEmailOrPhoneNumberAlreadyExistsExceptionTests(
@@ -48,6 +63,20 @@ public class UserControllerExceptionHandlerTests {
         var result = userControllerExceptionHandler.handleEmailOrPhoneNumberAlreadyExistsException(exception);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo(expectedExceptionMessage));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionParams")
+    public void handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionTest(
+            String testCase,
+            RuntimeException exception,
+            String expectedExceptionMessage
+    ) {
+        var result = userControllerExceptionHandler.handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordException(exception);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo(expectedExceptionMessage));
     }

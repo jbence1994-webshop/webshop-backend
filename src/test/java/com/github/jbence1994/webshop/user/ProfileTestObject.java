@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.user.AddressTestObject.address;
@@ -76,7 +77,8 @@ public final class ProfileTestObject {
                 loyaltyPoints,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                address()
+                address(),
+                new ArrayList<>()
         );
     }
 }

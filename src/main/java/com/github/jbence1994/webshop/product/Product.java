@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -14,8 +16,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "products")
@@ -37,8 +40,18 @@ public class Product {
 
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProductPhoto> photos = new HashSet<>();
+    private List<ProductPhoto> photos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductRating> ratings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductFeedback> feedbacks = new ArrayList<>();
 
     public void addPhoto(String fileName) {
         var photo = new ProductPhoto();
@@ -49,18 +62,47 @@ public class Product {
     }
 
     public void removePhoto(String fileName) {
-        var photo = getPhoto(fileName);
-
-        if (photo != null) {
-            photos.remove(photo);
-            photo.setProduct(null);
-        }
+        getPhoto(fileName)
+                .ifPresent(photo -> {
+                    photos.remove(photo);
+                    photo.setProduct(null);
+                });
     }
 
-    private ProductPhoto getPhoto(String fileName) {
+    public Optional<ProductPhoto> getFirstPhoto() {
+        return photos.stream()
+                .findFirst();
+    }
+
+    public void addRating(ProductRating productRating) {
+        ratings.add(productRating);
+    }
+
+    public void updateRating(Long profileId, Byte value) {
+        getRating(profileId)
+                .ifPresent(productRating -> productRating.setValue(value));
+    }
+
+    public double calculateAverageRating() {
+        return ratings.stream()
+                .mapToInt(ProductRating::getValue)
+                .average()
+                .orElse(0.0);
+    }
+
+    public void addFeedback(ProductFeedback productFeedback) {
+        feedbacks.add(productFeedback);
+    }
+
+    private Optional<ProductPhoto> getPhoto(String fileName) {
         return photos.stream()
                 .filter(photo -> photo.getFileName().equals(fileName))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
+    }
+
+    private Optional<ProductRating> getRating(Long profileId) {
+        return ratings.stream()
+                .filter(rating -> rating.getProfile().getUserId().equals(profileId))
+                .findFirst();
     }
 }

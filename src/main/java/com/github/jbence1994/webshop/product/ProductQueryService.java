@@ -7,7 +7,8 @@ public interface ProductQueryService {
             String sortBy,
             String orderBy,
             int page,
-            int size
+            int size,
+            Byte categoryId
     );
 
     Product getProduct(Long id);
