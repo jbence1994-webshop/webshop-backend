@@ -22,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductRatingResponse createProductRating(Long id, Byte value) {
+    public Product createProductRating(Long id, Byte value) {
         validate(value);
 
         var product = productQueryService.getProduct(id);
@@ -34,25 +34,25 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.save(product);
 
-        return new ProductRatingResponse(id, value, product.calculateAverageRating(), product.getRatings().size());
+        return product;
     }
 
     @Override
-    public ProductRatingResponse updateProductRating(Long id, Byte rateValue) {
-        validate(rateValue);
+    public Product updateProductRating(Long id, Byte value) {
+        validate(value);
 
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        product.updateRating(user.getId(), rateValue);
+        product.updateRating(user.getId(), value);
 
         productRepository.save(product);
 
-        return new ProductRatingResponse(id, rateValue, product.calculateAverageRating(), product.getRatings().size());
+        return product;
     }
 
     @Override
-    public ProductFeedbackResponse createProductFeedback(Long id, String feedback) {
+    public Product createProductFeedback(Long id, String feedback) {
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.save(product);
 
-        return new ProductFeedbackResponse(id, feedback);
+        return product;
     }
 
     private void save(Product product) {

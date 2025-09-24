@@ -18,14 +18,14 @@ import static com.github.jbence1994.webshop.product.CreateProductRatingRequestTe
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
-import static com.github.jbence1994.webshop.product.ProductFeedbackResponseTestObject.productFeedbackResponse;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
-import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
-import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_FEEDBACK;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithFeedback;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithUpdatedRating;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2WithPhotos;
 import static com.github.jbence1994.webshop.product.UpdateProductRatingRequestTestObject.updateProductRatingRequest;
@@ -167,7 +167,7 @@ class ProductControllerTests {
 
     @Test
     public void createProductRatingTest() {
-        when(productService.createProductRating(any(), any())).thenReturn(productRatingResponse());
+        when(productService.createProductRating(any(), any())).thenReturn(product1WithRating());
 
         var result = productController.createProductRating(1L, createProductRatingRequest());
 
@@ -181,7 +181,7 @@ class ProductControllerTests {
 
     @Test
     public void updateProductRatingTest() {
-        when(productService.updateProductRating(any(), any())).thenReturn(updatedProductRatingResponse());
+        when(productService.updateProductRating(any(), any())).thenReturn(product1WithUpdatedRating());
 
         var result = productController.updateProductRating(1L, updateProductRatingRequest());
 
@@ -194,7 +194,7 @@ class ProductControllerTests {
     @Test
     public void createProductFeedbackTest() {
         when(createProductFeedbackRequestSanitizer.sanitize(any())).thenReturn(createProductFeedbackRequest());
-        when(productService.createProductFeedback(any(), any())).thenReturn(productFeedbackResponse());
+        when(productService.createProductFeedback(any(), any())).thenReturn(product1WithFeedback());
 
         var result = productController.createProductFeedback(1L, notSanitizedCreateProductFeedbackRequest());
 

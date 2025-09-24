@@ -12,9 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.product.ProductFeedbackResponseTestObject.productFeedbackResponse;
-import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
-import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_FEEDBACK;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithFeedback;
@@ -75,10 +72,8 @@ public class ProductServiceImplTests {
 
         var result = productService.createProductRating(1L, (byte) 5);
 
-        assertThat(result.productId(), equalTo(productRatingResponse().productId()));
-        assertThat(result.yourRating(), equalTo(productRatingResponse().yourRating()));
-        assertThat(result.averageRating(), equalTo(productRatingResponse().averageRating()));
-        assertThat(result.totalRatings(), equalTo(productRatingResponse().totalRatings()));
+        assertThat(result.getId(), equalTo(product1WithRating().getId()));
+        assertThat(result.getRatings().getFirst().getValue(), equalTo(product1WithRating().getRatings().getFirst().getValue()));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();
@@ -111,10 +106,8 @@ public class ProductServiceImplTests {
 
         var result = productService.updateProductRating(1L, (byte) 4);
 
-        assertThat(result.productId(), equalTo(updatedProductRatingResponse().productId()));
-        assertThat(result.yourRating(), equalTo(updatedProductRatingResponse().yourRating()));
-        assertThat(result.averageRating(), equalTo(updatedProductRatingResponse().averageRating()));
-        assertThat(result.totalRatings(), equalTo(updatedProductRatingResponse().totalRatings()));
+        assertThat(result.getId(), equalTo(product1WithUpdatedRating().getId()));
+        assertThat(result.getRatings().getFirst().getValue(), equalTo(product1WithUpdatedRating().getRatings().getFirst().getValue()));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();
@@ -147,8 +140,8 @@ public class ProductServiceImplTests {
 
         var result = productService.createProductFeedback(1L, PRODUCT_1_FEEDBACK);
 
-        assertThat(result.productId(), equalTo(productRatingResponse().productId()));
-        assertThat(result.feedback(), equalTo(productFeedbackResponse().feedback()));
+        assertThat(result.getId(), equalTo(product1WithFeedback().getId()));
+        assertThat(result.getFeedbacks().getFirst().getText(), equalTo(product1WithFeedback().getFeedbacks().getFirst().getText()));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();
