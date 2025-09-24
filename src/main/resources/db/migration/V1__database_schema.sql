@@ -113,12 +113,29 @@ CREATE TABLE IF NOT EXISTS product_ratings
     product_id BIGINT           NOT NULL,
     profile_id BIGINT           NOT NULL,
     value      TINYINT UNSIGNED NOT NULL,
-    CONSTRAINT unique_product_id_profile_id UNIQUE (product_id, profile_id),
+    CONSTRAINT unique_product_ratings_product_id_profile_id UNIQUE (product_id, profile_id),
     CONSTRAINT fk_product_ratings_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
     CONSTRAINT fk_product_ratings_profiles
+        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS product_feedbacks
+(
+    id         BIGINT        NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    product_id BIGINT        NOT NULL,
+    profile_id BIGINT        NOT NULL,
+    text       VARCHAR(1000) NOT NULL,
+    CONSTRAINT unique_product_feedbacks_product_id_profile_id UNIQUE (product_id, profile_id),
+    CONSTRAINT fk_product_feedbacks_products
+        FOREIGN KEY (product_id) REFERENCES products (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_product_feedbacks_profiles
         FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
@@ -201,7 +218,7 @@ CREATE TABLE IF NOT EXISTS cart_items
     cart_id    BINARY(16) NOT NULL,
     product_id BIGINT     NOT NULL,
     quantity   INT        NOT NULL DEFAULT 1,
-    CONSTRAINT unique_cart_id_product_id UNIQUE (cart_id, product_id),
+    CONSTRAINT unique_cart_items_cart_id_product_id UNIQUE (cart_id, product_id),
     CONSTRAINT fk_cart_items_carts
         FOREIGN KEY (cart_id) REFERENCES carts (id)
             ON DELETE CASCADE
