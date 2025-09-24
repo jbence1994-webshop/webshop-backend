@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.wishlist;
+package com.github.jbence1994.webshop.product;
 
 public final class DeleteProductFromWishlistRequestTestObject {
     public static DeleteProductFromWishlistRequest deleteProductFromWishlistRequest() {
