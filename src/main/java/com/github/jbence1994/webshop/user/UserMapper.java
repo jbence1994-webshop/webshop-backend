@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     UserDto toDto(User user);
 
+    @Mapping(target = "membershipTier", expression = "java(profile.getMembershipTier().name())")
     ProfileDto toDto(Profile profile);
 
     AddressDto toDto(Address address);
