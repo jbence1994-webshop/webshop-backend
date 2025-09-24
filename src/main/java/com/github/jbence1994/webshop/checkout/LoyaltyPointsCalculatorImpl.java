@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.loyalty;
+package com.github.jbence1994.webshop.checkout;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
