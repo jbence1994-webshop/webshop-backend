@@ -90,7 +90,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(sanitizedProductDto);
     }
 
-    @PostMapping("{id}/rate")
+    @PostMapping("{id}/rating")
     public ResponseEntity<ProductRatingResponse> createProductRating(
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRatingRequest request
@@ -100,7 +100,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productRating);
     }
 
-    @PutMapping("{id}/rate")
+    @PutMapping("{id}/rating")
     public ProductRatingResponse updateProductRating(
             @PathVariable Long id,
             @Valid @RequestBody UpdateProductRatingRequest request
