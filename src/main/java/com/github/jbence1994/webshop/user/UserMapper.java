@@ -25,6 +25,7 @@ public interface UserMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "avatarFileName", ignore = true)
     @Mapping(target = "loyaltyPoints", ignore = true)
+    @Mapping(target = "rewardPoints", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
