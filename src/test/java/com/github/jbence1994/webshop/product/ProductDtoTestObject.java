@@ -57,7 +57,8 @@ public final class ProductDtoTestObject {
                 unit,
                 description,
                 category,
-                photo
+                photo,
+                0.0
         );
     }
 }
