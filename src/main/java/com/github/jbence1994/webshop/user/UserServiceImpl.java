@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Locale;
 
 @Service
@@ -97,9 +98,8 @@ public class UserServiceImpl implements UserService {
                 .findTopByUserIdOrderByExpirationDateDesc(user.getId())
                 .orElseThrow(InvalidTemporaryPasswordException::new);
 
-        var temporaryPasswordsWithoutLatest = temporaryPasswords.stream()
-                .filter(tempPassword -> !tempPassword.getId().equals(latestTemporaryPassword.getId()))
-                .toList();
+        var temporaryPasswordsWithoutLatest = new ArrayList<>(temporaryPasswords);
+        temporaryPasswordsWithoutLatest.removeIf(tempPassword -> tempPassword.getId().equals(latestTemporaryPassword.getId()));
 
         temporaryPasswordRepository.deleteAll(temporaryPasswordsWithoutLatest);
 
