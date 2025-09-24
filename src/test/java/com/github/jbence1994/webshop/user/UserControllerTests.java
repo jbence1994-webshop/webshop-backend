@@ -74,6 +74,8 @@ public class UserControllerTests {
         assertThat(result.profile().lastName(), equalTo(userDto().profile().lastName()));
         assertThat(result.profile().dateOfBirth(), equalTo(userDto().profile().dateOfBirth()));
         assertThat(result.profile().phoneNumber(), equalTo(userDto().profile().phoneNumber()));
+        assertThat(result.profile().loyaltyPoints(), equalTo(userDto().profile().loyaltyPoints()));
+        assertThat(result.profile().membershipTier(), equalTo(userDto().profile().membershipTier()));
         assertThat(result.profile().address().addressLine(), equalTo(userDto().profile().address().addressLine()));
         assertThat(result.profile().address().municipality(), equalTo(userDto().profile().address().municipality()));
         assertThat(result.profile().address().province(), equalTo(userDto().profile().address().province()));
