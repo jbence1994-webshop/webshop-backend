@@ -9,12 +9,12 @@ import java.math.RoundingMode;
 @Component
 @RequiredArgsConstructor
 public class LoyaltyPointsCalculatorImpl implements LoyaltyPointsCalculator {
-    private final LoyaltyConfig loyaltyConfig;
+    private final LoyaltyPointsConfig loyaltyPointsConfig;
 
     @Override
     public int calculateLoyaltyPoints(BigDecimal orderTotal) {
         return orderTotal
-                .divide(BigDecimal.valueOf(loyaltyConfig.pointsRate()), 0, RoundingMode.DOWN)
+                .divide(BigDecimal.valueOf(loyaltyPointsConfig.rate()), 0, RoundingMode.DOWN)
                 .intValue();
     }
 }

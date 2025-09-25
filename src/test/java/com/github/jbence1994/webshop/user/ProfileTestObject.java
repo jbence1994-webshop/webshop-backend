@@ -13,58 +13,63 @@ import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMB
 
 public final class ProfileTestObject {
     public static Profile bronzeProfile1() {
-        return buildProfile(1L, null, 0);
+        return buildProfile(1L, null, 0, 0);
     }
 
     public static Profile bronzeProfile2() {
-        return buildProfile(1L, null, 2_500);
+        return buildProfile(1L, null, 2_500, 3_750);
     }
 
     public static Profile bronzeProfile3() {
-        return buildProfile(1L, null, 4_999);
+        return buildProfile(1L, null, 4_999, 7_498);
     }
 
     public static Profile silverProfile1() {
-        return buildProfile(1L, null, 5_000);
+        return buildProfile(1L, null, 5_000, 10_000);
     }
 
     public static Profile silverProfile2() {
-        return buildProfile(1L, null, 7_500);
+        return buildProfile(1L, null, 7_500, 15_000);
     }
 
     public static Profile silverProfile3() {
-        return buildProfile(1L, null, 9_999);
+        return buildProfile(1L, null, 9_999, 19_998);
     }
 
     public static Profile goldProfile1() {
-        return buildProfile(1L, null, 10_000);
+        return buildProfile(1L, null, 10_000, 25_000);
     }
 
     public static Profile goldProfile2() {
-        return buildProfile(1L, null, 15_000);
+        return buildProfile(1L, null, 15_000, 37_500);
     }
 
     public static Profile goldProfile3() {
-        return buildProfile(1L, null, 19_999);
+        return buildProfile(1L, null, 19_999, 49_997);
     }
 
     public static Profile platinumProfile1() {
-        return buildProfile(1L, null, 20_000);
+        return buildProfile(1L, null, 20_000, 100_000);
     }
 
     public static Profile platinumProfile2() {
-        return buildProfile(1L, null, 2_550_000);
+        return buildProfile(1L, null, 2_550_000, 0);
     }
 
     public static Profile platinumProfile3() {
-        return buildProfile(1L, AVATAR_FILE_NAME, 1_000_000);
+        return buildProfile(1L, AVATAR_FILE_NAME, 1_000_000, 5_000_000);
     }
 
     public static Profile profileAfterMappingFromDto() {
-        return buildProfile(null, null, 0);
+        return buildProfile(null, null, 0, 0);
     }
 
-    private static Profile buildProfile(Long userId, String avatarFileName, int loyaltyPoints) {
+    private static Profile buildProfile(
+            Long userId,
+            String avatarFileName,
+            int loyaltyPoints,
+            int rewardPoints
+    ) {
         return new Profile(
                 userId,
                 null,
@@ -75,6 +80,7 @@ public final class ProfileTestObject {
                 PHONE_NUMBER,
                 avatarFileName,
                 loyaltyPoints,
+                rewardPoints,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 address(),

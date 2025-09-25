@@ -4,7 +4,11 @@ import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECK
 
 public final class CompleteCheckoutSessionRequestTestObject {
 
-    public static CompleteCheckoutSessionRequest completeCheckoutSessionRequest() {
-        return new CompleteCheckoutSessionRequest(CHECKOUT_SESSION_ID);
+    public static CompleteCheckoutSessionRequest completeCheckoutSessionRequestWithRewardPointsEarn() {
+        return new CompleteCheckoutSessionRequest(CHECKOUT_SESSION_ID, RewardPointsAction.EARN);
+    }
+
+    public static CompleteCheckoutSessionRequest completeCheckoutSessionRequestWithRewardPointsBurn() {
+        return new CompleteCheckoutSessionRequest(CHECKOUT_SESSION_ID, RewardPointsAction.BURN);
     }
 }
