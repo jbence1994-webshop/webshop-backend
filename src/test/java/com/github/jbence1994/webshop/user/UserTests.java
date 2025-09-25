@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
+import static com.github.jbence1994.webshop.user.MembershipTier.BRONZE;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -76,6 +77,36 @@ public class UserTests {
         user1.earnLoyaltyPoints(100);
 
         assertThat(user1.getProfile().getLoyaltyPoints(), equalTo(100));
+    }
+
+    @Test
+    public void getRewardPointsTest() {
+        var result = user1.getRewardPoints();
+
+        assertThat(result, equalTo(0));
+    }
+
+    @Test
+    public void earnRewardPointsTest() {
+        user1.earnRewardPoints(100);
+
+        assertThat(user1.getRewardPoints(), equalTo(100));
+    }
+
+    @Test
+    public void burnRewardPointsTest() {
+        user1.earnRewardPoints(100);
+
+        user1.burnRewardPoints(50);
+
+        assertThat(user1.getRewardPoints(), equalTo(50));
+    }
+
+    @Test
+    public void getMembershipTierTest() {
+        var result = user1.getMembershipTier();
+
+        assertThat(result, equalTo(BRONZE));
     }
 
     @Test

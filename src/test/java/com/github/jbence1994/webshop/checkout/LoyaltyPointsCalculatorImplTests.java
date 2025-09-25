@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class LoyaltyPointsCalculatorImplTests {
 
     @Mock
-    private LoyaltyConfig loyaltyConfig;
+    private LoyaltyPointsConfig loyaltyPointsConfig;
 
     @InjectMocks
     private LoyaltyPointsCalculatorImpl loyaltyPointsCalculator;
@@ -44,7 +44,7 @@ public class LoyaltyPointsCalculatorImplTests {
             BigDecimal orderTotalPrice,
             int expectedLoyaltyPoints
     ) {
-        when(loyaltyConfig.pointsRate()).thenReturn(POINTS_RATE);
+        when(loyaltyPointsConfig.rate()).thenReturn(POINTS_RATE);
         var result = loyaltyPointsCalculator.calculateLoyaltyPoints(orderTotalPrice);
 
         assertThat(result, equalTo(expectedLoyaltyPoints));
