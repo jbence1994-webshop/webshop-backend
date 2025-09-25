@@ -201,7 +201,7 @@ public class CheckoutServiceImplTests {
     }
 
     @Test
-    public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon() {
+    public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon_RewardPointsActionEarn() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
@@ -209,7 +209,7 @@ public class CheckoutServiceImplTests {
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
         when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
-        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
+        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN);
 
         assertThat(result, not(nullValue()));
 
@@ -224,14 +224,14 @@ public class CheckoutServiceImplTests {
     }
 
     @Test
-    public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon() {
+    public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon_RewardPointsActionEarn() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
         when(authService.getCurrentUser()).thenReturn(user());
         doNothing().when(orderService).createOrder(any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
         when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
-        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
+        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN);
 
         assertThat(result, not(nullValue()));
 
@@ -250,7 +250,7 @@ public class CheckoutServiceImplTests {
 
         var result = assertThrows(
                 ExpiredCheckoutSessionException.class,
-                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN)
         );
 
         assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 has expired."));
@@ -270,7 +270,7 @@ public class CheckoutServiceImplTests {
 
         var result = assertThrows(
                 CheckoutSessionAlreadyCompletedException.class,
-                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN)
         );
 
         assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 already completed."));
@@ -290,7 +290,7 @@ public class CheckoutServiceImplTests {
 
         var result = assertThrows(
                 EmptyCartException.class,
-                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN)
         );
 
         assertThat(result.getMessage(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
@@ -314,7 +314,7 @@ public class CheckoutServiceImplTests {
 
         var result = assertThrows(
                 PaymentException.class,
-                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN)
         );
 
         assertThat(result.getMessage(), equalTo("Payment exception."));

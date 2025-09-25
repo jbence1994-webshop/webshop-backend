@@ -87,7 +87,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     @Override
     @Transactional
-    public CompleteCheckoutSessionResponse completeCheckoutSession(UUID checkoutSessionId) {
+    public CompleteCheckoutSessionResponse completeCheckoutSession(UUID checkoutSessionId, RewardPointsAction action) {
         var checkoutSession = checkoutQueryService.getCheckoutSession(checkoutSessionId);
 
         if (checkoutSession.isExpired()) {

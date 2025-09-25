@@ -82,7 +82,7 @@ public class CheckoutControllerTests {
 
     @Test
     public void completeCheckoutSessionTest() {
-        when(checkoutService.completeCheckoutSession(any())).thenReturn(completeCheckoutSessionResponse());
+        when(checkoutService.completeCheckoutSession(any(), any())).thenReturn(completeCheckoutSessionResponse());
 
         var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequestWithRewardPointsEarn());
 
