@@ -44,12 +44,16 @@ public class Order {
 
     private BigDecimal totalPrice;
 
+    private BigDecimal totalPriceCardAmount;
+
+    private BigDecimal totalPriceRewardPointsAmount;
+
     private BigDecimal discountAmount;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    private int loyaltyPoints;
+    private int earnedLoyaltyPoints;
 
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")

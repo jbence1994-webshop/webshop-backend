@@ -117,7 +117,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
         user.earnLoyaltyPoints(loyaltyPoints);
-        order.setLoyaltyPoints(loyaltyPoints);
+        order.setEarnedLoyaltyPoints(loyaltyPoints);
 
         try {
             var paymentSessionRequest = new PaymentSessionRequest(checkoutSession, order);
