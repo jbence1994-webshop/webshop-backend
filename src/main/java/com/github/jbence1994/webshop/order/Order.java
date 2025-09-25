@@ -66,11 +66,13 @@ public class Order {
         return customerEmail.equals(customer.getEmail());
     }
 
-    public static Order from(User customer, CheckoutSession checkoutSession) {
+    public static Order from(User customer, CheckoutSession checkoutSession, OrderPricing orderPricing) {
         var order = new Order();
 
         order.customer = customer;
-        order.totalPrice = checkoutSession.getCartTotal();
+        order.totalPrice = orderPricing.getTotalPrice();
+        order.totalPriceCardAmount = orderPricing.getTotalPriceCardAmount();
+        order.totalPriceRewardPointsAmount = orderPricing.getTotalPriceRewardPointsAmount();
         order.discountAmount = checkoutSession.getDiscountAmount();
         order.status = OrderStatus.CREATED;
 

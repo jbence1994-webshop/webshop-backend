@@ -8,17 +8,20 @@ import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.order.Order;
+import com.github.jbence1994.webshop.order.OrderPricing;
 import com.github.jbence1994.webshop.order.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
     private final LoyaltyPointsCalculator loyaltyPointsCalculator;
+    private final RewardPointsCalculator rewardPointsCalculator;
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
@@ -108,7 +111,24 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var user = authService.getCurrentUser();
 
-        var order = Order.from(user, checkoutSession);
+        var cartTotal = checkoutSession.getCartTotal();
+
+        var orderPricing = OrderPricing.of();
+
+        if (RewardPointsAction.EARN.equals(action)) {
+            var earnedRewardPoints = rewardPointsCalculator.calculateRewardPoints(
+                    cartTotal,
+                    user.getMembershipTier().getRewardPointsMultiplier()
+            );
+
+            user.earnRewardPoints(earnedRewardPoints);
+
+            orderPricing = OrderPricing.of(cartTotal, cartTotal, BigDecimal.ZERO);
+        } else {
+            // TODO: Implement 'BURN' path.
+        }
+
+        var order = Order.from(user, checkoutSession, orderPricing);
 
         orderService.createOrder(order);
 

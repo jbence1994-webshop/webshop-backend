@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "profiles")
@@ -73,6 +74,10 @@ public class Profile {
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
     private List<Product> favoriteProducts = new ArrayList<>();
+
+    public Optional<String> getProfileAvatar() {
+        return Optional.ofNullable(avatarFileName);
+    }
 
     public void earnLoyaltyPoints(int value) {
         this.loyaltyPoints += value;

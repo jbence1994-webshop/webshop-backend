@@ -27,9 +27,17 @@ import static com.github.jbence1994.webshop.user.ProfileTestObject.silverProfile
 import static com.github.jbence1994.webshop.user.ProfileTestObject.silverProfile3;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class ProfileTests {
     private final Profile profile = bronzeProfile1();
+
+    private static Stream<Arguments> profileAvatarTestParams() {
+        return Stream.of(
+                Arguments.of("Profile with avatar", platinumProfile3(), true, false),
+                Arguments.of("Profile without avatar", bronzeProfile1(), false, true)
+        );
+    }
 
     private static Stream<Arguments> profileParams() {
         return Stream.of(
@@ -46,6 +54,20 @@ public class ProfileTests {
                 Arguments.of(String.format("%s profile with %d loyalty points", PLATINUM.name(), platinumProfile2().getLoyaltyPoints()), platinumProfile2(), PLATINUM),
                 Arguments.of(String.format("%s profile with %d loyalty points", PLATINUM.name(), platinumProfile3().getLoyaltyPoints()), platinumProfile3(), PLATINUM)
         );
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("profileAvatarTestParams")
+    public void getProfileAvatarTests(
+            String testCase,
+            Profile profile,
+            boolean isPresent,
+            boolean isEmpty
+    ) {
+        var result = profile.getProfileAvatar();
+
+        assertThat(result.isPresent(), is(isPresent));
+        assertThat(result.isEmpty(), is(isEmpty));
     }
 
     @Test
