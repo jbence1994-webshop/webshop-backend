@@ -14,7 +14,7 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObjec
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObject.checkoutSessionDtoWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
-import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequest;
+import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequestWithRewardPointsEarn;
 import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionResponseTestObject.completeCheckoutSessionResponse;
 import static com.github.jbence1994.webshop.checkout.CreateCheckoutSessionRequestTestObject.createCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
@@ -84,7 +84,7 @@ public class CheckoutControllerTests {
     public void completeCheckoutSessionTest() {
         when(checkoutService.completeCheckoutSession(any())).thenReturn(completeCheckoutSessionResponse());
 
-        var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequest());
+        var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequestWithRewardPointsEarn());
 
         assertThat(result, not(nullValue()));
         assertThat(result.orderId(), equalTo(1L));
