@@ -39,10 +39,19 @@ public class OllamaChatServiceTests {
     }
 
     @Test
-    public void chatTest_HappyPath() {
+    public void chatTest_HappyPath_1() {
         when(ollamaChatModel.call(any(Prompt.class))).thenReturn(chatResponse());
 
         var result = assertDoesNotThrow(() -> chatService.chat(chatRequest()));
+
+        assertThat(result.message(), not(nullValue()));
+    }
+
+    @Test
+    public void chatTest_HappyPath_2() {
+        when(ollamaChatModel.call(any(Prompt.class))).thenReturn(chatResponse());
+
+        var result = assertDoesNotThrow(() -> chatService.chat("Greet."));
 
         assertThat(result.message(), not(nullValue()));
     }

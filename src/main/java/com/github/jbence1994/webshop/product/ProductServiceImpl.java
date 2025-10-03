@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+    private final ProductReviewSummaryQueryService productReviewSummaryQueryService;
+    private final ProductReviewSummaryService productReviewSummaryService;
+    private final ProductReviewSummarizer productReviewSummarizer;
     private final ProductQueryService productQueryService;
     private final ProductRepository productRepository;
     private final AuthService authService;
@@ -59,6 +62,31 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
 
         return product;
+    }
+
+    @Override
+    public ProductReviewSummary generateProductReviewSummary(Long id) {
+        var product = productQueryService.getProduct(id);
+
+        var productReviewSummary = productReviewSummaryQueryService.getProductReviewSummary(product.getId());
+
+        if (productReviewSummary == null) {
+            var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
+
+            productReviewSummary = ProductReviewSummary.of(product, productReviewSummaryText);
+
+            productReviewSummaryService.createProductReviewSummary(productReviewSummary);
+        }
+
+        if (productReviewSummary.isExpired()) {
+            var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
+
+            productReviewSummary.setText(productReviewSummaryText);
+
+            productReviewSummaryService.updateProductReviewSummary(productReviewSummary);
+        }
+
+        return productReviewSummary;
     }
 
     private void save(Product product) {

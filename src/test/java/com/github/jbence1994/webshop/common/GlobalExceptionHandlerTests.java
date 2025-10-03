@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.ai.OllamaException;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.image.ImageDeletionException;
 import com.github.jbence1994.webshop.image.ImageUploadException;
@@ -69,6 +70,15 @@ public class GlobalExceptionHandlerTests {
                         "The photo could not be deleted successfully."
                 )
         );
+    }
+
+    @Test
+    public void handleOllamaExceptionTest() {
+        var result = globalExceptionHandler.handleOllamaException(new OllamaException());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Ollama currently unavailable."));
     }
 
     @Test

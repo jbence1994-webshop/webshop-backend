@@ -19,12 +19,14 @@ import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSani
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
+import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.notExpiredProductReviewSummary;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW_SUMMARY;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithOneReview;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
-import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithReview;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithUpdatedRating;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2WithPhotos;
@@ -194,7 +196,7 @@ class ProductControllerTests {
     @Test
     public void createProductReviewTest() {
         when(createProductReviewRequestSanitizer.sanitize(any())).thenReturn(createProductReviewRequest());
-        when(productService.createProductReview(any(), any())).thenReturn(product1WithReview());
+        when(productService.createProductReview(any(), any())).thenReturn(product1WithOneReview());
 
         var result = productController.createProductReview(1L, notSanitizedCreateProductReviewRequest());
 
@@ -202,5 +204,16 @@ class ProductControllerTests {
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().productId(), equalTo(1L));
         assertThat(result.getBody().review(), equalTo(PRODUCT_1_REVIEW));
+    }
+
+    @Test
+    public void generateProductReviewSummaryTest() {
+        when(productService.generateProductReviewSummary(any())).thenReturn(notExpiredProductReviewSummary());
+
+        var result = productController.generateProductReviewSummary(1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().text(), equalTo(PRODUCT_1_REVIEW_SUMMARY));
     }
 }

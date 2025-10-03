@@ -10,7 +10,8 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_NOT_EXISTING_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductRatingTestObject.productRating;
-import static com.github.jbence1994.webshop.product.ProductReviewTestObject.productReview;
+import static com.github.jbence1994.webshop.product.ProductReviewTestObject.productReview1;
+import static com.github.jbence1994.webshop.product.ProductReviewTestObject.productReview2;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -104,8 +105,8 @@ public class ProductTests {
 
     @Test
     public void addReviewTest() {
-        product.addReview(productReview());
-        product.addReview(productReview());
+        product.addReview(productReview1());
+        product.addReview(productReview2());
 
         assertThat(product.getReviews().size(), equalTo(2));
     }
