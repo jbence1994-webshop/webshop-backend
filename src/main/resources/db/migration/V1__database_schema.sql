@@ -141,6 +141,18 @@ CREATE TABLE IF NOT EXISTS product_reviews
             ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS product_review_summaries
+(
+    id              BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    product_id      BIGINT   NOT NULL,
+    text            TEXT     NOT NULL,
+    expiration_date DATETIME NOT NULL,
+    CONSTRAINT fk_product_review_summaries_products
+        FOREIGN KEY (product_id) REFERENCES products (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS orders
 (
     id              BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,

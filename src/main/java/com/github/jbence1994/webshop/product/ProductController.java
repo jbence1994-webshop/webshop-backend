@@ -133,4 +133,13 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productReviewResponse);
     }
+
+    @PostMapping("{id}/summarize-reviews")
+    public ResponseEntity<ProductReviewSummaryResponse> generateProductReviewSummary(@PathVariable Long id) {
+        var productReviewSummary = productService.generateProductReviewSummary(id);
+
+        var productReviewSummaryResponse = new ProductReviewSummaryResponse(productReviewSummary.getText());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productReviewSummaryResponse);
+    }
 }

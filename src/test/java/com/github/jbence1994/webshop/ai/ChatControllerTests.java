@@ -25,7 +25,7 @@ public class ChatControllerTests {
 
     @Test
     public void chatTest() {
-        when(chatService.chat(any())).thenReturn(chatResponse());
+        when(chatService.chat(any(ChatRequest.class))).thenReturn(chatResponse("Hello, World!"));
 
         var result = chatController.chat(chatRequest());
 

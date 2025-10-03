@@ -1,10 +1,9 @@
-package com.github.jbence1994.webshop.user;
+package com.github.jbence1994.webshop.product;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -15,33 +14,32 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "temporary_passwords")
+@Table(name = "product_review_summaries")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class TemporaryPassword {
+public class ProductReviewSummary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String password;
-
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Product product;
+
+    private String text;
 
     private LocalDateTime expirationDate;
 
-    public static TemporaryPassword of(String password, User user) {
-        var temporaryPassword = new TemporaryPassword();
+    public static ProductReviewSummary of(Product product, String text) {
+        var productReviewSummary = new ProductReviewSummary();
 
-        temporaryPassword.password = password;
-        temporaryPassword.user = user;
-        temporaryPassword.expirationDate = LocalDateTime.now().plusMinutes(15);
+        productReviewSummary.product = product;
+        productReviewSummary.text = text;
+        productReviewSummary.expirationDate = LocalDateTime.now().plusDays(7);
 
-        return temporaryPassword;
+        return productReviewSummary;
     }
 
     public boolean isExpired() {
