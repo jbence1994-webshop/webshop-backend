@@ -52,13 +52,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProductFeedback(Long id, String feedback) {
+    public Product createProductReview(Long id, String review) {
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        var productFeedback = new ProductFeedback(product, user.getProfile(), feedback);
+        var productReview = new ProductReview(product, user.getProfile(), review);
 
-        product.addFeedback(productFeedback);
+        product.addReview(productReview);
 
         productRepository.save(product);
 

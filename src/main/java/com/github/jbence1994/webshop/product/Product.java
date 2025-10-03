@@ -51,7 +51,7 @@ public class Product {
     private List<ProductRating> ratings = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductFeedback> feedbacks = new ArrayList<>();
+    private List<ProductReview> reviews = new ArrayList<>();
 
     public void addPhoto(String fileName) {
         var photo = new ProductPhoto();
@@ -90,8 +90,8 @@ public class Product {
                 .orElse(0.0);
     }
 
-    public void addFeedback(ProductFeedback productFeedback) {
-        feedbacks.add(productFeedback);
+    public void addReview(ProductReview productReview) {
+        reviews.add(productReview);
     }
 
     private Optional<ProductPhoto> getPhoto(String fileName) {

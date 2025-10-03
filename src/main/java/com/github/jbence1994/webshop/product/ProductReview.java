@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "product_feedbacks")
+@Table(name = "product_reviews")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProductFeedback {
+public class ProductReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ public class ProductFeedback {
 
     private String text;
 
-    public ProductFeedback(Product product, Profile profile, String text) {
+    public ProductReview(Product product, Profile profile, String text) {
         this.product = product;
         this.profile = profile;
         this.text = text;

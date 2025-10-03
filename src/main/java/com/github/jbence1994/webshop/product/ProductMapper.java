@@ -22,6 +22,6 @@ public interface ProductMapper {
     @Mapping(target = "photos", ignore = true)
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "ratings", ignore = true)
-    @Mapping(target = "feedbacks", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
     Product toEntity(ProductDto productDto);
 }
