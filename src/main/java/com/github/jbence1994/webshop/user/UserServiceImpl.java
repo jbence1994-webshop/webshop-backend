@@ -9,7 +9,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -66,11 +65,7 @@ public class UserServiceImpl implements UserService {
         var rawTemporaryPassword = temporaryPasswordGenerator.generate();
         var hashedTemporaryPassword = passwordManager.encode(rawTemporaryPassword);
 
-        var temporaryPassword = new TemporaryPassword(
-                hashedTemporaryPassword,
-                user,
-                LocalDateTime.now().plusMinutes(15)
-        );
+        var temporaryPassword = TemporaryPassword.of(hashedTemporaryPassword, user);
         temporaryPasswordRepository.save(temporaryPassword);
 
         user.setPassword(hashedTemporaryPassword);
