@@ -29,7 +29,7 @@ public class TemporaryPassword {
     private String password;
 
     @OneToOne
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     private LocalDateTime expirationDate;
