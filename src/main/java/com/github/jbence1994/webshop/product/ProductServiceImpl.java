@@ -28,9 +28,7 @@ public class ProductServiceImpl implements ProductService {
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        var productRating = new ProductRating(product, user.getProfile(), value);
-
-        product.addRating(productRating);
+        product.addRating(ProductRating.of(product, user.getProfile(), value));
 
         productRepository.save(product);
 
@@ -56,9 +54,7 @@ public class ProductServiceImpl implements ProductService {
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        var productReview = new ProductReview(product, user.getProfile(), review);
-
-        product.addReview(productReview);
+        product.addReview(ProductReview.of(product, user.getProfile(), review));
 
         productRepository.save(product);
 

@@ -35,9 +35,13 @@ public class ProductReview {
 
     private String text;
 
-    public ProductReview(Product product, Profile profile, String text) {
-        this.product = product;
-        this.profile = profile;
-        this.text = text;
+    public static ProductReview of(Product product, Profile profile, String text) {
+        var productReview = new ProductReview();
+
+        productReview.product = product;
+        productReview.profile = profile;
+        productReview.text = text;
+
+        return productReview;
     }
 }
