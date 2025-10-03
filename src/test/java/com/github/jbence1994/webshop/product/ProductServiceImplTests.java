@@ -12,10 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_FEEDBACK;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
-import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithFeedback;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithReview;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithUpdatedRating;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -133,15 +133,15 @@ public class ProductServiceImplTests {
     }
 
     @Test
-    public void createProductFeedbackTest() {
+    public void createProductReviewTest() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
         when(authService.getCurrentUser()).thenReturn(user());
-        when(productRepository.save(any())).thenReturn(product1WithFeedback());
+        when(productRepository.save(any())).thenReturn(product1WithReview());
 
-        var result = productService.createProductFeedback(1L, PRODUCT_1_FEEDBACK);
+        var result = productService.createProductReview(1L, PRODUCT_1_REVIEW);
 
-        assertThat(result.getId(), equalTo(product1WithFeedback().getId()));
-        assertThat(result.getFeedbacks().getFirst().getText(), equalTo(product1WithFeedback().getFeedbacks().getFirst().getText()));
+        assertThat(result.getId(), equalTo(product1WithReview().getId()));
+        assertThat(result.getReviews().getFirst().getText(), equalTo(product1WithReview().getReviews().getFirst().getText()));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();

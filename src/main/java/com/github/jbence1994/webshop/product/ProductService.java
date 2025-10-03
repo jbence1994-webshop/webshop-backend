@@ -9,5 +9,5 @@ public interface ProductService {
 
     Product updateProductRating(Long id, Byte value);
 
-    Product createProductFeedback(Long id, String feedback);
+    Product createProductReview(Long id, String review);
 }

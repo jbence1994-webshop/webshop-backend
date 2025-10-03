@@ -6,8 +6,8 @@ import java.util.List;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
-import static com.github.jbence1994.webshop.product.ProductFeedbackTestObject.productFeedback;
 import static com.github.jbence1994.webshop.product.ProductRatingTestObject.productRating;
+import static com.github.jbence1994.webshop.product.ProductReviewTestObject.productReview;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_DESCRIPTION;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_UNIT;
@@ -58,7 +58,7 @@ public final class ProductTestObject {
         );
     }
 
-    public static Product product1WithFeedback() {
+    public static Product product1WithReview() {
         return new Product(
                 1L,
                 PRODUCT_1_NAME,
@@ -68,7 +68,7 @@ public final class ProductTestObject {
                 category1(),
                 new ArrayList<>(),
                 List.of(productRating((byte) 4)),
-                List.of(productFeedback())
+                List.of(productReview())
         );
     }
 
