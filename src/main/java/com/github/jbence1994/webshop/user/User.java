@@ -71,11 +71,27 @@ public class User {
     }
 
     public Optional<String> getProfileAvatar() {
-        return Optional.ofNullable(profile.getAvatarFileName());
+        return profile.getProfileAvatar();
     }
 
     public void earnLoyaltyPoints(int value) {
         profile.earnLoyaltyPoints(value);
+    }
+
+    public int getRewardPoints() {
+        return profile.getRewardPoints();
+    }
+
+    public void earnRewardPoints(int value) {
+        profile.earnRewardPoints(value);
+    }
+
+    public void burnRewardPoints(int value) {
+        profile.burnRewardPoints(value);
+    }
+
+    public MembershipTier getMembershipTier() {
+        return profile.getMembershipTier();
     }
 
     public void addFavoriteProduct(Product product) {

@@ -46,18 +46,6 @@ CREATE TABLE IF NOT EXISTS users
     updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS temporary_passwords
-(
-    id              BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    password        VARCHAR(255) NOT NULL,
-    user_id         BIGINT       NOT NULL,
-    expiration_date DATETIME     NOT NULL,
-    CONSTRAINT fk_temporary_passwords_users
-        FOREIGN KEY (user_id) REFERENCES users (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS profiles
 (
     user_id          BIGINT       NOT NULL PRIMARY KEY,
@@ -68,6 +56,7 @@ CREATE TABLE IF NOT EXISTS profiles
     phone_number     VARCHAR(25) UNIQUE,
     avatar_file_name VARCHAR(41) UNIQUE,
     loyalty_points   INT UNSIGNED NOT NULL DEFAULT 0,
+    reward_points    INT UNSIGNED NOT NULL DEFAULT 0,
     created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_profiles_users
@@ -88,6 +77,18 @@ CREATE TABLE IF NOT EXISTS addresses
     updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_addresses_users
         FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS temporary_passwords
+(
+    id              BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    password        VARCHAR(255) NOT NULL,
+    user_id         BIGINT       NOT NULL,
+    expiration_date DATETIME     NOT NULL,
+    CONSTRAINT fk_temporary_passwords_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
@@ -155,13 +156,15 @@ CREATE TABLE IF NOT EXISTS product_review_summaries
 
 CREATE TABLE IF NOT EXISTS orders
 (
-    id              BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    customer_id     BIGINT         NOT NULL,
-    total_price     DECIMAL(10, 2) NOT NULL,
-    discount_amount DECIMAL(10, 2) NOT NULL,
-    status          VARCHAR(20)    NOT NULL DEFAULT 'CREATED',
-    loyalty_points  INT UNSIGNED   NOT NULL DEFAULT 0,
-    created_at      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id                               BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    customer_id                      BIGINT         NOT NULL,
+    total_price                      DECIMAL(10, 2) NOT NULL,
+    total_price_card_amount          DECIMAL(10, 2) NOT NULL,
+    total_price_reward_points_amount DECIMAL(10, 2),
+    discount_amount                  DECIMAL(10, 2) NOT NULL,
+    status                           VARCHAR(20)    NOT NULL DEFAULT 'CREATED',
+    earned_loyalty_points            INT UNSIGNED   NOT NULL DEFAULT 0,
+    created_at                       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_orders_users
         FOREIGN KEY (customer_id) REFERENCES users (id)
             ON DELETE NO ACTION
