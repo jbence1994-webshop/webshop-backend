@@ -21,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
     private final LoyaltyPointsCalculator loyaltyPointsCalculator;
-    private final RewardPointsCalculator rewardPointsCalculator;
+    private final RewardPointsConverter rewardPointsConverter;
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
@@ -116,10 +116,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         var orderPricing = OrderPricing.of();
 
         if (RewardPointsAction.EARN.equals(action)) {
-            var earnedRewardPoints = rewardPointsCalculator.calculateRewardPoints(
-                    cartTotal,
-                    user.getMembershipTier().getRewardPointsMultiplier()
-            );
+            var earnedRewardPoints = rewardPointsConverter.toRewardPoints(cartTotal, user.getMembershipTier());
 
             user.earnRewardPoints(earnedRewardPoints);
 
