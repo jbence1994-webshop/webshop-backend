@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "profiles")
@@ -53,6 +54,8 @@ public class Profile {
 
     private int loyaltyPoints;
 
+    private int rewardPoints;
+
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
@@ -72,8 +75,20 @@ public class Profile {
     )
     private List<Product> favoriteProducts = new ArrayList<>();
 
+    public Optional<String> getProfileAvatar() {
+        return Optional.ofNullable(avatarFileName);
+    }
+
     public void earnLoyaltyPoints(int value) {
         this.loyaltyPoints += value;
+    }
+
+    public void earnRewardPoints(int value) {
+        this.rewardPoints += value;
+    }
+
+    public void burnRewardPoints(int value) {
+        this.rewardPoints -= value;
     }
 
     public MembershipTier getMembershipTier() {

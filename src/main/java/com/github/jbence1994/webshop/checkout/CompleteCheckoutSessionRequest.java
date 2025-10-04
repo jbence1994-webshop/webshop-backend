@@ -12,4 +12,7 @@ public class CompleteCheckoutSessionRequest {
 
     @NotNull(message = "Checkout Session ID must be provided.")
     private UUID checkoutSessionId;
+
+    @NotNull(message = "Reward points action must be provided.")
+    private RewardPointsAction action;
 }
