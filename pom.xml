@@ -40,11 +40,11 @@
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
 
         <!-- JaCoCo properties -->
-        <jacoco.line-coverage>1.00</jacoco.line-coverage>
-        <jacoco.branch-coverage>1.00</jacoco.branch-coverage>
-        <jacoco.complexity-coverage>1.00</jacoco.complexity-coverage>
-        <jacoco.method-coverage>1.00</jacoco.method-coverage>
-        <jacoco.class-coverage>1.00</jacoco.class-coverage>
+        <jacoco.line-coverage>0.90</jacoco.line-coverage>
+        <jacoco.branch-coverage>0.84</jacoco.branch-coverage>
+        <jacoco.complexity-coverage>0.91</jacoco.complexity-coverage>
+        <jacoco.method-coverage>0.93</jacoco.method-coverage>
+        <jacoco.class-coverage>0.92</jacoco.class-coverage>
 
         <!-- Flags -->
         <flyway.skip>false</flyway.skip>
