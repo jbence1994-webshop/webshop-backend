@@ -29,15 +29,19 @@ public class TemporaryPassword {
     private String password;
 
     @OneToOne
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     private LocalDateTime expirationDate;
 
-    public TemporaryPassword(String password, User user, LocalDateTime expirationDate) {
-        this.password = password;
-        this.user = user;
-        this.expirationDate = expirationDate;
+    public static TemporaryPassword of(String password, User user) {
+        var temporaryPassword = new TemporaryPassword();
+
+        temporaryPassword.password = password;
+        temporaryPassword.user = user;
+        temporaryPassword.expirationDate = LocalDateTime.now().plusMinutes(15);
+
+        return temporaryPassword;
     }
 
     public boolean isExpired() {

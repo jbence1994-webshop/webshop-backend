@@ -7,9 +7,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CreateProductFeedbackRequest {
+public class CreateProductReviewRequest {
 
-    @NotNull(message = "Product feedback must be provided.")
-    @NotBlank(message = "Product feedback must be not empty.")
-    private String feedback;
+    @NotNull(message = "Product review must be provided.")
+    @NotBlank(message = "Product review must be not empty.")
+    private String review;
 }

@@ -12,12 +12,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.product.ProductFeedbackResponseTestObject.productFeedbackResponse;
-import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
-import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
-import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_FEEDBACK;
+import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.expiredProductReviewSummary;
+import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.notExpiredProductReviewSummary;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW_SUMMARY;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
-import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithFeedback;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithOneReview;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithUpdatedRating;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
@@ -26,6 +26,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -33,6 +35,15 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceImplTests {
+
+    @Mock
+    private ProductReviewSummaryQueryService productReviewSummaryQueryService;
+
+    @Mock
+    private ProductReviewSummaryService productReviewSummaryService;
+
+    @Mock
+    private ProductReviewSummarizer productReviewSummarizer;
 
     @Mock
     private ProductQueryService productQueryService;
@@ -75,10 +86,8 @@ public class ProductServiceImplTests {
 
         var result = productService.createProductRating(1L, (byte) 5);
 
-        assertThat(result.productId(), equalTo(productRatingResponse().productId()));
-        assertThat(result.yourRating(), equalTo(productRatingResponse().yourRating()));
-        assertThat(result.averageRating(), equalTo(productRatingResponse().averageRating()));
-        assertThat(result.totalRatings(), equalTo(productRatingResponse().totalRatings()));
+        assertThat(result.getId(), equalTo(product1WithRating().getId()));
+        assertThat(result.getRatings().getFirst().getValue(), equalTo(product1WithRating().getRatings().getFirst().getValue()));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();
@@ -111,10 +120,8 @@ public class ProductServiceImplTests {
 
         var result = productService.updateProductRating(1L, (byte) 4);
 
-        assertThat(result.productId(), equalTo(updatedProductRatingResponse().productId()));
-        assertThat(result.yourRating(), equalTo(updatedProductRatingResponse().yourRating()));
-        assertThat(result.averageRating(), equalTo(updatedProductRatingResponse().averageRating()));
-        assertThat(result.totalRatings(), equalTo(updatedProductRatingResponse().totalRatings()));
+        assertThat(result.getId(), equalTo(product1WithUpdatedRating().getId()));
+        assertThat(result.getRatings().getFirst().getValue(), equalTo(product1WithUpdatedRating().getRatings().getFirst().getValue()));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();
@@ -140,18 +147,70 @@ public class ProductServiceImplTests {
     }
 
     @Test
-    public void createProductFeedbackTest() {
+    public void createProductReviewTest() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
         when(authService.getCurrentUser()).thenReturn(user());
-        when(productRepository.save(any())).thenReturn(product1WithFeedback());
+        when(productRepository.save(any())).thenReturn(product1WithOneReview());
 
-        var result = productService.createProductFeedback(1L, PRODUCT_1_FEEDBACK);
+        var result = productService.createProductReview(1L, PRODUCT_1_REVIEW);
 
-        assertThat(result.productId(), equalTo(productRatingResponse().productId()));
-        assertThat(result.feedback(), equalTo(productFeedbackResponse().feedback()));
+        assertThat(result.getId(), equalTo(product1WithOneReview().getId()));
+        assertThat(result.getReviews().getFirst().getText(), equalTo(product1WithOneReview().getReviews().getFirst().getText()));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();
         verify(productRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void generateProductReviewSummaryTest_AlreadyExistingProductReviewSummary() {
+        when(productQueryService.getProduct(any())).thenReturn(product1WithOneReview());
+        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(notExpiredProductReviewSummary());
+
+        var result = productService.generateProductReviewSummary(1L);
+
+        assertThat(result.getText(), equalTo(PRODUCT_1_REVIEW_SUMMARY));
+
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(productReviewSummaryQueryService, times(1)).getProductReviewSummary(any());
+        verify(productReviewSummarizer, never()).summarizeProductReviews(any());
+        verify(productReviewSummaryService, never()).createProductReviewSummary(any());
+        verify(productReviewSummaryService, never()).updateProductReviewSummary(any());
+    }
+
+    @Test
+    public void generateProductReviewSummaryTest_ProductReviewSummaryIsNull() {
+        when(productQueryService.getProduct(any())).thenReturn(product1WithOneReview());
+        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(null);
+        when(productReviewSummarizer.summarizeProductReviews(any())).thenReturn(PRODUCT_1_REVIEW_SUMMARY);
+        doNothing().when(productReviewSummaryService).createProductReviewSummary(any());
+
+        var result = productService.generateProductReviewSummary(1L);
+
+        assertThat(result.getText(), equalTo(PRODUCT_1_REVIEW_SUMMARY));
+
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(productReviewSummaryQueryService, times(1)).getProductReviewSummary(any());
+        verify(productReviewSummarizer, atLeast(1)).summarizeProductReviews(any());
+        verify(productReviewSummaryService, times(1)).createProductReviewSummary(any());
+        verify(productReviewSummaryService, never()).updateProductReviewSummary(any());
+    }
+
+    @Test
+    public void generateProductReviewSummaryTest_ProductReviewSummaryIsExpired() {
+        when(productQueryService.getProduct(any())).thenReturn(product1WithOneReview());
+        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(expiredProductReviewSummary());
+        when(productReviewSummarizer.summarizeProductReviews(any())).thenReturn(PRODUCT_1_REVIEW_SUMMARY);
+        doNothing().when(productReviewSummaryService).updateProductReviewSummary(any());
+
+        var result = productService.generateProductReviewSummary(1L);
+
+        assertThat(result.getText(), equalTo(PRODUCT_1_REVIEW_SUMMARY));
+
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(productReviewSummaryQueryService, times(1)).getProductReviewSummary(any());
+        verify(productReviewSummarizer, atLeast(1)).summarizeProductReviews(any());
+        verify(productReviewSummaryService, never()).createProductReviewSummary(any());
+        verify(productReviewSummaryService, times(1)).updateProductReviewSummary(any());
     }
 }

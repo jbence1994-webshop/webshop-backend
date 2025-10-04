@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    private final CreateProductFeedbackRequestSanitizer createProductFeedbackRequestSanitizer;
+    private final CreateProductReviewRequestSanitizer createProductReviewRequestSanitizer;
     private final CategoryQueryService categoryQueryService;
     private final ProductQueryService productQueryService;
     private final ProductDtoSanitizer productDtoSanitizer;
@@ -28,7 +28,7 @@ public class ProductController {
     private final ProductMapper productMapper;
 
     public ProductController(
-            final CreateProductFeedbackRequestSanitizer createProductFeedbackRequestSanitizer,
+            final CreateProductReviewRequestSanitizer createProductReviewRequestSanitizer,
             final CategoryQueryService categoryQueryService,
             final ProductQueryService productQueryService,
             final ProductDtoSanitizer productDtoSanitizer,
@@ -36,7 +36,7 @@ public class ProductController {
             final ProductService productService,
             final ProductMapper productMapper
     ) {
-        this.createProductFeedbackRequestSanitizer = createProductFeedbackRequestSanitizer;
+        this.createProductReviewRequestSanitizer = createProductReviewRequestSanitizer;
         this.categoryQueryService = categoryQueryService;
         this.productQueryService = productQueryService;
         this.productDtoSanitizer = productDtoSanitizer;
@@ -98,9 +98,16 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRatingRequest request
     ) {
-        var productRating = productService.createProductRating(id, request.getValue());
+        var product = productService.createProductRating(id, request.getValue());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productRating);
+        var productRatingResponse = new ProductRatingResponse(
+                id,
+                request.getValue(),
+                product.calculateAverageRating(),
+                product.getRatings().size()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productRatingResponse);
     }
 
     @PutMapping("{id}/rating")
@@ -108,18 +115,31 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateProductRatingRequest request
     ) {
-        return productService.updateProductRating(id, request.getValue());
+        var product = productService.updateProductRating(id, request.getValue());
+
+        return new ProductRatingResponse(id, request.getValue(), product.calculateAverageRating(), product.getRatings().size());
     }
 
-    @PostMapping("{id}/feedback")
-    public ResponseEntity<ProductFeedbackResponse> createProductFeedback(
+    @PostMapping("{id}/review")
+    public ResponseEntity<ProductReviewResponse> createProductReview(
             @PathVariable Long id,
-            @Valid @RequestBody CreateProductFeedbackRequest request
+            @Valid @RequestBody CreateProductReviewRequest request
     ) {
-        var sanitizedRequest = createProductFeedbackRequestSanitizer.sanitize(request);
+        var sanitizedRequest = createProductReviewRequestSanitizer.sanitize(request);
 
-        var productFeedback = productService.createProductFeedback(id, sanitizedRequest.getFeedback());
+        var product = productService.createProductReview(id, sanitizedRequest.getReview());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productFeedback);
+        var productReviewResponse = new ProductReviewResponse(product.getId(), sanitizedRequest.getReview());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productReviewResponse);
+    }
+
+    @PostMapping("{id}/summarize-reviews")
+    public ResponseEntity<ProductReviewSummaryResponse> generateProductReviewSummary(@PathVariable Long id) {
+        var productReviewSummary = productService.generateProductReviewSummary(id);
+
+        var productReviewSummaryResponse = new ProductReviewSummaryResponse(productReviewSummary.getText());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productReviewSummaryResponse);
     }
 }

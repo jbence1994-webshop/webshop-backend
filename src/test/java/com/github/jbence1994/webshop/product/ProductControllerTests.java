@@ -12,20 +12,22 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.product.CategoryTestObject.category1;
-import static com.github.jbence1994.webshop.product.CreateProductFeedbackRequestTestObject.createProductFeedbackRequest;
-import static com.github.jbence1994.webshop.product.CreateProductFeedbackRequestTestObject.notSanitizedCreateProductFeedbackRequest;
 import static com.github.jbence1994.webshop.product.CreateProductRatingRequestTestObject.createProductRatingRequest;
+import static com.github.jbence1994.webshop.product.CreateProductReviewRequestTestObject.createProductReviewRequest;
+import static com.github.jbence1994.webshop.product.CreateProductReviewRequestTestObject.notSanitizedCreateProductReviewRequest;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
-import static com.github.jbence1994.webshop.product.ProductFeedbackResponseTestObject.productFeedbackResponse;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
-import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
-import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
-import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_FEEDBACK;
+import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.notExpiredProductReviewSummary;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW;
+import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW_SUMMARY;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1AfterMappingFromDto;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithOneReview;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithPhotos;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithUpdatedRating;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2WithPhotos;
 import static com.github.jbence1994.webshop.product.UpdateProductRatingRequestTestObject.updateProductRatingRequest;
@@ -51,7 +53,7 @@ import static org.mockito.Mockito.when;
 class ProductControllerTests {
 
     @Mock
-    private CreateProductFeedbackRequestSanitizer createProductFeedbackRequestSanitizer;
+    private CreateProductReviewRequestSanitizer createProductReviewRequestSanitizer;
 
     @Mock
     private CategoryQueryService categoryQueryService;
@@ -167,7 +169,7 @@ class ProductControllerTests {
 
     @Test
     public void createProductRatingTest() {
-        when(productService.createProductRating(any(), any())).thenReturn(productRatingResponse());
+        when(productService.createProductRating(any(), any())).thenReturn(product1WithRating());
 
         var result = productController.createProductRating(1L, createProductRatingRequest());
 
@@ -181,7 +183,7 @@ class ProductControllerTests {
 
     @Test
     public void updateProductRatingTest() {
-        when(productService.updateProductRating(any(), any())).thenReturn(updatedProductRatingResponse());
+        when(productService.updateProductRating(any(), any())).thenReturn(product1WithUpdatedRating());
 
         var result = productController.updateProductRating(1L, updateProductRatingRequest());
 
@@ -192,15 +194,26 @@ class ProductControllerTests {
     }
 
     @Test
-    public void createProductFeedbackTest() {
-        when(createProductFeedbackRequestSanitizer.sanitize(any())).thenReturn(createProductFeedbackRequest());
-        when(productService.createProductFeedback(any(), any())).thenReturn(productFeedbackResponse());
+    public void createProductReviewTest() {
+        when(createProductReviewRequestSanitizer.sanitize(any())).thenReturn(createProductReviewRequest());
+        when(productService.createProductReview(any(), any())).thenReturn(product1WithOneReview());
 
-        var result = productController.createProductFeedback(1L, notSanitizedCreateProductFeedbackRequest());
+        var result = productController.createProductReview(1L, notSanitizedCreateProductReviewRequest());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().productId(), equalTo(1L));
-        assertThat(result.getBody().feedback(), equalTo(PRODUCT_1_FEEDBACK));
+        assertThat(result.getBody().review(), equalTo(PRODUCT_1_REVIEW));
+    }
+
+    @Test
+    public void generateProductReviewSummaryTest() {
+        when(productService.generateProductReviewSummary(any())).thenReturn(notExpiredProductReviewSummary());
+
+        var result = productController.generateProductReviewSummary(1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().text(), equalTo(PRODUCT_1_REVIEW_SUMMARY));
     }
 }

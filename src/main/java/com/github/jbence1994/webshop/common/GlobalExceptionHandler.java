@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.common;
 
+import com.github.jbence1994.webshop.ai.OllamaException;
 import com.github.jbence1994.webshop.cart.EmptyCartException;
 import com.github.jbence1994.webshop.image.ImageDeletionException;
 import com.github.jbence1994.webshop.image.ImageUploadException;
@@ -32,6 +33,12 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(exception = OllamaException.class)
+    public ResponseEntity<ErrorDto> handleOllamaException(OllamaException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto(exception.getMessage()));
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorDto> handleHttpMessageNotReadableException() {
         return ResponseEntity.badRequest().body(new ErrorDto("Invalid request body."));
@@ -91,7 +98,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(exception = MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+    public ResponseEntity<ErrorDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ignored) {
         return ResponseEntity.badRequest().body(new ErrorDto("Invalid input."));
     }
 

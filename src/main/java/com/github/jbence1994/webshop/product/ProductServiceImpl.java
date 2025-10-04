@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+    private final ProductReviewSummaryQueryService productReviewSummaryQueryService;
+    private final ProductReviewSummaryService productReviewSummaryService;
+    private final ProductReviewSummarizer productReviewSummarizer;
     private final ProductQueryService productQueryService;
     private final ProductRepository productRepository;
     private final AuthService authService;
@@ -22,47 +25,68 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductRatingResponse createProductRating(Long id, Byte value) {
+    public Product createProductRating(Long id, Byte value) {
         validate(value);
 
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        var productRating = new ProductRating(product, user.getProfile(), value);
-
-        product.addRating(productRating);
+        product.addRating(ProductRating.of(product, user.getProfile(), value));
 
         productRepository.save(product);
 
-        return new ProductRatingResponse(id, value, product.calculateAverageRating(), product.getRatings().size());
+        return product;
     }
 
     @Override
-    public ProductRatingResponse updateProductRating(Long id, Byte rateValue) {
-        validate(rateValue);
+    public Product updateProductRating(Long id, Byte value) {
+        validate(value);
 
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        product.updateRating(user.getId(), rateValue);
+        product.updateRating(user.getId(), value);
 
         productRepository.save(product);
 
-        return new ProductRatingResponse(id, rateValue, product.calculateAverageRating(), product.getRatings().size());
+        return product;
     }
 
     @Override
-    public ProductFeedbackResponse createProductFeedback(Long id, String feedback) {
+    public Product createProductReview(Long id, String review) {
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        var productFeedback = new ProductFeedback(product, user.getProfile(), feedback);
-
-        product.addFeedback(productFeedback);
+        product.addReview(ProductReview.of(product, user.getProfile(), review));
 
         productRepository.save(product);
 
-        return new ProductFeedbackResponse(id, feedback);
+        return product;
+    }
+
+    @Override
+    public ProductReviewSummary generateProductReviewSummary(Long id) {
+        var product = productQueryService.getProduct(id);
+
+        var productReviewSummary = productReviewSummaryQueryService.getProductReviewSummary(product.getId());
+
+        if (productReviewSummary == null) {
+            var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
+
+            productReviewSummary = ProductReviewSummary.of(product, productReviewSummaryText);
+
+            productReviewSummaryService.createProductReviewSummary(productReviewSummary);
+        }
+
+        if (productReviewSummary.isExpired()) {
+            var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
+
+            productReviewSummary.setText(productReviewSummaryText);
+
+            productReviewSummaryService.updateProductReviewSummary(productReviewSummary);
+        }
+
+        return productReviewSummary;
     }
 
     private void save(Product product) {
