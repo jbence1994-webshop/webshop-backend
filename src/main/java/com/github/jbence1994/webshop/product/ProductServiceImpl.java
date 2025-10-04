@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+    private final ProductReviewSummaryQueryService productReviewSummaryQueryService;
+    private final ProductReviewSummaryService productReviewSummaryService;
+    private final ProductReviewSummarizer productReviewSummarizer;
     private final ProductQueryService productQueryService;
     private final ProductRepository productRepository;
     private final AuthService authService;
@@ -28,9 +31,7 @@ public class ProductServiceImpl implements ProductService {
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        var productRating = new ProductRating(product, user.getProfile(), value);
-
-        product.addRating(productRating);
+        product.addRating(ProductRating.of(product, user.getProfile(), value));
 
         productRepository.save(product);
 
@@ -52,17 +53,40 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProductFeedback(Long id, String feedback) {
+    public Product createProductReview(Long id, String review) {
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        var productFeedback = new ProductFeedback(product, user.getProfile(), feedback);
-
-        product.addFeedback(productFeedback);
+        product.addReview(ProductReview.of(product, user.getProfile(), review));
 
         productRepository.save(product);
 
         return product;
+    }
+
+    @Override
+    public ProductReviewSummary generateProductReviewSummary(Long id) {
+        var product = productQueryService.getProduct(id);
+
+        var productReviewSummary = productReviewSummaryQueryService.getProductReviewSummary(product.getId());
+
+        if (productReviewSummary == null) {
+            var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
+
+            productReviewSummary = ProductReviewSummary.of(product, productReviewSummaryText);
+
+            productReviewSummaryService.createProductReviewSummary(productReviewSummary);
+        }
+
+        if (productReviewSummary.isExpired()) {
+            var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
+
+            productReviewSummary.setText(productReviewSummaryText);
+
+            productReviewSummaryService.updateProductReviewSummary(productReviewSummary);
+        }
+
+        return productReviewSummary;
     }
 
     private void save(Product product) {

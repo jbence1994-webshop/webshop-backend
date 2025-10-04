@@ -125,19 +125,31 @@ CREATE TABLE IF NOT EXISTS product_ratings
             ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS product_feedbacks
+CREATE TABLE IF NOT EXISTS product_reviews
 (
-    id         BIGINT        NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    product_id BIGINT        NOT NULL,
-    profile_id BIGINT        NOT NULL,
-    text       VARCHAR(1000) NOT NULL,
-    CONSTRAINT unique_product_feedbacks_product_id_profile_id UNIQUE (product_id, profile_id),
-    CONSTRAINT fk_product_feedbacks_products
+    id         BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    product_id BIGINT NOT NULL,
+    profile_id BIGINT NOT NULL,
+    text       TEXT   NOT NULL,
+    CONSTRAINT unique_product_reviews_product_id_profile_id UNIQUE (product_id, profile_id),
+    CONSTRAINT fk_product_reviews_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT fk_product_feedbacks_profiles
+    CONSTRAINT fk_product_reviews_profiles
         FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS product_review_summaries
+(
+    id              BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    product_id      BIGINT   NOT NULL,
+    text            TEXT     NOT NULL,
+    expiration_date DATETIME NOT NULL,
+    CONSTRAINT fk_product_review_summaries_products
+        FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
