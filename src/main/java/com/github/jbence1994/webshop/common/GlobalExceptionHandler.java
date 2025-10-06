@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(exception = AccessDeniedException.class)
     public ResponseEntity<ErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
     }
