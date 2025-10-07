@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.OllamaChatModel;
 
-import static com.github.jbence1994.webshop.ai.ChatRequestTestObject.chatRequest;
 import static com.github.jbence1994.webshop.ai.OllamaChatResponseTestObject.chatResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -39,21 +38,12 @@ public class OllamaChatServiceTests {
     }
 
     @Test
-    public void chatTest_HappyPath_1() {
-        when(ollamaChatModel.call(any(Prompt.class))).thenReturn(chatResponse());
-
-        var result = assertDoesNotThrow(() -> chatService.chat(chatRequest()));
-
-        assertThat(result.message(), not(nullValue()));
-    }
-
-    @Test
-    public void chatTest_HappyPath_2() {
+    public void chatTest_HappyPath() {
         when(ollamaChatModel.call(any(Prompt.class))).thenReturn(chatResponse());
 
         var result = assertDoesNotThrow(() -> chatService.chat("Greet."));
 
-        assertThat(result.message(), not(nullValue()));
+        assertThat(result, not(nullValue()));
     }
 
     @Test
@@ -62,7 +52,7 @@ public class OllamaChatServiceTests {
 
         var result = assertThrows(
                 OllamaException.class,
-                () -> chatService.chat(chatRequest())
+                () -> chatService.chat("Greet.")
         );
 
         assertThat(result.getMessage(), equalTo("Ollama currently unavailable."));

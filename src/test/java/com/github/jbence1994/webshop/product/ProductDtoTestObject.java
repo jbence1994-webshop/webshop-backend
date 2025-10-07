@@ -42,6 +42,17 @@ public final class ProductDtoTestObject {
         );
     }
 
+    public static ProductDto notSanitizedProductDtoWithNullDescription() {
+        return buildProduct(
+                null,
+                " " + PRODUCT_1_NAME + " ",
+                " " + PRODUCT_1_UNIT + " ",
+                null,
+                " " + CATEGORY_1_NAME + " ",
+                null
+        );
+    }
+
     private static ProductDto buildProduct(
             Long id,
             String name,

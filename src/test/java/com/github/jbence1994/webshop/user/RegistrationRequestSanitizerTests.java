@@ -15,11 +15,14 @@ import static com.github.jbence1994.webshop.user.ProfileTestConstants.LAST_NAME;
 import static com.github.jbence1994.webshop.user.ProfileTestConstants.MIDDLE_NAME;
 import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMBER;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequest;
+import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequestWithNullMiddleName;
 import static com.github.jbence1994.webshop.user.UserTestConstants.CONFIRM_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
 import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(MockitoExtension.class)
 public class RegistrationRequestSanitizerTests {
@@ -28,7 +31,7 @@ public class RegistrationRequestSanitizerTests {
     private RegistrationRequestSanitizer registrationRequestSanitizer;
 
     @Test
-    public void sanitizeTest() {
+    public void sanitizeTest_1() {
         var result = registrationRequestSanitizer.sanitize(notSanitizedRegistrationRequest());
 
         assertThat(result.getUser().getEmail(), equalTo(EMAIL));
@@ -37,6 +40,26 @@ public class RegistrationRequestSanitizerTests {
 
         assertThat(result.getProfile().getFirstName(), equalTo(FIRST_NAME));
         assertThat(result.getProfile().getMiddleName(), equalTo(MIDDLE_NAME));
+        assertThat(result.getProfile().getLastName(), equalTo(LAST_NAME));
+        assertThat(result.getProfile().getPhoneNumber(), equalTo(PHONE_NUMBER));
+
+        assertThat(result.getAddress().getAddressLine(), equalTo(ADDRESS_LINE));
+        assertThat(result.getAddress().getMunicipality(), equalTo(MUNICIPALITY));
+        assertThat(result.getAddress().getProvince(), equalTo(PROVINCE));
+        assertThat(result.getAddress().getPostalCode(), equalTo(POSTAL_CODE));
+        assertThat(result.getAddress().getCountry(), equalTo(COUNTRY));
+    }
+
+    @Test
+    public void sanitizeTest_2() {
+        var result = registrationRequestSanitizer.sanitize(notSanitizedRegistrationRequestWithNullMiddleName());
+
+        assertThat(result.getUser().getEmail(), equalTo(EMAIL));
+        assertThat(result.getUser().getPassword(), equalTo(PASSWORD));
+        assertThat(result.getUser().getConfirmPassword(), equalTo(CONFIRM_PASSWORD));
+
+        assertThat(result.getProfile().getFirstName(), equalTo(FIRST_NAME));
+        assertThat(result.getProfile().getMiddleName(), is(nullValue()));
         assertThat(result.getProfile().getLastName(), equalTo(LAST_NAME));
         assertThat(result.getProfile().getPhoneNumber(), equalTo(PHONE_NUMBER));
 
