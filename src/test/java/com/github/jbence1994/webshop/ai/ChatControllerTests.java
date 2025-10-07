@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.github.jbence1994.webshop.ai.ChatRequestTestObject.chatRequest;
-import static com.github.jbence1994.webshop.ai.ChatResponseTestObject.chatResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -25,7 +24,7 @@ public class ChatControllerTests {
 
     @Test
     public void chatTest() {
-        when(chatService.chat(any(ChatRequest.class))).thenReturn(chatResponse("Hello, World!"));
+        when(chatService.chat(any())).thenReturn("Hello, World!");
 
         var result = chatController.chat(chatRequest());
 

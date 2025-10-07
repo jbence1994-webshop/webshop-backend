@@ -15,6 +15,8 @@ public class ChatController {
 
     @PostMapping
     public ChatResponse chat(@Valid @RequestBody ChatRequest request) {
-        return chatService.chat(request);
+        var message = chatService.chat(request.prompt());
+
+        return new ChatResponse(message);
     }
 }
