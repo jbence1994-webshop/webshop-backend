@@ -29,6 +29,6 @@ public class ProductReviewSummarizerImpl implements ProductReviewSummarizer {
                 """
                 .formatted(product.getName(), reviewsAsText);
 
-        return chatService.chat(prompt).message();
+        return chatService.chat(prompt);
     }
 }

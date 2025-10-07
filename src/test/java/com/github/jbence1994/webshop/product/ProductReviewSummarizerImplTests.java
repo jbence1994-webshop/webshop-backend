@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.github.jbence1994.webshop.ai.ChatResponseTestObject.chatResponse;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW_SUMMARY;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +32,7 @@ public class ProductReviewSummarizerImplTests {
     @Test
     public void summarizeProductReviewsTest() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(chatService.chat(anyString())).thenReturn(chatResponse(PRODUCT_1_REVIEW_SUMMARY));
+        when(chatService.chat(any())).thenReturn(PRODUCT_1_REVIEW_SUMMARY);
 
         var result = productReviewSummarizer.summarizeProductReviews(1L);
 
