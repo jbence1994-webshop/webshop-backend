@@ -24,6 +24,10 @@ public final class RegistrationRequestTestObject {
         return buildRegistrationRequest(UserDtoTestObject.notSanitizedUserDto());
     }
 
+    public static RegistrationRequest notSanitizedRegistrationRequestWithNullMiddleName() {
+        return buildRegistrationRequest(UserDtoTestObject.notSanitizedUserDtoWithNullMiddleName());
+    }
+
     public static RegistrationRequest registrationRequestWithInvalidConfirmPassword() {
         return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, INVALID_CONFIRM_PASSWORD));
     }
@@ -73,6 +77,15 @@ public final class RegistrationRequestTestObject {
                     ProfileDtoTestObject.notSanitizedProfileDto()
             );
         }
+
+        public static RegistrationRequest.UserDto notSanitizedUserDtoWithNullMiddleName() {
+            return new RegistrationRequest.UserDto(
+                    " " + EMAIL + " ",
+                    " " + PASSWORD + " ",
+                    " " + CONFIRM_PASSWORD + " ",
+                    ProfileDtoTestObject.notSanitizedProfileDtoWithNullMiddleName()
+            );
+        }
     }
 
     private static final class ProfileDtoTestObject {
@@ -91,6 +104,17 @@ public final class RegistrationRequestTestObject {
             return new RegistrationRequest.ProfileDto(
                     " " + FIRST_NAME + " ",
                     " " + MIDDLE_NAME + " ",
+                    " " + LAST_NAME + " ",
+                    DATE_OF_BIRTH,
+                    " " + PHONE_NUMBER + " ",
+                    AddressDtoTestObject.notSanitizedAddressDto()
+            );
+        }
+
+        public static RegistrationRequest.ProfileDto notSanitizedProfileDtoWithNullMiddleName() {
+            return new RegistrationRequest.ProfileDto(
+                    " " + FIRST_NAME + " ",
+                    null,
                     " " + LAST_NAME + " ",
                     DATE_OF_BIRTH,
                     " " + PHONE_NUMBER + " ",

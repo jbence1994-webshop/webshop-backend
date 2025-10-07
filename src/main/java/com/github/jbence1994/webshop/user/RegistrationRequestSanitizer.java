@@ -6,55 +6,36 @@ import org.springframework.stereotype.Component;
 public class RegistrationRequestSanitizer {
 
     public RegistrationRequest sanitize(RegistrationRequest request) {
-        var sanitizedUserDto = sanitize(request.getUser());
-
-        return new RegistrationRequest(sanitizedUserDto);
+        return new RegistrationRequest(sanitize(request.getUser()));
     }
 
     private RegistrationRequest.UserDto sanitize(RegistrationRequest.UserDto userDto) {
-        var sanitizedEmail = userDto.getEmail().trim();
-        var sanitizedPassword = userDto.getPassword().trim();
-        var sanitizedConfirmPassword = userDto.getConfirmPassword().trim();
-        var sanitizedProfileDto = sanitize(userDto.getProfile());
-
         return new RegistrationRequest.UserDto(
-                sanitizedEmail,
-                sanitizedPassword,
-                sanitizedConfirmPassword,
-                sanitizedProfileDto
+                userDto.getEmail().trim(),
+                userDto.getPassword().trim(),
+                userDto.getConfirmPassword().trim(),
+                sanitize(userDto.getProfile())
         );
     }
 
     private RegistrationRequest.ProfileDto sanitize(RegistrationRequest.ProfileDto profileDto) {
-        var sanitizedFirstName = profileDto.getFirstName().trim();
-        var sanitizedMiddleName = profileDto.getMiddleName().trim();
-        var sanitizedLastName = profileDto.getLastName().trim();
-        var sanitizedPhoneNumber = profileDto.getPhoneNumber().trim();
-        var sanitizedAddressDto = sanitize(profileDto.getAddress());
-
         return new RegistrationRequest.ProfileDto(
-                sanitizedFirstName,
-                sanitizedMiddleName,
-                sanitizedLastName,
+                profileDto.getFirstName().trim(),
+                profileDto.getMiddleName() != null ? profileDto.getMiddleName().trim() : null,
+                profileDto.getLastName().trim(),
                 profileDto.getDateOfBirth(),
-                sanitizedPhoneNumber,
-                sanitizedAddressDto
+                profileDto.getPhoneNumber().trim(),
+                sanitize(profileDto.getAddress())
         );
     }
 
     private RegistrationRequest.AddressDto sanitize(RegistrationRequest.AddressDto addressDto) {
-        var sanitizedAddressLine = addressDto.getAddressLine().trim();
-        var sanitizedMunicipality = addressDto.getMunicipality().trim();
-        var sanitizedProvince = addressDto.getProvince().trim();
-        var sanitizedPostalCode = addressDto.getPostalCode().trim();
-        var sanitizedCountry = addressDto.getCountry().trim();
-
         return new RegistrationRequest.AddressDto(
-                sanitizedAddressLine,
-                sanitizedMunicipality,
-                sanitizedProvince,
-                sanitizedPostalCode,
-                sanitizedCountry
+                addressDto.getAddressLine().trim(),
+                addressDto.getMunicipality().trim(),
+                addressDto.getProvince().trim(),
+                addressDto.getPostalCode().trim(),
+                addressDto.getCountry().trim()
         );
     }
 }
