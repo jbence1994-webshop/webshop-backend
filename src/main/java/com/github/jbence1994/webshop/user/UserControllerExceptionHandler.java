@@ -9,18 +9,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(basePackageClasses = UserController.class)
 public class UserControllerExceptionHandler {
 
-    @ExceptionHandler(exception = {
-            EmailAlreadyExistsException.class,
-            PhoneNumberAlreadyExistsException.class,
-    })
+    @ExceptionHandler(exception = {EmailAlreadyExistsException.class, PhoneNumberAlreadyExistsException.class})
     public ResponseEntity<ErrorDto> handleEmailOrPhoneNumberAlreadyExistsException(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(exception = {
-            InvalidTemporaryPasswordException.class,
-            ExpiredTemporaryPasswordException.class
-    })
+    @ExceptionHandler(exception = {InvalidTemporaryPasswordException.class, ExpiredTemporaryPasswordException.class})
     public ResponseEntity<ErrorDto> handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordException(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
     }
