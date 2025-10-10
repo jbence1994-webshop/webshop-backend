@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.cart;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -25,8 +26,8 @@ public class CartTests {
 
     private static Stream<Arguments> cartEmptyCheckParams() {
         return Stream.of(
-                Arguments.of("Cart is not empty", cartWithTwoItems(), false),
-                Arguments.of("Cart is empty", emptyCart(), true)
+                Arguments.of(Named.of("Cart is not empty", cartWithTwoItems()), false),
+                Arguments.of(Named.of("Cart is empty", emptyCart()), true)
         );
     }
 
@@ -90,11 +91,7 @@ public class CartTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("cartEmptyCheckParams")
-    public void isEmptyTests(
-            String testCase,
-            Cart cart,
-            boolean expectedResult
-    ) {
+    public void isEmptyTests(Cart cart, boolean expectedResult) {
         var result = cart.isEmpty();
 
         assertThat(result, is(expectedResult));

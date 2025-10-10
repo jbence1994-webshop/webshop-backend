@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.image;
 
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -30,8 +31,8 @@ public class FileNotEmptyValidatorTests {
 
     private static Stream<Arguments> fileParams() {
         return Stream.of(
-                Arguments.of("File is not empty", multipartFile(), true),
-                Arguments.of("File is empty", emptyMultipartFile(), false)
+                Arguments.of(Named.of("File is not empty", multipartFile()), true),
+                Arguments.of(Named.of("File is empty", emptyMultipartFile()), false)
         );
     }
 
@@ -42,11 +43,7 @@ public class FileNotEmptyValidatorTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("fileParams")
-    public void isValidTests(
-            String testCase,
-            MultipartFile file,
-            boolean expectedResult
-    ) {
+    public void isValidTests(MultipartFile file, boolean expectedResult) {
         var result = fileNotEmptyValidator.isValid(file, context);
 
         assertThat(result, is(expectedResult));

@@ -9,6 +9,7 @@ import com.github.jbence1994.webshop.product.ProductNotFoundException;
 import com.github.jbence1994.webshop.user.UserNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -51,22 +52,32 @@ public class GlobalExceptionHandlerTests {
 
     private static Stream<Arguments> objectErrorParams() {
         return Stream.of(
-                Arguments.of("ConfirmPassword", objectError1(), "user.confirmPassword", "Confirm password does not match the password."),
-                Arguments.of("ConfirmNewPassword", objectError2(), "confirmNewPassword", "Confirm new password does not match the new password."),
-                Arguments.of("ConfirmNewPassword", objectError3(), "confirmNewPassword", "Confirm new password does not match the new password.")
+                Arguments.of(
+                        Named.of("ConfirmPassword", objectError1()),
+                        "user.confirmPassword",
+                        "Confirm password does not match the password."
+                ),
+                Arguments.of(
+                        Named.of("ConfirmNewPassword", objectError2()),
+                        "confirmNewPassword",
+                        "Confirm new password does not match the new password."
+                ),
+                Arguments.of(
+                        Named.of("ConfirmNewPassword", objectError3()),
+                        "confirmNewPassword",
+                        "Confirm new password does not match the new password."
+                )
         );
     }
 
     private static Stream<Arguments> imageUploadOrImageDeletionExceptionParams() {
         return Stream.of(
                 Arguments.of(
-                        "ImageUploadException",
-                        new ImageUploadException("The photo could not be uploaded successfully."),
+                        Named.of("ImageUploadException", new ImageUploadException("The photo could not be uploaded successfully.")),
                         "The photo could not be uploaded successfully."
                 ),
                 Arguments.of(
-                        "ImageUploadException",
-                        new ImageDeletionException("The photo could not be deleted successfully."),
+                        Named.of("ImageUploadException", new ImageDeletionException("The photo could not be deleted successfully.")),
                         "The photo could not be deleted successfully."
                 )
         );
@@ -173,11 +184,7 @@ public class GlobalExceptionHandlerTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("imageUploadOrImageDeletionExceptionParams")
-    public void handleImageUploadOrImageDeletionExceptionTests(
-            String testCase,
-            RuntimeException exception,
-            String expectedExceptionMessage
-    ) {
+    public void handleImageUploadOrImageDeletionExceptionTests(RuntimeException exception, String expectedExceptionMessage) {
         var result = globalExceptionHandler.handleImageUploadOrImageDeletionException(exception);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
@@ -215,12 +222,7 @@ public class GlobalExceptionHandlerTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("objectErrorParams")
-    public void handleValidationErrorsTests_WithObjectError(
-            String testCase,
-            ObjectError error,
-            String fieldName,
-            String message
-    ) {
+    public void handleValidationErrorsTests_WithObjectError(ObjectError error, String fieldName, String message) {
         var bindingResult = mock(BindingResult.class);
         var exception = mock(MethodArgumentNotValidException.class);
 

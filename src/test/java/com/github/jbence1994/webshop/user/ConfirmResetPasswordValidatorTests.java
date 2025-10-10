@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.user;
 
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,12 +40,12 @@ public class ConfirmResetPasswordValidatorTests {
 
     private static Stream<Arguments> isNotValidParams() {
         return Stream.of(
-                Arguments.of("Request is null", null),
-                Arguments.of("Password is null", resetPasswordRequestWithNullPassword()),
-                Arguments.of("Confirm password is null", resetPasswordRequestWithNullConfirmPassword()),
-                Arguments.of("Password is blank", resetPasswordRequestWithBlankPassword()),
-                Arguments.of("Confirm password is blank", resetPasswordRequestWithBlankConfirmPassword()),
-                Arguments.of("Confirm password is invalid", resetPasswordRequestWithInvalidConfirmPassword())
+                Arguments.of(Named.of("Request is null", null)),
+                Arguments.of(Named.of("Password is null", resetPasswordRequestWithNullPassword())),
+                Arguments.of(Named.of("Confirm password is null", resetPasswordRequestWithNullConfirmPassword())),
+                Arguments.of(Named.of("Password is blank", resetPasswordRequestWithBlankPassword())),
+                Arguments.of(Named.of("Confirm password is blank", resetPasswordRequestWithBlankConfirmPassword())),
+                Arguments.of(Named.of("Confirm password is invalid", resetPasswordRequestWithInvalidConfirmPassword()))
         );
     }
 
@@ -57,10 +58,7 @@ public class ConfirmResetPasswordValidatorTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("isNotValidParams")
-    public void isValidTest_UnhappyPaths(
-            String testCase,
-            ResetPasswordRequest request
-    ) {
+    public void isValidTest_UnhappyPaths(ResetPasswordRequest request) {
         var result = confirmResetPasswordValidator.isValid(request, context);
 
         assertThat(result, is(false));

@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.checkout;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,15 +25,15 @@ public class CheckoutSessionTests {
 
     private static Stream<Arguments> checkoutSessionGetAppliedCouponParams() {
         return Stream.of(
-                Arguments.of("Checkout session has coupon applied", checkoutSessionWithPercentOffTypeOfAppliedCoupon(), true, false),
-                Arguments.of("Checkout session does not have a coupon applied", checkoutSession1(), false, true)
+                Arguments.of(Named.of("Checkout session has coupon applied", checkoutSessionWithPercentOffTypeOfAppliedCoupon()), true, false),
+                Arguments.of(Named.of("Checkout session does not have a coupon applied", checkoutSession1()), false, true)
         );
     }
 
     private static Stream<Arguments> checkoutSessionParams() {
         return Stream.of(
-                Arguments.of("Checkout session is not expired", checkoutSession1(), false),
-                Arguments.of("Checkout session is expired", expiredCheckoutSession(), true)
+                Arguments.of(Named.of("Checkout session is not expired", checkoutSession1()), false),
+                Arguments.of(Named.of("Checkout session is expired", expiredCheckoutSession()), true)
         );
     }
 
@@ -51,12 +52,7 @@ public class CheckoutSessionTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("checkoutSessionGetAppliedCouponParams")
-    public void getAppliedCouponTests(
-            String testCase,
-            CheckoutSession checkoutSession,
-            boolean isPresent,
-            boolean isEmpty
-    ) {
+    public void getAppliedCouponTests(CheckoutSession checkoutSession, boolean isPresent, boolean isEmpty) {
         var result = checkoutSession.getAppliedCoupon();
 
         assertThat(result.isPresent(), is(isPresent));
@@ -65,11 +61,7 @@ public class CheckoutSessionTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("checkoutSessionParams")
-    public void isExpiredTests(
-            String testCase,
-            CheckoutSession checkoutSession,
-            boolean expectedResult
-    ) {
+    public void isExpiredTests(CheckoutSession checkoutSession, boolean expectedResult) {
         var result = checkoutSession.isExpired();
 
         assertThat(result, is(expectedResult));

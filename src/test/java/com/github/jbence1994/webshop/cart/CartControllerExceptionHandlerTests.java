@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.product.ProductNotFoundException;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,13 +28,11 @@ public class CartControllerExceptionHandlerTests {
     private static Stream<Arguments> cartOrCartItemNotFoundExceptionParams() {
         return Stream.of(
                 Arguments.of(
-                        "CartNotFoundException",
-                        new CartNotFoundException(CART_ID),
+                        Named.of("CartNotFoundException", new CartNotFoundException(CART_ID)),
                         "No cart was found with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69."
                 ),
                 Arguments.of(
-                        "CartItemNotFoundException",
-                        new CartItemNotFoundException(100L),
+                        Named.of("CartItemNotFoundException", new CartItemNotFoundException(100L)),
                         "No cart item was found with the given product ID: 100."
                 )
         );
@@ -41,11 +40,7 @@ public class CartControllerExceptionHandlerTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("cartOrCartItemNotFoundExceptionParams")
-    public void handleCartOrCartItemNotFoundExceptionTests(
-            String testCase,
-            RuntimeException exception,
-            String expectedExceptionMessage
-    ) {
+    public void handleCartOrCartItemNotFoundExceptionTests(RuntimeException exception, String expectedExceptionMessage) {
         var result = cartControllerExceptionHandler.handleCartOrCartItemNotFoundException(exception);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));

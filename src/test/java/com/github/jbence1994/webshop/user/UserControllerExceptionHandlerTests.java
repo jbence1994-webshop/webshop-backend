@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,13 +27,11 @@ public class UserControllerExceptionHandlerTests {
     private static Stream<Arguments> handleEmailOrPhoneNumberAlreadyExistsExceptionParams() {
         return Stream.of(
                 Arguments.of(
-                        "EmailAlreadyExistsException",
-                        new EmailAlreadyExistsException(EMAIL),
+                        Named.of("EmailAlreadyExistsException", new EmailAlreadyExistsException(EMAIL)),
                         "Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."
                 ),
                 Arguments.of(
-                        "PhoneNumberAlreadyExistsException",
-                        new PhoneNumberAlreadyExistsException(PHONE_NUMBER),
+                        Named.of("PhoneNumberAlreadyExistsException", new PhoneNumberAlreadyExistsException(PHONE_NUMBER)),
                         "Phone number '+36501323566' is already registered. Please use a different."
                 )
         );
@@ -41,13 +40,11 @@ public class UserControllerExceptionHandlerTests {
     private static Stream<Arguments> handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionParams() {
         return Stream.of(
                 Arguments.of(
-                        "InvalidTemporaryPasswordException",
-                        new InvalidTemporaryPasswordException(),
+                        Named.of("InvalidTemporaryPasswordException", new InvalidTemporaryPasswordException()),
                         "Invalid temporary password."
                 ),
                 Arguments.of(
-                        "ExpiredTemporaryPasswordException",
-                        new ExpiredTemporaryPasswordException(),
+                        Named.of("ExpiredTemporaryPasswordException", new ExpiredTemporaryPasswordException()),
                         "Temporary password has expired."
                 )
         );
@@ -55,11 +52,7 @@ public class UserControllerExceptionHandlerTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("handleEmailOrPhoneNumberAlreadyExistsExceptionParams")
-    public void handleEmailOrPhoneNumberAlreadyExistsExceptionTests(
-            String testCase,
-            RuntimeException exception,
-            String expectedExceptionMessage
-    ) {
+    public void handleEmailOrPhoneNumberAlreadyExistsExceptionTests(RuntimeException exception, String expectedExceptionMessage) {
         var result = userControllerExceptionHandler.handleEmailOrPhoneNumberAlreadyExistsException(exception);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
@@ -69,11 +62,7 @@ public class UserControllerExceptionHandlerTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionParams")
-    public void handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionTest(
-            String testCase,
-            RuntimeException exception,
-            String expectedExceptionMessage
-    ) {
+    public void handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionTest(RuntimeException exception, String expectedExceptionMessage) {
         var result = userControllerExceptionHandler.handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordException(exception);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));

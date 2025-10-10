@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.user;
 
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,12 +40,12 @@ public class ConfirmNewPasswordValidatorTests {
 
     private static Stream<Arguments> isNotValidParams() {
         return Stream.of(
-                Arguments.of("Request is null", null),
-                Arguments.of("Password is null", changePasswordRequestWithNullPassword()),
-                Arguments.of("Confirm password is null", changePasswordRequestWithNullConfirmPassword()),
-                Arguments.of("Password is blank", changePasswordRequestWithBlankPassword()),
-                Arguments.of("Confirm password is blank", changePasswordRequestWithBlankConfirmPassword()),
-                Arguments.of("Confirm password is invalid", changePasswordRequestWithInvalidConfirmPassword())
+                Arguments.of(Named.of("Request is null", null)),
+                Arguments.of(Named.of("Password is null", changePasswordRequestWithNullPassword())),
+                Arguments.of(Named.of("Confirm password is null", changePasswordRequestWithNullConfirmPassword())),
+                Arguments.of(Named.of("Password is blank", changePasswordRequestWithBlankPassword())),
+                Arguments.of(Named.of("Confirm password is blank", changePasswordRequestWithBlankConfirmPassword())),
+                Arguments.of(Named.of("Confirm password is invalid", changePasswordRequestWithInvalidConfirmPassword()))
         );
     }
 
@@ -57,10 +58,7 @@ public class ConfirmNewPasswordValidatorTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("isNotValidParams")
-    public void isValidTest_UnhappyPaths(
-            String testCase,
-            ChangePasswordRequest request
-    ) {
+    public void isValidTest_UnhappyPaths(ChangePasswordRequest request) {
         var result = confirmNewPasswordValidator.isValid(request, context);
 
         assertThat(result, is(false));

@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.coupon;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,8 +47,8 @@ public class CouponQueryServiceImplTests {
 
     private static Stream<Arguments> isCouponRedeemedTestParams() {
         return Stream.of(
-                Arguments.of("Coupon is redeemed", COUPON_1_CODE, 1, true),
-                Arguments.of("Coupon is not yet redeemed", COUPON_2_CODE, 0, false)
+                Arguments.of(Named.of("Coupon is redeemed", COUPON_1_CODE), 1, true),
+                Arguments.of(Named.of("Coupon is not yet redeemed", COUPON_2_CODE), 0, false)
         );
     }
 
@@ -104,12 +105,7 @@ public class CouponQueryServiceImplTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("isCouponRedeemedTestParams")
-    public void isCouponRedeemedTests(
-            String testCase,
-            String couponCode,
-            int returnValueFromRepository,
-            boolean expectedResult
-    ) {
+    public void isCouponRedeemedTests(String couponCode, int returnValueFromRepository, boolean expectedResult) {
         when(couponRepository.isCouponRedeemed(any(), any())).thenReturn(returnValueFromRepository);
 
         var result = couponQueryService.isCouponRedeemed(couponCode);
