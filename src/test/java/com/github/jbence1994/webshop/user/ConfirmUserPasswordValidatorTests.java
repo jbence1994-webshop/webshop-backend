@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.user;
 
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,12 +41,12 @@ public class ConfirmUserPasswordValidatorTests {
 
     private static Stream<Arguments> isNotValidParams() {
         return Stream.of(
-                Arguments.of("User is null", registrationRequestWithNullUser()),
-                Arguments.of("Password is null", registrationRequestWithNullPassword()),
-                Arguments.of("Confirm password is null", registrationRequestWithNullConfirmPassword()),
-                Arguments.of("Password is blank", registrationRequestWithBlankPassword()),
-                Arguments.of("Confirm password is blank", registrationRequestWithBlankConfirmPassword()),
-                Arguments.of("Confirm password is invalid", registrationRequestWithInvalidConfirmPassword())
+                Arguments.of(Named.of("User is null", registrationRequestWithNullUser())),
+                Arguments.of(Named.of("Password is null", registrationRequestWithNullPassword())),
+                Arguments.of(Named.of("Confirm password is null", registrationRequestWithNullConfirmPassword())),
+                Arguments.of(Named.of("Password is blank", registrationRequestWithBlankPassword())),
+                Arguments.of(Named.of("Confirm password is blank", registrationRequestWithBlankConfirmPassword())),
+                Arguments.of(Named.of("Confirm password is invalid", registrationRequestWithInvalidConfirmPassword()))
         );
     }
 
@@ -58,10 +59,7 @@ public class ConfirmUserPasswordValidatorTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("isNotValidParams")
-    public void isValidTest_UnhappyPaths(
-            String testCase,
-            RegistrationRequest request
-    ) {
+    public void isValidTest_UnhappyPaths(RegistrationRequest request) {
         var result = confirmUserPasswordValidator.isValid(request, context);
 
         assertThat(result, is(false));

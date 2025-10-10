@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.product;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -59,8 +60,8 @@ public class ProductServiceImplTests {
 
     private static Stream<Arguments> rateParams() {
         return Stream.of(
-                Arguments.of("Rate value is 0", (byte) 0),
-                Arguments.of("Rate value is 6", (byte) 6)
+                Arguments.of(Named.of("Rate value is 0", (byte) 0)),
+                Arguments.of(Named.of("Rate value is 6", (byte) 6))
         );
     }
 
@@ -96,10 +97,7 @@ public class ProductServiceImplTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("rateParams")
-    public void createProductRatingTest_UnhappyPath_InvalidProductRateValueException(
-            String testCase,
-            byte rateValue
-    ) {
+    public void createProductRatingTest_UnhappyPath_InvalidProductRateValueException(byte rateValue) {
         var result = assertThrows(
                 InvalidProductRateValueException.class,
                 () -> productService.createProductRating(1L, rateValue)
@@ -130,10 +128,7 @@ public class ProductServiceImplTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("rateParams")
-    public void updateProductRatingTest_UnhappyPath_InvalidProductRateValueException(
-            String testCase,
-            byte rateValue
-    ) {
+    public void updateProductRatingTest_UnhappyPath_InvalidProductRateValueException(byte rateValue) {
         var result = assertThrows(
                 InvalidProductRateValueException.class,
                 () -> productService.updateProductRating(1L, rateValue)

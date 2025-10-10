@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.order;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,8 +25,8 @@ public class OrderTests {
 
     private static Stream<Arguments> isEligibleForFreeShippingTestParams() {
         return Stream.of(
-                Arguments.of("Not eligible for free shipping", order1(), false),
-                Arguments.of("Eligible for free shipping", order2(), true)
+                Arguments.of(Named.of("Not eligible for free shipping", order1()), false),
+                Arguments.of(Named.of("Eligible for free shipping", order2()), true)
         );
     }
 
@@ -45,11 +46,7 @@ public class OrderTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("isEligibleForFreeShippingTestParams")
-    public void isEligibleForFreeShippingTest(
-            String testCase,
-            Order order,
-            boolean expectedResult
-    ) {
+    public void isEligibleForFreeShippingTest(Order order, boolean expectedResult) {
         var result = order.isEligibleForFreeShipping(FREE_SHIPPING_THRESHOLD);
 
         assertThat(result, is(expectedResult));
