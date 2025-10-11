@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,18 +19,14 @@ public class ProductReviewSummaryTests {
 
     private static Stream<Arguments> productReviewSummaryParams() {
         return Stream.of(
-                Arguments.of("Product review summary is expired", expiredProductReviewSummary(), true),
-                Arguments.of("Product review summary is not expired", notExpiredProductReviewSummary(), false)
+                Arguments.of(Named.of("Product review summary is expired", expiredProductReviewSummary()), true),
+                Arguments.of(Named.of("Product review summary is not expired", notExpiredProductReviewSummary()), false)
         );
     }
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("productReviewSummaryParams")
-    public void isExpiredTest(
-            String testCase,
-            ProductReviewSummary productReviewSummary,
-            boolean expectedResult
-    ) {
+    public void isExpiredTest(ProductReviewSummary productReviewSummary, boolean expectedResult) {
         var result = productReviewSummary.isExpired();
 
         assertThat(result, is(expectedResult));

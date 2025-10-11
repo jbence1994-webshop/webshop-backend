@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,8 +27,8 @@ public class ProductTests {
 
     private static Stream<Arguments> ratingIdParams() {
         return Stream.of(
-                Arguments.of("Rating ID: 1", 1L),
-                Arguments.of("Rating ID: 2", 2L)
+                Arguments.of(Named.of("Rating ID: 1", 1L)),
+                Arguments.of(Named.of("Rating ID: 2", 2L))
         );
     }
 
@@ -79,10 +80,7 @@ public class ProductTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("ratingIdParams")
-    public void updateRatingTest(
-            String testCase,
-            Long ratingId
-    ) {
+    public void updateRatingTest(Long ratingId) {
         product.addRating(productRating((byte) 1));
 
         assertDoesNotThrow(() -> product.updateRating(ratingId, (byte) 1));

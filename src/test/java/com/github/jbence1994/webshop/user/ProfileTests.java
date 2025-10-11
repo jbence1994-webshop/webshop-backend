@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -34,36 +35,31 @@ public class ProfileTests {
 
     private static Stream<Arguments> profileAvatarTestParams() {
         return Stream.of(
-                Arguments.of("Profile with avatar", platinumProfile3(), true, false),
-                Arguments.of("Profile without avatar", bronzeProfile1(), false, true)
+                Arguments.of(Named.of("Profile with avatar", platinumProfile3()), true, false),
+                Arguments.of(Named.of("Profile without avatar", bronzeProfile1()), false, true)
         );
     }
 
     private static Stream<Arguments> profileParams() {
         return Stream.of(
-                Arguments.of(String.format("%s profile with %d loyalty points", BRONZE.name(), bronzeProfile1().getLoyaltyPoints()), bronzeProfile1(), BRONZE),
-                Arguments.of(String.format("%s profile with %d loyalty points", BRONZE.name(), bronzeProfile2().getLoyaltyPoints()), bronzeProfile2(), BRONZE),
-                Arguments.of(String.format("%s profile with %d loyalty points", BRONZE.name(), bronzeProfile3().getLoyaltyPoints()), bronzeProfile3(), BRONZE),
-                Arguments.of(String.format("%s profile with %d loyalty points", SILVER.name(), silverProfile1().getLoyaltyPoints()), silverProfile1(), SILVER),
-                Arguments.of(String.format("%s profile with %d loyalty points", SILVER.name(), silverProfile2().getLoyaltyPoints()), silverProfile2(), SILVER),
-                Arguments.of(String.format("%s profile with %d loyalty points", SILVER.name(), silverProfile3().getLoyaltyPoints()), silverProfile3(), SILVER),
-                Arguments.of(String.format("%s profile with %d loyalty points", GOLD.name(), goldProfile1().getLoyaltyPoints()), goldProfile1(), GOLD),
-                Arguments.of(String.format("%s profile with %d loyalty points", GOLD.name(), goldProfile2().getLoyaltyPoints()), goldProfile2(), GOLD),
-                Arguments.of(String.format("%s profile with %d loyalty points", GOLD.name(), goldProfile3().getLoyaltyPoints()), goldProfile3(), GOLD),
-                Arguments.of(String.format("%s profile with %d loyalty points", PLATINUM.name(), platinumProfile1().getLoyaltyPoints()), platinumProfile1(), PLATINUM),
-                Arguments.of(String.format("%s profile with %d loyalty points", PLATINUM.name(), platinumProfile2().getLoyaltyPoints()), platinumProfile2(), PLATINUM),
-                Arguments.of(String.format("%s profile with %d loyalty points", PLATINUM.name(), platinumProfile3().getLoyaltyPoints()), platinumProfile3(), PLATINUM)
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", BRONZE.name(), bronzeProfile1().getLoyaltyPoints()), bronzeProfile1()), BRONZE),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", BRONZE.name(), bronzeProfile2().getLoyaltyPoints()), bronzeProfile2()), BRONZE),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", BRONZE.name(), bronzeProfile3().getLoyaltyPoints()), bronzeProfile3()), BRONZE),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", SILVER.name(), silverProfile1().getLoyaltyPoints()), silverProfile1()), SILVER),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", SILVER.name(), silverProfile2().getLoyaltyPoints()), silverProfile2()), SILVER),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", SILVER.name(), silverProfile3().getLoyaltyPoints()), silverProfile3()), SILVER),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", GOLD.name(), goldProfile1().getLoyaltyPoints()), goldProfile1()), GOLD),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", GOLD.name(), goldProfile2().getLoyaltyPoints()), goldProfile2()), GOLD),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", GOLD.name(), goldProfile3().getLoyaltyPoints()), goldProfile3()), GOLD),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", PLATINUM.name(), platinumProfile1().getLoyaltyPoints()), platinumProfile1()), PLATINUM),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", PLATINUM.name(), platinumProfile2().getLoyaltyPoints()), platinumProfile2()), PLATINUM),
+                Arguments.of(Named.of(String.format("%s profile with %d loyalty points", PLATINUM.name(), platinumProfile3().getLoyaltyPoints()), platinumProfile3()), PLATINUM)
         );
     }
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("profileAvatarTestParams")
-    public void getProfileAvatarTests(
-            String testCase,
-            Profile profile,
-            boolean isPresent,
-            boolean isEmpty
-    ) {
+    public void getProfileAvatarTests(Profile profile, boolean isPresent, boolean isEmpty) {
         var result = profile.getProfileAvatar();
 
         assertThat(result.isPresent(), is(isPresent));
@@ -95,11 +91,7 @@ public class ProfileTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("profileParams")
-    public void getMembershipTierTests(
-            String testCase,
-            Profile profile,
-            MembershipTier expectedMembershipTier
-    ) {
+    public void getMembershipTierTests(Profile profile, MembershipTier expectedMembershipTier) {
         var result = profile.getMembershipTier();
 
         assertThat(result, equalTo(expectedMembershipTier));

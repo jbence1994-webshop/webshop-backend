@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,13 +41,13 @@ public class ProductQueryServiceImplTests {
 
     private static Stream<Arguments> sortByAndOrderByParams() {
         return Stream.of(
-                Arguments.of("SortBy and orderBy are null", null, null, -1, 20),
-                Arguments.of("SortBy and orderBy are empty", "", "", 0, 20),
-                Arguments.of("SortBy and orderBy are an unknown property", "testValue", "testValue", 1, 20),
-                Arguments.of("SortBy 'id', orderBy 'asc'", "id", "asc", 2, 20),
-                Arguments.of("SortBy 'id', orderBy 'desc'", "id", "desc", -1, 20),
-                Arguments.of("SortBy 'price', orderBy 'asc'", "price", "asc", 0, 20),
-                Arguments.of("SortBy 'price', orderBy 'desc'", "price", "desc", 1, 20)
+                Arguments.of(Named.of("SortBy and orderBy are null", null), null, -1, 20),
+                Arguments.of(Named.of("SortBy and orderBy are empty", ""), "", 0, 20),
+                Arguments.of(Named.of("SortBy and orderBy are an unknown property", "testValue"), "testValue", 1, 20),
+                Arguments.of(Named.of("SortBy 'id', orderBy 'asc'", "id"), "asc", 2, 20),
+                Arguments.of(Named.of("SortBy 'id', orderBy 'desc'", "id"), "desc", -1, 20),
+                Arguments.of(Named.of("SortBy 'price', orderBy 'asc'", "price"), "asc", 0, 20),
+                Arguments.of(Named.of("SortBy 'price', orderBy 'desc'", "price"), "desc", 1, 20)
         );
     }
 
@@ -55,20 +56,14 @@ public class ProductQueryServiceImplTests {
         byte categoryId2 = 2;
 
         return Stream.of(
-                Arguments.of("Electronics", categoryId1, 2),
-                Arguments.of("Home & Living", categoryId2, 0)
+                Arguments.of(Named.of("Electronics", categoryId1), 2),
+                Arguments.of(Named.of("Home & Living", categoryId2), 0)
         );
     }
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("sortByAndOrderByParams")
-    public void getProductsTests(
-            String testCase,
-            String sortBy,
-            String orderBy,
-            int page,
-            int size
-    ) {
+    public void getProductsTests(String sortBy, String orderBy, int page, int size) {
         var products = List.of(product1(), product2());
         var productsPage = new PageImpl<>(products, PageRequest.of(0, 20), products.size());
         when(productRepository.findAll(any(PageRequest.class))).thenReturn(productsPage);
@@ -81,11 +76,7 @@ public class ProductQueryServiceImplTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("categoryIdParams")
-    public void getProductsTest_ByCategoryId(
-            String testCase,
-            byte categoryId,
-            int expectedCount
-    ) {
+    public void getProductsTest_ByCategoryId(byte categoryId, int expectedCount) {
         var products = List.of(product1(), product2());
         var productsPage = new PageImpl<>(products, PageRequest.of(0, 20), products.size());
         when(productRepository.findAll(any(PageRequest.class))).thenReturn(productsPage);

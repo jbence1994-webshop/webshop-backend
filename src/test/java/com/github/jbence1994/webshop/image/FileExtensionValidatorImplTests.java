@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.image;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +20,7 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.JPG;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PNG;
 import static com.github.jbence1994.webshop.image.ImageUploadTestObject.bmpImageUpload;
 import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpegImageUpload;
+import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpgImageUpload;
 import static com.github.jbence1994.webshop.image.ImageUploadTestObject.pngImageUpload;
 import static com.github.jbence1994.webshop.image.ImageUploadTestObject.tiffImageUpload;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -38,10 +40,10 @@ public class FileExtensionValidatorImplTests {
 
     private static Stream<Arguments> uploadImageParams() {
         return Stream.of(
-                Arguments.of(JPEG, jpegImageUpload()),
-                Arguments.of(JPG, jpegImageUpload()),
-                Arguments.of(PNG, pngImageUpload()),
-                Arguments.of(BMP, bmpImageUpload())
+                Arguments.of(Named.of(JPEG, jpegImageUpload())),
+                Arguments.of(Named.of(JPG, jpgImageUpload())),
+                Arguments.of(Named.of(PNG, pngImageUpload())),
+                Arguments.of(Named.of(BMP, bmpImageUpload()))
         );
     }
 
@@ -52,10 +54,7 @@ public class FileExtensionValidatorImplTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("uploadImageParams")
-    public void validateTests_HappyPath(
-            String testCase,
-            ImageUpload image
-    ) {
+    public void validateTests_HappyPath(ImageUpload image) {
         assertDoesNotThrow(() -> fileExtensionValidator.validate(image));
     }
 

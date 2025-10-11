@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -25,8 +26,8 @@ public class UserTests {
 
     private static Stream<Arguments> getProfileAvatarTestParams() {
         return Stream.of(
-                Arguments.of("User with avatar", userWithAvatar(), true, false),
-                Arguments.of("User without avatar", user(), false, true)
+                Arguments.of(Named.of("User with avatar", userWithAvatar()), true, false),
+                Arguments.of(Named.of("User without avatar", user()), false, true)
         );
     }
 
@@ -60,12 +61,7 @@ public class UserTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("getProfileAvatarTestParams")
-    public void getProfileAvatarTests(
-            String testCase,
-            User user,
-            boolean isPresent,
-            boolean isEmpty
-    ) {
+    public void getProfileAvatarTests(User user, boolean isPresent, boolean isEmpty) {
         var result = user.getProfileAvatar();
 
         assertThat(result.isPresent(), is(isPresent));
