@@ -2,6 +2,8 @@ package com.github.jbence1994.webshop.cart;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.message.StringMapMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/carts")
 @RequiredArgsConstructor
+@Slf4j
 public class CartController {
     private final CartQueryService cartQueryService;
     private final CartService cartService;
@@ -26,6 +29,14 @@ public class CartController {
     @PostMapping
     public ResponseEntity<CartDto> createCart() {
         var cart = cartService.createCart();
+
+        var logMessage = new StringMapMessage()
+                .with("event", "cart_created")
+                .with("cartId", cart.getId())
+                .with("itemCount", String.valueOf(cart.getItems().size()))
+                .with("totalPrice", String.valueOf(cart.calculateTotal()));
+
+        log.info(logMessage.asString());
 
         var cartDto = cartMapper.toDto(cart);
 
