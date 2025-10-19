@@ -123,9 +123,8 @@ public class CheckoutServiceImpl implements CheckoutService {
             user.earnRewardPoints(earnedRewardPoints);
 
             orderPricing = OrderPricing.of(cartTotal, cartTotal, BigDecimal.ZERO);
-        } else {
-            // TODO: Implement 'BURN' path.
         }
+        // TODO: Implement 'BURN' path in else branch.
 
         var order = Order.from(user, checkoutSession, orderPricing);
 
