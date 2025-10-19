@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.product;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("wishlist")
 @RequiredArgsConstructor
+@Slf4j
 public class WishlistController {
     private final WishlistService wishlistService;
     private final WishlistMapper wishlistMapper;
