@@ -3,10 +3,13 @@ package com.github.jbence1994.webshop.checkout;
 import com.github.jbence1994.webshop.common.ClientAppConfig;
 import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.order.OrderItem;
+import com.github.jbence1994.webshop.order.OrderStatus;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
+import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -68,28 +72,38 @@ public class StripePaymentGateway implements PaymentGateway {
         }
     }
 
-    private static SessionCreateParams.PaymentIntentData buildPaymentIntent(
-            UUID cartId,
-            Long orderId,
-            UUID checkoutSessionId
-    ) {
-        return SessionCreateParams.PaymentIntentData.builder()
-                .putMetadata("cart_id", cartId.toString())
-                .putMetadata("order_id", orderId.toString())
-                .putMetadata("checkout_session_id", checkoutSessionId.toString())
-                .build();
-    }
-
-    /*@Override
+    @Override
     public Optional<PaymentResult> parseWebhookRequest(WebhookRequest request) {
         try {
             var payload = request.payload();
             var signature = request.headers().get("stripe-signature");
             var event = Webhook.constructEvent(payload, signature, webhookSecretKey);
+            var eventType = event.getType();
 
-            return switch (event.getType()) {
+            return switch (eventType) {
+                case "charge.succeeded" -> Optional.of(
+                        new PaymentResult(
+                                eventType,
+                                null,
+                                null,
+                                null,
+                                OrderStatus.CREATED,
+                                CheckoutStatus.PENDING
+                        )
+                );
+                case "payment_intent.created" -> Optional.of(
+                        new PaymentResult(
+                                eventType,
+                                extractCartId(event),
+                                extractOrderId(event),
+                                extractCheckoutSessionId(event),
+                                OrderStatus.CREATED,
+                                CheckoutStatus.PENDING
+                        )
+                );
                 case "payment_intent.succeeded" -> Optional.of(
                         new PaymentResult(
+                                eventType,
                                 extractCartId(event),
                                 extractOrderId(event),
                                 extractCheckoutSessionId(event),
@@ -99,6 +113,7 @@ public class StripePaymentGateway implements PaymentGateway {
                 );
                 case "payment_intent.payment_failed" -> Optional.of(
                         new PaymentResult(
+                                eventType,
                                 extractCartId(event),
                                 extractOrderId(event),
                                 extractCheckoutSessionId(event),
@@ -108,6 +123,7 @@ public class StripePaymentGateway implements PaymentGateway {
                 );
                 default -> Optional.of(
                         new PaymentResult(
+                                eventType,
                                 extractCartId(event),
                                 extractOrderId(event),
                                 extractCheckoutSessionId(event),
@@ -119,7 +135,19 @@ public class StripePaymentGateway implements PaymentGateway {
         } catch (SignatureVerificationException exception) {
             throw new PaymentException(exception.getMessage());
         }
-    }*/
+    }
+
+    private static SessionCreateParams.PaymentIntentData buildPaymentIntent(
+            UUID cartId,
+            Long orderId,
+            UUID checkoutSessionId
+    ) {
+        return SessionCreateParams.PaymentIntentData.builder()
+                .putMetadata("cart_id", cartId.toString())
+                .putMetadata("order_id", orderId.toString())
+                .putMetadata("checkout_session_id", checkoutSessionId.toString())
+                .build();
+    }
 
     private UUID extractCartId(Event event) {
         var paymentIntent = getPaymentIntent(event);

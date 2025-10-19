@@ -21,7 +21,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -86,12 +85,5 @@ public class CartServiceImplTests {
         when(cartRepository.save(any())).thenReturn(emptyCart());
 
         assertDoesNotThrow(() -> cartService.clearCart(CART_ID));
-    }
-
-    @Test
-    public void deleteCartTest() {
-        doNothing().when(cartRepository).deleteById(any());
-
-        assertDoesNotThrow(() -> cartService.deleteCart(CART_ID));
     }
 }

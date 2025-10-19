@@ -9,6 +9,7 @@ import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderPricing;
+import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
+    private final OrderQueryService orderQueryService;
     private final CartQueryService cartQueryService;
     private final PaymentGateway paymentGateway;
     private final CouponService couponService;
@@ -150,22 +152,21 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
-    // TODO: Refactor this.
-    /*@Override
+    @Override
     public void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request) {
         paymentGateway
                 .parseWebhookRequest(request)
                 .ifPresent(paymentResult -> {
-                    var order = orderQueryService.getOrder(paymentResult.orderId());
-                    order.setStatus(paymentResult.orderStatus());
-                    orderService.updateOrder(order);
+                    if (!"charge.succeeded".equals(paymentResult.eventType())) {
 
-                    var checkoutSession = checkoutQueryService.getCheckoutSession(paymentResult.checkoutSessionId());
-                    checkoutSession.setStatus(paymentResult.checkoutStatus());
-                    checkoutRepository.save(checkoutSession);
+                        var order = orderQueryService.getOrder(paymentResult.orderId());
+                        order.setStatus(paymentResult.orderStatus());
+                        orderService.updateOrder(order);
 
-                    var cart = cartQueryService.getCart(paymentResult.cartId());
-                    cartService.deleteCart(cart.getId());
+                        var checkoutSession = checkoutQueryService.getCheckoutSession(paymentResult.checkoutSessionId());
+                        checkoutSession.setStatus(paymentResult.checkoutStatus());
+                        checkoutRepository.save(checkoutSession);
+                    }
                 });
-    }*/
+    }
 }
