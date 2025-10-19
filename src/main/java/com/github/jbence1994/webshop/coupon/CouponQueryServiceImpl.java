@@ -2,12 +2,14 @@ package com.github.jbence1994.webshop.coupon;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CouponQueryServiceImpl implements CouponQueryService {
     private final CouponRepository couponRepository;
     private final AuthService authService;
