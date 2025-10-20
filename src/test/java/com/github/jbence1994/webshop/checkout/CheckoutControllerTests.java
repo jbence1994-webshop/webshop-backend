@@ -116,6 +116,6 @@ public class CheckoutControllerTests {
 
         assertDoesNotThrow(() -> checkoutController.handleCompleteCheckoutSessionWebhook(Map.of("stripe-signature", STRIPE_SIGNATURE), STRIPE_PAYLOAD));
 
-        verify(checkoutService, times(1)).completeCheckoutSession(any(), any());
+        verify(checkoutService, times(1)).handleCompleteCheckoutSessionWebhookEvent(any());
     }
 }
