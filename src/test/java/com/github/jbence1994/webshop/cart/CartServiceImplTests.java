@@ -86,11 +86,4 @@ public class CartServiceImplTests {
 
         assertDoesNotThrow(() -> cartService.clearCart(CART_ID));
     }
-
-    /*@Test
-    public void deleteCartTest() {
-        doNothing().when(cartRepository).deleteById(any());
-
-        assertDoesNotThrow(() -> cartService.deleteCart(CART_ID));
-    }*/
 }
