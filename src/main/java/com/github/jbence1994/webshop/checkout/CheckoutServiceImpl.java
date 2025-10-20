@@ -121,9 +121,8 @@ public class CheckoutServiceImpl implements CheckoutService {
             user.earnRewardPoints(earnedRewardPoints);
 
             orderPricing = OrderPricing.of(cartTotal, cartTotal, BigDecimal.ZERO);
-        } else {
-            // TODO: Implement 'BURN' path.
         }
+        // TODO: Implement 'BURN' path on else branch.
 
         var order = Order.from(user, checkoutSession, orderPricing);
 
@@ -163,9 +162,6 @@ public class CheckoutServiceImpl implements CheckoutService {
                     var checkoutSession = checkoutQueryService.getCheckoutSession(paymentResult.checkoutSessionId());
                     checkoutSession.setStatus(paymentResult.checkoutStatus());
                     checkoutRepository.save(checkoutSession);
-
-                    var cart = cartQueryService.getCart(paymentResult.cartId());
-                    cartService.deleteCart(cart.getId());
                 });
     }*/
 }
