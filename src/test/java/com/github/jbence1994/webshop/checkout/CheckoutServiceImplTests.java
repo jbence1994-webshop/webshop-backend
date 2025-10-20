@@ -7,12 +7,15 @@ import com.github.jbence1994.webshop.coupon.CouponAlreadyRedeemedException;
 import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
+import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
@@ -25,10 +28,14 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.e
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
 import static com.github.jbence1994.webshop.checkout.LoyaltyTestConstants.POINTS_RATE;
+import static com.github.jbence1994.webshop.checkout.PaymentResultTestObject.chargeSucceeded;
+import static com.github.jbence1994.webshop.checkout.PaymentResultTestObject.paymentIntentSucceeded;
 import static com.github.jbence1994.webshop.checkout.PaymentSessionResponseTestObject.paymentSessionResponse;
+import static com.github.jbence1994.webshop.checkout.WebhookRequestTestObject.webhookRequest;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
+import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 import static com.github.jbence1994.webshop.user.UserTestObject.user;
 import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -62,6 +69,9 @@ public class CheckoutServiceImplTests {
 
     @Mock
     private CouponQueryService couponQueryService;
+
+    @Mock
+    private OrderQueryService orderQueryService;
 
     @Mock
     private CartQueryService cartQueryService;
@@ -338,5 +348,49 @@ public class CheckoutServiceImplTests {
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
         verify(orderService, times(1)).deleteOrder(any());
+    }
+
+    @Test
+    public void handleCompleteCheckoutSessionWebhookEventTest_HappyPath_ChargeSucceeded() {
+        when(paymentGateway.parseWebhookRequest(any())).thenReturn(Optional.of(chargeSucceeded()));
+
+        assertDoesNotThrow(() -> checkoutService.handleCompleteCheckoutSessionWebhookEvent(webhookRequest()));
+
+        verify(paymentGateway, times(1)).parseWebhookRequest(any());
+        verify(orderQueryService, never()).getOrder(any());
+        verify(orderService, never()).updateOrder(any());
+        verify(checkoutQueryService, never()).getCheckoutSession(any());
+        verify(checkoutRepository, never()).save(any());
+    }
+
+    @Test
+    public void handleCompleteCheckoutSessionWebhookEventTest_HappyPath_PaymentIntentSucceeded() {
+        when(paymentGateway.parseWebhookRequest(any())).thenReturn(Optional.of(paymentIntentSucceeded()));
+        when(orderQueryService.getOrder(any())).thenReturn(order1());
+        doNothing().when(orderService).updateOrder(any());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutRepository.save(any())).thenReturn(completedCheckoutSession());
+
+        assertDoesNotThrow(() -> checkoutService.handleCompleteCheckoutSessionWebhookEvent(webhookRequest()));
+
+        verify(paymentGateway, times(1)).parseWebhookRequest(any());
+        verify(orderQueryService, times(1)).getOrder(any());
+        verify(orderService, times(1)).updateOrder(any());
+        verify(checkoutQueryService, times(1)).getCheckoutSession(any());
+        verify(checkoutRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void handleCompleteCheckoutSessionWebhookEventTest_UnhappyPath() {
+        when(paymentGateway.parseWebhookRequest(any())).thenReturn(Optional.empty());
+
+        assertDoesNotThrow(() -> checkoutService.handleCompleteCheckoutSessionWebhookEvent(webhookRequest()));
+
+        verify(paymentGateway, times(1)).parseWebhookRequest(any());
+        verify(paymentGateway, times(1)).parseWebhookRequest(any());
+        verify(orderQueryService, never()).getOrder(any());
+        verify(orderService, never()).updateOrder(any());
+        verify(checkoutQueryService, never()).getCheckoutSession(any());
+        verify(checkoutRepository, never()).save(any());
     }
 }
