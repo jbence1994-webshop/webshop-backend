@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.util.Map;
+
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.checkout.ApplyCouponToCheckoutSessionRequestTestObject.applyCouponToCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.checkout.ApplyCouponToCheckoutSessionRequestTestObject.notSanitizedApplyCouponToCheckoutSessionRequest;
@@ -14,6 +16,8 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObjec
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObject.checkoutSessionDtoWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.STRIPE_PAYLOAD;
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.STRIPE_SIGNATURE;
 import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequestWithRewardPointsEarn;
 import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionResponseTestObject.completeCheckoutSessionResponse;
 import static com.github.jbence1994.webshop.checkout.CreateCheckoutSessionRequestTestObject.createCheckoutSessionRequest;
@@ -23,7 +27,11 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,6 +62,9 @@ public class CheckoutControllerTests {
         assertThat(result.getBody().cartId(), equalTo(checkoutSessionDto().cartId()));
         assertThat(result.getBody().appliedCoupon(), is(nullValue()));
         assertThat(result.getBody().status(), equalTo(checkoutSessionDto().status()));
+
+        verify(checkoutService, times(1)).createCheckoutSession(any());
+        verify(checkoutMapper, times(1)).toDto(any());
     }
 
     @Test
@@ -67,6 +78,10 @@ public class CheckoutControllerTests {
         assertThat(result.id(), equalTo(checkoutSessionDtoWithPercentOffTypeOfAppliedCoupon().id()));
         assertThat(result.appliedCoupon(), not(nullValue()));
         assertThat(result.appliedCoupon(), equalTo(COUPON_1_CODE));
+
+        verify(applyCouponToCheckoutSessionRequestSanitizer, times(1)).sanitize(any());
+        verify(checkoutService, times(1)).applyCouponToCheckoutSession(any(), any());
+        verify(checkoutMapper, times(1)).toDto(any());
     }
 
     @Test
@@ -78,6 +93,9 @@ public class CheckoutControllerTests {
 
         assertThat(result.id(), equalTo(checkoutSessionDto().id()));
         assertThat(result.appliedCoupon(), is(nullValue()));
+
+        verify(checkoutService, times(1)).removeCouponFromCheckoutSession(any());
+        verify(checkoutMapper, times(1)).toDto(any());
     }
 
     @Test
@@ -88,5 +106,16 @@ public class CheckoutControllerTests {
 
         assertThat(result, not(nullValue()));
         assertThat(result.orderId(), equalTo(1L));
+
+        verify(checkoutService, times(1)).completeCheckoutSession(any(), any());
+    }
+
+    @Test
+    public void handleCompleteCheckoutSessionWebhookTest() {
+        doNothing().when(checkoutService).handleCompleteCheckoutSessionWebhookEvent(any());
+
+        assertDoesNotThrow(() -> checkoutController.handleCompleteCheckoutSessionWebhook(Map.of("stripe-signature", STRIPE_SIGNATURE), STRIPE_PAYLOAD));
+
+        verify(checkoutService, times(1)).handleCompleteCheckoutSessionWebhookEvent(any());
     }
 }

@@ -48,7 +48,6 @@ public class CheckoutControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
-    // FIXME: Need to refactor what kind of exception occurred => customize Http status codes.
     @ExceptionHandler(exception = PaymentException.class)
     public ResponseEntity<ErrorDto> handlePaymentException(PaymentException exception) {
         return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(new ErrorDto(exception.getMessage()));

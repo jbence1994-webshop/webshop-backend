@@ -11,17 +11,21 @@ import static com.github.jbence1994.webshop.user.UserTestObject.user;
 
 public final class OrderTestObject {
     public static Order order1() {
-        return buildOrder(BigDecimal.valueOf(49.99), BigDecimal.valueOf(49.99), BigDecimal.ZERO, List.of(orderItem()));
+        return buildOrder(BigDecimal.valueOf(49.99), BigDecimal.valueOf(49.99), OrderStatus.CREATED, List.of(orderItem()));
+    }
+
+    public static Order updatedOrder1() {
+        return buildOrder(BigDecimal.valueOf(49.99), BigDecimal.valueOf(49.99), OrderStatus.CONFIRMED, List.of(orderItem()));
     }
 
     public static Order order2() {
-        return buildOrder(BigDecimal.valueOf(249.95), BigDecimal.valueOf(249.95), BigDecimal.ZERO, List.of(orderItem()));
+        return buildOrder(BigDecimal.valueOf(249.95), BigDecimal.valueOf(249.95), OrderStatus.CREATED, List.of(orderItem()));
     }
 
     private static Order buildOrder(
             BigDecimal totalPrice,
             BigDecimal totalPriceCardAmount,
-            BigDecimal totalPriceRewardPointsAmount,
+            OrderStatus orderStatus,
             List<OrderItem> orderItems
     ) {
         return new Order(
@@ -29,9 +33,9 @@ public final class OrderTestObject {
                 user(),
                 totalPrice,
                 totalPriceCardAmount,
-                totalPriceRewardPointsAmount,
+                BigDecimal.ZERO,
                 DISCOUNT_AMOUNT,
-                OrderStatus.CREATED,
+                orderStatus,
                 EARNED_LOYALTY_POINTS,
                 CREATED_AT,
                 orderItems

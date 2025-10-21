@@ -3,10 +3,13 @@ package com.github.jbence1994.webshop.checkout;
 import com.github.jbence1994.webshop.common.ClientAppConfig;
 import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.order.OrderItem;
+import com.github.jbence1994.webshop.order.OrderStatus;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
+import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -68,6 +72,62 @@ public class StripePaymentGateway implements PaymentGateway {
         }
     }
 
+    @Override
+    public Optional<PaymentResult> parseWebhookRequest(WebhookRequest request) {
+        try {
+            var payload = request.payload();
+            var signature = request.headers().get("stripe-signature");
+            var event = Webhook.constructEvent(payload, signature, webhookSecretKey);
+            var eventType = event.getType();
+
+            return switch (eventType) {
+                case "payment_intent.created" -> Optional.of(
+                        new PaymentResult(
+                                eventType,
+                                extractCartId(event),
+                                extractOrderId(event),
+                                extractCheckoutSessionId(event),
+                                OrderStatus.CREATED,
+                                CheckoutStatus.PENDING
+                        )
+                );
+                case "payment_intent.succeeded" -> Optional.of(
+                        new PaymentResult(
+                                eventType,
+                                extractCartId(event),
+                                extractOrderId(event),
+                                extractCheckoutSessionId(event),
+                                OrderStatus.CONFIRMED,
+                                CheckoutStatus.COMPLETED
+                        )
+                );
+                case "payment_intent.payment_failed" -> Optional.of(
+                        new PaymentResult(
+                                eventType,
+                                extractCartId(event),
+                                extractOrderId(event),
+                                extractCheckoutSessionId(event),
+                                OrderStatus.FAILED,
+                                CheckoutStatus.FAILED
+                        )
+                );
+                case "payment_intent.canceled" -> Optional.of(
+                        new PaymentResult(
+                                eventType,
+                                extractCartId(event),
+                                extractOrderId(event),
+                                extractCheckoutSessionId(event),
+                                OrderStatus.CANCELED,
+                                CheckoutStatus.CANCELED
+                        )
+                );
+                default -> Optional.empty();
+            };
+        } catch (SignatureVerificationException exception) {
+            throw new PaymentException(exception.getMessage());
+        }
+    }
+
     private static SessionCreateParams.PaymentIntentData buildPaymentIntent(
             UUID cartId,
             Long orderId,
@@ -79,47 +139,6 @@ public class StripePaymentGateway implements PaymentGateway {
                 .putMetadata("checkout_session_id", checkoutSessionId.toString())
                 .build();
     }
-
-    /*@Override
-    public Optional<PaymentResult> parseWebhookRequest(WebhookRequest request) {
-        try {
-            var payload = request.payload();
-            var signature = request.headers().get("stripe-signature");
-            var event = Webhook.constructEvent(payload, signature, webhookSecretKey);
-
-            return switch (event.getType()) {
-                case "payment_intent.succeeded" -> Optional.of(
-                        new PaymentResult(
-                                extractCartId(event),
-                                extractOrderId(event),
-                                extractCheckoutSessionId(event),
-                                OrderStatus.CONFIRMED,
-                                CheckoutStatus.COMPLETED
-                        )
-                );
-                case "payment_intent.payment_failed" -> Optional.of(
-                        new PaymentResult(
-                                extractCartId(event),
-                                extractOrderId(event),
-                                extractCheckoutSessionId(event),
-                                OrderStatus.FAILED,
-                                CheckoutStatus.FAILED
-                        )
-                );
-                default -> Optional.of(
-                        new PaymentResult(
-                                extractCartId(event),
-                                extractOrderId(event),
-                                extractCheckoutSessionId(event),
-                                OrderStatus.CANCELLED,
-                                CheckoutStatus.CANCELLED
-                        )
-                );
-            };
-        } catch (SignatureVerificationException exception) {
-            throw new PaymentException(exception.getMessage());
-        }
-    }*/
 
     private UUID extractCartId(Event event) {
         var paymentIntent = getPaymentIntent(event);
