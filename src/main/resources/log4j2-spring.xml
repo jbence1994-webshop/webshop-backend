@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="60">
+
+    <Properties>
+        <Property name="webshop">webshop</Property>
+        <Property name="logPath">logs/webshop.log</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <JsonTemplateLayout eventTemplateText='{
+        "timestamp":"%d{ISO8601}",
+        "level":"%p",
+        "logger":"%c",
+        "thread":"%t",
+        "message": ${json:message},
+        "context": ${json:map:contextMap},
+        "exception": ${json:exception}
+      }'/>
+        </Console>
+
+        <RollingFile name="File"
+                     fileName="${logPath}"
+                     filePattern="logs/my-app-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="20 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+            <JsonTemplateLayout eventTemplateText='{
+        "timestamp":"%d{ISO8601}",
+        "level":"%p",
+        "logger":"%c",
+        "thread":"%t",
+        "message": ${json:message},
+        "context": ${json:map:contextMap},
+        "exception": ${json:exception}
+      }'/>
+        </RollingFile>
+
+        <Async name="Async">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Async>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Async"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
