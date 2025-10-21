@@ -14,139 +14,86 @@ public interface CheckoutTestConstants {
     String STRIPE_SIGNATURE = "t=1760877524,v1=d765774c33b5b6bbdab7fd8daef3449ac913f9632e06b7e6418d784259f2e35a,v0=07d4aa25a85a7fdbc800736f290c823f6026f2b723b6849969ba7b93073872df";
     String STRIPE_PAYLOAD = """
             {
-              "id" : "evt_3SJvslBFhLKsY9xG1U4hscA8",
-              "object" : "event",
-              "api_version" : "2025-08-27.basil",
-              "created" : 1760877523,
-              "data" : {
-                "object" : {
-                  "id" : "ch_3SJvslBFhLKsY9xG1VPOYDpo",
-                  "object" : "charge",
-                  "amount" : 5798,
-                  "amount_captured" : 5798,
-                  "amount_refunded" : 0,
-                  "application" : null,
-                  "application_fee" : null,
-                  "application_fee_amount" : null,
-                  "balance_transaction" : null,
-                  "billing_details" : {
-                    "address" : {
-                      "city" : null,
-                      "country" : "HU",
-                      "line1" : null,
-                      "line2" : null,
-                      "postal_code" : null,
-                      "state" : null
+              "id": "evt_3SKfMTBFhLKsY9xG0nzvhjw9",
+              "object": "event",
+              "api_version": "2025-08-27.basil",
+              "created": 1761052346,
+              "data": {
+                "object": {
+                  "id": "pi_3SKfMTBFhLKsY9xG0GfbIpNO",
+                  "object": "payment_intent",
+                  "amount": 5798,
+                  "amount_capturable": 0,
+                  "amount_details": {
+                    "shipping": {
+                      "amount": 799,
+                      "from_postal_code": null,
+                      "to_postal_code": null
                     },
-                    "email" : "juhasz.bence.zsolt@gmail.com",
-                    "name" : "Juhász Bence Zsolt",
-                    "phone" : null,
-                    "tax_id" : null
-                  },
-                  "calculated_statement_descriptor" : "Stripe",
-                  "captured" : true,
-                  "created" : 1760877523,
-                  "currency" : "usd",
-                  "customer" : null,
-                  "description" : null,
-                  "destination" : null,
-                  "dispute" : null,
-                  "disputed" : false,
-                  "failure_balance_transaction" : null,
-                  "failure_code" : null,
-                  "failure_message" : null,
-                  "fraud_details" : { },
-                  "livemode" : false,
-                  "metadata" : {
-                    "cart_id" : "16b44976-e93b-48aa-84d5-cdf70df367e4",
-                    "order_id" : "6",
-                    "checkout_session_id" : "37eef5b2-c4f1-4284-80be-c3f82ff89316"
-                  },
-                  "on_behalf_of" : null,
-                  "order" : null,
-                  "outcome" : {
-                    "advice_code" : null,
-                    "network_advice_code" : null,
-                    "network_decline_code" : null,
-                    "network_status" : "approved_by_network",
-                    "reason" : null,
-                    "risk_level" : "normal",
-                    "risk_score" : 22,
-                    "seller_message" : "Payment complete.",
-                    "type" : "authorized"
-                  },
-                  "paid" : true,
-                  "payment_intent" : "pi_3SJvslBFhLKsY9xG1bEYiv6Z",
-                  "payment_method" : "pm_1SJvskBFhLKsY9xGNVb8HIJm",
-                  "payment_method_details" : {
-                    "card" : {
-                      "amount_authorized" : 5798,
-                      "authorization_code" : "036106",
-                      "brand" : "visa",
-                      "checks" : {
-                        "address_line1_check" : null,
-                        "address_postal_code_check" : null,
-                        "cvc_check" : null
-                      },
-                      "country" : "US",
-                      "exp_month" : 10,
-                      "exp_year" : 2030,
-                      "extended_authorization" : {
-                        "status" : "disabled"
-                      },
-                      "fingerprint" : "YpEydrd5pDmvCglQ",
-                      "funding" : "credit",
-                      "incremental_authorization" : {
-                        "status" : "unavailable"
-                      },
-                      "installments" : null,
-                      "last4" : "4242",
-                      "mandate" : null,
-                      "multicapture" : {
-                        "status" : "unavailable"
-                      },
-                      "network" : "visa",
-                      "network_token" : {
-                        "used" : false
-                      },
-                      "network_transaction_id" : "891126912110011",
-                      "overcapture" : {
-                        "maximum_amount_capturable" : 5798,
-                        "status" : "unavailable"
-                      },
-                      "regulated_status" : "unregulated",
-                      "three_d_secure" : null,
-                      "wallet" : {
-                        "dynamic_last4" : null,
-                        "link" : { },
-                        "type" : "link"
-                      }
+                    "tax": {
+                      "total_tax_amount": 0
                     },
-                    "type" : "card"
+                    "tip": {}
                   },
-                  "radar_options" : { },
-                  "receipt_email" : null,
-                  "receipt_number" : null,
-                  "receipt_url" : "https://pay.stripe.com/receipts/payment/CAcaFwoVYWNjdF8xUzRHa01CRmhMS3NZOXhHKNS308cGMgYrMzrw5AI6LBboWGasyTX4VXArnF4ZLYnZqfBufCzpsIQcjv6mhY2ci_YkyGJFoyam-sBJ",
-                  "refunded" : false,
-                  "review" : null,
-                  "shipping" : null,
-                  "source" : null,
-                  "source_transfer" : null,
-                  "statement_descriptor" : null,
-                  "statement_descriptor_suffix" : null,
-                  "status" : "succeeded",
-                  "transfer_data" : null,
-                  "transfer_group" : null
+                  "amount_received": 5798,
+                  "application": null,
+                  "application_fee_amount": null,
+                  "automatic_payment_methods": null,
+                  "canceled_at": null,
+                  "cancellation_reason": null,
+                  "capture_method": "automatic_async",
+                  "client_secret": "pi_3SKfMTBFhLKsY9xG0GfbIpNO_secret_9mc36MNlYLtBhiiMG8jT28FEu",
+                  "confirmation_method": "automatic",
+                  "created": 1761052345,
+                  "currency": "usd",
+                  "customer": null,
+                  "description": null,
+                  "excluded_payment_method_types": null,
+                  "last_payment_error": null,
+                  "latest_charge": "ch_3SKfMTBFhLKsY9xG0pXaA1f4",
+                  "livemode": false,
+                  "metadata": {
+                    "cart_id": "6af3af56-7230-4134-b36b-63b261a7ad31",
+                    "order_id": "1",
+                    "checkout_session_id": "e71f7ed8-3f4e-4c50-92c4-1a9123a1d10f"
+                  },
+                  "next_action": null,
+                  "on_behalf_of": null,
+                  "payment_details": {
+                    "customer_reference": null,
+                    "order_reference": "prod_T0I6p9oStNEZOz"
+                  },
+                  "payment_method": "pm_1SKfMRBFhLKsY9xGr35M4LeI",
+                  "payment_method_configuration_details": null,
+                  "payment_method_options": {
+                    "card": {
+                      "installments": null,
+                      "mandate_options": null,
+                      "network": null,
+                      "request_three_d_secure": "automatic"
+                    }
+                  },
+                  "payment_method_types": ["card"],
+                  "processing": null,
+                  "receipt_email": null,
+                  "review": null,
+                  "setup_future_usage": null,
+                  "shipping": null,
+                  "source": null,
+                  "statement_descriptor": null,
+                  "statement_descriptor_suffix": null,
+                  "status": "succeeded",
+                  "transfer_data": null,
+                  "transfer_group": null
                 }
               },
-              "livemode" : false,
-              "pending_webhooks" : 2,
-              "request" : {
-                "id" : null,
-                "idempotency_key" : "5667b83a-e669-41d8-bb14-dcfe6700f99e"
+              "livemode": false,
+              "pending_webhooks": 2,
+              "request": {
+                "id": null,
+                "idempotency_key": "5ea19cac-e9dc-448f-898e-9cde1ef089ef"
               },
-              "type" : "charge.succeeded"
+              "type": "payment_intent.succeeded"
             }
             """;
 }

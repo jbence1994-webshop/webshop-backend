@@ -156,16 +156,13 @@ public class CheckoutServiceImpl implements CheckoutService {
         paymentGateway
                 .parseWebhookRequest(request)
                 .ifPresent(paymentResult -> {
-                    if (!"charge.succeeded".equals(paymentResult.eventType())) {
+                    var order = orderQueryService.getOrder(paymentResult.orderId());
+                    order.setStatus(paymentResult.orderStatus());
+                    orderService.updateOrder(order);
 
-                        var order = orderQueryService.getOrder(paymentResult.orderId());
-                        order.setStatus(paymentResult.orderStatus());
-                        orderService.updateOrder(order);
-
-                        var checkoutSession = checkoutQueryService.getCheckoutSession(paymentResult.checkoutSessionId());
-                        checkoutSession.setStatus(paymentResult.checkoutStatus());
-                        checkoutRepository.save(checkoutSession);
-                    }
+                    var checkoutSession = checkoutQueryService.getCheckoutSession(paymentResult.checkoutSessionId());
+                    checkoutSession.setStatus(paymentResult.checkoutStatus());
+                    checkoutRepository.save(checkoutSession);
                 });
     }
 }

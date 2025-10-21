@@ -81,16 +81,6 @@ public class StripePaymentGateway implements PaymentGateway {
             var eventType = event.getType();
 
             return switch (eventType) {
-                case "charge.succeeded" -> Optional.of(
-                        new PaymentResult(
-                                eventType,
-                                null,
-                                null,
-                                null,
-                                OrderStatus.CREATED,
-                                CheckoutStatus.PENDING
-                        )
-                );
                 case "payment_intent.created" -> Optional.of(
                         new PaymentResult(
                                 eventType,
@@ -121,16 +111,17 @@ public class StripePaymentGateway implements PaymentGateway {
                                 CheckoutStatus.FAILED
                         )
                 );
-                default -> Optional.of(
+                case "payment_intent.canceled" -> Optional.of(
                         new PaymentResult(
                                 eventType,
                                 extractCartId(event),
                                 extractOrderId(event),
                                 extractCheckoutSessionId(event),
-                                OrderStatus.CANCELLED,
-                                CheckoutStatus.CANCELLED
+                                OrderStatus.CANCELED,
+                                CheckoutStatus.CANCELED
                         )
                 );
+                default -> Optional.empty();
             };
         } catch (SignatureVerificationException exception) {
             throw new PaymentException(exception.getMessage());

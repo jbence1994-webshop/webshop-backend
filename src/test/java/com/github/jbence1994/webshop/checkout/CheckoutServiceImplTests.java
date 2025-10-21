@@ -28,7 +28,6 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.e
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
 import static com.github.jbence1994.webshop.checkout.LoyaltyTestConstants.POINTS_RATE;
-import static com.github.jbence1994.webshop.checkout.PaymentResultTestObject.chargeSucceeded;
 import static com.github.jbence1994.webshop.checkout.PaymentResultTestObject.paymentIntentSucceeded;
 import static com.github.jbence1994.webshop.checkout.PaymentSessionResponseTestObject.paymentSessionResponse;
 import static com.github.jbence1994.webshop.checkout.WebhookRequestTestObject.webhookRequest;
@@ -348,19 +347,6 @@ public class CheckoutServiceImplTests {
         verify(loyaltyPointsCalculator, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
         verify(orderService, times(1)).deleteOrder(any());
-    }
-
-    @Test
-    public void handleCompleteCheckoutSessionWebhookEventTest_HappyPath_ChargeSucceeded() {
-        when(paymentGateway.parseWebhookRequest(any())).thenReturn(Optional.of(chargeSucceeded()));
-
-        assertDoesNotThrow(() -> checkoutService.handleCompleteCheckoutSessionWebhookEvent(webhookRequest()));
-
-        verify(paymentGateway, times(1)).parseWebhookRequest(any());
-        verify(orderQueryService, never()).getOrder(any());
-        verify(orderService, never()).updateOrder(any());
-        verify(checkoutQueryService, never()).getCheckoutSession(any());
-        verify(checkoutRepository, never()).save(any());
     }
 
     @Test
