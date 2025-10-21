@@ -9,6 +9,7 @@ import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.order.Order;
 import com.github.jbence1994.webshop.order.OrderPricing;
+import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
+    private final OrderQueryService orderQueryService;
     private final CartQueryService cartQueryService;
     private final PaymentGateway paymentGateway;
     private final CouponService couponService;
@@ -122,7 +124,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
             orderPricing = OrderPricing.of(cartTotal, cartTotal, BigDecimal.ZERO);
         }
-        // TODO: Implement 'BURN' path on else branch.
+        // TODO: Implement 'BURN' path in else branch.
 
         var order = Order.from(user, checkoutSession, orderPricing);
 
@@ -149,8 +151,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         }
     }
 
-    // TODO: Refactor this.
-    /*@Override
+    @Override
     public void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request) {
         paymentGateway
                 .parseWebhookRequest(request)
@@ -163,5 +164,5 @@ public class CheckoutServiceImpl implements CheckoutService {
                     checkoutSession.setStatus(paymentResult.checkoutStatus());
                     checkoutRepository.save(checkoutSession);
                 });
-    }*/
+    }
 }
