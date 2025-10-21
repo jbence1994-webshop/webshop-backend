@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop;
 
+import com.github.jbence1994.webshop.auth.JwtConfig;
 import com.github.jbence1994.webshop.checkout.FreeShippingConfig;
 import com.github.jbence1994.webshop.checkout.LoyaltyPointsConfig;
 import com.github.jbence1994.webshop.checkout.RewardPointsConfig;
@@ -20,6 +21,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
         FreeShippingConfig.class,
         WebshopNameConfig.class,
         ClientAppConfig.class,
+        JwtConfig.class
 })
 public class Application {
 
