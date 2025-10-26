@@ -20,6 +20,6 @@ public class CreateProductReviewRequestSanitizerTests {
     public void sanitizeTest() {
         var result = createProductReviewRequestSanitizer.sanitize(notSanitizedCreateProductReviewRequest());
 
-        assertThat(result.getReview(), equalTo(PRODUCT_1_REVIEW));
+        assertThat(result.review(), equalTo(PRODUCT_1_REVIEW));
     }
 }

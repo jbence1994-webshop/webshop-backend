@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class CreateProductReviewRequestSanitizer {
 
     public CreateProductReviewRequest sanitize(CreateProductReviewRequest request) {
-        return new CreateProductReviewRequest(request.getReview().trim());
+        return new CreateProductReviewRequest(request.review().trim());
     }
 }
