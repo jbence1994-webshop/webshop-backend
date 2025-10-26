@@ -19,7 +19,7 @@ public class WishlistController {
 
     @PostMapping
     public ResponseEntity<WishlistProductDto> addProductToWishlist(@Valid @RequestBody AddProductToWishlistRequest request) {
-        var product = wishlistService.addProductToWishlist(request.getProductId());
+        var product = wishlistService.addProductToWishlist(request.productId());
 
         var wishlistProductDto = wishlistMapper.toDto(product);
 
