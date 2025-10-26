@@ -20,6 +20,6 @@ public class ForgotPasswordRequestSanitizerTests {
     public void sanitizeTest() {
         var result = forgotPasswordRequestSanitizer.sanitize(notSanitizedForgotPasswordRequest());
 
-        assertThat(result.getEmail(), equalTo(EMAIL));
+        assertThat(result.email(), equalTo(EMAIL));
     }
 }

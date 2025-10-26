@@ -62,7 +62,7 @@ public class UserController {
     public void forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         var sanitizedRequest = forgotPasswordRequestSanitizer.sanitize(request);
 
-        userService.forgotPassword(sanitizedRequest.getEmail());
+        userService.forgotPassword(sanitizedRequest.email());
     }
 
     @PostMapping("/reset-password")
