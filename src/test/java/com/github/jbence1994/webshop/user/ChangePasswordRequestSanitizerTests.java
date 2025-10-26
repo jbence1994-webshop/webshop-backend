@@ -21,7 +21,7 @@ public class ChangePasswordRequestSanitizerTests {
     public void sanitizeTest() {
         var result = changePasswordRequestSanitizer.sanitize(notSanitizedChangePasswordRequest());
 
-        assertThat(result.getNewPassword(), equalTo(NEW_PASSWORD));
-        assertThat(result.getConfirmNewPassword(), equalTo(CONFIRM_NEW_PASSWORD));
+        assertThat(result.newPassword(), equalTo(NEW_PASSWORD));
+        assertThat(result.confirmNewPassword(), equalTo(CONFIRM_NEW_PASSWORD));
     }
 }

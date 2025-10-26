@@ -55,10 +55,7 @@ public class UserController {
     public void changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         var sanitizedRequest = changePasswordRequestSanitizer.sanitize(request);
 
-        userService.changePassword(
-                sanitizedRequest.getOldPassword(),
-                sanitizedRequest.getNewPassword()
-        );
+        userService.changePassword(sanitizedRequest.oldPassword(), sanitizedRequest.newPassword());
     }
 
     @PostMapping("/forgot-password")
