@@ -115,9 +115,9 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateProductRatingRequest request
     ) {
-        var product = productService.updateProductRating(id, request.getValue());
+        var product = productService.updateProductRating(id, request.value());
 
-        return new ProductRatingResponse(id, request.getValue(), product.calculateAverageRating(), product.getRatings().size());
+        return new ProductRatingResponse(id, request.value(), product.calculateAverageRating(), product.getRatings().size());
     }
 
     @PostMapping("{id}/review")
