@@ -19,7 +19,7 @@ public class WishlistController {
 
     @PostMapping
     public ResponseEntity<WishlistProductDto> addProductToWishlist(@Valid @RequestBody AddProductToWishlistRequest request) {
-        var product = wishlistService.addProductToWishlist(request.getProductId());
+        var product = wishlistService.addProductToWishlist(request.productId());
 
         var wishlistProductDto = wishlistMapper.toDto(product);
 
@@ -28,7 +28,7 @@ public class WishlistController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteProductFromWishlist(@Valid @RequestBody DeleteProductFromWishlistRequest request) {
-        wishlistService.deleteProductFromWishlist(request.getProductId());
+        wishlistService.deleteProductFromWishlist(request.productId());
 
         return ResponseEntity.noContent().build();
     }

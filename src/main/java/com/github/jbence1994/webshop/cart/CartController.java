@@ -44,7 +44,7 @@ public class CartController {
             @PathVariable UUID id,
             @Valid @RequestBody AddItemToCartRequest request
     ) {
-        var cartItem = cartService.addItemToCart(id, request.getProductId());
+        var cartItem = cartService.addItemToCart(id, request.productId());
 
         var cartItemDto = cartMapper.toDto(cartItem);
 
@@ -57,11 +57,7 @@ public class CartController {
             @PathVariable Long productId,
             @Valid @RequestBody UpdateCartItemRequest request
     ) {
-        var cartItem = cartService.updateCartItem(
-                cartId,
-                productId,
-                request.getQuantity()
-        );
+        var cartItem = cartService.updateCartItem(cartId, productId, request.quantity());
 
         return cartMapper.toDto(cartItem);
     }

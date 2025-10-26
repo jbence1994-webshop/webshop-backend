@@ -7,9 +7,9 @@ public class ChangePasswordRequestSanitizer {
 
     public ChangePasswordRequest sanitize(ChangePasswordRequest request) {
         return new ChangePasswordRequest(
-                request.getOldPassword().trim(),
-                request.getNewPassword().trim(),
-                request.getConfirmNewPassword().trim()
+                request.oldPassword().trim(),
+                request.newPassword().trim(),
+                request.confirmNewPassword().trim()
         );
     }
 }

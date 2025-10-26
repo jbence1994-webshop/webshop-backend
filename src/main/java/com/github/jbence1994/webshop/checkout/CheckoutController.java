@@ -25,7 +25,7 @@ public class CheckoutController {
 
     @PostMapping("/create")
     public ResponseEntity<CheckoutSessionDto> createCheckoutSession(@Valid @RequestBody CreateCheckoutSessionRequest request) {
-        var checkoutSession = checkoutService.createCheckoutSession(request.getCartId());
+        var checkoutSession = checkoutService.createCheckoutSession(request.cartId());
 
         var checkoutSessionDto = checkoutMapper.toDto(checkoutSession);
 
@@ -39,7 +39,7 @@ public class CheckoutController {
     ) {
         var sanitizedRequest = applyCouponToCheckoutSessionRequestSanitizer.sanitize(request);
 
-        var checkoutSession = checkoutService.applyCouponToCheckoutSession(id, sanitizedRequest.getCouponCode());
+        var checkoutSession = checkoutService.applyCouponToCheckoutSession(id, sanitizedRequest.couponCode());
 
         return checkoutMapper.toDto(checkoutSession);
     }
@@ -53,7 +53,7 @@ public class CheckoutController {
 
     @PostMapping("/complete")
     public CompleteCheckoutSessionResponse completeCheckoutSession(@Valid @RequestBody CompleteCheckoutSessionRequest request) {
-        return checkoutService.completeCheckoutSession(request.getCheckoutSessionId(), request.getAction());
+        return checkoutService.completeCheckoutSession(request.checkoutSessionId(), request.action());
     }
 
     @PostMapping("/complete/webhook")

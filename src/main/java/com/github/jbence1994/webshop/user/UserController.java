@@ -34,9 +34,9 @@ public class UserController {
     public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
         var sanitizedRequest = registrationRequestSanitizer.sanitize(request);
 
-        var address = userMapper.toEntity(sanitizedRequest.getAddress());
-        var profile = userMapper.toEntity(sanitizedRequest.getProfile());
-        var user = userMapper.toEntity(sanitizedRequest.getUser());
+        var address = userMapper.toEntity(sanitizedRequest.user().profile().address());
+        var profile = userMapper.toEntity(sanitizedRequest.user().profile());
+        var user = userMapper.toEntity(sanitizedRequest.user());
 
         address.setProfile(profile);
         profile.setAddress(address);
@@ -55,27 +55,21 @@ public class UserController {
     public void changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         var sanitizedRequest = changePasswordRequestSanitizer.sanitize(request);
 
-        userService.changePassword(
-                sanitizedRequest.getOldPassword(),
-                sanitizedRequest.getNewPassword()
-        );
+        userService.changePassword(sanitizedRequest.oldPassword(), sanitizedRequest.newPassword());
     }
 
     @PostMapping("/forgot-password")
     public void forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         var sanitizedRequest = forgotPasswordRequestSanitizer.sanitize(request);
 
-        userService.forgotPassword(sanitizedRequest.getEmail());
+        userService.forgotPassword(sanitizedRequest.email());
     }
 
     @PostMapping("/reset-password")
     public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         var sanitizedRequest = resetPasswordRequestSanitizer.sanitize(request);
 
-        userService.resetPassword(
-                sanitizedRequest.getTemporaryPassword(),
-                sanitizedRequest.getNewPassword()
-        );
+        userService.resetPassword(sanitizedRequest.temporaryPassword(), sanitizedRequest.newPassword());
     }
 
     @DeleteMapping("/{id}")

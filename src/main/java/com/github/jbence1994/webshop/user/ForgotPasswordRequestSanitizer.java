@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class ForgotPasswordRequestSanitizer {
 
     public ForgotPasswordRequest sanitize(ForgotPasswordRequest request) {
-        return new ForgotPasswordRequest(request.getEmail().trim());
+        return new ForgotPasswordRequest(request.email().trim());
     }
 }
