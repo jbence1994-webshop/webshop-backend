@@ -102,7 +102,7 @@ SET @profileId := (SELECT user_id
                    WHERE user_id = @userId);
 
 INSERT INTO addresses (profile_id, address_line, municipality, province, postal_code, country)
-VALUES (@profileId, 'Balaton utca 2/B.', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY');
+VALUES (@profileId, 'Balaton utca 2/B', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY');
 
 INSERT INTO coupons (code, type, value, description, expiration_date)
 VALUES ('WELCOME10', 'PERCENT_OFF', 0.10, '10% off welcome coupon', '9999-12-31 23:59:59'),
