@@ -39,7 +39,7 @@ public class CheckoutController {
     ) {
         var sanitizedRequest = applyCouponToCheckoutSessionRequestSanitizer.sanitize(request);
 
-        var checkoutSession = checkoutService.applyCouponToCheckoutSession(id, sanitizedRequest.getCouponCode());
+        var checkoutSession = checkoutService.applyCouponToCheckoutSession(id, sanitizedRequest.couponCode());
 
         return checkoutMapper.toDto(checkoutSession);
     }
