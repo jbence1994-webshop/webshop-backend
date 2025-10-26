@@ -25,7 +25,7 @@ public class CheckoutController {
 
     @PostMapping("/create")
     public ResponseEntity<CheckoutSessionDto> createCheckoutSession(@Valid @RequestBody CreateCheckoutSessionRequest request) {
-        var checkoutSession = checkoutService.createCheckoutSession(request.getCartId());
+        var checkoutSession = checkoutService.createCheckoutSession(request.cartId());
 
         var checkoutSessionDto = checkoutMapper.toDto(checkoutSession);
 
