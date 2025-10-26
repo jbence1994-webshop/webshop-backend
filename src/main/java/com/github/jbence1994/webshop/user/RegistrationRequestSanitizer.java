@@ -6,36 +6,36 @@ import org.springframework.stereotype.Component;
 public class RegistrationRequestSanitizer {
 
     public RegistrationRequest sanitize(RegistrationRequest request) {
-        return new RegistrationRequest(sanitize(request.getUser()));
+        return new RegistrationRequest(sanitize(request.user()));
     }
 
     private RegistrationRequest.UserDto sanitize(RegistrationRequest.UserDto userDto) {
         return new RegistrationRequest.UserDto(
-                userDto.getEmail().trim(),
-                userDto.getPassword().trim(),
-                userDto.getConfirmPassword().trim(),
-                sanitize(userDto.getProfile())
+                userDto.email().trim(),
+                userDto.password().trim(),
+                userDto.confirmPassword().trim(),
+                sanitize(userDto.profile())
         );
     }
 
     private RegistrationRequest.ProfileDto sanitize(RegistrationRequest.ProfileDto profileDto) {
         return new RegistrationRequest.ProfileDto(
-                profileDto.getFirstName().trim(),
-                profileDto.getMiddleName() != null ? profileDto.getMiddleName().trim() : null,
-                profileDto.getLastName().trim(),
-                profileDto.getDateOfBirth(),
-                profileDto.getPhoneNumber().trim(),
-                sanitize(profileDto.getAddress())
+                profileDto.firstName().trim(),
+                profileDto.middleName() != null ? profileDto.middleName().trim() : null,
+                profileDto.lastName().trim(),
+                profileDto.dateOfBirth(),
+                profileDto.phoneNumber().trim(),
+                sanitize(profileDto.address())
         );
     }
 
     private RegistrationRequest.AddressDto sanitize(RegistrationRequest.AddressDto addressDto) {
         return new RegistrationRequest.AddressDto(
-                addressDto.getAddressLine().trim(),
-                addressDto.getMunicipality().trim(),
-                addressDto.getProvince().trim(),
-                addressDto.getPostalCode().trim(),
-                addressDto.getCountry().trim()
+                addressDto.addressLine().trim(),
+                addressDto.municipality().trim(),
+                addressDto.province().trim(),
+                addressDto.postalCode().trim(),
+                addressDto.country().trim()
         );
     }
 }

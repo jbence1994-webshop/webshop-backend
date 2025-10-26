@@ -20,6 +20,6 @@ public class ApplyCouponToCheckoutSessionRequestSanitizerTests {
     public void sanitizeTest() {
         var result = applyCouponToCheckoutSessionRequestSanitizer.sanitize(notSanitizedApplyCouponToCheckoutSessionRequest());
 
-        assertThat(result.getCouponCode(), equalTo(COUPON_1_CODE));
+        assertThat(result.couponCode(), equalTo(COUPON_1_CODE));
     }
 }

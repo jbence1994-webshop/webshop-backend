@@ -100,11 +100,11 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRatingRequest request
     ) {
-        var product = productService.createProductRating(id, request.getValue());
+        var product = productService.createProductRating(id, request.value());
 
         var productRatingResponse = new ProductRatingResponse(
                 id,
-                request.getValue(),
+                request.value(),
                 product.calculateAverageRating(),
                 product.getRatings().size()
         );
@@ -117,9 +117,9 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateProductRatingRequest request
     ) {
-        var product = productService.updateProductRating(id, request.getValue());
+        var product = productService.updateProductRating(id, request.value());
 
-        return new ProductRatingResponse(id, request.getValue(), product.calculateAverageRating(), product.getRatings().size());
+        return new ProductRatingResponse(id, request.value(), product.calculateAverageRating(), product.getRatings().size());
     }
 
     @PostMapping("{id}/review")
@@ -129,9 +129,9 @@ public class ProductController {
     ) {
         var sanitizedRequest = createProductReviewRequestSanitizer.sanitize(request);
 
-        var product = productService.createProductReview(id, sanitizedRequest.getReview());
+        var product = productService.createProductReview(id, sanitizedRequest.review());
 
-        var productReviewResponse = new ProductReviewResponse(product.getId(), sanitizedRequest.getReview());
+        var productReviewResponse = new ProductReviewResponse(product.getId(), sanitizedRequest.review());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productReviewResponse);
     }

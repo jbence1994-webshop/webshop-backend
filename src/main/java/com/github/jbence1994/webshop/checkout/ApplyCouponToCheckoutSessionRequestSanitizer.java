@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class ApplyCouponToCheckoutSessionRequestSanitizer {
 
     public ApplyCouponToCheckoutSessionRequest sanitize(ApplyCouponToCheckoutSessionRequest request) {
-        return new ApplyCouponToCheckoutSessionRequest(request.getCouponCode().trim());
+        return new ApplyCouponToCheckoutSessionRequest(request.couponCode().trim());
     }
 }

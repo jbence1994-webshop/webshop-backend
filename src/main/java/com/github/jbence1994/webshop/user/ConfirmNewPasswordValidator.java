@@ -11,14 +11,14 @@ public class ConfirmNewPasswordValidator implements ConstraintValidator<ConfirmN
 
     @Override
     public boolean isValid(ChangePasswordRequest request, ConstraintValidatorContext constraintValidatorContext) {
-        if (request == null || request.getNewPassword() == null || request.getConfirmNewPassword() == null) {
+        if (request == null || request.newPassword() == null || request.confirmNewPassword() == null) {
             return false;
         }
 
-        if (request.getNewPassword().isBlank() || request.getConfirmNewPassword().isBlank()) {
+        if (request.newPassword().isBlank() || request.confirmNewPassword().isBlank()) {
             return false;
         }
 
-        return request.getNewPassword().equals(request.getConfirmNewPassword());
+        return request.newPassword().equals(request.confirmNewPassword());
     }
 }
