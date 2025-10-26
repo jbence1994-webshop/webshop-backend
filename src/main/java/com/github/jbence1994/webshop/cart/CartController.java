@@ -57,11 +57,7 @@ public class CartController {
             @PathVariable Long productId,
             @Valid @RequestBody UpdateCartItemRequest request
     ) {
-        var cartItem = cartService.updateCartItem(
-                cartId,
-                productId,
-                request.getQuantity()
-        );
+        var cartItem = cartService.updateCartItem(cartId, productId, request.quantity());
 
         return cartMapper.toDto(cartItem);
     }
