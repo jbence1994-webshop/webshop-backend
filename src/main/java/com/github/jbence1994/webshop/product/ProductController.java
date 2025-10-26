@@ -98,11 +98,11 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRatingRequest request
     ) {
-        var product = productService.createProductRating(id, request.getValue());
+        var product = productService.createProductRating(id, request.value());
 
         var productRatingResponse = new ProductRatingResponse(
                 id,
-                request.getValue(),
+                request.value(),
                 product.calculateAverageRating(),
                 product.getRatings().size()
         );
