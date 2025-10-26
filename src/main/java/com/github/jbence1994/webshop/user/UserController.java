@@ -34,9 +34,9 @@ public class UserController {
     public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
         var sanitizedRequest = registrationRequestSanitizer.sanitize(request);
 
-        var address = userMapper.toEntity(sanitizedRequest.getAddress());
-        var profile = userMapper.toEntity(sanitizedRequest.getProfile());
-        var user = userMapper.toEntity(sanitizedRequest.getUser());
+        var address = userMapper.toEntity(sanitizedRequest.user().profile().address());
+        var profile = userMapper.toEntity(sanitizedRequest.user().profile());
+        var user = userMapper.toEntity(sanitizedRequest.user());
 
         address.setProfile(profile);
         profile.setAddress(address);

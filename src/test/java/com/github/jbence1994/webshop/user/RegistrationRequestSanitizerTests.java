@@ -34,39 +34,39 @@ public class RegistrationRequestSanitizerTests {
     public void sanitizeTest_1() {
         var result = registrationRequestSanitizer.sanitize(notSanitizedRegistrationRequest());
 
-        assertThat(result.getUser().getEmail(), equalTo(EMAIL));
-        assertThat(result.getUser().getPassword(), equalTo(PASSWORD));
-        assertThat(result.getUser().getConfirmPassword(), equalTo(CONFIRM_PASSWORD));
+        assertThat(result.user().email(), equalTo(EMAIL));
+        assertThat(result.user().password(), equalTo(PASSWORD));
+        assertThat(result.user().confirmPassword(), equalTo(CONFIRM_PASSWORD));
 
-        assertThat(result.getProfile().getFirstName(), equalTo(FIRST_NAME));
-        assertThat(result.getProfile().getMiddleName(), equalTo(MIDDLE_NAME));
-        assertThat(result.getProfile().getLastName(), equalTo(LAST_NAME));
-        assertThat(result.getProfile().getPhoneNumber(), equalTo(PHONE_NUMBER));
+        assertThat(result.user().profile().firstName(), equalTo(FIRST_NAME));
+        assertThat(result.user().profile().middleName(), equalTo(MIDDLE_NAME));
+        assertThat(result.user().profile().lastName(), equalTo(LAST_NAME));
+        assertThat(result.user().profile().phoneNumber(), equalTo(PHONE_NUMBER));
 
-        assertThat(result.getAddress().getAddressLine(), equalTo(ADDRESS_LINE));
-        assertThat(result.getAddress().getMunicipality(), equalTo(MUNICIPALITY));
-        assertThat(result.getAddress().getProvince(), equalTo(PROVINCE));
-        assertThat(result.getAddress().getPostalCode(), equalTo(POSTAL_CODE));
-        assertThat(result.getAddress().getCountry(), equalTo(COUNTRY));
+        assertThat(result.user().profile().address().addressLine(), equalTo(ADDRESS_LINE));
+        assertThat(result.user().profile().address().municipality(), equalTo(MUNICIPALITY));
+        assertThat(result.user().profile().address().province(), equalTo(PROVINCE));
+        assertThat(result.user().profile().address().postalCode(), equalTo(POSTAL_CODE));
+        assertThat(result.user().profile().address().country(), equalTo(COUNTRY));
     }
 
     @Test
     public void sanitizeTest_2() {
         var result = registrationRequestSanitizer.sanitize(notSanitizedRegistrationRequestWithNullMiddleName());
 
-        assertThat(result.getUser().getEmail(), equalTo(EMAIL));
-        assertThat(result.getUser().getPassword(), equalTo(PASSWORD));
-        assertThat(result.getUser().getConfirmPassword(), equalTo(CONFIRM_PASSWORD));
+        assertThat(result.user().email(), equalTo(EMAIL));
+        assertThat(result.user().password(), equalTo(PASSWORD));
+        assertThat(result.user().confirmPassword(), equalTo(CONFIRM_PASSWORD));
 
-        assertThat(result.getProfile().getFirstName(), equalTo(FIRST_NAME));
-        assertThat(result.getProfile().getMiddleName(), is(nullValue()));
-        assertThat(result.getProfile().getLastName(), equalTo(LAST_NAME));
-        assertThat(result.getProfile().getPhoneNumber(), equalTo(PHONE_NUMBER));
+        assertThat(result.user().profile().firstName(), equalTo(FIRST_NAME));
+        assertThat(result.user().profile().middleName(), is(nullValue()));
+        assertThat(result.user().profile().lastName(), equalTo(LAST_NAME));
+        assertThat(result.user().profile().phoneNumber(), equalTo(PHONE_NUMBER));
 
-        assertThat(result.getAddress().getAddressLine(), equalTo(ADDRESS_LINE));
-        assertThat(result.getAddress().getMunicipality(), equalTo(MUNICIPALITY));
-        assertThat(result.getAddress().getProvince(), equalTo(PROVINCE));
-        assertThat(result.getAddress().getPostalCode(), equalTo(POSTAL_CODE));
-        assertThat(result.getAddress().getCountry(), equalTo(COUNTRY));
+        assertThat(result.user().profile().address().addressLine(), equalTo(ADDRESS_LINE));
+        assertThat(result.user().profile().address().municipality(), equalTo(MUNICIPALITY));
+        assertThat(result.user().profile().address().province(), equalTo(PROVINCE));
+        assertThat(result.user().profile().address().postalCode(), equalTo(POSTAL_CODE));
+        assertThat(result.user().profile().address().country(), equalTo(COUNTRY));
     }
 }
