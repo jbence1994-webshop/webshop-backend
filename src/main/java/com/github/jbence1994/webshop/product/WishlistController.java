@@ -28,7 +28,7 @@ public class WishlistController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteProductFromWishlist(@Valid @RequestBody DeleteProductFromWishlistRequest request) {
-        wishlistService.deleteProductFromWishlist(request.getProductId());
+        wishlistService.deleteProductFromWishlist(request.productId());
 
         return ResponseEntity.noContent().build();
     }
