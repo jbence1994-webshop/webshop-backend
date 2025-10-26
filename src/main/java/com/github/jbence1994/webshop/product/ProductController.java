@@ -127,9 +127,9 @@ public class ProductController {
     ) {
         var sanitizedRequest = createProductReviewRequestSanitizer.sanitize(request);
 
-        var product = productService.createProductReview(id, sanitizedRequest.getReview());
+        var product = productService.createProductReview(id, sanitizedRequest.review());
 
-        var productReviewResponse = new ProductReviewResponse(product.getId(), sanitizedRequest.getReview());
+        var productReviewResponse = new ProductReviewResponse(product.getId(), sanitizedRequest.review());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productReviewResponse);
     }
