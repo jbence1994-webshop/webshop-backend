@@ -69,10 +69,7 @@ public class UserController {
     public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         var sanitizedRequest = resetPasswordRequestSanitizer.sanitize(request);
 
-        userService.resetPassword(
-                sanitizedRequest.getTemporaryPassword(),
-                sanitizedRequest.getNewPassword()
-        );
+        userService.resetPassword(sanitizedRequest.temporaryPassword(), sanitizedRequest.newPassword());
     }
 
     @DeleteMapping("/{id}")
