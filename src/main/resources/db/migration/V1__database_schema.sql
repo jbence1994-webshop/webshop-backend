@@ -264,3 +264,16 @@ CREATE TABLE IF NOT EXISTS checkout_sessions
             ON DELETE NO ACTION
             ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS chat_messages
+(
+    id              BIGINT     NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    conversation_id BINARY(16) NOT NULL,
+    prompt          TEXT       NOT NULL,
+    user_id         BIGINT     NOT NULL,
+    created_at      DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_chat_messages_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE
+);

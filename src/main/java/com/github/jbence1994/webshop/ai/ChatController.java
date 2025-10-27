@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/ai")
+@RequestMapping("/chat")
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatService chatService;
 
     @PostMapping
     public ChatResponse chat(@Valid @RequestBody ChatRequest request) {
-        var message = chatService.chat(request.prompt());
+        var message = chatService.chat(request.conversationId(), request.prompt());
 
         return new ChatResponse(message);
     }
