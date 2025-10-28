@@ -5,6 +5,10 @@ public interface ProductService {
 
     void updateProduct(Product product);
 
+    Product addProductToWishlist(Long productId);
+
+    void deleteProductFromWishlist(Long productId);
+
     Product createProductRating(Long id, Byte value);
 
     Product updateProductRating(Long id, Byte value);

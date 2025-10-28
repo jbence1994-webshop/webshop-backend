@@ -33,6 +33,7 @@ public interface UserMapper {
 
     @Mapping(target = "profileId", ignore = true)
     @Mapping(target = "profile", ignore = true)
+    @Mapping(target = "country", expression = "java(address.country().toUpperCase())")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Address toEntity(RegistrationRequest.AddressDto address);
