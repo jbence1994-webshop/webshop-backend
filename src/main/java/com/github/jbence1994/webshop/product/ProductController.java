@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,8 @@ public class ProductController {
     private final ProductQueryService productQueryService;
     private final ProductDtoSanitizer productDtoSanitizer;
     private final ImageUrlBuilder imageUrlBuilder;
+    private final WishlistService wishlistService;
+    private final WishlistMapper wishlistMapper;
     private final ProductService productService;
     private final ProductMapper productMapper;
 
@@ -33,6 +36,8 @@ public class ProductController {
             final ProductQueryService productQueryService,
             final ProductDtoSanitizer productDtoSanitizer,
             @Qualifier("productPhotoUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
+            final WishlistService wishlistService,
+            final WishlistMapper wishlistMapper,
             final ProductService productService,
             final ProductMapper productMapper
     ) {
@@ -41,6 +46,8 @@ public class ProductController {
         this.productQueryService = productQueryService;
         this.productDtoSanitizer = productDtoSanitizer;
         this.imageUrlBuilder = imageUrlBuilder;
+        this.wishlistService = wishlistService;
+        this.wishlistMapper = wishlistMapper;
         this.productService = productService;
         this.productMapper = productMapper;
     }
@@ -91,6 +98,22 @@ public class ProductController {
         sanitizedProductDto.setId(product.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(sanitizedProductDto);
+    }
+
+    @PostMapping("{id}/wishlist")
+    public ResponseEntity<WishlistProductDto> addProductToWishlist(@PathVariable Long id) {
+        var product = wishlistService.addProductToWishlist(id);
+
+        var wishlistProductDto = wishlistMapper.toDto(product);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(wishlistProductDto);
+    }
+
+    @DeleteMapping("{id}/wishlist")
+    public ResponseEntity<Void> deleteProductFromWishlist(@PathVariable Long id) {
+        wishlistService.deleteProductFromWishlist(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("{id}/rating")

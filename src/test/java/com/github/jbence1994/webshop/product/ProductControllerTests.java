@@ -31,6 +31,7 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product1Wi
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2WithPhotos;
 import static com.github.jbence1994.webshop.product.UpdateProductRatingRequestTestObject.updateProductRatingRequest;
+import static com.github.jbence1994.webshop.product.WishlistProductDtoTestObject.wishlistProductDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -63,6 +64,12 @@ class ProductControllerTests {
 
     @Mock
     private ProductDtoSanitizer productDtoSanitizer;
+
+    @Mock
+    private WishlistService wishlistService;
+
+    @Mock
+    private WishlistMapper wishlistMapper;
 
     @Mock
     private ProductService productService;
@@ -165,6 +172,28 @@ class ProductControllerTests {
                 hasProperty("description", equalTo(productDto().getDescription())),
                 hasProperty("photo", is(nullValue()))
         ));
+    }
+
+    @Test
+    public void addProductToWishlistTest() {
+        when(wishlistService.addProductToWishlist(any())).thenReturn(product1());
+        when(wishlistMapper.toDto(any())).thenReturn(wishlistProductDto());
+
+        var result = productController.addProductToWishlist(1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().id(), equalTo(wishlistProductDto().id()));
+    }
+
+    @Test
+    public void deleteProductFromWishlistTest() {
+        doNothing().when(wishlistService).deleteProductFromWishlist(any());
+
+        var result = productController.deleteProductFromWishlist(1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
