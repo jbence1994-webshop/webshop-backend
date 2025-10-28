@@ -1,7 +1,8 @@
 package com.github.jbence1994.webshop.ai;
 
-import com.github.jbence1994.webshop.auth.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -12,29 +13,34 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class OllamaChatService implements ChatService {
-    private final ChatMessageRepository chatMessageRepository;
     private final SystemPromptUtil systemPromptUtil;
     private final OllamaChatModel ollamaChatModel;
-    private final AuthService authService;
+    private final ChatMemory chatMemory;
 
     @Override
     public String chat(String promptText) {
         try {
-            var systemMessage = new SystemMessage(systemPromptUtil.getSystemPrompt());
-            var userMessage = new UserMessage(promptText);
+            var sanitizedPromptText = promptText.trim();
+            var systemMessage = new SystemMessage(systemPromptUtil.getSystemPrompt().map(String::trim).orElse(""));
+            var userMessage = new UserMessage(sanitizedPromptText);
             var prompt = new Prompt(List.of(systemMessage, userMessage));
 
-            return ollamaChatModel.call(prompt)
-                    .getResult()
-                    .getOutput()
-                    .getText();
+            var response = Optional.ofNullable(
+                    ollamaChatModel.call(prompt)
+                            .getResult()
+                            .getOutput()
+                            .getText()
+            );
+
+            return response.map(String::trim).orElse("");
         } catch (Exception exception) {
-            throw new OllamaException();
+            throw new OllamaException(exception);
         }
     }
 
@@ -42,35 +48,36 @@ public class OllamaChatService implements ChatService {
     @Transactional
     public String chat(UUID conversationId, String promptText) {
         try {
-            var user = authService.getCurrentUser();
+            var conversationIdAsString = conversationId.toString();
+            var sanitizedPromptText = promptText.trim();
 
-            var history = chatMessageRepository.findByConversationIdOrderByCreatedAtAsc(conversationId);
+            var memoryMessages = chatMemory.get(conversationIdAsString);
 
-            var userMessages = history.stream()
-                    .map(chatMessage -> new UserMessage(chatMessage.getPrompt()))
-                    .toList();
+            var systemMessage = new SystemMessage(systemPromptUtil.getSystemPrompt().map(String::trim).orElse(""));
+            var userMessage = new UserMessage(sanitizedPromptText);
+            var promptMessages = new ArrayList<Message>(memoryMessages.size() + 2);
+            var prompt = new Prompt(promptMessages);
 
-            var systemMessage = new SystemMessage(systemPromptUtil.getSystemPrompt());
+            promptMessages.add(systemMessage);
+            promptMessages.add(userMessage);
+            promptMessages.addAll(memoryMessages);
 
-            var messages = new ArrayList<Message>(userMessages.size() + 1);
-            messages.add(systemMessage);
-            messages.addAll(userMessages);
-            messages.add(new UserMessage(promptText));
+            var response = Optional.ofNullable(
+                    ollamaChatModel.call(prompt)
+                            .getResult()
+                            .getOutput()
+                            .getText()
+            );
 
-            var prompt = new Prompt(messages);
+            var sanitizedResponse = response.map(String::trim).orElse("");
 
-            var response = ollamaChatModel
-                    .call(prompt)
-                    .getResult()
-                    .getOutput()
-                    .getText();
+            var assistantMessage = new AssistantMessage(sanitizedResponse);
 
-            var chatMessage = ChatMessage.from(conversationId, promptText, user);
-            chatMessageRepository.save(chatMessage);
+            chatMemory.add(conversationIdAsString, List.of(userMessage, assistantMessage));
 
-            return response;
+            return sanitizedResponse;
         } catch (Exception exception) {
-            throw new OllamaException();
+            throw new OllamaException(exception);
         }
     }
 }
