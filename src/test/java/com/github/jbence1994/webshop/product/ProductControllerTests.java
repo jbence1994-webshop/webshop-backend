@@ -66,9 +66,6 @@ class ProductControllerTests {
     private ProductDtoSanitizer productDtoSanitizer;
 
     @Mock
-    private WishlistService wishlistService;
-
-    @Mock
     private ProductService productService;
 
     @Mock
@@ -173,7 +170,7 @@ class ProductControllerTests {
 
     @Test
     public void addProductToWishlistTest() {
-        when(wishlistService.addProductToWishlist(any())).thenReturn(product1());
+        when(productService.addProductToWishlist(any())).thenReturn(product1());
         when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
 
         var result = productController.addProductToWishlist(1L);
@@ -185,7 +182,7 @@ class ProductControllerTests {
 
     @Test
     public void deleteProductFromWishlistTest() {
-        doNothing().when(wishlistService).deleteProductFromWishlist(any());
+        doNothing().when(productService).deleteProductFromWishlist(any());
 
         var result = productController.deleteProductFromWishlist(1L);
 

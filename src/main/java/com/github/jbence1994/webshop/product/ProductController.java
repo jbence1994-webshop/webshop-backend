@@ -25,7 +25,6 @@ public class ProductController {
     private final ProductQueryService productQueryService;
     private final ProductDtoSanitizer productDtoSanitizer;
     private final ImageUrlBuilder imageUrlBuilder;
-    private final WishlistService wishlistService;
     private final ProductService productService;
     private final ProductMapper productMapper;
 
@@ -35,7 +34,6 @@ public class ProductController {
             final ProductQueryService productQueryService,
             final ProductDtoSanitizer productDtoSanitizer,
             @Qualifier("productPhotoUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
-            final WishlistService wishlistService,
             final ProductService productService,
             final ProductMapper productMapper
     ) {
@@ -44,7 +42,6 @@ public class ProductController {
         this.productQueryService = productQueryService;
         this.productDtoSanitizer = productDtoSanitizer;
         this.imageUrlBuilder = imageUrlBuilder;
-        this.wishlistService = wishlistService;
         this.productService = productService;
         this.productMapper = productMapper;
     }
@@ -99,7 +96,7 @@ public class ProductController {
 
     @PostMapping("{id}/wishlist")
     public ResponseEntity<WishlistProductDto> addProductToWishlist(@PathVariable Long id) {
-        var product = wishlistService.addProductToWishlist(id);
+        var product = productService.addProductToWishlist(id);
 
         var wishlistProductDto = productMapper.toWishlistProductDto(product);
 
@@ -108,7 +105,7 @@ public class ProductController {
 
     @DeleteMapping("{id}/wishlist")
     public ResponseEntity<Void> deleteProductFromWishlist(@PathVariable Long id) {
-        wishlistService.deleteProductFromWishlist(id);
+        productService.deleteProductFromWishlist(id);
 
         return ResponseEntity.noContent().build();
     }
