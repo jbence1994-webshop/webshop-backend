@@ -26,7 +26,6 @@ public class ProductController {
     private final ProductDtoSanitizer productDtoSanitizer;
     private final ImageUrlBuilder imageUrlBuilder;
     private final WishlistService wishlistService;
-    private final WishlistMapper wishlistMapper;
     private final ProductService productService;
     private final ProductMapper productMapper;
 
@@ -37,7 +36,6 @@ public class ProductController {
             final ProductDtoSanitizer productDtoSanitizer,
             @Qualifier("productPhotoUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
             final WishlistService wishlistService,
-            final WishlistMapper wishlistMapper,
             final ProductService productService,
             final ProductMapper productMapper
     ) {
@@ -47,7 +45,6 @@ public class ProductController {
         this.productDtoSanitizer = productDtoSanitizer;
         this.imageUrlBuilder = imageUrlBuilder;
         this.wishlistService = wishlistService;
-        this.wishlistMapper = wishlistMapper;
         this.productService = productService;
         this.productMapper = productMapper;
     }
@@ -64,9 +61,9 @@ public class ProductController {
 
         return products.stream()
                 .map(product -> {
-                    var productDto = productMapper.toDto(product);
+                    var productDto = productMapper.toProductDto(product);
                     product.getFirstPhoto()
-                            .map(photo -> productMapper.toDto(photo, imageUrlBuilder))
+                            .map(photo -> productMapper.toProductPhotoDto(photo, imageUrlBuilder))
                             .ifPresent(productDto::setPhoto);
                     return productDto;
                 })
@@ -77,9 +74,9 @@ public class ProductController {
     public ProductDto getProduct(@PathVariable Long id) {
         var product = productQueryService.getProduct(id);
 
-        var productDto = productMapper.toDto(product);
+        var productDto = productMapper.toProductDto(product);
         product.getFirstPhoto()
-                .map(photo -> productMapper.toDto(photo, imageUrlBuilder))
+                .map(photo -> productMapper.toProductPhotoDto(photo, imageUrlBuilder))
                 .ifPresent(productDto::setPhoto);
 
         return productDto;
@@ -104,7 +101,7 @@ public class ProductController {
     public ResponseEntity<WishlistProductDto> addProductToWishlist(@PathVariable Long id) {
         var product = wishlistService.addProductToWishlist(id);
 
-        var wishlistProductDto = wishlistMapper.toDto(product);
+        var wishlistProductDto = productMapper.toWishlistProductDto(product);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(wishlistProductDto);
     }

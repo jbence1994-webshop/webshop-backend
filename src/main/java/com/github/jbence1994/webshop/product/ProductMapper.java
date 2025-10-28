@@ -8,15 +8,17 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    CategoryDto toDto(Category category);
+    CategoryDto toCategoryDto(Category category);
 
     @Mapping(target = "url", expression = "java(imageUrlBuilder.buildUrl(productPhoto.getFileName()))")
-    ProductPhotoDto toDto(ProductPhoto productPhoto, @Context ImageUrlBuilder imageUrlBuilder);
+    ProductPhotoDto toProductPhotoDto(ProductPhoto productPhoto, @Context ImageUrlBuilder imageUrlBuilder);
 
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "photo", ignore = true)
     @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
-    ProductDto toDto(Product product);
+    ProductDto toProductDto(Product product);
+
+    WishlistProductDto toWishlistProductDto(Product product);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "photos", ignore = true)

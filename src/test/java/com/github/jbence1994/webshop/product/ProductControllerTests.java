@@ -69,9 +69,6 @@ class ProductControllerTests {
     private WishlistService wishlistService;
 
     @Mock
-    private WishlistMapper wishlistMapper;
-
-    @Mock
     private ProductService productService;
 
     @Mock
@@ -83,7 +80,7 @@ class ProductControllerTests {
     @Test
     public void getProductsTest_ProductsWithoutPhotos() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
 
         byte categoryId = 1;
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);
@@ -91,15 +88,15 @@ class ProductControllerTests {
         assertThat(result.size(), equalTo(2));
 
         verify(productQueryService, times(1)).getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte());
-        verify(productMapper, times(2)).toDto(any(Product.class));
-        verify(productMapper, never()).toDto(any(), any());
+        verify(productMapper, times(2)).toProductDto(any(Product.class));
+        verify(productMapper, never()).toProductPhotoDto(any(), any());
     }
 
     @Test
     public void getProductsTest_ProductsWithPhotos() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1WithPhotos(), product2WithPhotos()));
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
-        when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
+        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductPhotoDto(any(), any())).thenReturn(productPhotoDto());
 
         byte categoryId = 1;
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);
@@ -107,14 +104,14 @@ class ProductControllerTests {
         assertThat(result.size(), equalTo(2));
 
         verify(productQueryService, times(1)).getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte());
-        verify(productMapper, times(2)).toDto(any(Product.class));
-        verify(productMapper, times(2)).toDto(any(), any());
+        verify(productMapper, times(2)).toProductDto(any(Product.class));
+        verify(productMapper, times(2)).toProductPhotoDto(any(), any());
     }
 
     @Test
     public void getProductTest_HappyPath_ProductWithoutPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
 
         var result = productController.getProduct(1L);
 
@@ -128,15 +125,15 @@ class ProductControllerTests {
         ));
 
         verify(productQueryService, times(1)).getProduct(any());
-        verify(productMapper, times(1)).toDto(any(Product.class));
-        verify(productMapper, never()).toDto(any(), any());
+        verify(productMapper, times(1)).toProductDto(any(Product.class));
+        verify(productMapper, never()).toProductPhotoDto(any(), any());
     }
 
     @Test
     public void getProductTest_HappyPath_ProductWithPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1WithPhotos());
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
-        when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
+        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductPhotoDto(any(), any())).thenReturn(productPhotoDto());
 
         var result = productController.getProduct(1L);
 
@@ -150,8 +147,8 @@ class ProductControllerTests {
         ));
 
         verify(productQueryService, times(1)).getProduct(any());
-        verify(productMapper, times(1)).toDto(any(Product.class));
-        verify(productMapper, times(1)).toDto(any(), any());
+        verify(productMapper, times(1)).toProductDto(any(Product.class));
+        verify(productMapper, times(1)).toProductPhotoDto(any(), any());
     }
 
     @Test
@@ -177,7 +174,7 @@ class ProductControllerTests {
     @Test
     public void addProductToWishlistTest() {
         when(wishlistService.addProductToWishlist(any())).thenReturn(product1());
-        when(wishlistMapper.toDto(any())).thenReturn(wishlistProductDto());
+        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
 
         var result = productController.addProductToWishlist(1L);
 
