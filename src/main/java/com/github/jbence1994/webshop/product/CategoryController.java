@@ -17,7 +17,7 @@ public class CategoryController {
     @GetMapping
     public List<CategoryDto> getCategories() {
         return categoryQueryService.getCategories().stream()
-                .map(productMapper::toDto)
+                .map(productMapper::toCategoryDto)
                 .toList();
     }
 }

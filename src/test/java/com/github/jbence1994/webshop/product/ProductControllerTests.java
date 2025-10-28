@@ -31,6 +31,7 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product1Wi
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2WithPhotos;
 import static com.github.jbence1994.webshop.product.UpdateProductRatingRequestTestObject.updateProductRatingRequest;
+import static com.github.jbence1994.webshop.product.WishlistProductDtoTestObject.wishlistProductDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -76,7 +77,7 @@ class ProductControllerTests {
     @Test
     public void getProductsTest_ProductsWithoutPhotos() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1(), product2()));
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
 
         byte categoryId = 1;
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);
@@ -84,15 +85,15 @@ class ProductControllerTests {
         assertThat(result.size(), equalTo(2));
 
         verify(productQueryService, times(1)).getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte());
-        verify(productMapper, times(2)).toDto(any(Product.class));
-        verify(productMapper, never()).toDto(any(), any());
+        verify(productMapper, times(2)).toProductDto(any(Product.class));
+        verify(productMapper, never()).toProductPhotoDto(any(), any());
     }
 
     @Test
     public void getProductsTest_ProductsWithPhotos() {
         when(productQueryService.getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte())).thenReturn(List.of(product1WithPhotos(), product2WithPhotos()));
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
-        when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
+        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductPhotoDto(any(), any())).thenReturn(productPhotoDto());
 
         byte categoryId = 1;
         var result = productController.getProducts("id", "asc", 0, 20, categoryId);
@@ -100,14 +101,14 @@ class ProductControllerTests {
         assertThat(result.size(), equalTo(2));
 
         verify(productQueryService, times(1)).getProducts(anyString(), anyString(), anyInt(), anyInt(), anyByte());
-        verify(productMapper, times(2)).toDto(any(Product.class));
-        verify(productMapper, times(2)).toDto(any(), any());
+        verify(productMapper, times(2)).toProductDto(any(Product.class));
+        verify(productMapper, times(2)).toProductPhotoDto(any(), any());
     }
 
     @Test
     public void getProductTest_HappyPath_ProductWithoutPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
 
         var result = productController.getProduct(1L);
 
@@ -121,15 +122,15 @@ class ProductControllerTests {
         ));
 
         verify(productQueryService, times(1)).getProduct(any());
-        verify(productMapper, times(1)).toDto(any(Product.class));
-        verify(productMapper, never()).toDto(any(), any());
+        verify(productMapper, times(1)).toProductDto(any(Product.class));
+        verify(productMapper, never()).toProductPhotoDto(any(), any());
     }
 
     @Test
     public void getProductTest_HappyPath_ProductWithPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1WithPhotos());
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDto());
-        when(productMapper.toDto(any(), any())).thenReturn(productPhotoDto());
+        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductPhotoDto(any(), any())).thenReturn(productPhotoDto());
 
         var result = productController.getProduct(1L);
 
@@ -143,8 +144,8 @@ class ProductControllerTests {
         ));
 
         verify(productQueryService, times(1)).getProduct(any());
-        verify(productMapper, times(1)).toDto(any(Product.class));
-        verify(productMapper, times(1)).toDto(any(), any());
+        verify(productMapper, times(1)).toProductDto(any(Product.class));
+        verify(productMapper, times(1)).toProductPhotoDto(any(), any());
     }
 
     @Test
@@ -165,6 +166,28 @@ class ProductControllerTests {
                 hasProperty("description", equalTo(productDto().getDescription())),
                 hasProperty("photo", is(nullValue()))
         ));
+    }
+
+    @Test
+    public void addProductToWishlistTest() {
+        when(productService.addProductToWishlist(any())).thenReturn(product1());
+        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
+
+        var result = productController.addProductToWishlist(1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().id(), equalTo(wishlistProductDto().id()));
+    }
+
+    @Test
+    public void deleteProductFromWishlistTest() {
+        doNothing().when(productService).deleteProductFromWishlist(any());
+
+        var result = productController.deleteProductFromWishlist(1L);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test

@@ -32,7 +32,7 @@ public class CategoryControllerTests {
     @Test
     public void getCategoriesTest() {
         when(categoryQueryService.getCategories()).thenReturn(List.of(category1()));
-        when(productMapper.toDto(any(Category.class))).thenReturn(categoryDto());
+        when(productMapper.toCategoryDto(any(Category.class))).thenReturn(categoryDto());
 
         var result = categoryController.getCategories();
 
