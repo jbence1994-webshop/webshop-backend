@@ -14,7 +14,7 @@ public record RegistrationRequest(
         @Valid
         UserDto user
 ) {
-    record UserDto(
+    public record UserDto(
 
             @NotNull(message = "Email must be provided.")
             @NotBlank(message = "Email must be not empty.")
@@ -35,7 +35,7 @@ public record RegistrationRequest(
     ) {
     }
 
-    record ProfileDto(
+    public record ProfileDto(
 
             @NotNull(message = "First name must be provided.")
             @NotBlank(message = "First name must be not empty.")
@@ -57,7 +57,7 @@ public record RegistrationRequest(
     ) {
     }
 
-    record AddressDto(
+    public record AddressDto(
 
             @NotNull(message = "Address line must be provided.")
             @NotBlank(message = "Address line must be not empty.")
