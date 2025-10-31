@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.expiredProductReviewSummary;
@@ -31,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,10 +67,10 @@ public class ProductServiceImplTests {
 
     private final User user = user();
 
-    private static Stream<Arguments> rateParams() {
+    private static Stream<Arguments> ratingValueParams() {
         return Stream.of(
-                Arguments.of(Named.of("Rate value is 0", (byte) 0)),
-                Arguments.of(Named.of("Rate value is 6", (byte) 6))
+                Arguments.of(Named.of("Rating value is 0", (byte) 0)),
+                Arguments.of(Named.of("Rating value is 6", (byte) 6))
         );
     }
 
@@ -132,11 +134,11 @@ public class ProductServiceImplTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("rateParams")
-    public void createProductRatingTest_UnhappyPath_InvalidProductRateValueException(byte rateValue) {
+    @MethodSource("ratingValueParams")
+    public void createProductRatingTest_UnhappyPath_InvalidProductRatingValueException(byte ratingValue) {
         var result = assertThrows(
-                InvalidProductRateValueException.class,
-                () -> productService.createProductRating(1L, rateValue)
+                InvalidProductRatingValueException.class,
+                () -> productService.createProductRating(1L, ratingValue)
         );
 
         assertThat(result.getMessage(), equalTo("Rating must be between 1 and 5."));
@@ -144,6 +146,25 @@ public class ProductServiceImplTests {
         verify(productQueryService, never()).getProduct(any());
         verify(authService, never()).getCurrentUser();
         verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    public void createProductRatingTest_UnhappyPath_ProductAlreadyRatedException() {
+        when(productQueryService.getProduct(any())).thenReturn(product1());
+        when(authService.getCurrentUser()).thenReturn(user());
+        doThrow(new RuntimeException(new SQLIntegrityConstraintViolationException("Duplicate entry '1-1' for key [...]")))
+                .when(productRepository).save(any());
+
+        var result = assertThrows(
+                ProductAlreadyRatedException.class,
+                () -> productService.createProductRating(1L, (byte) 1)
+        );
+
+        assertThat(result.getMessage(), equalTo("You have already rated this product. If you want to change it, please update it."));
+
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(authService, times(1)).getCurrentUser();
+        verify(productRepository, times(1)).save(any());
     }
 
     @Test
@@ -163,11 +184,11 @@ public class ProductServiceImplTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("rateParams")
-    public void updateProductRatingTest_UnhappyPath_InvalidProductRateValueException(byte rateValue) {
+    @MethodSource("ratingValueParams")
+    public void updateProductRatingTest_UnhappyPath_InvalidProductRatingValueException(byte ratingValue) {
         var result = assertThrows(
-                InvalidProductRateValueException.class,
-                () -> productService.updateProductRating(1L, rateValue)
+                InvalidProductRatingValueException.class,
+                () -> productService.updateProductRating(1L, ratingValue)
         );
 
         assertThat(result.getMessage(), equalTo("Rating must be between 1 and 5."));

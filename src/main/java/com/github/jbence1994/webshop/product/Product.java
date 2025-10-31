@@ -78,9 +78,9 @@ public class Product {
         ratings.add(productRating);
     }
 
-    public void updateRating(Long profileId, Byte value) {
+    public void updateRating(Long profileId, Byte ratingValue) {
         getRating(profileId)
-                .ifPresent(productRating -> productRating.setValue(value));
+                .ifPresent(productRating -> productRating.setValue(ratingValue));
     }
 
     public double calculateAverageRating() {

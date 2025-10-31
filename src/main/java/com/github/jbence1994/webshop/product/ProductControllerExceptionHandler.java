@@ -14,8 +14,13 @@ public class ProductControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(exception = InvalidProductRateValueException.class)
-    public ResponseEntity<ErrorDto> handleInvalidProductRateValueException(InvalidProductRateValueException exception) {
+    @ExceptionHandler(exception = InvalidProductRatingValueException.class)
+    public ResponseEntity<ErrorDto> handleInvalidProductRatingValueException(InvalidProductRatingValueException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(exception = ProductAlreadyRatedException.class)
+    public ResponseEntity<ErrorDto> handleProductAlreadyRatedException(ProductAlreadyRatedException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 }
