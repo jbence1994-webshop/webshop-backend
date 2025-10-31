@@ -1,5 +1,7 @@
 package com.github.jbence1994.webshop.product;
 
+import java.util.Optional;
+
 public interface ProductReviewSummaryQueryService {
-    ProductReviewSummary getProductReviewSummary(Long productId);
+    Optional<ProductReviewSummary> getProductReviewSummary(Long productId);
 }
