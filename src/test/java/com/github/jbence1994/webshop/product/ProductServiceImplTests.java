@@ -3,7 +3,6 @@ package com.github.jbence1994.webshop.product;
 import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.user.User;
 import com.github.jbence1994.webshop.user.UserService;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -150,7 +149,6 @@ public class ProductServiceImplTests {
     }
 
     @Test
-    @SneakyThrows
     public void createProductRatingTest_UnhappyPath_ProductAlreadyRatedException() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
         when(authService.getCurrentUser()).thenReturn(user());
