@@ -97,22 +97,12 @@ public class ProductServiceImpl implements ProductService {
     public ProductReviewSummary generateProductReviewSummary(Long id) {
         var product = productQueryService.getProduct(id);
 
-        var productReviewSummary = productReviewSummaryQueryService.getProductReviewSummary(product.getId());
-
-        if (productReviewSummary == null) {
-            var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
-
-            productReviewSummary = ProductReviewSummary.of(product, productReviewSummaryText);
-
-            productReviewSummaryService.createProductReviewSummary(productReviewSummary);
-        }
+        var productReviewSummary = productReviewSummaryQueryService
+                .getProductReviewSummary(product.getId())
+                .orElseGet(() -> createSummary(product));
 
         if (productReviewSummary.isExpired()) {
-            var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
-
-            productReviewSummary.setText(productReviewSummaryText);
-
-            productReviewSummaryService.updateProductReviewSummary(productReviewSummary);
+            updateSummary(product, productReviewSummary);
         }
 
         return productReviewSummary;
@@ -126,5 +116,23 @@ public class ProductServiceImpl implements ProductService {
         if (ratingValue < 1 || ratingValue > 5) {
             throw new InvalidProductRatingValueException();
         }
+    }
+
+    private ProductReviewSummary createSummary(Product product) {
+        var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
+
+        var productReviewSummary = ProductReviewSummary.of(product, productReviewSummaryText);
+
+        productReviewSummaryService.createProductReviewSummary(productReviewSummary);
+
+        return productReviewSummary;
+    }
+
+    private void updateSummary(Product product, ProductReviewSummary productReviewSummary) {
+        var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
+
+        productReviewSummary.setText(productReviewSummaryText);
+
+        productReviewSummaryService.updateProductReviewSummary(productReviewSummary);
     }
 }

@@ -10,9 +10,8 @@ import java.util.Optional;
 
 import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.notExpiredProductReviewSummary;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +30,7 @@ public class ProductReviewSummaryQueryServiceImplTests {
 
         var result = productReviewSummaryQueryService.getProductReviewSummary(1L);
 
-        assertThat(result, not(nullValue()));
+        assertThat(result, not(equalTo(Optional.empty())));
     }
 
     @Test
@@ -40,6 +39,6 @@ public class ProductReviewSummaryQueryServiceImplTests {
 
         var result = productReviewSummaryQueryService.getProductReviewSummary(1L);
 
-        assertThat(result, is(nullValue()));
+        assertThat(result, equalTo(Optional.empty()));
     }
 }
