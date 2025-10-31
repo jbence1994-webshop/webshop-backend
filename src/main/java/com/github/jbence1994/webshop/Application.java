@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop;
 
+import com.github.jbence1994.webshop.ai.ChatMemoryMaxMessagesConfig;
 import com.github.jbence1994.webshop.checkout.FreeShippingConfig;
 import com.github.jbence1994.webshop.checkout.LoyaltyPointsConfig;
 import com.github.jbence1994.webshop.checkout.RewardPointsConfig;
@@ -13,13 +14,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties(value = {
+        ChatMemoryMaxMessagesConfig.class,
         WebshopEmailAddressConfig.class,
         LoyaltyPointsConfig.class,
         RewardPointsConfig.class,
         ImageUploadsConfig.class,
         FreeShippingConfig.class,
         WebshopNameConfig.class,
-        ClientAppConfig.class,
+        ClientAppConfig.class
 })
 public class Application {
 

@@ -23,6 +23,8 @@ spring:
           num-ctx: ${LLM_CONTEXT_WINDOW}
           num_predict: ${LLM_OUTPUT_TOKENS}
           temperature: ${LLM_TEMPERATURE}
+    chat-memory:
+      max-messages: ${CHAT_MEMORY_MAX_MESSAGES}
 
 webshop:
   name: ${WEBSHOP_NAME}
