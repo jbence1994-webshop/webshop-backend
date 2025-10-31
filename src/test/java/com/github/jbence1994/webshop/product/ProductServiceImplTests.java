@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.expiredProductReviewSummary;
@@ -217,7 +218,7 @@ public class ProductServiceImplTests {
     @Test
     public void generateProductReviewSummaryTest_AlreadyExistingProductReviewSummary() {
         when(productQueryService.getProduct(any())).thenReturn(product1WithOneReview());
-        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(notExpiredProductReviewSummary());
+        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(Optional.of(notExpiredProductReviewSummary()));
 
         var result = productService.generateProductReviewSummary(1L);
 
@@ -233,7 +234,7 @@ public class ProductServiceImplTests {
     @Test
     public void generateProductReviewSummaryTest_ProductReviewSummaryIsNull() {
         when(productQueryService.getProduct(any())).thenReturn(product1WithOneReview());
-        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(null);
+        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(Optional.empty());
         when(productReviewSummarizer.summarizeProductReviews(any())).thenReturn(PRODUCT_1_REVIEW_SUMMARY);
         doNothing().when(productReviewSummaryService).createProductReviewSummary(any());
 
@@ -251,7 +252,7 @@ public class ProductServiceImplTests {
     @Test
     public void generateProductReviewSummaryTest_ProductReviewSummaryIsExpired() {
         when(productQueryService.getProduct(any())).thenReturn(product1WithOneReview());
-        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(expiredProductReviewSummary());
+        when(productReviewSummaryQueryService.getProductReviewSummary(any())).thenReturn(Optional.of(expiredProductReviewSummary()));
         when(productReviewSummarizer.summarizeProductReviews(any())).thenReturn(PRODUCT_1_REVIEW_SUMMARY);
         doNothing().when(productReviewSummaryService).updateProductReviewSummary(any());
 
