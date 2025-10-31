@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.product;
 
 import com.github.jbence1994.webshop.user.Profile;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GeneratedColumn;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product_reviews")
@@ -34,6 +38,10 @@ public class ProductReview {
     private Profile profile;
 
     private String text;
+
+    @Column(insertable = false, updatable = false)
+    @GeneratedColumn("created_at")
+    private LocalDateTime createdAt;
 
     public static ProductReview of(Product product, Profile profile, String text) {
         var productReview = new ProductReview();

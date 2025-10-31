@@ -18,6 +18,11 @@ public interface ProductMapper {
     @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
     ProductDto toProductDto(Product product);
 
+    @Mapping(target = "category", source = "category.name")
+    @Mapping(target = "photo", ignore = true)
+    @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
+    ProductByIdDto toProductByIdDto(Product product);
+
     WishlistProductDto toWishlistProductDto(Product product);
 
     @Mapping(target = "id", ignore = true)
@@ -26,4 +31,16 @@ public interface ProductMapper {
     @Mapping(target = "ratings", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     Product toEntity(ProductDto productDto);
+
+    @Mapping(
+            target = "name",
+            expression = """
+                    java(
+                    productReview.getProfile().getFirstName() + " " +
+                    (productReview.getProfile().getMiddleName() != null ? productReview.getProfile().getMiddleName() + " " : "") +
+                    productReview.getProfile().getLastName()
+                    )
+                    """
+    )
+    ProductReviewDto toProductReviewDto(ProductReview productReview);
 }

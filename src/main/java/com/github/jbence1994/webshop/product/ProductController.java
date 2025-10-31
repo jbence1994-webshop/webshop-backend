@@ -68,15 +68,15 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductDto getProduct(@PathVariable Long id) {
+    public ProductByIdDto getProduct(@PathVariable Long id) {
         var product = productQueryService.getProduct(id);
 
-        var productDto = productMapper.toProductDto(product);
+        var productByIdDto = productMapper.toProductByIdDto(product);
         product.getFirstPhoto()
                 .map(photo -> productMapper.toProductPhotoDto(photo, imageUrlBuilder))
-                .ifPresent(productDto::setPhoto);
+                .ifPresent(productByIdDto::setPhoto);
 
-        return productDto;
+        return productByIdDto;
     }
 
     @PostMapping
@@ -117,6 +117,7 @@ public class ProductController {
     ) {
         var product = productService.createProductRating(id, request.ratingValue());
 
+        // TODO: Move to ProductMapper.
         var productRatingResponse = new ProductRatingResponse(
                 id,
                 request.ratingValue(),
@@ -134,6 +135,7 @@ public class ProductController {
     ) {
         var product = productService.updateProductRating(id, request.ratingValue());
 
+        // TODO: Move to ProductMapper.
         return new ProductRatingResponse(id, request.ratingValue(), product.calculateAverageRating(), product.getRatings().size());
     }
 
@@ -146,6 +148,7 @@ public class ProductController {
 
         var product = productService.createProductReview(id, sanitizedRequest.review());
 
+        // TODO: Move to ProductMapper.
         var productReviewResponse = new ProductReviewResponse(product.getId(), sanitizedRequest.review());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productReviewResponse);
@@ -155,6 +158,7 @@ public class ProductController {
     public ResponseEntity<ProductReviewSummaryResponse> generateProductReviewSummary(@PathVariable Long id) {
         var productReviewSummary = productService.generateProductReviewSummary(id);
 
+        // TODO: Move to ProductMapper.
         var productReviewSummaryResponse = new ProductReviewSummaryResponse(productReviewSummary.getText());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productReviewSummaryResponse);

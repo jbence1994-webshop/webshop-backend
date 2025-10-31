@@ -15,6 +15,8 @@ import static com.github.jbence1994.webshop.product.CategoryTestObject.category1
 import static com.github.jbence1994.webshop.product.CreateProductRatingRequestTestObject.createProductRatingRequest;
 import static com.github.jbence1994.webshop.product.CreateProductReviewRequestTestObject.createProductReviewRequest;
 import static com.github.jbence1994.webshop.product.CreateProductReviewRequestTestObject.notSanitizedCreateProductReviewRequest;
+import static com.github.jbence1994.webshop.product.ProductByIdDtoTestObject.productByIdDtoWithPhoto;
+import static com.github.jbence1994.webshop.product.ProductByIdDtoTestObject.productByIdDtoWithoutPhoto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
@@ -108,43 +110,43 @@ class ProductControllerTests {
     @Test
     public void getProductTest_HappyPath_ProductWithoutPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductByIdDto(any(Product.class))).thenReturn(productByIdDtoWithoutPhoto());
 
         var result = productController.getProduct(1L);
 
         assertThat(result, allOf(
-                hasProperty("id", equalTo(productDto().getId())),
-                hasProperty("name", equalTo(productDto().getName())),
-                hasProperty("price", equalTo(productDto().getPrice())),
-                hasProperty("unit", equalTo(productDto().getUnit())),
-                hasProperty("description", equalTo(productDto().getDescription())),
-                hasProperty("photo", equalTo(productDto().getPhoto()))
+                hasProperty("id", equalTo(productByIdDtoWithoutPhoto().getId())),
+                hasProperty("name", equalTo(productByIdDtoWithoutPhoto().getName())),
+                hasProperty("price", equalTo(productByIdDtoWithoutPhoto().getPrice())),
+                hasProperty("unit", equalTo(productByIdDtoWithoutPhoto().getUnit())),
+                hasProperty("description", equalTo(productByIdDtoWithoutPhoto().getDescription())),
+                hasProperty("photo", equalTo(productByIdDtoWithoutPhoto().getPhoto()))
         ));
 
         verify(productQueryService, times(1)).getProduct(any());
-        verify(productMapper, times(1)).toProductDto(any(Product.class));
+        verify(productMapper, times(1)).toProductByIdDto(any(Product.class));
         verify(productMapper, never()).toProductPhotoDto(any(), any());
     }
 
     @Test
     public void getProductTest_HappyPath_ProductWithPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1WithPhotos());
-        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductByIdDto(any(Product.class))).thenReturn(productByIdDtoWithPhoto());
         when(productMapper.toProductPhotoDto(any(), any())).thenReturn(productPhotoDto());
 
         var result = productController.getProduct(1L);
 
         assertThat(result, allOf(
-                hasProperty("id", equalTo(productDto().getId())),
-                hasProperty("name", equalTo(productDto().getName())),
-                hasProperty("price", equalTo(productDto().getPrice())),
-                hasProperty("unit", equalTo(productDto().getUnit())),
-                hasProperty("description", equalTo(productDto().getDescription())),
-                hasProperty("photo", equalTo(productDto().getPhoto()))
+                hasProperty("id", equalTo(productByIdDtoWithPhoto().getId())),
+                hasProperty("name", equalTo(productByIdDtoWithPhoto().getName())),
+                hasProperty("price", equalTo(productByIdDtoWithPhoto().getPrice())),
+                hasProperty("unit", equalTo(productByIdDtoWithPhoto().getUnit())),
+                hasProperty("description", equalTo(productByIdDtoWithPhoto().getDescription())),
+                hasProperty("photo", equalTo(productByIdDtoWithPhoto().getPhoto()))
         ));
 
         verify(productQueryService, times(1)).getProduct(any());
-        verify(productMapper, times(1)).toProductDto(any(Product.class));
+        verify(productMapper, times(1)).toProductByIdDto(any(Product.class));
         verify(productMapper, times(1)).toProductPhotoDto(any(), any());
     }
 
