@@ -48,27 +48,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProductRating(Long id, Byte value) {
-        validate(value);
+    public Product createProductRating(Long id, Byte ratingValue) {
+        try {
+            validate(ratingValue);
 
-        var product = productQueryService.getProduct(id);
-        var user = authService.getCurrentUser();
+            var product = productQueryService.getProduct(id);
+            var user = authService.getCurrentUser();
 
-        product.addRating(ProductRating.of(product, user.getProfile(), value));
+            product.addRating(ProductRating.of(product, user.getProfile(), ratingValue));
 
-        productRepository.save(product);
+            productRepository.save(product);
 
-        return product;
+            return product;
+        } catch (InvalidProductRatingValueException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new ProductAlreadyRatedException();
+        }
     }
 
     @Override
-    public Product updateProductRating(Long id, Byte value) {
-        validate(value);
+    public Product updateProductRating(Long id, Byte ratingValue) {
+        validate(ratingValue);
 
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        product.updateRating(user.getId(), value);
+        product.updateRating(user.getId(), ratingValue);
 
         productRepository.save(product);
 
@@ -116,9 +122,9 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
-    private void validate(int rateValue) {
-        if (rateValue < 1 || rateValue > 5) {
-            throw new InvalidProductRateValueException();
+    private void validate(int ratingValue) {
+        if (ratingValue < 1 || ratingValue > 5) {
+            throw new InvalidProductRatingValueException();
         }
     }
 }
