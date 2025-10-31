@@ -9,9 +9,9 @@ public interface ProductService {
 
     void deleteProductFromWishlist(Long productId);
 
-    Product createProductRating(Long id, Byte value);
+    Product createProductRating(Long id, Byte ratingValue);
 
-    Product updateProductRating(Long id, Byte value);
+    Product updateProductRating(Long id, Byte ratingValue);
 
     Product createProductReview(Long id, String review);
 

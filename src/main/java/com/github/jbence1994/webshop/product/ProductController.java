@@ -115,11 +115,11 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRatingRequest request
     ) {
-        var product = productService.createProductRating(id, request.value());
+        var product = productService.createProductRating(id, request.ratingValue());
 
         var productRatingResponse = new ProductRatingResponse(
                 id,
-                request.value(),
+                request.ratingValue(),
                 product.calculateAverageRating(),
                 product.getRatings().size()
         );
@@ -132,9 +132,9 @@ public class ProductController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateProductRatingRequest request
     ) {
-        var product = productService.updateProductRating(id, request.value());
+        var product = productService.updateProductRating(id, request.ratingValue());
 
-        return new ProductRatingResponse(id, request.value(), product.calculateAverageRating(), product.getRatings().size());
+        return new ProductRatingResponse(id, request.ratingValue(), product.calculateAverageRating(), product.getRatings().size());
     }
 
     @PostMapping("{id}/review")

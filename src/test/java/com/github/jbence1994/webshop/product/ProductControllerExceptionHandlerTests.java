@@ -28,11 +28,20 @@ public class ProductControllerExceptionHandlerTests {
     }
 
     @Test
-    public void handleInvalidProductRateValueExceptionTest() {
-        var result = productControllerExceptionHandler.handleInvalidProductRateValueException(new InvalidProductRateValueException());
+    public void handleInvalidProductRatingValueExceptionTest() {
+        var result = productControllerExceptionHandler.handleInvalidProductRatingValueException(new InvalidProductRatingValueException());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().error(), equalTo("Rating must be between 1 and 5."));
+    }
+
+    @Test
+    public void handleProductAlreadyRatedExceptionTest() {
+        var result = productControllerExceptionHandler.handleProductAlreadyRatedException(new ProductAlreadyRatedException());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("You have already rated this product. If you want to change it, please update it."));
     }
 }
