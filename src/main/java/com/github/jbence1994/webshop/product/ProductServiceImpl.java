@@ -28,14 +28,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProductToWishlist(Long productId) {
-        var user = authService.getCurrentUser();
-        var product = productQueryService.getProduct(productId);
+        try {
+            var user = authService.getCurrentUser();
+            var product = productQueryService.getProduct(productId);
 
-        user.addFavoriteProduct(product);
+            user.addFavoriteProduct(product);
 
-        userService.updateUser(user);
+            userService.updateUser(user);
 
-        return product;
+            return product;
+        } catch (Exception exception) {
+            throw new ProductAlreadyOnWishlistException(productId);
+        }
     }
 
     @Override
@@ -63,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (InvalidProductRatingValueException exception) {
             throw exception;
         } catch (Exception exception) {
-            throw new ProductAlreadyRatedException();
+            throw new ProductAlreadyRatedException(id);
         }
     }
 

@@ -23,4 +23,9 @@ public class ProductControllerExceptionHandler {
     public ResponseEntity<ErrorDto> handleProductAlreadyRatedException(ProductAlreadyRatedException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
+
+    @ExceptionHandler(exception = ProductAlreadyOnWishlistException.class)
+    public ResponseEntity<ErrorDto> handleProductAlreadyOnWishlistException(ProductAlreadyOnWishlistException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
+    }
 }
