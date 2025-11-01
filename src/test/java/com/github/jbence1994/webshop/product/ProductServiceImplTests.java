@@ -90,7 +90,7 @@ public class ProductServiceImplTests {
     }
 
     @Test
-    public void addProductToWishlistTest() {
+    public void addProductToWishlistTest_HappyPath() {
         when(authService.getCurrentUser()).thenReturn(user);
         when(productQueryService.getProduct(any())).thenReturn(product1());
         doNothing().when(userService).updateUser(any());
@@ -99,6 +99,24 @@ public class ProductServiceImplTests {
 
         assertThat(result.getId(), equalTo(product1().getId()));
         assertThat(user.getProfile().getFavoriteProducts().size(), equalTo(1));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(userService, times(1)).updateUser(any());
+    }
+
+    @Test
+    public void addProductToWishlistTest_UnhappyPath_ProductAlreadyOnWishlistException() {
+        when(authService.getCurrentUser()).thenReturn(user);
+        when(productQueryService.getProduct(any())).thenReturn(product1());
+        doThrow(new ProductAlreadyOnWishlistException(1L)).when(userService).updateUser(any());
+
+        var result = assertThrows(
+                ProductAlreadyOnWishlistException.class,
+                () -> productService.addProductToWishlist(1L)
+        );
+
+        assertThat(result.getMessage(), equalTo("This product with the given ID: #1 is already on your wishlist."));
 
         verify(authService, times(1)).getCurrentUser();
         verify(productQueryService, times(1)).getProduct(any());
@@ -161,7 +179,7 @@ public class ProductServiceImplTests {
                 () -> productService.createProductRating(1L, (byte) 1)
         );
 
-        assertThat(result.getMessage(), equalTo("You have already rated this product. If you want to change it, please update it."));
+        assertThat(result.getMessage(), equalTo("You have already rated this product with the given ID: #1."));
 
         verify(productQueryService, times(1)).getProduct(any());
         verify(authService, times(1)).getCurrentUser();
