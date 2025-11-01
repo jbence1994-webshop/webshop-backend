@@ -127,10 +127,11 @@ CREATE TABLE IF NOT EXISTS product_ratings
 
 CREATE TABLE IF NOT EXISTS product_reviews
 (
-    id         BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    product_id BIGINT NOT NULL,
-    profile_id BIGINT NOT NULL,
-    text       TEXT   NOT NULL,
+    id         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    product_id BIGINT   NOT NULL,
+    profile_id BIGINT   NOT NULL,
+    text       TEXT     NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_product_reviews_product_id_profile_id UNIQUE (product_id, profile_id),
     CONSTRAINT fk_product_reviews_products
         FOREIGN KEY (product_id) REFERENCES products (id)

@@ -8,6 +8,8 @@ public interface ProductTestConstants {
     String PRODUCT_1_DESCRIPTION = "High quality wireless mouse perfect for everyday use.";
     String PRODUCT_1_REVIEW = "This is a review.";
     String PRODUCT_1_REVIEW_SUMMARY = "This is summary of reviews.";
+    LocalDateTime PRODUCT_1_REVIEW_CREATED_AT = LocalDateTime.of(2025, 10, 31, 15, 56, 59);
+    LocalDateTime PRODUCT_2_REVIEW_CREATED_AT = LocalDateTime.of(2025, 10, 31, 15, 57, 59);
     LocalDateTime EXPIRED_PRODUCT_1_REVIEW_SUMMARY_EXPIRATION_DATE = LocalDateTime.of(2025, 10, 2, 23, 59, 59);
     LocalDateTime NOT_EXPIRED_PRODUCT_1_REVIEW_SUMMARY_EXPIRATION_DATE = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
     String PRODUCT_2_NAME = "Gaming Keyboard";

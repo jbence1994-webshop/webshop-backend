@@ -12,12 +12,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryQueryService categoryQueryService;
-    private final ProductMapper productMapper;
+    private final CategoryMapper categoryMapper;
 
     @GetMapping
     public List<CategoryDto> getCategories() {
         return categoryQueryService.getCategories().stream()
-                .map(productMapper::toCategoryDto)
+                .map(categoryMapper::toDto)
                 .toList();
     }
 }
