@@ -38,10 +38,19 @@ public class ProductControllerExceptionHandlerTests {
 
     @Test
     public void handleProductAlreadyRatedExceptionTest() {
-        var result = productControllerExceptionHandler.handleProductAlreadyRatedException(new ProductAlreadyRatedException());
+        var result = productControllerExceptionHandler.handleProductAlreadyRatedException(new ProductAlreadyRatedException(1L));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("You have already rated this product. If you want to change it, please update it."));
+        assertThat(result.getBody().error(), equalTo("You have already rated this product with the given ID: #1."));
+    }
+
+    @Test
+    public void handleProductAlreadyOnWishlistExceptionTest() {
+        var result = productControllerExceptionHandler.handleProductAlreadyOnWishlistException(new ProductAlreadyOnWishlistException(1L));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("This product with the given ID: #1 is already on your wishlist."));
     }
 }
