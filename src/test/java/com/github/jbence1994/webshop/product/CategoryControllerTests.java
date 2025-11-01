@@ -24,7 +24,7 @@ public class CategoryControllerTests {
     private CategoryQueryService categoryQueryService;
 
     @Mock
-    private ProductMapper productMapper;
+    private CategoryMapper categoryMapper;
 
     @InjectMocks
     private CategoryController categoryController;
@@ -32,7 +32,7 @@ public class CategoryControllerTests {
     @Test
     public void getCategoriesTest() {
         when(categoryQueryService.getCategories()).thenReturn(List.of(category1()));
-        when(productMapper.toCategoryDto(any(Category.class))).thenReturn(categoryDto());
+        when(categoryMapper.toDto(any())).thenReturn(categoryDto());
 
         var result = categoryController.getCategories();
 

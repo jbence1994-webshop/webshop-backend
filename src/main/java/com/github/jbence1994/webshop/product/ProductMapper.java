@@ -8,7 +8,10 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    CategoryDto toCategoryDto(Category category);
+    @Mapping(target = "category", source = "category.name")
+    @Mapping(target = "photo", ignore = true)
+    @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
+    ProductDto toProductDto(Product product);
 
     @Mapping(target = "url", expression = "java(imageUrlBuilder.buildUrl(productPhoto.getFileName()))")
     ProductPhotoDto toProductPhotoDto(ProductPhoto productPhoto, @Context ImageUrlBuilder imageUrlBuilder);
@@ -16,9 +19,40 @@ public interface ProductMapper {
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "photo", ignore = true)
     @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
-    ProductDto toProductDto(Product product);
+    ProductByIdDto toProductByIdDto(Product product);
+
+    @Mapping(
+            target = "name",
+            expression = """
+                    java(
+                    productReview.getProfile().getFirstName() + " " +
+                    (productReview.getProfile().getMiddleName() != null ? productReview.getProfile().getMiddleName() + " " : "") +
+                    productReview.getProfile().getLastName()
+                    )
+                    """
+    )
+    ProductReviewDto toProductReviewDto(ProductReview productReview);
 
     WishlistProductDto toWishlistProductDto(Product product);
+
+    @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "yourRating", source = "request.ratingValue")
+    @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
+    @Mapping(target = "totalRatings", expression = "java(product.getRatings().size())")
+    ProductRatingResponse toProductRatingResponse(CreateProductRatingRequest request, Product product);
+
+    @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "yourRating", source = "request.ratingValue")
+    @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
+    @Mapping(target = "totalRatings", expression = "java(product.getRatings().size())")
+    ProductRatingResponse toProductRatingResponse(UpdateProductRatingRequest request, Product product);
+
+    @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "review", source = "request.review")
+    ProductReviewResponse toProductReviewResponse(CreateProductReviewRequest request, Product product);
+
+    @Mapping(target = "text", source = "productReviewSummary.text")
+    ProductReviewSummaryResponse toProductReviewSummaryResponse(ProductReviewSummary productReviewSummary);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "photos", ignore = true)
