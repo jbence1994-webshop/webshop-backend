@@ -15,10 +15,16 @@ import static com.github.jbence1994.webshop.product.CategoryTestObject.category1
 import static com.github.jbence1994.webshop.product.CreateProductRatingRequestTestObject.createProductRatingRequest;
 import static com.github.jbence1994.webshop.product.CreateProductReviewRequestTestObject.createProductReviewRequest;
 import static com.github.jbence1994.webshop.product.CreateProductReviewRequestTestObject.notSanitizedCreateProductReviewRequest;
+import static com.github.jbence1994.webshop.product.ProductByIdDtoTestObject.productByIdDtoWithPhoto;
+import static com.github.jbence1994.webshop.product.ProductByIdDtoTestObject.productByIdDtoWithoutPhoto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSanitizedProductDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductReviewResponseTestObject.productReviewResponse;
+import static com.github.jbence1994.webshop.product.ProductReviewSummaryResponseTestObject.productReviewSummaryResponse;
 import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.notExpiredProductReviewSummary;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW_SUMMARY;
@@ -108,43 +114,43 @@ class ProductControllerTests {
     @Test
     public void getProductTest_HappyPath_ProductWithoutPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductByIdDto(any(Product.class))).thenReturn(productByIdDtoWithoutPhoto());
 
         var result = productController.getProduct(1L);
 
         assertThat(result, allOf(
-                hasProperty("id", equalTo(productDto().getId())),
-                hasProperty("name", equalTo(productDto().getName())),
-                hasProperty("price", equalTo(productDto().getPrice())),
-                hasProperty("unit", equalTo(productDto().getUnit())),
-                hasProperty("description", equalTo(productDto().getDescription())),
-                hasProperty("photo", equalTo(productDto().getPhoto()))
+                hasProperty("id", equalTo(productByIdDtoWithoutPhoto().getId())),
+                hasProperty("name", equalTo(productByIdDtoWithoutPhoto().getName())),
+                hasProperty("price", equalTo(productByIdDtoWithoutPhoto().getPrice())),
+                hasProperty("unit", equalTo(productByIdDtoWithoutPhoto().getUnit())),
+                hasProperty("description", equalTo(productByIdDtoWithoutPhoto().getDescription())),
+                hasProperty("photo", equalTo(productByIdDtoWithoutPhoto().getPhoto()))
         ));
 
         verify(productQueryService, times(1)).getProduct(any());
-        verify(productMapper, times(1)).toProductDto(any(Product.class));
+        verify(productMapper, times(1)).toProductByIdDto(any(Product.class));
         verify(productMapper, never()).toProductPhotoDto(any(), any());
     }
 
     @Test
     public void getProductTest_HappyPath_ProductWithPhoto() {
         when(productQueryService.getProduct(any())).thenReturn(product1WithPhotos());
-        when(productMapper.toProductDto(any(Product.class))).thenReturn(productDto());
+        when(productMapper.toProductByIdDto(any(Product.class))).thenReturn(productByIdDtoWithPhoto());
         when(productMapper.toProductPhotoDto(any(), any())).thenReturn(productPhotoDto());
 
         var result = productController.getProduct(1L);
 
         assertThat(result, allOf(
-                hasProperty("id", equalTo(productDto().getId())),
-                hasProperty("name", equalTo(productDto().getName())),
-                hasProperty("price", equalTo(productDto().getPrice())),
-                hasProperty("unit", equalTo(productDto().getUnit())),
-                hasProperty("description", equalTo(productDto().getDescription())),
-                hasProperty("photo", equalTo(productDto().getPhoto()))
+                hasProperty("id", equalTo(productByIdDtoWithPhoto().getId())),
+                hasProperty("name", equalTo(productByIdDtoWithPhoto().getName())),
+                hasProperty("price", equalTo(productByIdDtoWithPhoto().getPrice())),
+                hasProperty("unit", equalTo(productByIdDtoWithPhoto().getUnit())),
+                hasProperty("description", equalTo(productByIdDtoWithPhoto().getDescription())),
+                hasProperty("photo", equalTo(productByIdDtoWithPhoto().getPhoto()))
         ));
 
         verify(productQueryService, times(1)).getProduct(any());
-        verify(productMapper, times(1)).toProductDto(any(Product.class));
+        verify(productMapper, times(1)).toProductByIdDto(any(Product.class));
         verify(productMapper, times(1)).toProductPhotoDto(any(), any());
     }
 
@@ -193,6 +199,7 @@ class ProductControllerTests {
     @Test
     public void createProductRatingTest() {
         when(productService.createProductRating(any(), any())).thenReturn(product1WithRating());
+        when(productMapper.toProductRatingResponse(any(CreateProductRatingRequest.class), any())).thenReturn(productRatingResponse());
 
         var result = productController.createProductRating(1L, createProductRatingRequest());
 
@@ -207,6 +214,7 @@ class ProductControllerTests {
     @Test
     public void updateProductRatingTest() {
         when(productService.updateProductRating(any(), any())).thenReturn(product1WithUpdatedRating());
+        when(productMapper.toProductRatingResponse(any(UpdateProductRatingRequest.class), any())).thenReturn(updatedProductRatingResponse());
 
         var result = productController.updateProductRating(1L, updateProductRatingRequest());
 
@@ -220,6 +228,7 @@ class ProductControllerTests {
     public void createProductReviewTest() {
         when(createProductReviewRequestSanitizer.sanitize(any())).thenReturn(createProductReviewRequest());
         when(productService.createProductReview(any(), any())).thenReturn(product1WithOneReview());
+        when(productMapper.toProductReviewResponse(any(), any())).thenReturn(productReviewResponse());
 
         var result = productController.createProductReview(1L, notSanitizedCreateProductReviewRequest());
 
@@ -232,6 +241,7 @@ class ProductControllerTests {
     @Test
     public void generateProductReviewSummaryTest() {
         when(productService.generateProductReviewSummary(any())).thenReturn(notExpiredProductReviewSummary());
+        when(productMapper.toProductReviewSummaryResponse(any())).thenReturn(productReviewSummaryResponse());
 
         var result = productController.generateProductReviewSummary(1L);
 
