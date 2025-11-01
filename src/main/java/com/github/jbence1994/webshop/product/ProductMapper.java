@@ -8,8 +8,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    CategoryDto toCategoryDto(Category category);
-
     @Mapping(target = "url", expression = "java(imageUrlBuilder.buildUrl(productPhoto.getFileName()))")
     ProductPhotoDto toProductPhotoDto(ProductPhoto productPhoto, @Context ImageUrlBuilder imageUrlBuilder);
 
