@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.image;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/products/{productId}/photos")
 @Validated
+@Slf4j
 public class ProductPhotoController {
     private final ProductPhotoQueryService productPhotoQueryService;
     private final ImageUrlBuilder imageUrlBuilder;
