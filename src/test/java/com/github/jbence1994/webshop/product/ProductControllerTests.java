@@ -21,6 +21,10 @@ import static com.github.jbence1994.webshop.product.ProductDtoTestObject.notSani
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDto;
 import static com.github.jbence1994.webshop.product.ProductDtoTestObject.productDtoWithNullIdAndNullPhoto;
 import static com.github.jbence1994.webshop.product.ProductPhotoDtoTestObject.productPhotoDto;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.productRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductRatingResponseTestObject.updatedProductRatingResponse;
+import static com.github.jbence1994.webshop.product.ProductReviewResponseTestObject.productReviewResponse;
+import static com.github.jbence1994.webshop.product.ProductReviewSummaryResponseTestObject.productReviewSummaryResponse;
 import static com.github.jbence1994.webshop.product.ProductReviewSummaryTestObject.notExpiredProductReviewSummary;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW;
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW_SUMMARY;
@@ -195,6 +199,7 @@ class ProductControllerTests {
     @Test
     public void createProductRatingTest() {
         when(productService.createProductRating(any(), any())).thenReturn(product1WithRating());
+        when(productMapper.toProductRatingResponse(any(CreateProductRatingRequest.class), any())).thenReturn(productRatingResponse());
 
         var result = productController.createProductRating(1L, createProductRatingRequest());
 
@@ -209,6 +214,7 @@ class ProductControllerTests {
     @Test
     public void updateProductRatingTest() {
         when(productService.updateProductRating(any(), any())).thenReturn(product1WithUpdatedRating());
+        when(productMapper.toProductRatingResponse(any(UpdateProductRatingRequest.class), any())).thenReturn(updatedProductRatingResponse());
 
         var result = productController.updateProductRating(1L, updateProductRatingRequest());
 
@@ -222,6 +228,7 @@ class ProductControllerTests {
     public void createProductReviewTest() {
         when(createProductReviewRequestSanitizer.sanitize(any())).thenReturn(createProductReviewRequest());
         when(productService.createProductReview(any(), any())).thenReturn(product1WithOneReview());
+        when(productMapper.toProductReviewResponse(any(), any())).thenReturn(productReviewResponse());
 
         var result = productController.createProductReview(1L, notSanitizedCreateProductReviewRequest());
 
@@ -234,6 +241,7 @@ class ProductControllerTests {
     @Test
     public void generateProductReviewSummaryTest() {
         when(productService.generateProductReviewSummary(any())).thenReturn(notExpiredProductReviewSummary());
+        when(productMapper.toProductReviewSummaryResponse(any())).thenReturn(productReviewSummaryResponse());
 
         var result = productController.generateProductReviewSummary(1L);
 
