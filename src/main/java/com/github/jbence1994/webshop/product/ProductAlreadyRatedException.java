@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.product;
 
 public class ProductAlreadyRatedException extends RuntimeException {
-    public ProductAlreadyRatedException() {
-        super("You have already rated this product. If you want to change it, please update it.");
+    public ProductAlreadyRatedException(Long productId) {
+        super(String.format("You have already rated this product with the given ID: #%d.", productId));
     }
 }
