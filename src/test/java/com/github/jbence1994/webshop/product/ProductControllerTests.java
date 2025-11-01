@@ -172,6 +172,11 @@ class ProductControllerTests {
                 hasProperty("description", equalTo(productDto().getDescription())),
                 hasProperty("photo", is(nullValue()))
         ));
+
+        verify(productDtoSanitizer, times(1)).sanitize(any());
+        verify(categoryQueryService, times(1)).getCategory(any());
+        verify(productMapper, times(1)).toEntity(any());
+        verify(productService, times(1)).createProduct(any());
     }
 
     @Test
@@ -184,6 +189,9 @@ class ProductControllerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().id(), equalTo(wishlistProductDto().id()));
+
+        verify(productService, times(1)).addProductToWishlist(any());
+        verify(productMapper, times(1)).toWishlistProductDto(any());
     }
 
     @Test
@@ -194,6 +202,8 @@ class ProductControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
+
+        verify(productService, times(1)).deleteProductFromWishlist(any());
     }
 
     @Test
@@ -209,6 +219,9 @@ class ProductControllerTests {
         assertThat(result.getBody().yourRating(), equalTo((byte) 5));
         assertThat(result.getBody().averageRating(), equalTo(5.0));
         assertThat(result.getBody().totalRatings(), equalTo(1));
+
+        verify(productService, times(1)).createProductRating(any(), any());
+        verify(productMapper, times(1)).toProductRatingResponse(any(CreateProductRatingRequest.class), any());
     }
 
     @Test
@@ -222,6 +235,9 @@ class ProductControllerTests {
         assertThat(result.yourRating(), equalTo((byte) 4));
         assertThat(result.averageRating(), equalTo(4.0));
         assertThat(result.totalRatings(), equalTo(1));
+
+        verify(productService, times(1)).updateProductRating(any(), any());
+        verify(productMapper, times(1)).toProductRatingResponse(any(UpdateProductRatingRequest.class), any());
     }
 
     @Test
@@ -236,6 +252,10 @@ class ProductControllerTests {
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().productId(), equalTo(1L));
         assertThat(result.getBody().review(), equalTo(PRODUCT_1_REVIEW));
+
+        verify(createProductReviewRequestSanitizer, times(1)).sanitize(any());
+        verify(productService, times(1)).createProductReview(any(), any());
+        verify(productMapper, times(1)).toProductReviewResponse(any(), any());
     }
 
     @Test
@@ -248,5 +268,8 @@ class ProductControllerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().text(), equalTo(PRODUCT_1_REVIEW_SUMMARY));
+
+        verify(productService, times(1)).generateProductReviewSummary(any());
+        verify(productMapper, times(1)).toProductReviewSummaryResponse(any());
     }
 }
