@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.github.jbence1994.webshop.ai.ChatRequestTestObject.chatRequest;
+import static com.github.jbence1994.webshop.ai.ChatResponseTestObject.chatResponse;
+import static com.github.jbence1994.webshop.ai.ChatTestConstants.CHAT_RESPONSE_TEXT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -19,12 +21,16 @@ public class ChatControllerTests {
     @Mock
     private ChatService chatService;
 
+    @Mock
+    private ChatMapper chatMapper;
+
     @InjectMocks
     private ChatController chatController;
 
     @Test
     public void chatTest() {
-        when(chatService.chat(any())).thenReturn("Hello, World!");
+        when(chatService.chat(any())).thenReturn(CHAT_RESPONSE_TEXT);
+        when(chatMapper.toChatResponse(any())).thenReturn(chatResponse());
 
         var result = chatController.chat(chatRequest());
 
