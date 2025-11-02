@@ -19,7 +19,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
         ImageUploadsConfig.class,
         FreeShippingConfig.class,
         WebshopNameConfig.class,
-        ClientAppConfig.class,
+        ClientAppConfig.class
 })
 public class Application {
 
