@@ -13,6 +13,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,5 +38,8 @@ public class ChatControllerTests {
 
         assertThat(result, not(nullValue()));
         assertThat(result.message(), not(nullValue()));
+
+        verify(chatService, times(1)).chat(any());
+        verify(chatMapper, times(1)).toChatResponse(any());
     }
 }
