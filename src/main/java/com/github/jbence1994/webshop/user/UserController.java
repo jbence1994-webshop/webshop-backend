@@ -47,8 +47,7 @@ public class UserController {
 
         var registeredUser = userService.registerUser(user);
 
-        // TODO: Move to mapper.
-        var response = new RegistrationResponse(registeredUser.getId(), registeredUser.getEmail());
+        var response = userMapper.toRegistrationResponse(registeredUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

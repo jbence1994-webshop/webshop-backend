@@ -98,11 +98,11 @@ public class UserControllerTests {
     @Test
     public void registerUserTest() {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
-
         when(userMapper.toAddress(any())).thenReturn(addressAfterMappingFromDto());
         when(userMapper.toProfile(any())).thenReturn(profileAfterMappingFromDto());
         when(userMapper.toUser(any())).thenReturn(userAfterMappingFromDto());
         when(userService.registerUser(any())).thenReturn(user());
+        when(userMapper.toRegistrationResponse(any())).thenReturn(registrationResponse());
 
         var result = userController.registerUser(notSanitizedRegistrationRequest());
 

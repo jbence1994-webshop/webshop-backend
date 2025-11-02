@@ -12,6 +12,8 @@ public interface UserMapper {
 
     AddressDto toAddressDto(Address address);
 
+    RegistrationResponse toRegistrationResponse(User user);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
