@@ -5,12 +5,14 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserDto toDto(User user);
+    UserDto toUserDto(User user);
 
     @Mapping(target = "membershipTier", expression = "java(profile.getMembershipTier().name())")
-    ProfileDto toDto(Profile profile);
+    ProfileDto toProfileDto(Profile profile);
 
-    AddressDto toDto(Address address);
+    AddressDto toAddressDto(Address address);
+
+    RegistrationResponse toRegistrationResponse(User user);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
@@ -19,7 +21,7 @@ public interface UserMapper {
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "profileAvatar", ignore = true)
     @Mapping(target = "coupons", ignore = true)
-    User toEntity(RegistrationRequest.UserDto user);
+    User toUser(RegistrationRequest.UserDto user);
 
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "user", ignore = true)
@@ -29,12 +31,12 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
-    Profile toEntity(RegistrationRequest.ProfileDto profile);
+    Profile toProfile(RegistrationRequest.ProfileDto profile);
 
     @Mapping(target = "profileId", ignore = true)
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "country", expression = "java(address.country().toUpperCase())")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Address toEntity(RegistrationRequest.AddressDto address);
+    Address toAddress(RegistrationRequest.AddressDto address);
 }
