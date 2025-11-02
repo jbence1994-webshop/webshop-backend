@@ -87,7 +87,7 @@ public class ProductController {
 
         var category = categoryQueryService.getCategory(sanitizedProductDto.getCategory());
 
-        var product = productMapper.toEntity(sanitizedProductDto);
+        var product = productMapper.toProduct(sanitizedProductDto);
         product.setCategory(category);
 
         productService.createProduct(product);

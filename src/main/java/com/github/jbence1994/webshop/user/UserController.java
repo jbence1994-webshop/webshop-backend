@@ -29,16 +29,17 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable Long id) {
         var user = userQueryService.getUser(id);
-        return userMapper.toDto(user);
+
+        return userMapper.toUserDto(user);
     }
 
     @PostMapping
     public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
         var sanitizedRequest = registrationRequestSanitizer.sanitize(request);
 
-        var address = userMapper.toEntity(sanitizedRequest.user().profile().address());
-        var profile = userMapper.toEntity(sanitizedRequest.user().profile());
-        var user = userMapper.toEntity(sanitizedRequest.user());
+        var address = userMapper.toAddress(sanitizedRequest.user().profile().address());
+        var profile = userMapper.toProfile(sanitizedRequest.user().profile());
+        var user = userMapper.toUser(sanitizedRequest.user());
 
         address.setProfile(profile);
         profile.setAddress(address);
@@ -48,7 +49,7 @@ public class UserController {
 
         var registeredUser = userService.registerUser(user);
 
-        var response = new RegistrationResponse(registeredUser.getId(), registeredUser.getEmail());
+        var response = userMapper.toRegistrationResponse(registeredUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
