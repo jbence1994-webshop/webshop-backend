@@ -47,10 +47,11 @@ public class OllamaChatService implements ChatService {
         try {
             var conversationIdAsString = conversationId.toString();
             var sanitizedPromptText = promptText.trim();
+            var systemPrompt = trimOrEmpty(systemPromptUtil.getSystemPrompt());
 
             var memoryMessages = chatMemory.get(conversationIdAsString);
 
-            var systemMessage = new SystemMessage(systemPromptUtil.getSystemPrompt().map(String::trim).orElse(""));
+            var systemMessage = new SystemMessage(systemPrompt);
             var userMessage = new UserMessage(sanitizedPromptText);
             var promptMessages = new ArrayList<Message>(memoryMessages.size() + 2);
             var prompt = new Prompt(promptMessages);
