@@ -53,7 +53,9 @@ public class CheckoutController {
 
     @PostMapping("/complete")
     public CompleteCheckoutSessionResponse completeCheckoutSession(@Valid @RequestBody CompleteCheckoutSessionRequest request) {
-        return checkoutService.completeCheckoutSession(request.checkoutSessionId(), request.action());
+        var completeCheckoutSession = checkoutService.completeCheckoutSession(request.checkoutSessionId(), request.action());
+
+        return checkoutMapper.toCompleteCheckoutSessionResponse(completeCheckoutSession);
     }
 
     @PostMapping("/complete/webhook")

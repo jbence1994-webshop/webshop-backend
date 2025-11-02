@@ -12,4 +12,6 @@ public interface CheckoutMapper {
             expression = "java(checkoutSession.getAppliedCoupon().map(coupon -> coupon.getCode()).orElse(null))"
     )
     CheckoutSessionDto toDto(CheckoutSession checkoutSession);
+
+    CompleteCheckoutSessionResponse toCompleteCheckoutSessionResponse(CompleteCheckoutSession completeCheckoutSession);
 }
