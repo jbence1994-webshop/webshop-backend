@@ -59,5 +59,5 @@ public interface ProductMapper {
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "ratings", ignore = true)
     @Mapping(target = "reviews", ignore = true)
-    Product toEntity(ProductDto productDto);
+    Product toProduct(ProductDto productDto);
 }

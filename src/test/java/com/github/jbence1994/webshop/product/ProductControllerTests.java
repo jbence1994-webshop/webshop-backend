@@ -158,7 +158,7 @@ class ProductControllerTests {
     public void createProductTest() {
         when(productDtoSanitizer.sanitize(any())).thenReturn(productDtoWithNullIdAndNullPhoto());
         when(categoryQueryService.getCategory(any())).thenReturn(category1());
-        when(productMapper.toEntity(any())).thenReturn(product1AfterMappingFromDto());
+        when(productMapper.toProduct(any())).thenReturn(product1AfterMappingFromDto());
         doNothing().when(productService).createProduct(any());
 
         var result = productController.createProduct(notSanitizedProductDto());
@@ -175,7 +175,7 @@ class ProductControllerTests {
 
         verify(productDtoSanitizer, times(1)).sanitize(any());
         verify(categoryQueryService, times(1)).getCategory(any());
-        verify(productMapper, times(1)).toEntity(any());
+        verify(productMapper, times(1)).toProduct(any());
         verify(productService, times(1)).createProduct(any());
     }
 
