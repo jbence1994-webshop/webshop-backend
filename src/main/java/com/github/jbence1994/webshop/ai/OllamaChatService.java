@@ -42,7 +42,9 @@ public class OllamaChatService implements ChatService {
                             .getText()
             );
 
-            return response.map(String::trim).orElse("");
+            return response
+                    .map(String::trim)
+                    .orElse("");
         } catch (Exception exception) {
             throw new OllamaException(exception);
         }
