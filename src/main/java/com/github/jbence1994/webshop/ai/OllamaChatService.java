@@ -27,24 +27,15 @@ public class OllamaChatService implements ChatService {
     public String chat(String promptText) {
         try {
             var sanitizedPromptText = promptText.trim();
-            var systemPrompt = systemPromptUtil.getSystemPrompt()
-                    .map(String::trim)
-                    .orElse("");
+            var systemPrompt = trimOrEmpty(systemPromptUtil.getSystemPrompt());
 
             var systemMessage = new SystemMessage(systemPrompt);
             var userMessage = new UserMessage(sanitizedPromptText);
             var prompt = new Prompt(List.of(systemMessage, userMessage));
 
-            var response = Optional.ofNullable(
-                    ollamaChatModel.call(prompt)
-                            .getResult()
-                            .getOutput()
-                            .getText()
-            );
+            var response = Optional.ofNullable(ollamaChatModel.call(prompt).getResult().getOutput().getText());
 
-            return response
-                    .map(String::trim)
-                    .orElse("");
+            return response.map(String::trim).orElse("");
         } catch (Exception exception) {
             throw new OllamaException(exception);
         }
@@ -75,7 +66,7 @@ public class OllamaChatService implements ChatService {
                             .getText()
             );
 
-            var sanitizedResponse = response.map(String::trim).orElse("");
+            var sanitizedResponse = trimOrEmpty(response);
 
             var assistantMessage = new AssistantMessage(sanitizedResponse);
 
@@ -85,5 +76,11 @@ public class OllamaChatService implements ChatService {
         } catch (Exception exception) {
             throw new OllamaException(exception);
         }
+    }
+
+    private String trimOrEmpty(Optional<String> input) {
+        return input
+                .map(String::trim)
+                .orElse("");
     }
 }
