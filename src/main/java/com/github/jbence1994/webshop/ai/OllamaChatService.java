@@ -35,7 +35,7 @@ public class OllamaChatService implements ChatService {
 
             var response = Optional.ofNullable(ollamaChatModel.call(prompt).getResult().getOutput().getText());
 
-            return response.map(String::trim).orElse("");
+            return trimOrEmpty(response);
         } catch (Exception exception) {
             throw new OllamaException(exception);
         }
