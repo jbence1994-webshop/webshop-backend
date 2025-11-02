@@ -35,11 +35,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem updateCartItem(
-            UUID cartId,
-            Long productId,
-            int quantity
-    ) {
+    public CartItem updateCartItem(UUID cartId, Long productId, int quantity) {
         var cart = cartQueryService.getCart(cartId);
         var cartItem = cartQueryService.getCartItem(cartId, productId);
 

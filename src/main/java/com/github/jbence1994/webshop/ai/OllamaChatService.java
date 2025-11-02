@@ -18,7 +18,11 @@ public class OllamaChatService implements ChatService {
     @Override
     public String chat(String promptText) {
         try {
-            var systemMessage = new SystemMessage(systemPromptUtil.getSystemPrompt());
+            var systemPrompt = systemPromptUtil.getSystemPrompt()
+                    .map(String::trim)
+                    .orElse("");
+
+            var systemMessage = new SystemMessage(systemPrompt);
             var userMessage = new UserMessage(promptText);
             var prompt = new Prompt(List.of(systemMessage, userMessage));
 
