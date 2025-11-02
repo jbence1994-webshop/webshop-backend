@@ -9,6 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.OllamaChatModel;
 
+import java.util.Optional;
+
 import static com.github.jbence1994.webshop.ai.OllamaChatResponseTestObject.chatResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -34,7 +36,7 @@ public class OllamaChatServiceTests {
 
     @BeforeEach
     public void setUp() {
-        when(systemPromptUtil.getSystemPrompt()).thenReturn("You are a virtual assistant.");
+        when(systemPromptUtil.getSystemPrompt()).thenReturn(Optional.of("You are a virtual assistant."));
     }
 
     @Test
