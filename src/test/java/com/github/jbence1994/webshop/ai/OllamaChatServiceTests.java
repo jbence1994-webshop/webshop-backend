@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.ai.ChatTestConstants.CONVERSATION_ID;
+
 import static com.github.jbence1994.webshop.ai.OllamaChatResponseTestObject.chatResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
