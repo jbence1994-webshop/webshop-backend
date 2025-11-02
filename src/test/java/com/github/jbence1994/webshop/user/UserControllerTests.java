@@ -63,7 +63,7 @@ public class UserControllerTests {
     @Test
     public void getUserTest_HappyPath() {
         when(userQueryService.getUser(anyLong())).thenReturn(user());
-        when(userMapper.toDto(any(User.class))).thenReturn(userDto());
+        when(userMapper.toUserDto(any())).thenReturn(userDto());
 
         var result = userController.getUser(1L);
 
@@ -98,11 +98,11 @@ public class UserControllerTests {
     @Test
     public void registerUserTest() {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
-
-        when(userMapper.toEntity(any(RegistrationRequest.AddressDto.class))).thenReturn(addressAfterMappingFromDto());
-        when(userMapper.toEntity(any(RegistrationRequest.ProfileDto.class))).thenReturn(profileAfterMappingFromDto());
-        when(userMapper.toEntity(any(RegistrationRequest.UserDto.class))).thenReturn(userAfterMappingFromDto());
+        when(userMapper.toAddress(any())).thenReturn(addressAfterMappingFromDto());
+        when(userMapper.toProfile(any())).thenReturn(profileAfterMappingFromDto());
+        when(userMapper.toUser(any())).thenReturn(userAfterMappingFromDto());
         when(userService.registerUser(any())).thenReturn(user());
+        when(userMapper.toRegistrationResponse(any())).thenReturn(registrationResponse());
 
         var result = userController.registerUser(notSanitizedRegistrationRequest());
 
