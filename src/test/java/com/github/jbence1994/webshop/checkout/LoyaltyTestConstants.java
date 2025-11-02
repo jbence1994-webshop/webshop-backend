@@ -1,5 +1,5 @@
 package com.github.jbence1994.webshop.checkout;
 
 public interface LoyaltyTestConstants {
-    int POINTS_RATE = 20;
+    int LOYALTY_POINTS_RATE = 20;
 }
