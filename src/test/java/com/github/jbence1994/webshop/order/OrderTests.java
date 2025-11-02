@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
 import static com.github.jbence1994.webshop.order.OrderPricingTestObject.orderPricingRewardPointsEarn;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
@@ -32,13 +32,13 @@ public class OrderTests {
 
     @Test
     public void fromTests() {
-        var result = Order.from(user(), checkoutSession1(), orderPricingRewardPointsEarn());
+        var result = Order.from(user(), checkoutSession(), orderPricingRewardPointsEarn());
 
         assertThat(result, allOf(
                 hasProperty("totalPrice", comparesEqualTo(orderPricingRewardPointsEarn().getTotalPrice())),
                 hasProperty("totalPriceCardAmount", comparesEqualTo(orderPricingRewardPointsEarn().getTotalPriceCardAmount())),
                 hasProperty("totalPriceRewardPointsAmount", comparesEqualTo(orderPricingRewardPointsEarn().getTotalPriceRewardPointsAmount())),
-                hasProperty("discountAmount", comparesEqualTo(checkoutSession1().getDiscountAmount())),
+                hasProperty("discountAmount", comparesEqualTo(checkoutSession().getDiscountAmount())),
                 hasProperty("status", equalTo(OrderStatus.CREATED))
         ));
         assertThat(result.getItems().size(), equalTo(1));

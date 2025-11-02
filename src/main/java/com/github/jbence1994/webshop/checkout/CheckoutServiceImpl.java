@@ -92,7 +92,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     @Override
     @Transactional
-    public CompleteCheckoutSession completeCheckoutSession(UUID checkoutSessionId, RewardPointsAction action) {
+    public CheckoutSession completeCheckoutSession(UUID checkoutSessionId, RewardPointsAction action) {
         var checkoutSession = checkoutQueryService.getCheckoutSession(checkoutSessionId);
 
         if (checkoutSession.isExpired()) {
@@ -144,7 +144,10 @@ public class CheckoutServiceImpl implements CheckoutService {
 
             cart.clear();
 
-            return new CompleteCheckoutSession(order.getId(), paymentSessionResponse.checkoutUrl());
+            checkoutSession.setOrder(order);
+            checkoutSession.setCheckoutUrl(paymentSessionResponse.checkoutUrl());
+
+            return checkoutSession;
         } catch (PaymentException exception) {
             orderService.deleteOrder(order.getId());
             throw exception;
