@@ -20,6 +20,7 @@ import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.STRIP
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.STRIPE_SIGNATURE;
 import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequestWithRewardPointsEarn;
 import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionResponseTestObject.completeCheckoutSessionResponse;
+import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionTestObject.completeCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CreateCheckoutSessionRequestTestObject.createCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -100,7 +101,8 @@ public class CheckoutControllerTests {
 
     @Test
     public void completeCheckoutSessionTest() {
-        when(checkoutService.completeCheckoutSession(any(), any())).thenReturn(completeCheckoutSessionResponse());
+        when(checkoutService.completeCheckoutSession(any(), any())).thenReturn(completeCheckoutSession());
+        when(checkoutMapper.toCompleteCheckoutSessionResponse(any())).thenReturn(completeCheckoutSessionResponse());
 
         var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequestWithRewardPointsEarn());
 
@@ -108,6 +110,7 @@ public class CheckoutControllerTests {
         assertThat(result.orderId(), equalTo(1L));
 
         verify(checkoutService, times(1)).completeCheckoutSession(any(), any());
+        verify(checkoutMapper, times(1)).toCompleteCheckoutSessionResponse(any());
     }
 
     @Test

@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatService chatService;
+    private final ChatMapper chatMapper;
 
     @PostMapping
     public ChatResponse chat(@Valid @RequestBody ChatRequest request) {
         var message = chatService.chat(request.prompt());
 
-        return new ChatResponse(message);
+        return chatMapper.toChatResponse(message);
     }
 }
