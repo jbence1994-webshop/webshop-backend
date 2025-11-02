@@ -27,7 +27,7 @@ public class OllamaChatService implements ChatService {
     public String chat(String promptText) {
         try {
             var sanitizedPromptText = promptText.trim();
-            var systemPrompt = trimOrEmpty(systemPromptUtil.getSystemPrompt());
+            var systemPrompt = sanitize(systemPromptUtil.getSystemPrompt());
 
             var systemMessage = new SystemMessage(systemPrompt);
             var userMessage = new UserMessage(sanitizedPromptText);
@@ -35,7 +35,7 @@ public class OllamaChatService implements ChatService {
 
             var response = Optional.ofNullable(ollamaChatModel.call(prompt).getResult().getOutput().getText());
 
-            return trimOrEmpty(response);
+            return sanitize(response);
         } catch (Exception exception) {
             throw new OllamaException(exception);
         }
@@ -47,7 +47,7 @@ public class OllamaChatService implements ChatService {
         try {
             var conversationIdAsString = conversationId.toString();
             var sanitizedPromptText = promptText.trim();
-            var systemPrompt = trimOrEmpty(systemPromptUtil.getSystemPrompt());
+            var systemPrompt = sanitize(systemPromptUtil.getSystemPrompt());
 
             var memoryMessages = chatMemory.get(conversationIdAsString);
 
@@ -67,7 +67,7 @@ public class OllamaChatService implements ChatService {
                             .getText()
             );
 
-            var sanitizedResponse = trimOrEmpty(response);
+            var sanitizedResponse = sanitize(response);
 
             var assistantMessage = new AssistantMessage(sanitizedResponse);
 
@@ -79,9 +79,7 @@ public class OllamaChatService implements ChatService {
         }
     }
 
-    private String trimOrEmpty(Optional<String> input) {
-        return input
-                .map(String::trim)
-                .orElse("");
+    private String sanitize(Optional<String> input) {
+        return input.map(String::trim).orElse("");
     }
 }
