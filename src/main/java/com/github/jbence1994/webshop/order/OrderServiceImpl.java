@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+    private final OrderQueryService orderQueryService;
     private final OrderRepository orderRepository;
 
     @Override
@@ -16,6 +17,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateOrder(Order order) {
         save(order);
+    }
+
+    @Override
+    public Order updateOrderStatus(Long id, OrderStatus status) {
+        var order = orderQueryService.getOrder(id);
+        order.setStatus(status);
+
+        save(order);
+
+        return order;
     }
 
     @Override
