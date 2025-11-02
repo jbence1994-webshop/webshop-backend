@@ -256,12 +256,18 @@ CREATE TABLE IF NOT EXISTS checkout_sessions
     status              VARCHAR(20)    NOT NULL             DEFAULT 'PENDING',
     created_at          DATETIME       NOT NULL             DEFAULT CURRENT_TIMESTAMP,
     expiration_date     DATETIME       NOT NULL,
+    order_id            BIGINT,
+    checkout_url        VARCHAR(500) UNIQUE,
     CONSTRAINT fk_checkout_sessions_carts
         FOREIGN KEY (cart_id) REFERENCES carts (id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE,
     CONSTRAINT fk_checkout_sessions_coupons
         FOREIGN KEY (applied_coupon) REFERENCES coupons (code)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_checkout_sessions_orders
+        FOREIGN KEY (order_id) REFERENCES orders (id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE
 );
