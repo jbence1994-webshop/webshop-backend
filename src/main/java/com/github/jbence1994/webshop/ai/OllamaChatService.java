@@ -30,6 +30,7 @@ public class OllamaChatService implements ChatService {
             var systemPrompt = systemPromptUtil.getSystemPrompt()
                     .map(String::trim)
                     .orElse("");
+
             var systemMessage = new SystemMessage(systemPrompt);
             var userMessage = new UserMessage(sanitizedPromptText);
             var prompt = new Prompt(List.of(systemMessage, userMessage));
