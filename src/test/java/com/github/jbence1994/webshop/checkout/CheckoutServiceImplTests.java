@@ -20,7 +20,7 @@ import java.util.Optional;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
-import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithEmptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.completedCheckoutSession;
@@ -93,7 +93,7 @@ public class CheckoutServiceImplTests {
     @Test
     public void createCheckoutSession_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-        when(checkoutRepository.save(any())).thenReturn(checkoutSession1());
+        when(checkoutRepository.save(any())).thenReturn(checkoutSession());
 
         var result = checkoutService.createCheckoutSession(CART_ID);
 
@@ -120,7 +120,7 @@ public class CheckoutServiceImplTests {
 
     @Test
     public void applyCouponToCheckoutSessionTest_HappyPath() {
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
         when(couponQueryService.isCouponRedeemed(any())).thenReturn(false);
         when(checkoutRepository.save(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
@@ -152,7 +152,7 @@ public class CheckoutServiceImplTests {
 
     @Test
     public void applyCouponToCheckoutSessionTest_UnhappyPath_ExpiredCouponException() {
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(couponQueryService.getCoupon(any())).thenReturn(fixedAmountExpiredCoupon());
 
         var result = assertThrows(
@@ -170,7 +170,7 @@ public class CheckoutServiceImplTests {
 
     @Test
     public void applyCouponToCheckoutSessionTest_UnhappyPath_CouponAlreadyRedeemedException() {
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
         when(couponQueryService.isCouponRedeemed(any())).thenReturn(true);
 
@@ -190,7 +190,7 @@ public class CheckoutServiceImplTests {
     @Test
     public void removeCouponFromCheckoutSessionTest_HappyPath() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
-        when(checkoutRepository.save(any())).thenReturn(checkoutSession1());
+        when(checkoutRepository.save(any())).thenReturn(checkoutSession());
 
         assertDoesNotThrow(() -> checkoutService.removeCouponFromCheckoutSession(CART_ID));
 
@@ -240,7 +240,7 @@ public class CheckoutServiceImplTests {
 
     @Test
     public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon_RewardPointsActionBurn() {
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(authService.getCurrentUser()).thenReturn(userWithAvatar());
         doNothing().when(orderService).createOrder(any());
         when(loyaltyPointsCalculator.calculateLoyaltyPoints(any())).thenReturn(POINTS_RATE);
@@ -325,7 +325,7 @@ public class CheckoutServiceImplTests {
 
     @Test
     public void completeCheckoutSessionTest_UnhappyPath_PaymentException() {
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(authService.getCurrentUser()).thenReturn(user());
         when(rewardPointsConverter.toRewardPoints(any(), any())).thenReturn(74);
         doNothing().when(orderService).createOrder(any());
@@ -354,7 +354,7 @@ public class CheckoutServiceImplTests {
         when(paymentGateway.parseWebhookRequest(any())).thenReturn(Optional.of(paymentIntentSucceeded()));
         when(orderQueryService.getOrder(any())).thenReturn(order1());
         doNothing().when(orderService).updateOrder(any());
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(checkoutRepository.save(any())).thenReturn(completedCheckoutSession());
 
         assertDoesNotThrow(() -> checkoutService.handleCompleteCheckoutSessionWebhookEvent(webhookRequest()));

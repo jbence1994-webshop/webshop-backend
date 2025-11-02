@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.cart.Cart;
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.order.Order;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,13 +10,15 @@ import java.time.LocalDateTime;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_URL;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CREATED_AT;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
+import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 
 public final class CheckoutSessionTestObject {
-    public static CheckoutSession checkoutSession1() {
+    public static CheckoutSession checkoutSession() {
         return buildCheckoutSession(
                 cartWithOneItem(),
                 BigDecimal.valueOf(49.99),
@@ -23,7 +26,23 @@ public final class CheckoutSessionTestObject {
                 BigDecimal.ZERO,
                 null,
                 CheckoutStatus.PENDING,
-                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE
+                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                null,
+                null
+        );
+    }
+
+    public static CheckoutSession checkoutSessionWithOrderAndCheckoutUrl() {
+        return buildCheckoutSession(
+                cartWithOneItem(),
+                BigDecimal.valueOf(49.99),
+                BigDecimal.valueOf(49.99),
+                BigDecimal.ZERO,
+                null,
+                CheckoutStatus.PENDING,
+                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                order1(),
+                CHECKOUT_URL
         );
     }
 
@@ -35,7 +54,9 @@ public final class CheckoutSessionTestObject {
                 BigDecimal.valueOf(44.99),
                 percentOffNotExpiredCoupon(),
                 CheckoutStatus.PENDING,
-                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE
+                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                null,
+                null
         );
     }
 
@@ -47,7 +68,9 @@ public final class CheckoutSessionTestObject {
                 BigDecimal.valueOf(44.99),
                 percentOffNotExpiredCoupon(),
                 CheckoutStatus.PENDING,
-                EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE
+                EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                null,
+                null
         );
     }
 
@@ -59,7 +82,9 @@ public final class CheckoutSessionTestObject {
                 BigDecimal.ZERO,
                 null,
                 CheckoutStatus.PENDING,
-                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE
+                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                null,
+                null
         );
     }
 
@@ -71,7 +96,9 @@ public final class CheckoutSessionTestObject {
                 BigDecimal.ZERO,
                 null,
                 CheckoutStatus.COMPLETED,
-                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE
+                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                order1(),
+                CHECKOUT_URL
         );
     }
 
@@ -83,7 +110,9 @@ public final class CheckoutSessionTestObject {
                 BigDecimal.ZERO,
                 null,
                 CheckoutStatus.EXPIRED,
-                EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE
+                EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                null,
+                null
         );
     }
 
@@ -94,7 +123,9 @@ public final class CheckoutSessionTestObject {
             BigDecimal discountAmount,
             Coupon appliedCoupon,
             CheckoutStatus status,
-            LocalDateTime expirationDate
+            LocalDateTime expirationDate,
+            Order order,
+            String checkoutUrl
     ) {
         return new CheckoutSession(
                 CHECKOUT_SESSION_ID,
@@ -105,7 +136,9 @@ public final class CheckoutSessionTestObject {
                 appliedCoupon,
                 status,
                 CREATED_AT,
-                expirationDate
+                expirationDate,
+                order,
+                checkoutUrl
         );
     }
 }
