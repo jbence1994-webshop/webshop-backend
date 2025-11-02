@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.checkout;
 
+import com.github.jbence1994.webshop.user.MembershipTier;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,19 +13,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.checkout.LoyaltyTestConstants.POINTS_RATE;
+import static com.github.jbence1994.webshop.checkout.LoyaltyTestConstants.LOYALTY_POINTS_RATE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LoyaltyPointsCalculatorImplTests {
+public class LoyaltyConversionServiceImplTests {
 
     @Mock
     private LoyaltyPointsConfig loyaltyPointsConfig;
 
     @InjectMocks
-    private LoyaltyPointsCalculatorImpl loyaltyPointsCalculator;
+    private LoyaltyConversionServiceImpl loyaltyConversionService;
 
     private static Stream<Arguments> calculateLoyaltyPointsTestParams() {
         return Stream.of(
@@ -38,12 +39,30 @@ public class LoyaltyPointsCalculatorImplTests {
         );
     }
 
+    private static Stream<Arguments> rewardPointsParams() {
+        return Stream.of(
+                Arguments.of(Named.of("Multiplier is 1.5", MembershipTier.BRONZE), 74),
+                Arguments.of(Named.of("Multiplier is 2", MembershipTier.SILVER), 99),
+                Arguments.of(Named.of("Multiplier is 2.5", MembershipTier.GOLD), 124),
+                Arguments.of(Named.of("Multiplier is 5", MembershipTier.PLATINUM), 249)
+        );
+    }
+
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("calculateLoyaltyPointsTestParams")
     public void calculateLoyaltyPointsTest(BigDecimal orderTotalPrice, int expectedLoyaltyPoints) {
-        when(loyaltyPointsConfig.rate()).thenReturn(POINTS_RATE);
-        var result = loyaltyPointsCalculator.calculateLoyaltyPoints(orderTotalPrice);
+        when(loyaltyPointsConfig.rate()).thenReturn(LOYALTY_POINTS_RATE);
+
+        var result = loyaltyConversionService.calculateLoyaltyPoints(orderTotalPrice);
 
         assertThat(result, equalTo(expectedLoyaltyPoints));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("rewardPointsParams")
+    public void calculateRewardPointsTests(MembershipTier membershipTier, int expectedRewardPoints) {
+        var result = loyaltyConversionService.calculateRewardPoints(BigDecimal.valueOf(49.99), membershipTier);
+
+        assertThat(result, equalTo(expectedRewardPoints));
     }
 }

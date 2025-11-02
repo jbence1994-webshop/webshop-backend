@@ -21,8 +21,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
-    private final LoyaltyPointsCalculator loyaltyPointsCalculator;
-    private final RewardPointsConverter rewardPointsConverter;
+    private final LoyaltyConversionService loyaltyConversionService;
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
@@ -118,7 +117,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         var orderPricing = OrderPricing.of();
 
         if (RewardPointsAction.EARN.equals(action)) {
-            var earnedRewardPoints = rewardPointsConverter.toRewardPoints(cartTotal, user.getMembershipTier());
+            var earnedRewardPoints = loyaltyConversionService.calculateRewardPoints(cartTotal, user.getMembershipTier());
 
             user.earnRewardPoints(earnedRewardPoints);
 
@@ -133,7 +132,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         checkoutSession.getAppliedCoupon()
                 .ifPresent(coupon -> couponService.redeemCoupon(user.getId(), coupon.getCode(), order.getId()));
 
-        var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
+        var loyaltyPoints = loyaltyConversionService.calculateLoyaltyPoints(order.getTotalPrice());
         user.earnLoyaltyPoints(loyaltyPoints);
         order.setEarnedLoyaltyPoints(loyaltyPoints);
 
