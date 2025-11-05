@@ -78,18 +78,6 @@ public class User {
         profile.earnLoyaltyPoints(value);
     }
 
-    public int getRewardPoints() {
-        return profile.getRewardPoints();
-    }
-
-    public void earnRewardPoints(int value) {
-        profile.earnRewardPoints(value);
-    }
-
-    public void burnRewardPoints(int value) {
-        profile.burnRewardPoints(value);
-    }
-
     public MembershipTier getMembershipTier() {
         return profile.getMembershipTier();
     }
