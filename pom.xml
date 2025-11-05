@@ -24,7 +24,7 @@
 
         <!-- Project dependency versions -->
         <spring-ai-starter-model-ollama.version>1.0.3</spring-ai-starter-model-ollama.version>
-        <springdoc-openapi-starter-webmvc-ui.version>2.8.13</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.8.14</springdoc-openapi-starter-webmvc-ui.version>
         <jwt.version>0.12.5</jwt.version>
         <stripe-java.version>29.0.0</stripe-java.version>
         <spring-dotenv.version>4.0.0</spring-dotenv.version>

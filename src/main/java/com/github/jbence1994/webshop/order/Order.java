@@ -44,16 +44,12 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    private BigDecimal totalPriceCardAmount;
-
-    private BigDecimal totalPriceRewardPointsAmount;
-
     private BigDecimal discountAmount;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    private int earnedLoyaltyPoints;
+    private int loyaltyPoints;
 
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
@@ -66,13 +62,11 @@ public class Order {
         return customerEmail.equals(customer.getEmail());
     }
 
-    public static Order from(User customer, CheckoutSession checkoutSession, OrderPricing orderPricing) {
+    public static Order from(User customer, CheckoutSession checkoutSession) {
         var order = new Order();
 
         order.customer = customer;
-        order.totalPrice = orderPricing.getTotalPrice();
-        order.totalPriceCardAmount = orderPricing.getTotalPriceCardAmount();
-        order.totalPriceRewardPointsAmount = orderPricing.getTotalPriceRewardPointsAmount();
+        order.totalPrice = checkoutSession.getCartTotal();
         order.discountAmount = checkoutSession.getDiscountAmount();
         order.status = OrderStatus.CREATED;
 

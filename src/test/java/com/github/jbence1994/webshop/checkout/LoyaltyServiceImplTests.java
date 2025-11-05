@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.checkout;
 
-import com.github.jbence1994.webshop.user.MembershipTier;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,13 +18,13 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LoyaltyConversionServiceImplTests {
+public class LoyaltyServiceImplTests {
 
     @Mock
     private LoyaltyPointsConfig loyaltyPointsConfig;
 
     @InjectMocks
-    private LoyaltyConversionServiceImpl loyaltyConversionService;
+    private LoyaltyServiceImpl loyaltyService;
 
     private static Stream<Arguments> calculateLoyaltyPointsTestParams() {
         return Stream.of(
@@ -39,30 +38,13 @@ public class LoyaltyConversionServiceImplTests {
         );
     }
 
-    private static Stream<Arguments> rewardPointsParams() {
-        return Stream.of(
-                Arguments.of(Named.of("Multiplier is 1.5", MembershipTier.BRONZE), 74),
-                Arguments.of(Named.of("Multiplier is 2", MembershipTier.SILVER), 99),
-                Arguments.of(Named.of("Multiplier is 2.5", MembershipTier.GOLD), 124),
-                Arguments.of(Named.of("Multiplier is 5", MembershipTier.PLATINUM), 249)
-        );
-    }
-
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("calculateLoyaltyPointsTestParams")
     public void calculateLoyaltyPointsTest(BigDecimal orderTotalPrice, int expectedLoyaltyPoints) {
         when(loyaltyPointsConfig.rate()).thenReturn(LOYALTY_POINTS_RATE);
 
-        var result = loyaltyConversionService.calculateLoyaltyPoints(orderTotalPrice);
+        var result = loyaltyService.calculateLoyaltyPoints(orderTotalPrice);
 
         assertThat(result, equalTo(expectedLoyaltyPoints));
-    }
-
-    @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("rewardPointsParams")
-    public void calculateRewardPointsTests(MembershipTier membershipTier, int expectedRewardPoints) {
-        var result = loyaltyConversionService.calculateRewardPoints(BigDecimal.valueOf(49.99), membershipTier);
-
-        assertThat(result, equalTo(expectedRewardPoints));
     }
 }

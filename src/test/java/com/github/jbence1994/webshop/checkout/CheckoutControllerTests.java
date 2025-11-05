@@ -20,7 +20,7 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.c
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.STRIPE_PAYLOAD;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.STRIPE_SIGNATURE;
-import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequestWithRewardPointsEarn;
+import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.checkout.CreateCheckoutSessionRequestTestObject.createCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -101,15 +101,15 @@ public class CheckoutControllerTests {
 
     @Test
     public void completeCheckoutSessionTest() {
-        when(checkoutService.completeCheckoutSession(any(), any())).thenReturn(checkoutSessionWithOrderAndCheckoutUrl());
+        when(checkoutService.completeCheckoutSession(any())).thenReturn(checkoutSessionWithOrderAndCheckoutUrl());
         when(checkoutMapper.toDto(any())).thenReturn(checkoutSessionDtoWithOrderAndCheckoutUrl());
 
-        var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequestWithRewardPointsEarn());
+        var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequest());
 
         assertThat(result, not(nullValue()));
         assertThat(result.orderId(), equalTo(1L));
 
-        verify(checkoutService, times(1)).completeCheckoutSession(any(), any());
+        verify(checkoutService, times(1)).completeCheckoutSession(any());
         verify(checkoutMapper, times(1)).toDto(any());
     }
 

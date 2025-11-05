@@ -53,7 +53,7 @@ public class CheckoutController {
 
     @PostMapping("/complete")
     public CheckoutSessionDto completeCheckoutSession(@Valid @RequestBody CompleteCheckoutSessionRequest request) {
-        var checkoutSession = checkoutService.completeCheckoutSession(request.checkoutSessionId(), request.action());
+        var checkoutSession = checkoutService.completeCheckoutSession(request.checkoutSessionId());
 
         return checkoutMapper.toDto(checkoutSession);
     }
