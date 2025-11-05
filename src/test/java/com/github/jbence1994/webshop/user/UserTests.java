@@ -76,29 +76,6 @@ public class UserTests {
     }
 
     @Test
-    public void getRewardPointsTest() {
-        var result = user1.getRewardPoints();
-
-        assertThat(result, equalTo(0));
-    }
-
-    @Test
-    public void earnRewardPointsTest() {
-        user1.earnRewardPoints(100);
-
-        assertThat(user1.getRewardPoints(), equalTo(100));
-    }
-
-    @Test
-    public void burnRewardPointsTest() {
-        user1.earnRewardPoints(100);
-
-        user1.burnRewardPoints(50);
-
-        assertThat(user1.getRewardPoints(), equalTo(50));
-    }
-
-    @Test
     public void getMembershipTierTest() {
         var result = user1.getMembershipTier();
 

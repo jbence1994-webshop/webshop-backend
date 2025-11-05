@@ -18,7 +18,6 @@ public final class ProfileDtoTestObject {
                 DATE_OF_BIRTH,
                 PHONE_NUMBER,
                 0,
-                0,
                 MembershipTier.BRONZE.name(),
                 addressDto(),
                 new ArrayList<>()
