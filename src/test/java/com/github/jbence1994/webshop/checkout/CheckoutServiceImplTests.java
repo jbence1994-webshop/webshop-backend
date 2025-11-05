@@ -55,9 +55,6 @@ import static org.mockito.Mockito.when;
 public class CheckoutServiceImplTests {
 
     @Mock
-    private LoyaltyConversionService loyaltyConversionService;
-
-    @Mock
     private CheckoutQueryService checkoutQueryService;
 
     @Mock
@@ -71,6 +68,9 @@ public class CheckoutServiceImplTests {
 
     @Mock
     private CartQueryService cartQueryService;
+
+    @Mock
+    private LoyaltyService loyaltyService;
 
     @Mock
     private PaymentGateway paymentGateway;
@@ -211,48 +211,45 @@ public class CheckoutServiceImplTests {
     }
 
     @Test
-    public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon_RewardPointsActionEarn() {
+    public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
         when(authService.getCurrentUser()).thenReturn(user());
-        when(loyaltyConversionService.calculateRewardPoints(any(), any())).thenReturn(74);
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
-        when(loyaltyConversionService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
+        when(loyaltyService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
         when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
-        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN);
+        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
 
         assertThat(result, not(nullValue()));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, times(1)).getCurrentUser();
-        verify(loyaltyConversionService, times(1)).calculateRewardPoints(any(), any());
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
-        verify(loyaltyConversionService, times(1)).calculateLoyaltyPoints(any());
+        verify(loyaltyService, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
 
     @Test
-    public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon_RewardPointsActionBurn() {
+    public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(authService.getCurrentUser()).thenReturn(userWithAvatar());
         doNothing().when(orderService).createOrder(any());
-        when(loyaltyConversionService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
+        when(loyaltyService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
         when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
-        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.BURN);
+        var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
 
         assertThat(result, not(nullValue()));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, times(1)).getCurrentUser();
-        verify(loyaltyConversionService, never()).calculateRewardPoints(any(), any());
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyConversionService, times(1)).calculateLoyaltyPoints(any());
+        verify(loyaltyService, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -263,17 +260,16 @@ public class CheckoutServiceImplTests {
 
         var result = assertThrows(
                 ExpiredCheckoutSessionException.class,
-                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN)
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
         );
 
         assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 has expired."));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, never()).getCurrentUser();
-        verify(loyaltyConversionService, never()).calculateRewardPoints(any(), any());
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyConversionService, never()).calculateLoyaltyPoints(any());
+        verify(loyaltyService, never()).calculateLoyaltyPoints(any());
         verify(paymentGateway, never()).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -284,17 +280,16 @@ public class CheckoutServiceImplTests {
 
         var result = assertThrows(
                 CheckoutSessionAlreadyCompletedException.class,
-                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN)
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
         );
 
         assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 already completed."));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, never()).getCurrentUser();
-        verify(loyaltyConversionService, never()).calculateRewardPoints(any(), any());
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyConversionService, never()).calculateLoyaltyPoints(any());
+        verify(loyaltyService, never()).calculateLoyaltyPoints(any());
         verify(paymentGateway, never()).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -305,17 +300,16 @@ public class CheckoutServiceImplTests {
 
         var result = assertThrows(
                 EmptyCartException.class,
-                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN)
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
         );
 
         assertThat(result.getMessage(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, never()).getCurrentUser();
-        verify(loyaltyConversionService, never()).calculateRewardPoints(any(), any());
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyConversionService, never()).calculateLoyaltyPoints(any());
+        verify(loyaltyService, never()).calculateLoyaltyPoints(any());
         verify(paymentGateway, never()).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -324,24 +318,22 @@ public class CheckoutServiceImplTests {
     public void completeCheckoutSessionTest_UnhappyPath_PaymentException() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(authService.getCurrentUser()).thenReturn(user());
-        when(loyaltyConversionService.calculateRewardPoints(any(), any())).thenReturn(74);
         doNothing().when(orderService).createOrder(any());
-        when(loyaltyConversionService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
+        when(loyaltyService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
         doThrow(new PaymentException("Payment exception.")).when(paymentGateway).createPaymentSession(any());
 
         var result = assertThrows(
                 PaymentException.class,
-                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID, RewardPointsAction.EARN)
+                () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
         );
 
         assertThat(result.getMessage(), equalTo("Payment exception."));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, times(1)).getCurrentUser();
-        verify(loyaltyConversionService, times(1)).calculateRewardPoints(any(), any());
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyConversionService, times(1)).calculateLoyaltyPoints(any());
+        verify(loyaltyService, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
         verify(orderService, times(1)).deleteOrder(any());
     }

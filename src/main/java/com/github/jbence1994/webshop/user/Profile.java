@@ -54,8 +54,6 @@ public class Profile {
 
     private int loyaltyPoints;
 
-    private int rewardPoints;
-
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
@@ -81,14 +79,6 @@ public class Profile {
 
     public void earnLoyaltyPoints(int value) {
         this.loyaltyPoints += value;
-    }
-
-    public void earnRewardPoints(int value) {
-        this.rewardPoints += value;
-    }
-
-    public void burnRewardPoints(int value) {
-        this.rewardPoints -= value;
     }
 
     public MembershipTier getMembershipTier() {
