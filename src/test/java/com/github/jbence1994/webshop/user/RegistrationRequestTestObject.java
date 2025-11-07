@@ -11,7 +11,7 @@ import static com.github.jbence1994.webshop.user.ProfileTestConstants.LAST_NAME;
 import static com.github.jbence1994.webshop.user.ProfileTestConstants.MIDDLE_NAME;
 import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMBER;
 import static com.github.jbence1994.webshop.user.UserTestConstants.CONFIRM_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_CONFIRM_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
 
@@ -62,7 +62,7 @@ public final class RegistrationRequestTestObject {
                 String confirmPassword
         ) {
             return new RegistrationRequest.UserDto(
-                    EMAIL,
+                    EMAIL_1,
                     password,
                     confirmPassword,
                     ProfileDtoTestObject.profileDto()
@@ -71,7 +71,7 @@ public final class RegistrationRequestTestObject {
 
         public static RegistrationRequest.UserDto notSanitizedUserDto() {
             return new RegistrationRequest.UserDto(
-                    " " + EMAIL + " ",
+                    " " + EMAIL_1 + " ",
                     " " + PASSWORD + " ",
                     " " + CONFIRM_PASSWORD + " ",
                     ProfileDtoTestObject.notSanitizedProfileDto()
@@ -80,7 +80,7 @@ public final class RegistrationRequestTestObject {
 
         public static RegistrationRequest.UserDto notSanitizedUserDtoWithNullMiddleName() {
             return new RegistrationRequest.UserDto(
-                    " " + EMAIL + " ",
+                    " " + EMAIL_1 + " ",
                     " " + PASSWORD + " ",
                     " " + CONFIRM_PASSWORD + " ",
                     ProfileDtoTestObject.notSanitizedProfileDtoWithNullMiddleName()

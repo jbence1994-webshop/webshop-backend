@@ -10,15 +10,13 @@ import static com.github.jbence1994.webshop.user.ProfileTestConstants.MIDDLE_NAM
 import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMBER;
 
 public final class ProfileDtoTestObject {
-    public static ProfileDto bronzeProfileDto() {
+    public static ProfileDto profileDto() {
         return new ProfileDto(
                 FIRST_NAME,
                 MIDDLE_NAME,
                 LAST_NAME,
                 DATE_OF_BIRTH,
                 PHONE_NUMBER,
-                0,
-                MembershipTier.BRONZE.name(),
                 addressDto(),
                 new ArrayList<>()
         );

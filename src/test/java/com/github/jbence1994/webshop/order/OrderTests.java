@@ -12,7 +12,7 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.c
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order2;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.comparesEqualTo;
@@ -31,7 +31,7 @@ public class OrderTests {
 
     @Test
     public void fromTests() {
-        var result = Order.from(user(), checkoutSession());
+        var result = Order.from(user1WithoutAvatar(), checkoutSession());
 
         assertThat(result, allOf(
                 hasProperty("totalPrice", comparesEqualTo(checkoutSession().getCartTotal())),

@@ -11,8 +11,6 @@ public record ProfileDto(
         String lastName,
         LocalDate dateOfBirth,
         String phoneNumber,
-        int loyaltyPoints,
-        String membershipTier,
         AddressDto address,
         List<WishlistProductDto> favoriteProducts
 ) {
