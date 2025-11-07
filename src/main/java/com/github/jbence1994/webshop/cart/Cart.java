@@ -51,7 +51,7 @@ public class Cart {
     public CartItem addItem(Product product) {
         var cartItem = getItem(product.getId())
                 .orElseGet(() -> {
-                    var newItem = new CartItem(product, 0, this);
+                    var newItem = CartItem.from(product, 0, this);
                     items.add(newItem);
                     return newItem;
                 });

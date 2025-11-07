@@ -39,10 +39,14 @@ public class CartItem {
     @Column(name = "quantity")
     private Integer quantity;
 
-    public CartItem(Product product, Integer quantity, Cart cart) {
-        this.product = product;
-        this.quantity = quantity;
-        this.cart = cart;
+    public static CartItem from(Product product, Integer quantity, Cart cart) {
+        var cartItem = new CartItem();
+
+        cartItem.product = product;
+        cartItem.quantity = quantity;
+        cartItem.cart = cart;
+
+        return cartItem;
     }
 
     public BigDecimal calculateSubTotal() {
