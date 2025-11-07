@@ -28,8 +28,8 @@ public class CartTotalAdjustmentStrategyFactoryTests {
 
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("cartTotalAdjustmentStrategyParams")
-    public void getCartTotalAdjustmentStrategyTests(DiscountType type, CartTotalAdjustmentStrategy instance) {
-        var result = CartTotalAdjustmentStrategyFactory.getCartTotalAdjustmentStrategy(type);
+    public void getCartTotalAdjustmentStrategyTest(DiscountType discountType, CartTotalAdjustmentStrategy instance) {
+        var result = CartTotalAdjustmentStrategyFactory.getCartTotalAdjustmentStrategy(discountType);
 
         assertThat(result.getClass(), equalTo(instance.getClass()));
     }
