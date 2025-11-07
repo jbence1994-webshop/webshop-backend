@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_URL;
-import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CREATED_AT;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 
 public final class CheckoutSessionDtoTestObject {
@@ -33,7 +32,6 @@ public final class CheckoutSessionDtoTestObject {
                 BigDecimal.valueOf(49.99),
                 appliedCoupon,
                 CheckoutStatus.PENDING.name(),
-                CREATED_AT,
                 orderId,
                 checkoutUrl
         );
