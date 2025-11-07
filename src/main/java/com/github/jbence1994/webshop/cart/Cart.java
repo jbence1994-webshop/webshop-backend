@@ -49,16 +49,16 @@ public class Cart {
     }
 
     public CartItem addItem(Product product) {
-        var cartItem = getItem(product.getId())
+        var item = getItem(product.getId())
                 .orElseGet(() -> {
                     var newItem = new CartItem(product, 0, this);
                     items.add(newItem);
                     return newItem;
                 });
 
-        cartItem.setQuantity(cartItem.getQuantity() + 1);
+        item.setQuantity(item.getQuantity() + 1);
 
-        return cartItem;
+        return item;
     }
 
     public void removeItem(Long productId) {
