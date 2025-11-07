@@ -8,8 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,16 +32,16 @@ public class UserQueryServiceImplTests {
 
     @Test
     public void getUserTest_ById_HappyPath() {
-        when(userRepository.findById(any())).thenReturn(Optional.of(user()));
+        when(userRepository.findById(any())).thenReturn(Optional.of(user1WithoutAvatar()));
 
         var result = assertDoesNotThrow(() -> userQueryService.getUser(1L));
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
-                hasProperty("id", equalTo(user().getId())),
-                hasProperty("email", equalTo(user().getEmail())),
-                hasProperty("password", equalTo(user().getPassword())),
-                hasProperty("role", equalTo(user().getRole()))
+                hasProperty("id", equalTo(user1WithoutAvatar().getId())),
+                hasProperty("email", equalTo(user1WithoutAvatar().getEmail())),
+                hasProperty("password", equalTo(user1WithoutAvatar().getPassword())),
+                hasProperty("role", equalTo(user1WithoutAvatar().getRole()))
         ));
     }
 
@@ -59,16 +59,16 @@ public class UserQueryServiceImplTests {
 
     @Test
     public void getUserTest_ByEmail_HappyPath() {
-        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user()));
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user1WithoutAvatar()));
 
-        var result = assertDoesNotThrow(() -> userQueryService.getUser(EMAIL));
+        var result = assertDoesNotThrow(() -> userQueryService.getUser(EMAIL_1));
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
-                hasProperty("id", equalTo(user().getId())),
-                hasProperty("email", equalTo(user().getEmail())),
-                hasProperty("password", equalTo(user().getPassword())),
-                hasProperty("role", equalTo(user().getRole()))
+                hasProperty("id", equalTo(user1WithoutAvatar().getId())),
+                hasProperty("email", equalTo(user1WithoutAvatar().getEmail())),
+                hasProperty("password", equalTo(user1WithoutAvatar().getPassword())),
+                hasProperty("role", equalTo(user1WithoutAvatar().getRole()))
         ));
     }
 
@@ -78,7 +78,7 @@ public class UserQueryServiceImplTests {
 
         var result = assertThrows(
                 UserNotFoundException.class,
-                () -> userQueryService.getUser(EMAIL)
+                () -> userQueryService.getUser(EMAIL_1)
         );
 
         assertThat(result.getMessage(), equalTo("No user was found with the given e-mail: 'juhasz.bence.zsolt@gmail.com'."));

@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -54,7 +54,7 @@ public class CouponQueryServiceImplTests {
 
     @BeforeEach
     public void setUp() {
-        when(authService.getCurrentUser()).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
     }
 
     @Test
