@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         var rawTemporaryPassword = temporaryPasswordGenerator.generate();
         var hashedTemporaryPassword = passwordManager.encode(rawTemporaryPassword);
 
-        temporaryPasswordRepository.save(TemporaryPassword.of(hashedTemporaryPassword, user));
+        temporaryPasswordRepository.save(new TemporaryPassword(hashedTemporaryPassword, user));
 
         user.setPassword(hashedTemporaryPassword);
 

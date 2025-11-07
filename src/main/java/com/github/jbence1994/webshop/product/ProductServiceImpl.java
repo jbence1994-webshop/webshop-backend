@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
             var product = productQueryService.getProduct(id);
             var user = authService.getCurrentUser();
 
-            product.addRating(ProductRating.of(product, user.getProfile(), ratingValue));
+            product.addRating(new ProductRating(product, user.getProfile(), ratingValue));
 
             productRepository.save(product);
 
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
         var product = productQueryService.getProduct(id);
         var user = authService.getCurrentUser();
 
-        product.addReview(ProductReview.of(product, user.getProfile(), review));
+        product.addReview(new ProductReview(product, user.getProfile(), review));
 
         productRepository.save(product);
 
@@ -125,7 +125,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductReviewSummary createSummary(Product product) {
         var productReviewSummaryText = productReviewSummarizer.summarizeProductReviews(product.getId());
 
-        var productReviewSummary = ProductReviewSummary.of(product, productReviewSummaryText);
+        var productReviewSummary = new ProductReviewSummary(product, productReviewSummaryText);
 
         productReviewSummaryService.createProductReviewSummary(productReviewSummary);
 
