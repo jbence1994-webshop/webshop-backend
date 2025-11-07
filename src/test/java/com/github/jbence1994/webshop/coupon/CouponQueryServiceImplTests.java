@@ -24,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -110,7 +111,7 @@ public class CouponQueryServiceImplTests {
 
         var result = couponQueryService.isCouponRedeemed(couponCode);
 
-        assertThat(result, equalTo(expectedResult));
+        assertThat(result, is(expectedResult));
 
         verify(authService, times(1)).getCurrentUser();
         verify(couponRepository, times(1)).isCouponRedeemed(any(), any());
