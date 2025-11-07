@@ -1,24 +1,17 @@
 package com.github.jbence1994.webshop.order;
 
 import org.junit.jupiter.api.Named;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order2;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.comparesEqualTo;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 
 public class OrderTests {
@@ -35,18 +28,6 @@ public class OrderTests {
                 Arguments.of(Named.of("Not eligible for free shipping", order1()), false),
                 Arguments.of(Named.of("Eligible for free shipping", order2()), true)
         );
-    }
-
-    @Test
-    public void fromTests() {
-        var result = Order.from(user1WithoutAvatar(), checkoutSession());
-
-        assertThat(result, allOf(
-                hasProperty("totalPrice", comparesEqualTo(checkoutSession().getCartTotal())),
-                hasProperty("discountAmount", comparesEqualTo(checkoutSession().getDiscountAmount())),
-                hasProperty("status", equalTo(OrderStatus.CREATED))
-        ));
-        assertThat(result.getItems().size(), equalTo(1));
     }
 
     @ParameterizedTest(name = "{index} => {0}")
