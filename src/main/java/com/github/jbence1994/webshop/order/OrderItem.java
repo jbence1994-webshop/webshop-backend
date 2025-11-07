@@ -42,14 +42,10 @@ public class OrderItem {
 
     private BigDecimal subTotal;
 
-    public static OrderItem from(CartItem cartItem) {
-        var orderItem = new OrderItem();
-
-        orderItem.product = cartItem.getProduct();
-        orderItem.unitPrice = orderItem.product.getPrice();
-        orderItem.quantity = cartItem.getQuantity();
-        orderItem.subTotal = orderItem.unitPrice.multiply(BigDecimal.valueOf(orderItem.quantity));
-
-        return orderItem;
+    public OrderItem(CartItem cartItem) {
+        product = cartItem.getProduct();
+        unitPrice = product.getPrice();
+        quantity = cartItem.getQuantity();
+        subTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
 }

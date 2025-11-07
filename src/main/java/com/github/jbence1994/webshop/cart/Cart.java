@@ -86,7 +86,7 @@ public class Cart {
     public List<OrderItem> mapCartItemsToOrderItems() {
         var orderItems = new ArrayList<OrderItem>();
 
-        items.forEach(item -> orderItems.add(OrderItem.from(item)));
+        items.forEach(item -> orderItems.add(new OrderItem(item)));
 
         return orderItems;
     }

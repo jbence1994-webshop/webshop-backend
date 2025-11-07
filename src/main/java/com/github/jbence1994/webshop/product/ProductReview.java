@@ -43,13 +43,9 @@ public class ProductReview {
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
-    public static ProductReview of(Product product, Profile profile, String text) {
-        var productReview = new ProductReview();
-
-        productReview.product = product;
-        productReview.profile = profile;
-        productReview.text = text;
-
-        return productReview;
+    public ProductReview(Product product, Profile profile, String text) {
+        this.product = product;
+        this.profile = profile;
+        this.text = text;
     }
 }
