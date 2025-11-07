@@ -17,7 +17,7 @@ import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMB
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequestWithNullMiddleName;
 import static com.github.jbence1994.webshop.user.UserTestConstants.CONFIRM_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -34,7 +34,7 @@ public class RegistrationRequestSanitizerTests {
     public void sanitizeTest_1() {
         var result = registrationRequestSanitizer.sanitize(notSanitizedRegistrationRequest());
 
-        assertThat(result.user().email(), equalTo(EMAIL));
+        assertThat(result.user().email(), equalTo(EMAIL_1));
         assertThat(result.user().password(), equalTo(PASSWORD));
         assertThat(result.user().confirmPassword(), equalTo(CONFIRM_PASSWORD));
 
@@ -54,7 +54,7 @@ public class RegistrationRequestSanitizerTests {
     public void sanitizeTest_2() {
         var result = registrationRequestSanitizer.sanitize(notSanitizedRegistrationRequestWithNullMiddleName());
 
-        assertThat(result.user().email(), equalTo(EMAIL));
+        assertThat(result.user().email(), equalTo(EMAIL_1));
         assertThat(result.user().password(), equalTo(PASSWORD));
         assertThat(result.user().confirmPassword(), equalTo(CONFIRM_PASSWORD));
 

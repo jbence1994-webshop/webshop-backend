@@ -27,7 +27,6 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.c
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
-import static com.github.jbence1994.webshop.checkout.LoyaltyTestConstants.LOYALTY_POINTS_RATE;
 import static com.github.jbence1994.webshop.checkout.PaymentResultTestObject.paymentIntentSucceeded;
 import static com.github.jbence1994.webshop.checkout.PaymentSessionResponseTestObject.paymentSessionResponse;
 import static com.github.jbence1994.webshop.checkout.WebhookRequestTestObject.webhookRequest;
@@ -35,8 +34,8 @@ import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
-import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -68,9 +67,6 @@ public class CheckoutServiceImplTests {
 
     @Mock
     private CartQueryService cartQueryService;
-
-    @Mock
-    private LoyaltyService loyaltyService;
 
     @Mock
     private PaymentGateway paymentGateway;
@@ -213,10 +209,9 @@ public class CheckoutServiceImplTests {
     @Test
     public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
-        when(authService.getCurrentUser()).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
-        when(loyaltyService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
         when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
         var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
@@ -228,7 +223,6 @@ public class CheckoutServiceImplTests {
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
         verify(couponService, times(1)).redeemCoupon(any(), any(), any());
-        verify(loyaltyService, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -236,9 +230,8 @@ public class CheckoutServiceImplTests {
     @Test
     public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
-        when(authService.getCurrentUser()).thenReturn(userWithAvatar());
+        when(authService.getCurrentUser()).thenReturn(user1WithAvatar());
         doNothing().when(orderService).createOrder(any());
-        when(loyaltyService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
         when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
         var result = checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID);
@@ -249,7 +242,6 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyService, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -269,7 +261,6 @@ public class CheckoutServiceImplTests {
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyService, never()).calculateLoyaltyPoints(any());
         verify(paymentGateway, never()).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -289,7 +280,6 @@ public class CheckoutServiceImplTests {
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyService, never()).calculateLoyaltyPoints(any());
         verify(paymentGateway, never()).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -309,7 +299,6 @@ public class CheckoutServiceImplTests {
         verify(authService, never()).getCurrentUser();
         verify(orderService, never()).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyService, never()).calculateLoyaltyPoints(any());
         verify(paymentGateway, never()).createPaymentSession(any());
         verify(orderService, never()).deleteOrder(any());
     }
@@ -317,9 +306,8 @@ public class CheckoutServiceImplTests {
     @Test
     public void completeCheckoutSessionTest_UnhappyPath_PaymentException() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
-        when(authService.getCurrentUser()).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
         doNothing().when(orderService).createOrder(any());
-        when(loyaltyService.calculateLoyaltyPoints(any())).thenReturn(LOYALTY_POINTS_RATE);
         doThrow(new PaymentException("Payment exception.")).when(paymentGateway).createPaymentSession(any());
 
         var result = assertThrows(
@@ -333,7 +321,6 @@ public class CheckoutServiceImplTests {
         verify(authService, times(1)).getCurrentUser();
         verify(orderService, times(1)).createOrder(any());
         verify(couponService, never()).redeemCoupon(any(), any(), any());
-        verify(loyaltyService, times(1)).calculateLoyaltyPoints(any());
         verify(paymentGateway, times(1)).createPaymentSession(any());
         verify(orderService, times(1)).deleteOrder(any());
     }

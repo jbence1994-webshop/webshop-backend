@@ -11,9 +11,8 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
-import static com.github.jbence1994.webshop.user.MembershipTier.BRONZE;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
-import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -21,13 +20,13 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
 public class UserTests {
-    private final User user1 = user();
-    private final User user2 = userWithAvatar();
+    private final User user1 = user1WithoutAvatar();
+    private final User user2 = user1WithAvatar();
 
     private static Stream<Arguments> getProfileAvatarTestParams() {
         return Stream.of(
-                Arguments.of(Named.of("User with avatar", userWithAvatar()), true, false),
-                Arguments.of(Named.of("User without avatar", user()), false, true)
+                Arguments.of(Named.of("User with avatar", user1WithAvatar()), true, false),
+                Arguments.of(Named.of("User without avatar", user1WithoutAvatar()), false, true)
         );
     }
 
@@ -66,20 +65,6 @@ public class UserTests {
 
         assertThat(result.isPresent(), is(isPresent));
         assertThat(result.isEmpty(), is(isEmpty));
-    }
-
-    @Test
-    public void earnLoyaltyPointsTest() {
-        user1.earnLoyaltyPoints(100);
-
-        assertThat(user1.getProfile().getLoyaltyPoints(), equalTo(100));
-    }
-
-    @Test
-    public void getMembershipTierTest() {
-        var result = user1.getMembershipTier();
-
-        assertThat(result, equalTo(BRONZE));
     }
 
     @Test

@@ -6,8 +6,7 @@ import java.util.List;
 import static com.github.jbence1994.webshop.order.OrderItemTestObject.orderItem;
 import static com.github.jbence1994.webshop.order.OrderTestConstants.CREATED_AT;
 import static com.github.jbence1994.webshop.order.OrderTestConstants.DISCOUNT_AMOUNT;
-import static com.github.jbence1994.webshop.order.OrderTestConstants.EARNED_LOYALTY_POINTS;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 
 public final class OrderTestObject {
     public static Order order1() {
@@ -29,11 +28,10 @@ public final class OrderTestObject {
     ) {
         return new Order(
                 1L,
-                user(),
+                user1WithoutAvatar(),
                 totalPrice,
                 DISCOUNT_AMOUNT,
                 orderStatus,
-                EARNED_LOYALTY_POINTS,
                 CREATED_AT,
                 orderItems
         );

@@ -1,7 +1,6 @@
 package com.github.jbence1994.webshop;
 
 import com.github.jbence1994.webshop.checkout.FreeShippingConfig;
-import com.github.jbence1994.webshop.checkout.LoyaltyPointsConfig;
 import com.github.jbence1994.webshop.common.ClientAppConfig;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
 import com.github.jbence1994.webshop.common.WebshopNameConfig;
@@ -13,7 +12,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties(value = {
         WebshopEmailAddressConfig.class,
-        LoyaltyPointsConfig.class,
         ImageUploadsConfig.class,
         FreeShippingConfig.class,
         WebshopNameConfig.class,

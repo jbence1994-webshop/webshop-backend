@@ -17,8 +17,8 @@ import java.io.ByteArrayInputStream;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.FILE_SIZE;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PROFILE_AVATAR_DIRECTORY;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
-import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -58,8 +58,8 @@ public class ProfileAvatarServiceTests {
     @InjectMocks
     private ProfileAvatarService profileAvatarService;
 
-    private final User userWithoutAvatar = spy(user());
-    private final User user = spy(userWithAvatar());
+    private final User userWithoutAvatar = spy(user1WithoutAvatar());
+    private final User user = spy(user1WithAvatar());
     private final ImageUpload image = mock(ImageUpload.class);
 
     @BeforeEach
