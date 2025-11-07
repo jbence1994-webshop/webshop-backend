@@ -12,6 +12,7 @@ import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.c
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order2;
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -21,6 +22,13 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 
 public class OrderTests {
+
+    private static Stream<Arguments> customerEmailParams() {
+        return Stream.of(
+                Arguments.of(Named.of(EMAIL_1, EMAIL_1), true),
+                Arguments.of(Named.of("example@gmail.com", "example@gmail.com"), false)
+        );
+    }
 
     private static Stream<Arguments> isEligibleForFreeShippingTestParams() {
         return Stream.of(
@@ -39,6 +47,14 @@ public class OrderTests {
                 hasProperty("status", equalTo(OrderStatus.CREATED))
         ));
         assertThat(result.getItems().size(), equalTo(1));
+    }
+
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("customerEmailParams")
+    public void isPlacesByTests(String customerEmail, boolean expectedResult) {
+        var result = order1().isPlacedBy(customerEmail);
+
+        assertThat(result, is(expectedResult));
     }
 
     @ParameterizedTest(name = "{index} => {0}")
