@@ -74,14 +74,6 @@ public class User {
         return profile.getProfileAvatar();
     }
 
-    public void earnLoyaltyPoints(int value) {
-        profile.earnLoyaltyPoints(value);
-    }
-
-    public MembershipTier getMembershipTier() {
-        return profile.getMembershipTier();
-    }
-
     public void addFavoriteProduct(Product product) {
         profile.addFavoriteProduct(product);
     }

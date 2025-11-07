@@ -24,7 +24,6 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CouponQueryService couponQueryService;
     private final OrderQueryService orderQueryService;
     private final CartQueryService cartQueryService;
-    private final LoyaltyService loyaltyService;
     private final PaymentGateway paymentGateway;
     private final CouponService couponService;
     private final OrderService orderService;
@@ -122,10 +121,6 @@ public class CheckoutServiceImpl implements CheckoutService {
                                 order.getId()
                         )
                 );
-
-        var loyaltyPoints = loyaltyService.calculateLoyaltyPoints(order.getTotalPrice());
-        user.earnLoyaltyPoints(loyaltyPoints);
-        order.setLoyaltyPoints(loyaltyPoints);
 
         try {
             var paymentSessionRequest = new PaymentSessionRequest(checkoutSession, order);
