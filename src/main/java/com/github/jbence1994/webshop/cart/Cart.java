@@ -49,16 +49,16 @@ public class Cart {
     }
 
     public CartItem addItem(Product product) {
-        var cartItem = getItem(product.getId())
+        var item = getItem(product.getId())
                 .orElseGet(() -> {
                     var newItem = new CartItem(product, 0, this);
                     items.add(newItem);
                     return newItem;
                 });
 
-        cartItem.setQuantity(cartItem.getQuantity() + 1);
+        item.setQuantity(item.getQuantity() + 1);
 
-        return cartItem;
+        return item;
     }
 
     public void removeItem(Long productId) {
@@ -86,7 +86,7 @@ public class Cart {
     public List<OrderItem> mapCartItemsToOrderItems() {
         var orderItems = new ArrayList<OrderItem>();
 
-        items.forEach(item -> orderItems.add(OrderItem.from(item)));
+        items.forEach(item -> orderItems.add(new OrderItem(item)));
 
         return orderItems;
     }

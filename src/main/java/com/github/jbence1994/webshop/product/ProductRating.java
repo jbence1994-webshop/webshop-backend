@@ -35,13 +35,9 @@ public class ProductRating {
 
     private Byte value;
 
-    public static ProductRating of(Product product, Profile profile, Byte value) {
-        var productRating = new ProductRating();
-
-        productRating.product = product;
-        productRating.profile = profile;
-        productRating.value = value;
-
-        return productRating;
+    public ProductRating(Product product, Profile profile, Byte value) {
+        this.product = product;
+        this.profile = profile;
+        this.value = value;
     }
 }
