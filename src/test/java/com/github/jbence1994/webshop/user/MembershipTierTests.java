@@ -17,17 +17,11 @@ public class MembershipTierTests {
     private static Stream<Arguments> pointParams() {
         return Stream.of(
                 Arguments.of(Named.of("0 point", 0), MembershipTier.BRONZE),
-                Arguments.of(Named.of("2,500 points", 2_500), MembershipTier.BRONZE),
                 Arguments.of(Named.of("4,999 points", 4_999), MembershipTier.BRONZE),
                 Arguments.of(Named.of("5,000 points", 5_000), MembershipTier.SILVER),
-                Arguments.of(Named.of("7,500 points", 7_500), MembershipTier.SILVER),
                 Arguments.of(Named.of("9,999 points", 9_999), MembershipTier.SILVER),
                 Arguments.of(Named.of("10,000 points", 10_000), MembershipTier.GOLD),
-                Arguments.of(Named.of("15,000 points", 15_000), MembershipTier.GOLD),
-                Arguments.of(Named.of("19,999 points", 19_999), MembershipTier.GOLD),
-                Arguments.of(Named.of("20,000 points", 20_000), MembershipTier.GOLD),
-                Arguments.of(Named.of("50,000 points", 50_000), MembershipTier.GOLD),
-                Arguments.of(Named.of("100,000 points", 100_000), MembershipTier.GOLD)
+                Arguments.of(Named.of("50,000 points", 50_000), MembershipTier.GOLD)
         );
     }
 

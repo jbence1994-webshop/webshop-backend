@@ -52,6 +52,8 @@ public class Profile {
 
     private String avatarFileName;
 
+    private int loyaltyPoints;
+
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
@@ -73,6 +75,10 @@ public class Profile {
 
     public Optional<String> getProfileAvatar() {
         return Optional.ofNullable(avatarFileName);
+    }
+
+    public MembershipTier getMembershipTier() {
+        return MembershipTier.fromPoints(loyaltyPoints);
     }
 
     public void addFavoriteProduct(Product product) {

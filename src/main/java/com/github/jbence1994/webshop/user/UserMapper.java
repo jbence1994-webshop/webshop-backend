@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     UserDto toUserDto(User user);
 
+    @Mapping(target = "membershipTier", expression = "java(profile.getMembershipTier().name())")
     ProfileDto toProfileDto(Profile profile);
 
     AddressDto toAddressDto(Address address);
@@ -25,6 +26,7 @@ public interface UserMapper {
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "avatarFileName", ignore = true)
+    @Mapping(target = "loyaltyPoints", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
