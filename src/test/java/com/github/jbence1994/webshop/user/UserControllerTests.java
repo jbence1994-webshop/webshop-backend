@@ -19,8 +19,8 @@ import static com.github.jbence1994.webshop.user.RegistrationResponseTestObject.
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.notSanitizedResetPasswordRequest;
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequest;
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
-import static com.github.jbence1994.webshop.user.UserTestObject.userAfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1AfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -62,7 +62,7 @@ public class UserControllerTests {
 
     @Test
     public void getUserTest_HappyPath() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user());
+        when(userQueryService.getUser(anyLong())).thenReturn(user1WithoutAvatar());
         when(userMapper.toUserDto(any())).thenReturn(userDto());
 
         var result = userController.getUser(1L);
@@ -74,8 +74,6 @@ public class UserControllerTests {
         assertThat(result.profile().lastName(), equalTo(userDto().profile().lastName()));
         assertThat(result.profile().dateOfBirth(), equalTo(userDto().profile().dateOfBirth()));
         assertThat(result.profile().phoneNumber(), equalTo(userDto().profile().phoneNumber()));
-        assertThat(result.profile().loyaltyPoints(), equalTo(userDto().profile().loyaltyPoints()));
-        assertThat(result.profile().membershipTier(), equalTo(userDto().profile().membershipTier()));
         assertThat(result.profile().address().addressLine(), equalTo(userDto().profile().address().addressLine()));
         assertThat(result.profile().address().municipality(), equalTo(userDto().profile().address().municipality()));
         assertThat(result.profile().address().province(), equalTo(userDto().profile().address().province()));
@@ -100,8 +98,8 @@ public class UserControllerTests {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
         when(userMapper.toAddress(any())).thenReturn(addressAfterMappingFromDto());
         when(userMapper.toProfile(any())).thenReturn(profileAfterMappingFromDto());
-        when(userMapper.toUser(any())).thenReturn(userAfterMappingFromDto());
-        when(userService.registerUser(any())).thenReturn(user());
+        when(userMapper.toUser(any())).thenReturn(user1AfterMappingFromDto());
+        when(userService.registerUser(any())).thenReturn(user1WithoutAvatar());
         when(userMapper.toRegistrationResponse(any())).thenReturn(registrationResponse());
 
         var result = userController.registerUser(notSanitizedRegistrationRequest());

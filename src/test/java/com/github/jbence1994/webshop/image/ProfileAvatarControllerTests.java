@@ -13,8 +13,8 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_URL;
 import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpegImageUpload;
 import static com.github.jbence1994.webshop.image.MultipartFileTestObject.multipartFile;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
-import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -58,8 +58,8 @@ public class ProfileAvatarControllerTests {
     }
 
     @Test
-    public void getProfileAvatarTest_HappyPath_ProfileHaveAvatar() {
-        when(userQueryService.getUser(anyLong())).thenReturn(userWithAvatar());
+    public void getProfileAvatarTest_HappyPath_ProfileWithAvatar() {
+        when(userQueryService.getUser(anyLong())).thenReturn(user1WithAvatar());
         when(imageUrlBuilder.buildUrl(any())).thenReturn(AVATAR_URL);
 
         var result = profileAvatarController.getProfileAvatar(1L);
@@ -69,8 +69,8 @@ public class ProfileAvatarControllerTests {
     }
 
     @Test
-    public void getProfileAvatarTest_UnhappyPath_ProfileDontHaveAvatar() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user());
+    public void getProfileAvatarTest_UnhappyPath_ProfileWithoutAvatar() {
+        when(userQueryService.getUser(anyLong())).thenReturn(user1WithoutAvatar());
 
         var result = profileAvatarController.getProfileAvatar(1L);
 
