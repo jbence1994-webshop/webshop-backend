@@ -115,7 +115,13 @@ public class CheckoutServiceImpl implements CheckoutService {
         orderService.createOrder(order);
 
         checkoutSession.getAppliedCoupon()
-                .ifPresent(coupon -> couponService.redeemCoupon(user.getId(), coupon.getCode(), order.getId()));
+                .ifPresent(
+                        coupon -> couponService.redeemCoupon(
+                                user.getId(),
+                                coupon.getCode(),
+                                order.getId()
+                        )
+                );
 
         var loyaltyPoints = loyaltyService.calculateLoyaltyPoints(order.getTotalPrice());
         user.earnLoyaltyPoints(loyaltyPoints);
