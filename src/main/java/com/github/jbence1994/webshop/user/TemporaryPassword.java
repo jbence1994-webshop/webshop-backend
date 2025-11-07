@@ -34,14 +34,10 @@ public class TemporaryPassword {
 
     private LocalDateTime expirationDate;
 
-    public static TemporaryPassword of(String password, User user) {
-        var temporaryPassword = new TemporaryPassword();
-
-        temporaryPassword.password = password;
-        temporaryPassword.user = user;
-        temporaryPassword.expirationDate = LocalDateTime.now().plusMinutes(15);
-
-        return temporaryPassword;
+    public TemporaryPassword(String password, User user) {
+        this.password = password;
+        this.user = user;
+        this.expirationDate = LocalDateTime.now().plusMinutes(15);
     }
 
     public boolean isExpired() {

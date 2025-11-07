@@ -56,10 +56,6 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public boolean isPlacedBy(String customerEmail) {
-        return customerEmail.equals(customer.getEmail());
-    }
-
     public static Order from(User customer, CheckoutSession checkoutSession) {
         var order = new Order();
 
@@ -77,6 +73,10 @@ public class Order {
         );
 
         return order;
+    }
+
+    public boolean isPlacedBy(String customerEmail) {
+        return customerEmail.equals(customer.getEmail());
     }
 
     public boolean isEligibleForFreeShipping(BigDecimal threshold) {
