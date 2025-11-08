@@ -13,7 +13,7 @@ public class FixedAmountCartTotalAdjustmentStrategyTests {
     @Test
     public void adjustCartTotalTest() {
         var result = CartTotalAdjustmentStrategyFactory
-                .getCartTotalAdjustmentStrategy(DiscountType.FIXED_AMOUNT)
+                .getStrategy(DiscountType.FIXED_AMOUNT)
                 .adjustCartTotal(BigDecimal.valueOf(49.99), BigDecimal.valueOf(15.00));
 
         assertThat(result.getCartTotal(), comparesEqualTo(BigDecimal.valueOf(34.99)));
