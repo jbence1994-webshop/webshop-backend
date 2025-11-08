@@ -113,14 +113,13 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         orderService.createOrder(order);
 
-        checkoutSession.getAppliedCoupon()
-                .ifPresent(
-                        coupon -> couponService.redeemCoupon(
-                                user.getId(),
-                                coupon.getCode(),
-                                order.getId()
-                        )
-                );
+        if (checkoutSession.hasCouponApplied()) {
+            couponService.redeemCoupon(
+                    user.getId(),
+                    checkoutSession.getAppliedCoupon().getCode(),
+                    order.getId()
+            );
+        }
 
         try {
             var paymentSessionRequest = new PaymentSessionRequest(checkoutSession, order);

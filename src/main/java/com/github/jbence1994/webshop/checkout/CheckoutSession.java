@@ -23,7 +23,6 @@ import org.hibernate.annotations.GeneratedColumn;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -82,8 +81,8 @@ public class CheckoutSession {
         return checkoutSession;
     }
 
-    public Optional<Coupon> getAppliedCoupon() {
-        return Optional.ofNullable(appliedCoupon);
+    public boolean hasCouponApplied() {
+        return appliedCoupon != null;
     }
 
     public void applyCoupon(Coupon coupon) {
