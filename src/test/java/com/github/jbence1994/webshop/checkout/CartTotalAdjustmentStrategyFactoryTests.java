@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class CartTotalAdjustmentStrategyFactoryTests {
 
-    private static Stream<Arguments> cartTotalAdjustmentStrategyParams() {
+    private static Stream<Arguments> strategyParams() {
         return Stream.of(
                 Arguments.of(
                         Named.of("Is instance of FixedAmountCartTotalAdjustmentStrategy", DiscountType.FIXED_AMOUNT),
@@ -27,9 +27,9 @@ public class CartTotalAdjustmentStrategyFactoryTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("cartTotalAdjustmentStrategyParams")
-    public void getCartTotalAdjustmentStrategyTest(DiscountType discountType, CartTotalAdjustmentStrategy instance) {
-        var result = CartTotalAdjustmentStrategyFactory.getCartTotalAdjustmentStrategy(discountType);
+    @MethodSource("strategyParams")
+    public void getStrategyTests(DiscountType type, CartTotalAdjustmentStrategy instance) {
+        var result = CartTotalAdjustmentStrategyFactory.getStrategy(type);
 
         assertThat(result.getClass(), equalTo(instance.getClass()));
     }
