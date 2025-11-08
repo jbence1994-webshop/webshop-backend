@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.checkout;
+package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.DiscountType;
 import org.junit.jupiter.api.Named;

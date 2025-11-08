@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.cart.Cart;
+import com.github.jbence1994.webshop.cart.CartTotalAdjustmentStrategyFactory;
 import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.order.Order;
 import jakarta.persistence.Column;
