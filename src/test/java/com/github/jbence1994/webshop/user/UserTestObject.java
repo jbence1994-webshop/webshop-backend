@@ -1,12 +1,14 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.loyalty.LoyaltyPoint;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.jbence1994.webshop.user.LoyaltyPointTestObject.loyaltyPoint1;
-import static com.github.jbence1994.webshop.user.LoyaltyPointTestObject.loyaltyPoint2;
-import static com.github.jbence1994.webshop.user.LoyaltyPointTestObject.loyaltyPoint3;
+import static com.github.jbence1994.webshop.loyalty.LoyaltyPointTestObject.loyaltyPoint1;
+import static com.github.jbence1994.webshop.loyalty.LoyaltyPointTestObject.loyaltyPoint2;
+import static com.github.jbence1994.webshop.loyalty.LoyaltyPointTestObject.loyaltyPoint3;
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profileWithAvatar;
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profileWithoutAvatar;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;

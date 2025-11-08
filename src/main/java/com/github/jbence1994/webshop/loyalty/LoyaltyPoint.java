@@ -1,6 +1,7 @@
-package com.github.jbence1994.webshop.user;
+package com.github.jbence1994.webshop.loyalty;
 
 import com.github.jbence1994.webshop.order.Order;
+import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

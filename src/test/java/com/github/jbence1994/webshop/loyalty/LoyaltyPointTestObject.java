@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.user;
+package com.github.jbence1994.webshop.loyalty;
 
 import java.time.LocalDateTime;
 

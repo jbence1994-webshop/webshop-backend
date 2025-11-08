@@ -1,5 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.loyalty.MembershipTier;
+
 import static com.github.jbence1994.webshop.user.ProfileDtoTestObject.profileDto;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 

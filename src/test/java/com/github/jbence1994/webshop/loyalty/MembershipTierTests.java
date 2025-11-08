@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.user;
+package com.github.jbence1994.webshop.loyalty;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;

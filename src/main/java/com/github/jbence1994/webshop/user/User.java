@@ -1,6 +1,8 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.loyalty.LoyaltyPoint;
+import com.github.jbence1994.webshop.loyalty.MembershipTier;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
