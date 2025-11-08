@@ -91,7 +91,7 @@ public class CheckoutSession {
         this.cartTotal = originalCartTotal;
 
         var adjustedCartTotal = CartTotalAdjustmentStrategyFactory
-                .getCartTotalAdjustmentStrategy(appliedCoupon.getType())
+                .getStrategy(appliedCoupon.getType())
                 .adjustCartTotal(cartTotal, appliedCoupon.getValue());
 
         this.cartTotal = adjustedCartTotal.getCartTotal();
