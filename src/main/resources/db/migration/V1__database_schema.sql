@@ -280,15 +280,3 @@ CREATE TABLE IF NOT EXISTS loyalty_points
             ON DELETE NO ACTION
             ON UPDATE CASCADE
 );
-
-CREATE TABLE IF NOT EXISTS loyalty_points_transactions
-(
-    id         BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    order_id   BIGINT      NOT NULL,
-    action     VARCHAR(25) NOT NULL DEFAULT 'EARN',
-    created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_loyalty_points_transactions_orders
-        FOREIGN KEY (order_id) REFERENCES orders (id)
-            ON DELETE NO ACTION
-            ON UPDATE CASCADE
-);
