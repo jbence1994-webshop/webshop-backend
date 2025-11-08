@@ -14,7 +14,7 @@ public class CartTotalAdjustmentStrategyFactory {
             DiscountType.PERCENT_OFF, new PercentOffCartTotalAdjustmentStrategy()
     );
 
-    public static CartTotalAdjustmentStrategy getCartTotalAdjustmentStrategy(DiscountType type) {
+    public static CartTotalAdjustmentStrategy getStrategy(DiscountType type) {
         return CART_TOTAL_ADJUSTMENT_STRATEGIES.get(type);
     }
 }
