@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,9 @@ public class User {
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<Coupon> coupons = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LoyaltyPoint> loyaltyPoints = new ArrayList<>();
+
     public String getFirstName() {
         return profile.getFirstName();
     }
@@ -80,5 +84,15 @@ public class User {
 
     public void removeFavoriteProduct(Long productId) {
         profile.removeFavoriteProduct(productId);
+    }
+
+    public MembershipTier getMembershipTier() {
+        return MembershipTier.fromPoints(getLoyaltyPoints());
+    }
+
+    public int getLoyaltyPoints() {
+        return loyaltyPoints.stream()
+                .mapToInt(LoyaltyPoint::getAmount)
+                .reduce(0, Integer::sum);
     }
 }

@@ -13,34 +13,18 @@ import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMB
 
 public final class ProfileTestObject {
     public static Profile profileWithoutAvatar() {
-        return buildProfile(1L, null, 0);
+        return buildProfile(1L, null);
     }
 
     public static Profile profileWithAvatar() {
-        return buildProfile(1L, AVATAR_FILE_NAME, 0);
+        return buildProfile(1L, AVATAR_FILE_NAME);
     }
 
     public static Profile profileAfterMappingFromDto() {
-        return buildProfile(null, null, 0);
+        return buildProfile(null, null);
     }
 
-    public static Profile bronzeUser() {
-        return buildProfile(1L, null, 4_999);
-    }
-
-    public static Profile silverUser() {
-        return buildProfile(2L, null, 9_999);
-    }
-
-    public static Profile goldUser() {
-        return buildProfile(3L, null, 50_000);
-    }
-
-    private static Profile buildProfile(
-            Long userId,
-            String avatarFileName,
-            int loyaltyPoints
-    ) {
+    private static Profile buildProfile(Long userId, String avatarFileName) {
         return new Profile(
                 userId,
                 null,
@@ -50,7 +34,6 @@ public final class ProfileTestObject {
                 DATE_OF_BIRTH,
                 PHONE_NUMBER,
                 avatarFileName,
-                loyaltyPoints,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 address(),

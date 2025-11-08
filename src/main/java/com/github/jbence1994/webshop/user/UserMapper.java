@@ -5,9 +5,11 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+
+    @Mapping(target = "membershipTier", expression = "java(user.getMembershipTier().name())")
+    @Mapping(target = "loyaltyPoints", expression = "java(user.getLoyaltyPoints())")
     UserDto toUserDto(User user);
 
-    @Mapping(target = "membershipTier", expression = "java(profile.getMembershipTier().name())")
     ProfileDto toProfileDto(Profile profile);
 
     AddressDto toAddressDto(Address address);
@@ -21,12 +23,12 @@ public interface UserMapper {
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "profileAvatar", ignore = true)
     @Mapping(target = "coupons", ignore = true)
+    @Mapping(target = "loyaltyPoints", ignore = true)
     User toUser(RegistrationRequest.UserDto user);
 
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "avatarFileName", ignore = true)
-    @Mapping(target = "loyaltyPoints", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)

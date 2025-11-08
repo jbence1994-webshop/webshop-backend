@@ -1,11 +1,8 @@
-package com.github.jbence1994.webshop.checkout;
+package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.order.Order;
-import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,16 +18,18 @@ import org.hibernate.annotations.GeneratedColumn;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "loyalty_points_transactions")
+@Table(name = "loyalty_points")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class LoyaltyPointsTransaction {
+public class LoyaltyPoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Integer amount;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -40,22 +39,16 @@ public class LoyaltyPointsTransaction {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @Enumerated(EnumType.STRING)
-    private LoyaltyPointsAction action;
-
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
     private LocalDateTime expirationDate;
 
-    public LoyaltyPointsTransaction(Order order, LoyaltyPointsAction action) {
+    public LoyaltyPoint(int amount, Order order) {
+        this.amount = amount;
         this.user = order.getCustomer();
         this.order = order;
-        this.action = action;
-
-        if (LoyaltyPointsAction.EARN.equals(action)) {
-            this.expirationDate = LocalDateTime.now().plusDays(365);
-        }
+        this.expirationDate = LocalDateTime.now().plusDays(365);
     }
 }

@@ -55,7 +55,6 @@ CREATE TABLE IF NOT EXISTS profiles
     date_of_birth    DATE         NOT NULL,
     phone_number     VARCHAR(25) UNIQUE,
     avatar_file_name VARCHAR(41) UNIQUE,
-    loyalty_points   INT UNSIGNED NOT NULL DEFAULT 0,
     created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_profiles_users
@@ -268,17 +267,26 @@ CREATE TABLE IF NOT EXISTS checkout_sessions
             ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS loyalty_points
+(
+    id              BIGINT       NOT NULL PRIMARY KEY,
+    amount          INT UNSIGNED NOT NULL,
+    user_id         BIGINT       NOT NULL,
+    order_id        BIGINT       NOT NULL,
+    created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expiration_date DATETIME     NOT NULL,
+    CONSTRAINT fk_loyalty_points_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS loyalty_points_transactions
 (
     id         BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    user_id    BIGINT      NOT NULL,
     order_id   BIGINT      NOT NULL,
     action     VARCHAR(25) NOT NULL DEFAULT 'EARN',
     created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_loyalty_points_transactions_users
-        FOREIGN KEY (user_id) REFERENCES users (id)
-            ON DELETE NO ACTION
-            ON UPDATE CASCADE,
     CONSTRAINT fk_loyalty_points_transactions_orders
         FOREIGN KEY (order_id) REFERENCES orders (id)
             ON DELETE NO ACTION
