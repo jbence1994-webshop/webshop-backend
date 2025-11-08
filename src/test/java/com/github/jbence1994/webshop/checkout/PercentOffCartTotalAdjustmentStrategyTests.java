@@ -13,7 +13,7 @@ public class PercentOffCartTotalAdjustmentStrategyTests {
     @Test
     public void adjustCartTotalTest() {
         var result = CartTotalAdjustmentStrategyFactory
-                .getCartTotalAdjustmentStrategy(DiscountType.PERCENT_OFF)
+                .getStrategy(DiscountType.PERCENT_OFF)
                 .adjustCartTotal(BigDecimal.valueOf(49.99), BigDecimal.valueOf(0.10));
 
         assertThat(result.getCartTotal(), comparesEqualTo(BigDecimal.valueOf(44.99)));
