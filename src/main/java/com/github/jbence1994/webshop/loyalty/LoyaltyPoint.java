@@ -50,6 +50,7 @@ public class LoyaltyPoint {
         this.amount = amount;
         this.user = order.getCustomer();
         this.order = order;
+        this.createdAt = LocalDateTime.now();
         this.expirationDate = LocalDateTime.now().plusDays(365);
     }
 }
