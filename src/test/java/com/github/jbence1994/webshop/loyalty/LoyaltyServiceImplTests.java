@@ -28,22 +28,22 @@ public class LoyaltyServiceImplTests {
     @InjectMocks
     private LoyaltyServiceImpl loyaltyService;
 
-    private static Stream<Arguments> calculateLoyaltyPointsTestParams() {
+    private static Stream<Arguments> calculateLoyaltyPointsAmountTestParams() {
         return Stream.of(
-                Arguments.of(Named.of("Cart total: $5.99, expected loyalty points: 9", BigDecimal.valueOf(5.99)), 1),
-                Arguments.of(Named.of("Cart total: $10.99, expected loyalty points: 9", BigDecimal.valueOf(10.99)), 2),
-                Arguments.of(Named.of("Cart total: $15.99, expected loyalty points: 9", BigDecimal.valueOf(15.99)), 3),
-                Arguments.of(Named.of("Cart total: $20.99, expected loyalty points: 9", BigDecimal.valueOf(20.99)), 4),
-                Arguments.of(Named.of("Cart total: $25.99, expected loyalty points: 9", BigDecimal.valueOf(25.99)), 5)
+                Arguments.of(Named.of("Order total: $5.99, expected loyalty points: 9", BigDecimal.valueOf(5.99)), 1),
+                Arguments.of(Named.of("Order total: $10.99, expected loyalty points: 9", BigDecimal.valueOf(10.99)), 2),
+                Arguments.of(Named.of("Order total: $15.99, expected loyalty points: 9", BigDecimal.valueOf(15.99)), 3),
+                Arguments.of(Named.of("Order total: $20.99, expected loyalty points: 9", BigDecimal.valueOf(20.99)), 4),
+                Arguments.of(Named.of("Order total: $25.99, expected loyalty points: 9", BigDecimal.valueOf(25.99)), 5)
         );
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("calculateLoyaltyPointsTestParams")
-    public void calculateLoyaltyPointsTests(BigDecimal cartTotal, int expectedLoyaltyPoints) {
+    @MethodSource("calculateLoyaltyPointsAmountTestParams")
+    public void calculateLoyaltyPointsAmountTests(BigDecimal orderTotal, int expectedLoyaltyPoints) {
         when(loyaltyConversionConfig.rate()).thenReturn(LOYALTY_CONVERSION_RATE);
 
-        var result = loyaltyService.calculateLoyaltyPoints(cartTotal);
+        var result = loyaltyService.calculateLoyaltyPointsAmount(orderTotal);
 
         assertThat(result, equalTo(expectedLoyaltyPoints));
 

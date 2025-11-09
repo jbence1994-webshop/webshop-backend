@@ -12,8 +12,8 @@ public class LoyaltyServiceImpl implements LoyaltyService {
     private final LoyaltyConversionConfig loyaltyConversionConfig;
 
     @Override
-    public int calculateLoyaltyPoints(BigDecimal cartTotal) {
-        return cartTotal
+    public int calculateLoyaltyPointsAmount(BigDecimal orderTotal) {
+        return orderTotal
                 .divide(loyaltyConversionConfig.rate(), 0, RoundingMode.DOWN)
                 .intValue();
     }
