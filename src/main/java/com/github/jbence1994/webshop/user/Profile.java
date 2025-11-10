@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -62,6 +63,9 @@ public class Profile {
 
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
+
+    @ManyToMany(mappedBy = "profiles", fetch = FetchType.EAGER)
+    private List<Coupon> coupons = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

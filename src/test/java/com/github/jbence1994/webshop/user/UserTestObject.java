@@ -3,8 +3,8 @@ package com.github.jbence1994.webshop.user;
 import com.github.jbence1994.webshop.loyalty.LoyaltyPoint;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 import static com.github.jbence1994.webshop.loyalty.LoyaltyPointTestObject.loyaltyPoint1;
 import static com.github.jbence1994.webshop.loyalty.LoyaltyPointTestObject.loyaltyPoint2;
@@ -61,7 +61,6 @@ public final class UserTestObject {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 profile,
-                new ArrayList<>(),
                 loyaltyPoints
         );
     }
