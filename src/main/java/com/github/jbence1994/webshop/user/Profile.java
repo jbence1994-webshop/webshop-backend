@@ -1,6 +1,8 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.coupon.Coupon;
+import com.github.jbence1994.webshop.loyalty.LoyaltyPoint;
+import com.github.jbence1994.webshop.loyalty.MembershipTier;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -67,6 +70,9 @@ public class Profile {
     @ManyToMany(mappedBy = "profiles", fetch = FetchType.EAGER)
     private List<Coupon> coupons = new ArrayList<>();
 
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LoyaltyPoint> loyaltyPoints = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "wishlist",
@@ -77,6 +83,16 @@ public class Profile {
 
     public Optional<String> getProfileAvatar() {
         return Optional.ofNullable(avatarFileName);
+    }
+
+    public MembershipTier getMembershipTier() {
+        return MembershipTier.fromPoints(getLoyaltyPoints());
+    }
+
+    public int getLoyaltyPoints() {
+        return loyaltyPoints.stream()
+                .mapToInt(LoyaltyPoint::getAmount)
+                .reduce(0, Integer::sum);
     }
 
     public void addFavoriteProduct(Product product) {

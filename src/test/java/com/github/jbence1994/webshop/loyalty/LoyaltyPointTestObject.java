@@ -18,9 +18,9 @@ public final class LoyaltyPointTestObject {
     private static LoyaltyPoint buildLoyaltyPoint(Long id, Integer amount) {
         return new LoyaltyPoint(
                 id,
+                null,
+                null,
                 amount,
-                null,
-                null,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusDays(365)
         );

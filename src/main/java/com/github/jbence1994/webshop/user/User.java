@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.user;
 
-import com.github.jbence1994.webshop.loyalty.LoyaltyPoint;
 import com.github.jbence1994.webshop.loyalty.MembershipTier;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
@@ -11,7 +10,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,8 +19,6 @@ import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -55,9 +51,6 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LoyaltyPoint> loyaltyPoints = new ArrayList<>();
-
     public String getFirstName() {
         return profile.getFirstName();
     }
@@ -74,21 +67,19 @@ public class User {
         return profile.getProfileAvatar();
     }
 
+    public MembershipTier getMembershipTier() {
+        return profile.getMembershipTier();
+    }
+
+    public int getLoyaltyPoints() {
+        return profile.getLoyaltyPoints();
+    }
+
     public void addFavoriteProduct(Product product) {
         profile.addFavoriteProduct(product);
     }
 
     public void removeFavoriteProduct(Long productId) {
         profile.removeFavoriteProduct(productId);
-    }
-
-    public MembershipTier getMembershipTier() {
-        return MembershipTier.fromPoints(getLoyaltyPoints());
-    }
-
-    public int getLoyaltyPoints() {
-        return loyaltyPoints.stream()
-                .mapToInt(LoyaltyPoint::getAmount)
-                .reduce(0, Integer::sum);
     }
 }
