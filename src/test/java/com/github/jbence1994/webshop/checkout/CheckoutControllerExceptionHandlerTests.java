@@ -71,6 +71,15 @@ public class CheckoutControllerExceptionHandlerTests {
     }
 
     @Test
+    public void handleCheckoutSessionAlreadyExistByCartIdExceptionTest() {
+        var result = checkoutControllerExceptionHandler.handleCheckoutSessionAlreadyExistsByCartIdException(new CheckoutSessionAlreadyExistsByCartIdException(CART_ID));
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().error(), equalTo("Checkout session with the given cart ID: 00492884-e657-4c6a-abaa-aef8f4240a69 already exists."));
+    }
+
+    @Test
     public void handleExpiredCheckoutSessionExceptionTest() {
         var result = checkoutControllerExceptionHandler.handleExpiredCheckoutSessionException(new ExpiredCheckoutSessionException(CHECKOUT_SESSION_ID));
 

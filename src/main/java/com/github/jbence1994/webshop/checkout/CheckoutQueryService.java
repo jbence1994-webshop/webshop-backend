@@ -4,4 +4,6 @@ import java.util.UUID;
 
 public interface CheckoutQueryService {
     CheckoutSession getCheckoutSession(UUID id);
+
+    boolean existsByCartId(UUID cartId);
 }

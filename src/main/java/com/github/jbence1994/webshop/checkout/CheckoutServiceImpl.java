@@ -37,6 +37,10 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new EmptyCartException(cartId);
         }
 
+        if (checkoutQueryService.existsByCartId(cartId)) {
+            throw new CheckoutSessionAlreadyExistsByCartIdException(cartId);
+        }
+
         var checkoutSession = CheckoutSession.from(cart);
 
         save(checkoutSession);
