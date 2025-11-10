@@ -18,4 +18,9 @@ public class CheckoutQueryServiceImpl implements CheckoutQueryService {
                 .findById(id)
                 .orElseThrow(() -> new CheckoutSessionNotFoundException(id));
     }
+
+    @Override
+    public boolean existsByCartId(UUID cartId) {
+        return checkoutRepository.existsByCartId(cartId);
+    }
 }
