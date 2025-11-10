@@ -38,6 +38,13 @@ public class CheckoutControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
 
+    @ExceptionHandler(exception = CheckoutSessionAlreadyExistsByCartIdException.class)
+    public ResponseEntity<ErrorDto> handleCheckoutSessionAlreadyExistsByCartIdException(
+            CheckoutSessionAlreadyExistsByCartIdException exception
+    ) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
+    }
+
     @ExceptionHandler(exception = ExpiredCheckoutSessionException.class)
     public ResponseEntity<ErrorDto> handleExpiredCheckoutSessionException(ExpiredCheckoutSessionException exception) {
         return ResponseEntity.status(HttpStatus.GONE).body(new ErrorDto(exception.getMessage()));

@@ -86,6 +86,7 @@ public class CheckoutServiceImplTests {
     @Test
     public void createCheckoutSession_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
+        when(checkoutQueryService.existsByCartId(any())).thenReturn(false);
         when(checkoutRepository.save(any())).thenReturn(checkoutSession());
 
         var result = checkoutService.createCheckoutSession(CART_ID);
@@ -93,6 +94,7 @@ public class CheckoutServiceImplTests {
         assertThat(result, not(nullValue()));
 
         verify(cartQueryService, times(1)).getCart(any());
+        verify(checkoutQueryService, times(1)).existsByCartId(any());
         verify(checkoutRepository, times(1)).save(any());
     }
 
@@ -108,6 +110,24 @@ public class CheckoutServiceImplTests {
         assertThat(result.getMessage(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
 
         verify(cartQueryService, times(1)).getCart(any());
+        verify(checkoutQueryService, never()).existsByCartId(any());
+        verify(checkoutRepository, never()).save(any());
+    }
+
+    @Test
+    public void createCheckoutSession_UnhappyPath_CheckoutSessionAlreadyExistsByCartIdException() {
+        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
+        when(checkoutQueryService.existsByCartId(any())).thenReturn(true);
+
+        var result = assertThrows(
+                CheckoutSessionAlreadyExistsByCartIdException.class,
+                () -> checkoutService.createCheckoutSession(CART_ID)
+        );
+
+        assertThat(result.getMessage(), equalTo("Checkout session with the given cart ID: 00492884-e657-4c6a-abaa-aef8f4240a69 already exists."));
+
+        verify(cartQueryService, times(1)).getCart(any());
+        verify(checkoutQueryService, times(1)).existsByCartId(any());
         verify(checkoutRepository, never()).save(any());
     }
 
