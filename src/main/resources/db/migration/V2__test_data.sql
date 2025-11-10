@@ -112,7 +112,7 @@ SET @couponCode := (SELECT code
                     FROM coupons
                     WHERE code = 'WELCOME10');
 
-INSERT INTO user_coupons (user_id, coupon_code)
+INSERT INTO profile_coupons (profile_id, coupon_code)
 VALUES (@userId, @couponCode);
 
 INSERT INTO product_ratings (product_id, profile_id, value)
