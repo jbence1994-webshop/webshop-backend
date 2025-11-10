@@ -19,7 +19,6 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "profileAvatar", ignore = true)
-    @Mapping(target = "coupons", ignore = true)
     User toUser(RegistrationRequest.UserDto user);
 
     @Mapping(target = "userId", ignore = true)
@@ -27,6 +26,7 @@ public interface UserMapper {
     @Mapping(target = "avatarFileName", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "coupons", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
     Profile toProfile(RegistrationRequest.ProfileDto profile);
 

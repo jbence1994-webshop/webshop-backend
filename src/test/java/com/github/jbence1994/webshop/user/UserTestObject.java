@@ -34,8 +34,7 @@ public final class UserTestObject {
                 role,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                profile,
-                null
+                profile
         );
     }
 }
