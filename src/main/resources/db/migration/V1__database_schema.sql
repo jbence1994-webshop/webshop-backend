@@ -269,14 +269,18 @@ CREATE TABLE IF NOT EXISTS checkout_sessions
 
 CREATE TABLE IF NOT EXISTS loyalty_points
 (
-    id              BIGINT       NOT NULL PRIMARY KEY,
-    amount          INT UNSIGNED NOT NULL,
     user_id         BIGINT       NOT NULL,
     order_id        BIGINT       NOT NULL,
+    amount          INT UNSIGNED NOT NULL,
     created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expiration_date DATETIME     NOT NULL,
+    PRIMARY KEY (user_id, order_id),
     CONSTRAINT fk_loyalty_points_users
         FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_loyalty_points_orders
+        FOREIGN KEY (order_id) REFERENCES orders (id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE
 );
