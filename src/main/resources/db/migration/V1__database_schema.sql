@@ -203,15 +203,15 @@ CREATE TABLE IF NOT EXISTS profile_coupons
     redeemed_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
     order_id    BIGINT,
     PRIMARY KEY (profile_id, coupon_code),
-    CONSTRAINT fk_user_coupons_profiles
+    CONSTRAINT fk_profile_coupons_profiles
         FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE,
-    CONSTRAINT fk_user_coupons_coupons
+    CONSTRAINT fk_profile_coupons_coupons
         FOREIGN KEY (coupon_code) REFERENCES coupons (code)
             ON DELETE NO ACTION
             ON UPDATE CASCADE,
-    CONSTRAINT fk_user_coupons_orders
+    CONSTRAINT fk_profile_coupons_orders
         FOREIGN KEY (order_id) REFERENCES orders (id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE
