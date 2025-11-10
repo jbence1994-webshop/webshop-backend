@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.coupon;
 
-import com.github.jbence1994.webshop.user.User;
+import com.github.jbence1994.webshop.user.Profile;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -41,11 +41,11 @@ public class Coupon {
 
     @ManyToMany
     @JoinTable(
-            name = "user_coupons",
+            name = "profile_coupons",
             joinColumns = @JoinColumn(name = "coupon_code", referencedColumnName = "code"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "user_id")
     )
-    private List<User> users = new ArrayList<>();
+    private List<Profile> profiles = new ArrayList<>();
 
     public boolean isExpired() {
         return expirationDate.isBefore(LocalDateTime.now());
