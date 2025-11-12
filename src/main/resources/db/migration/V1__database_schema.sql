@@ -81,11 +81,13 @@ CREATE TABLE IF NOT EXISTS addresses
 
 CREATE TABLE IF NOT EXISTS recovery_codes
 (
-    id              BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    user_id         BIGINT       NOT NULL,
-    code            VARCHAR(255) NOT NULL,
-    created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expiration_date DATETIME     NOT NULL,
+    id              BIGINT           NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id         BIGINT           NOT NULL,
+    code            VARCHAR(255)     NOT NULL,
+    reset_token     VARCHAR(255),
+    created_at      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    attempts        TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    expiration_date DATETIME         NOT NULL,
     CONSTRAINT fk_recovery_codes_users
         FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE

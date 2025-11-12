@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.common.EmailContentTestObject.emailContent;
-import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.HASHED_TEMPORARY_PASSWORD;
-import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.TEMPORARY_PASSWORD;
-import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.expiredTemporaryPassword;
-import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.notExpiredTemporaryPassword;
+import static com.github.jbence1994.webshop.user.RecoveryCodeTestConstants.HASHED_RECOVERY_CODE;
+import static com.github.jbence1994.webshop.user.RecoveryCodeTestConstants.RECOVERY_CODE;
+import static com.github.jbence1994.webshop.user.RecoveryCodeTestObject.expiredRecoveryCode;
+import static com.github.jbence1994.webshop.user.RecoveryCodeTestObject.notExpiredRecoveryCode;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_OLD_PASSWORD;
@@ -42,13 +42,13 @@ import static org.mockito.Mockito.when;
 public class UserServiceImplTests {
 
     @Mock
-    private TemporaryPasswordRepository temporaryPasswordRepository;
-
-    @Mock
-    private TemporaryPasswordGenerator temporaryPasswordGenerator;
-
-    @Mock
     private WebshopEmailAddressConfig webshopEmailAddressConfig;
+
+    @Mock
+    private RecoveryCodeRepository recoveryCodeRepository;
+
+    @Mock
+    private RecoveryCodeGenerator recoveryCodeGenerator;
 
     @Mock
     private EmailTemplateBuilder emailTemplateBuilder;
@@ -155,9 +155,9 @@ public class UserServiceImplTests {
     @Test
     public void forgotPasswordTest() {
         when(userQueryService.getUser(anyString())).thenReturn(user1WithoutAvatar());
-        when(temporaryPasswordGenerator.generate()).thenReturn(TEMPORARY_PASSWORD);
-        when(passwordManager.encode(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
-        when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
+        when(recoveryCodeGenerator.generate()).thenReturn(RECOVERY_CODE);
+        when(passwordManager.encode(any())).thenReturn(HASHED_RECOVERY_CODE);
+        when(recoveryCodeRepository.save(any())).thenReturn(notExpiredRecoveryCode());
         when(emailTemplateBuilder.buildForForgotPassword(any(), any(), any())).thenReturn(emailContent());
         when(webshopEmailAddressConfig.username()).thenReturn("from@example.com");
         doNothing().when(emailService).sendEmail(any(), any(), any(), any());
@@ -165,9 +165,9 @@ public class UserServiceImplTests {
         assertDoesNotThrow(() -> userService.forgotPassword(EMAIL_1));
 
         verify(userQueryService, times(1)).getUser(anyString());
-        verify(temporaryPasswordGenerator, times(1)).generate();
+        verify(recoveryCodeGenerator, times(1)).generate();
         verify(passwordManager, times(1)).encode(any());
-        verify(temporaryPasswordRepository, times(1)).save(any());
+        verify(recoveryCodeRepository, times(1)).save(any());
         verify(emailTemplateBuilder, times(1)).buildForForgotPassword(any(), any(), any());
         verify(webshopEmailAddressConfig, times(1)).username();
         verify(emailService, times(1)).sendEmail(any(), any(), any(), any());
@@ -176,73 +176,73 @@ public class UserServiceImplTests {
     @Test
     public void resetPasswordTest_HappyPath() {
         when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
-        when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword(), notExpiredTemporaryPassword()));
-        when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
-        doNothing().when(temporaryPasswordRepository).deleteAll(any());
+        when(recoveryCodeRepository.findAllByUserId(any())).thenReturn(List.of(expiredRecoveryCode(), notExpiredRecoveryCode()));
+        when(recoveryCodeRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredRecoveryCode()));
+        doNothing().when(recoveryCodeRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
-        doNothing().when(temporaryPasswordRepository).delete(any());
+        doNothing().when(recoveryCodeRepository).delete(any());
 
-        assertDoesNotThrow(() -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD));
+        assertDoesNotThrow(() -> userService.resetPassword(RECOVERY_CODE, NEW_PASSWORD));
 
         verify(authService, times(1)).getCurrentUser();
-        verify(temporaryPasswordRepository, times(1)).findAllByUserId(any());
-        verify(temporaryPasswordRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
-        verify(temporaryPasswordRepository, times(1)).deleteAll(any());
+        verify(recoveryCodeRepository, times(1)).findAllByUserId(any());
+        verify(recoveryCodeRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
+        verify(recoveryCodeRepository, times(1)).deleteAll(any());
         verify(passwordManager, times(1)).verify(any(), any());
         verify(passwordManager, times(1)).encode(any());
         verify(userRepository, times(1)).save(any());
-        verify(temporaryPasswordRepository, times(1)).delete(any());
+        verify(recoveryCodeRepository, times(1)).delete(any());
     }
 
     @Test
     public void resetPasswordTest_UnhappyPath_AccessDeniedException() {
         when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
-        when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword(), notExpiredTemporaryPassword()));
-        when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
-        doNothing().when(temporaryPasswordRepository).deleteAll(any());
+        when(recoveryCodeRepository.findAllByUserId(any())).thenReturn(List.of(expiredRecoveryCode(), notExpiredRecoveryCode()));
+        when(recoveryCodeRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredRecoveryCode()));
+        doNothing().when(recoveryCodeRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(false);
 
         var result = assertThrows(
                 AccessDeniedException.class,
-                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+                () -> userService.resetPassword(RECOVERY_CODE, NEW_PASSWORD)
         );
 
-        assertThat(result.getMessage(), equalTo("Invalid temporary password."));
+        assertThat(result.getMessage(), equalTo("Invalid recovery code."));
 
         verify(authService, times(1)).getCurrentUser();
-        verify(temporaryPasswordRepository, times(1)).findAllByUserId(any());
-        verify(temporaryPasswordRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
-        verify(temporaryPasswordRepository, times(1)).deleteAll(any());
-        verify(temporaryPasswordRepository, never()).delete(any());
+        verify(recoveryCodeRepository, times(1)).findAllByUserId(any());
+        verify(recoveryCodeRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
+        verify(recoveryCodeRepository, times(1)).deleteAll(any());
+        verify(recoveryCodeRepository, never()).delete(any());
         verify(passwordManager, times(1)).verify(any(), any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
 
     @Test
-    public void resetPasswordTest_UnhappyPath_ExpiredTemporaryPasswordException() {
+    public void resetPasswordTest_UnhappyPath_expiredRecoveryCodeException() {
         when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
-        when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword()));
-        when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(expiredTemporaryPassword()));
-        doNothing().when(temporaryPasswordRepository).deleteAll(any());
+        when(recoveryCodeRepository.findAllByUserId(any())).thenReturn(List.of(expiredRecoveryCode()));
+        when(recoveryCodeRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(expiredRecoveryCode()));
+        doNothing().when(recoveryCodeRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(true);
-        doNothing().when(temporaryPasswordRepository).delete(any());
+        doNothing().when(recoveryCodeRepository).delete(any());
 
         var result = assertThrows(
-                ExpiredTemporaryPasswordException.class,
-                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+                ExpiredRecoveryCodeException.class,
+                () -> userService.resetPassword(RECOVERY_CODE, NEW_PASSWORD)
         );
 
-        assertThat(result.getMessage(), equalTo("Temporary password has expired."));
+        assertThat(result.getMessage(), equalTo("Recovery code has expired."));
 
         verify(authService, times(1)).getCurrentUser();
-        verify(temporaryPasswordRepository, times(1)).findAllByUserId(any());
-        verify(temporaryPasswordRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
-        verify(temporaryPasswordRepository, times(1)).deleteAll(any());
+        verify(recoveryCodeRepository, times(1)).findAllByUserId(any());
+        verify(recoveryCodeRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
+        verify(recoveryCodeRepository, times(1)).deleteAll(any());
         verify(passwordManager, times(1)).verify(any(), any());
-        verify(temporaryPasswordRepository, times(1)).delete(any());
+        verify(recoveryCodeRepository, times(1)).delete(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }

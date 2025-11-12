@@ -7,7 +7,7 @@ public class ResetPasswordRequestSanitizer {
 
     public ResetPasswordRequest sanitize(ResetPasswordRequest request) {
         return new ResetPasswordRequest(
-                request.temporaryPassword().trim(),
+                request.resetToken().trim(),
                 request.newPassword().trim(),
                 request.confirmNewPassword().trim()
         );

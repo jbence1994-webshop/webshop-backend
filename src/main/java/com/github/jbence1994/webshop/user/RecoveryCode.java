@@ -34,15 +34,20 @@ public class RecoveryCode {
 
     private String code;
 
+    private String resetToken;
+
     @Column(insertable = false, updatable = false)
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
+
+    private Byte attempts;
 
     private LocalDateTime expirationDate;
 
     public RecoveryCode(User user, String code) {
         this.user = user;
         this.code = code;
+        this.attempts = 1;
         this.expirationDate = LocalDateTime.now().plusMinutes(15);
     }
 

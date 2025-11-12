@@ -6,14 +6,13 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @Component
-public class TemporaryPasswordGeneratorImpl implements TemporaryPasswordGenerator {
+public class ResetTokenGeneratorImpl implements ResetTokenGenerator {
 
     @Override
     public String generate() {
         var bytes = new byte[32];
-        var secureRandom = new SecureRandom();
-        secureRandom.nextBytes(bytes);
+        new SecureRandom().nextBytes(bytes);
 
-        return Base64.getEncoder().withoutPadding().encodeToString(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 }

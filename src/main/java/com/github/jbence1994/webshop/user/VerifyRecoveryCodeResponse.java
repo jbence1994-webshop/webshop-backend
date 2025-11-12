@@ -1,0 +1,4 @@
+package com.github.jbence1994.webshop.user;
+
+public record VerifyRecoveryCodeResponse(String resetToken) {
+}

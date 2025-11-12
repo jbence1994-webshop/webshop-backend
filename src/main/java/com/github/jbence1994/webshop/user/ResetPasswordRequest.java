@@ -7,9 +7,9 @@ import jakarta.validation.constraints.Size;
 @ConfirmResetPassword
 public record ResetPasswordRequest(
 
-        @NotNull(message = "Temporary password must be provided.")
-        @NotBlank(message = "Temporary password must be not empty.")
-        String temporaryPassword,
+        @NotNull(message = "Reset token must be provided.")
+        @NotBlank(message = "Reset token must be not empty.")
+        String resetToken,
 
         @NotNull(message = "New password must be provided.")
         @NotBlank(message = "New password must be not empty.")

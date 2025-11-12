@@ -7,7 +7,9 @@ public interface UserService {
 
     void forgotPassword(String email);
 
-    void resetPassword(String temporaryPassword, String newPassword);
+    String verifyRecoveryCode(String email, String recoveryCode);
+
+    void resetPassword(String resetToken, String newPassword);
 
     void updateUser(User user);
 

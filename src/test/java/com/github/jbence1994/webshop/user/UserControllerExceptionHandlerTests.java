@@ -37,15 +37,15 @@ public class UserControllerExceptionHandlerTests {
         );
     }
 
-    private static Stream<Arguments> handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionParams() {
+    private static Stream<Arguments> handleInvalidRecoveryCodeOrExpiredRecoveryCodeExceptionParams() {
         return Stream.of(
                 Arguments.of(
-                        Named.of("InvalidTemporaryPasswordException", new InvalidTemporaryPasswordException()),
-                        "Invalid temporary password."
+                        Named.of("InvalidRecoveryCodeException", new InvalidRecoveryCodeException()),
+                        "Invalid recovery code."
                 ),
                 Arguments.of(
-                        Named.of("ExpiredTemporaryPasswordException", new ExpiredTemporaryPasswordException()),
-                        "Temporary password has expired."
+                        Named.of("ExpiredRecoveryCodeException", new ExpiredRecoveryCodeException()),
+                        "Recovery code has expired."
                 )
         );
     }
@@ -61,9 +61,9 @@ public class UserControllerExceptionHandlerTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionParams")
-    public void handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordExceptionTest(RuntimeException exception, String expectedExceptionMessage) {
-        var result = userControllerExceptionHandler.handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordException(exception);
+    @MethodSource("handleInvalidRecoveryCodeOrExpiredRecoveryCodeExceptionParams")
+    public void handleInvalidRecoveryCodeOrExpiredRecoveryCodeExceptionTest(RuntimeException exception, String expectedExceptionMessage) {
+        var result = userControllerExceptionHandler.handleInvalidRecoveryCodeOrExpiredRecoveryCodeException(exception);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.UNAUTHORIZED));
         assertThat(result.getBody(), not(nullValue()));
