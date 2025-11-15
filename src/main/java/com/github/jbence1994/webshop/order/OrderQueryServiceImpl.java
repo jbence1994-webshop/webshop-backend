@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.order;
 
 import com.github.jbence1994.webshop.auth.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderQueryServiceImpl implements OrderQueryService {
     private final OrderRepository orderRepository;
     private final AuthService authService;
