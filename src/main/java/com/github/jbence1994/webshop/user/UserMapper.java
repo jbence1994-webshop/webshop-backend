@@ -5,6 +5,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+
+    @Mapping(target = "membershipTier", expression = "java(user.getMembershipTier().name())")
+    @Mapping(target = "loyaltyPoints", expression = "java(user.getLoyaltyPoints())")
     UserDto toUserDto(User user);
 
     ProfileDto toProfileDto(Profile profile);
@@ -27,6 +30,7 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "coupons", ignore = true)
+    @Mapping(target = "loyaltyPoints", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
     Profile toProfile(RegistrationRequest.ProfileDto profile);
 

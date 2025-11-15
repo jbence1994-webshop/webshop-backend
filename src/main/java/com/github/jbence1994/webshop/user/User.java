@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.loyalty.MembershipTier;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -64,6 +65,14 @@ public class User {
 
     public Optional<String> getProfileAvatar() {
         return profile.getProfileAvatar();
+    }
+
+    public MembershipTier getMembershipTier() {
+        return profile.getMembershipTier();
+    }
+
+    public int getLoyaltyPoints() {
+        return profile.getLoyaltyPoints();
     }
 
     public void addFavoriteProduct(Product product) {

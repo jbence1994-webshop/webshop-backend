@@ -30,6 +30,9 @@ webshop:
   client-app:
     url: ${CLIENT_APP_URL}
 
+  loyalty-conversion:
+    rate: ${LOYALTY_CONVERSION_RATE}
+
   free-shipping:
     threshold: ${FREE_SHIPPING_THRESHOLD}
 

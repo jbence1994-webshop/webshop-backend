@@ -23,10 +23,10 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class CheckoutSessionTests {
 
-    private static Stream<Arguments> checkoutSessionGetAppliedCouponParams() {
+    private static Stream<Arguments> hasCouponAppliedParams() {
         return Stream.of(
-                Arguments.of(Named.of("Checkout session has coupon applied", checkoutSessionWithPercentOffTypeOfAppliedCoupon()), true, false),
-                Arguments.of(Named.of("Checkout session does not have a coupon applied", checkoutSession()), false, true)
+                Arguments.of(Named.of("Checkout session has coupon applied", checkoutSessionWithPercentOffTypeOfAppliedCoupon()), true),
+                Arguments.of(Named.of("Checkout session does not have a coupon applied", checkoutSession()), false)
         );
     }
 
@@ -51,12 +51,11 @@ public class CheckoutSessionTests {
     }
 
     @ParameterizedTest(name = "{index} => {0}")
-    @MethodSource("checkoutSessionGetAppliedCouponParams")
-    public void getAppliedCouponTests(CheckoutSession checkoutSession, boolean isPresent, boolean isEmpty) {
-        var result = checkoutSession.getAppliedCoupon();
+    @MethodSource("hasCouponAppliedParams")
+    public void hasCouponAppliedTests(CheckoutSession checkoutSession, boolean expectedResult) {
+        var result = checkoutSession.hasCouponApplied();
 
-        assertThat(result.isPresent(), is(isPresent));
-        assertThat(result.isEmpty(), is(isEmpty));
+        assertThat(result, is(expectedResult));
     }
 
     @ParameterizedTest(name = "{index} => {0}")

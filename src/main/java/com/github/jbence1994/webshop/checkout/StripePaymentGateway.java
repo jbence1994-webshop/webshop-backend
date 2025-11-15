@@ -1,7 +1,6 @@
 package com.github.jbence1994.webshop.checkout;
 
 import com.github.jbence1994.webshop.common.ClientAppConfig;
-import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.order.OrderItem;
 import com.github.jbence1994.webshop.order.OrderStatus;
 import com.stripe.exception.SignatureVerificationException;
@@ -48,10 +47,9 @@ public class StripePaymentGateway implements PaymentGateway {
                     .setCancelUrl(clientAppConfig.url() + "/checkout-cancel")
                     .setPaymentIntentData(buildPaymentIntent(checkoutSession.getCart().getId(), order.getId(), checkoutSession.getId()));
 
-            checkoutSession.getAppliedCoupon()
-                    .map(Coupon::getCode)
-                    .map(this::buildDiscounts)
-                    .ifPresent(builder::addAllDiscount);
+            if (checkoutSession.hasCouponApplied()) {
+                builder.addAllDiscount(buildDiscounts(checkoutSession.getAppliedCoupon().getCode()));
+            }
 
             if (order.isEligibleForFreeShipping(freeShippingConfig.threshold())) {
                 builder.addAllShippingOption(buildShippingOptions(freeShippingId));
