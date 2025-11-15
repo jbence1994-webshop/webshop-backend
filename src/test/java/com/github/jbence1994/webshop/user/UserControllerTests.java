@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -114,21 +113,30 @@ public class UserControllerTests {
     public void changePasswordTest() {
         when(changePasswordRequestSanitizer.sanitize(any())).thenReturn(changePasswordRequest());
 
-        assertDoesNotThrow(() -> userController.changePassword(notSanitizedChangePasswordRequest()));
+        var result = userController.changePassword(notSanitizedChangePasswordRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
     public void forgotPasswordTest() {
         when(forgotPasswordRequestSanitizer.sanitize(any())).thenReturn(forgotPasswordRequest());
 
-        assertDoesNotThrow(() -> userController.forgotPassword(notSanitizedForgotPasswordRequest()));
+        var result = userController.forgotPassword(notSanitizedForgotPasswordRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.ACCEPTED));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
     public void resetPasswordTest() {
         when(resetPasswordRequestSanitizer.sanitize(any())).thenReturn(resetPasswordRequest());
 
-        assertDoesNotThrow(() -> userController.resetPassword(notSanitizedResetPasswordRequest()));
+        var result = userController.resetPassword(notSanitizedResetPasswordRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
