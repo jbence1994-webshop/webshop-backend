@@ -37,7 +37,6 @@ public final class ProfileTestObject {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 address(),
-                new ArrayList<>(),
                 new ArrayList<>()
         );
     }

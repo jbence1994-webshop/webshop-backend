@@ -194,24 +194,24 @@ CREATE TABLE IF NOT EXISTS coupons
     expiration_date DATETIME       NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS profile_coupons
+CREATE TABLE IF NOT EXISTS user_coupons
 (
-    profile_id  BIGINT      NOT NULL,
+    user_id     BIGINT      NOT NULL,
     coupon_code VARCHAR(25) NOT NULL,
     created_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     redeemed    TINYINT(1)  NOT NULL DEFAULT 0,
     redeemed_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
     order_id    BIGINT,
-    PRIMARY KEY (profile_id, coupon_code),
-    CONSTRAINT fk_profile_coupons_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    PRIMARY KEY (user_id, coupon_code),
+    CONSTRAINT fk_user_coupons_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE,
-    CONSTRAINT fk_profile_coupons_coupons
+    CONSTRAINT fk_user_coupons_coupons
         FOREIGN KEY (coupon_code) REFERENCES coupons (code)
             ON DELETE NO ACTION
             ON UPDATE CASCADE,
-    CONSTRAINT fk_profile_coupons_orders
+    CONSTRAINT fk_user_coupons_orders
         FOREIGN KEY (order_id) REFERENCES orders (id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE
