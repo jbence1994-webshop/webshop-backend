@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,25 +55,31 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/change-password")
-    public void changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         var sanitizedRequest = changePasswordRequestSanitizer.sanitize(request);
 
         userService.changePassword(sanitizedRequest.oldPassword(), sanitizedRequest.newPassword());
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/forgot-password")
-    public void forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         var sanitizedRequest = forgotPasswordRequestSanitizer.sanitize(request);
 
         userService.forgotPassword(sanitizedRequest.email());
+
+        return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/reset-password")
-    public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         var sanitizedRequest = resetPasswordRequestSanitizer.sanitize(request);
 
         userService.resetPassword(sanitizedRequest.temporaryPassword(), sanitizedRequest.newPassword());
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
