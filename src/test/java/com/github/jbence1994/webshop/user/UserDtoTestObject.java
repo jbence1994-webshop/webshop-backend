@@ -2,8 +2,8 @@ package com.github.jbence1994.webshop.user;
 
 import java.util.List;
 
+import static com.github.jbence1994.webshop.coupon.UserCouponDtoTestObject.userCouponDto;
 import static com.github.jbence1994.webshop.user.ProfileDtoTestObject.profileDto;
-import static com.github.jbence1994.webshop.user.UserCouponDtoTestObject.userCouponDto;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 
 public final class UserDtoTestObject {

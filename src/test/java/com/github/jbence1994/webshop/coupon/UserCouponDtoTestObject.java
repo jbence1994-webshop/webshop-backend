@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.user;
+package com.github.jbence1994.webshop.coupon;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.NOT_EXPIRED_COUPON_EXPIRATION_DATE;
