@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,18 @@ public class User {
 
     private String password;
 
+    private String firstName;
+
+    private String middleName;
+
+    private String lastName;
+
+    private LocalDate dateOfBirth;
+
+    private String phoneNumber;
+
+    private String avatarFileName;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -54,7 +67,11 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Profile profile;
+    private Address address;
+
+    public Optional<String> getAvatarFileName() {
+        return Optional.ofNullable(avatarFileName);
+    }
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -63,22 +80,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
     private List<Product> favoriteProducts = new ArrayList<>();
-
-    public String getFirstName() {
-        return profile.getFirstName();
-    }
-
-    public String getPhoneNumber() {
-        return profile.getPhoneNumber();
-    }
-
-    public void setProfileAvatar(String fileName) {
-        profile.setAvatarFileName(fileName);
-    }
-
-    public Optional<String> getProfileAvatar() {
-        return profile.getProfileAvatar();
-    }
 
     public void addFavoriteProduct(Product product) {
         favoriteProducts.add(product);

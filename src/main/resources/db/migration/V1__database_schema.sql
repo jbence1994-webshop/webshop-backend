@@ -38,34 +38,23 @@ CREATE TABLE IF NOT EXISTS product_photos
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id         BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    email      VARCHAR(255) NOT NULL UNIQUE,
-    password   VARCHAR(255) NOT NULL,
-    role       VARCHAR(25)  NOT NULL DEFAULT 'USER',
-    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS profiles
-(
-    user_id          BIGINT       NOT NULL PRIMARY KEY,
+    id               BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    email            VARCHAR(255) NOT NULL UNIQUE,
+    password         VARCHAR(255) NOT NULL,
     first_name       VARCHAR(255) NOT NULL,
     middle_name      VARCHAR(255),
     last_name        VARCHAR(255) NOT NULL,
     date_of_birth    DATE         NOT NULL,
     phone_number     VARCHAR(25) UNIQUE,
     avatar_file_name VARCHAR(41) UNIQUE,
+    role             VARCHAR(25)  NOT NULL DEFAULT 'USER',
     created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_profiles_users
-        FOREIGN KEY (user_id) REFERENCES users (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
+    updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS addresses
 (
-    profile_id   BIGINT       NOT NULL PRIMARY KEY,
+    user_id      BIGINT       NOT NULL PRIMARY KEY,
     address_line VARCHAR(255) NOT NULL,
     municipality VARCHAR(255) NOT NULL,
     province     VARCHAR(255) NOT NULL,
@@ -73,8 +62,8 @@ CREATE TABLE IF NOT EXISTS addresses
     country      VARCHAR(255) NOT NULL,
     created_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_addresses_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    CONSTRAINT fk_addresses_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );

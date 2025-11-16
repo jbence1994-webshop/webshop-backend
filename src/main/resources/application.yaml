@@ -45,7 +45,7 @@ webshop:
       - png
       - bmp
     product-photos-directory: ${PRODUCT_PHOTOS_DIRECTORY}
-    profile-avatar-directory: ${PROFILE_AVATAR_DIRECTORY}
+    user-avatar-directory: ${USER_AVATAR_DIRECTORY}
 
   stripe:
     secretKey: ${STRIPE_SECRET_KEY}
