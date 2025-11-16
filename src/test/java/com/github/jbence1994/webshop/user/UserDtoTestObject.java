@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.coupon.UserCouponDtoTestObject.userCouponDto;
@@ -12,7 +13,8 @@ public final class UserDtoTestObject {
                 1L,
                 EMAIL_1,
                 profileDto(),
-                List.of(userCouponDto())
+                List.of(userCouponDto()),
+                new ArrayList<>()
         );
     }
 }

@@ -115,7 +115,7 @@ SET @couponCode := (SELECT code
 INSERT INTO user_coupons (user_id, coupon_code)
 VALUES (@userId, @couponCode);
 
-INSERT INTO product_ratings (product_id, profile_id, value)
+INSERT INTO product_ratings (product_id, user_id, value)
 VALUES (1, @profileId, 5),
        (2, @profileId, 3),
        (3, @profileId, 4),
@@ -147,7 +147,7 @@ VALUES (1, @profileId, 5),
        (29, @profileId, 4),
        (30, @profileId, 5);
 
-INSERT INTO product_reviews (product_id, profile_id, text)
+INSERT INTO product_reviews (product_id, user_id, text)
 VALUES (1, @profileId,
         'This wireless mouse feels very comfortable in hand and tracks smoothly on any surface. The battery lasts surprisingly long even with daily use.'),
        (2, @profileId,

@@ -94,14 +94,14 @@ CREATE TABLE IF NOT EXISTS temporary_passwords
 CREATE TABLE IF NOT EXISTS wishlist
 (
     product_id BIGINT NOT NULL,
-    profile_id BIGINT NOT NULL,
-    PRIMARY KEY (product_id, profile_id),
+    user_id    BIGINT NOT NULL,
+    PRIMARY KEY (product_id, user_id),
     CONSTRAINT fk_wishlist_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT fk_wishlist_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    CONSTRAINT fk_wishlist_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
@@ -110,15 +110,15 @@ CREATE TABLE IF NOT EXISTS product_ratings
 (
     id         BIGINT           NOT NULL PRIMARY KEY AUTO_INCREMENT,
     product_id BIGINT           NOT NULL,
-    profile_id BIGINT           NOT NULL,
+    user_id    BIGINT           NOT NULL,
     value      TINYINT UNSIGNED NOT NULL,
-    CONSTRAINT unique_product_ratings_product_id_profile_id UNIQUE (product_id, profile_id),
+    CONSTRAINT unique_product_ratings_product_id_user_id UNIQUE (product_id, user_id),
     CONSTRAINT fk_product_ratings_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT fk_product_ratings_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    CONSTRAINT fk_product_ratings_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
@@ -127,16 +127,16 @@ CREATE TABLE IF NOT EXISTS product_reviews
 (
     id         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
     product_id BIGINT   NOT NULL,
-    profile_id BIGINT   NOT NULL,
+    user_id    BIGINT   NOT NULL,
     text       TEXT     NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_product_reviews_product_id_profile_id UNIQUE (product_id, profile_id),
+    CONSTRAINT unique_product_reviews_product_id_user_id UNIQUE (product_id, user_id),
     CONSTRAINT fk_product_reviews_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT fk_product_reviews_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    CONSTRAINT fk_product_reviews_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );

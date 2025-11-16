@@ -98,7 +98,7 @@ public class ProductServiceImplTests {
         var result = productService.addProductToWishlist(1L);
 
         assertThat(result.getId(), equalTo(product1().getId()));
-        assertThat(user.getProfile().getFavoriteProducts().size(), equalTo(1));
+        assertThat(user.getFavoriteProducts().size(), equalTo(1));
 
         verify(authService, times(1)).getCurrentUser();
         verify(productQueryService, times(1)).getProduct(any());
@@ -130,7 +130,7 @@ public class ProductServiceImplTests {
 
         productService.deleteProductFromWishlist(1L);
 
-        assertThat(user.getProfile().getFavoriteProducts().size(), equalTo(0));
+        assertThat(user.getFavoriteProducts().size(), equalTo(0));
 
         verify(authService, times(1)).getCurrentUser();
         verify(userService, times(1)).updateUser(any());

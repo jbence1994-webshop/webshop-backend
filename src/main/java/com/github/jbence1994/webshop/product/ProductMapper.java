@@ -22,7 +22,7 @@ public interface ProductMapper {
     @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
     ProductByIdDto toProductByIdDto(Product product);
 
-    @Mapping(target = "name", expression = "java(getName(productReview.getProfile()))")
+    @Mapping(target = "name", expression = "java(getName(productReview.getUser().getProfile()))")
     ProductReviewDto toProductReviewDto(ProductReview productReview);
 
     default String getName(Profile profile) {
