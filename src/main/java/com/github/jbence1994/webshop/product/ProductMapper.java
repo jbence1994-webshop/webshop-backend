@@ -25,9 +25,11 @@ public interface ProductMapper {
             target = "name",
             expression = """
                     java(
-                    productReview.getProfile().getFirstName() + " " +
-                    (productReview.getProfile().getMiddleName() != null ? productReview.getProfile().getMiddleName() + " " : "") +
-                    productReview.getProfile().getLastName()
+                    productReview.getUser().getProfile().getFirstName() + " " +
+                    productReview.getUser().getProfile().getMiddleName() != null ?
+                    productReview.getUser().getProfile().getMiddleName() : "" +
+                    " " +
+                    productReview.getUser().getProfile().getLastName()
                     )
                     """
     )
