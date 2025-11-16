@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserAvatarService implements ImageService {
+    private final FileExtensionValidator fileExtensionValidator;
     private final ImageUploadsConfig imageUploadsConfig;
+    private final FileNameGenerator fileNameGenerator;
     private final UserQueryService userQueryService;
     private final UserService userService;
-    private final FileExtensionValidator fileExtensionValidator;
-    private final FileNameGenerator fileNameGenerator;
     private final FileUtils fileUtils;
 
     @Override

@@ -38,19 +38,19 @@ import static org.mockito.Mockito.when;
 public class UserAvatarServiceTests {
 
     @Mock
+    private FileExtensionValidator fileExtensionValidator;
+
+    @Mock
     private ImageUploadsConfig imageUploadsConfig;
+
+    @Mock
+    private FileNameGenerator fileNameGenerator;
 
     @Mock
     private UserQueryService userQueryService;
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private FileExtensionValidator fileExtensionValidator;
-
-    @Mock
-    private FileNameGenerator fileNameGenerator;
 
     @Mock
     private FileUtils fileUtils;
