@@ -94,14 +94,14 @@ CREATE TABLE IF NOT EXISTS temporary_passwords
 CREATE TABLE IF NOT EXISTS wishlist
 (
     product_id BIGINT NOT NULL,
-    profile_id BIGINT NOT NULL,
-    PRIMARY KEY (product_id, profile_id),
+    user_id    BIGINT NOT NULL,
+    PRIMARY KEY (product_id, user_id),
     CONSTRAINT fk_wishlist_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT fk_wishlist_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    CONSTRAINT fk_wishlist_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
@@ -110,15 +110,15 @@ CREATE TABLE IF NOT EXISTS product_ratings
 (
     id         BIGINT           NOT NULL PRIMARY KEY AUTO_INCREMENT,
     product_id BIGINT           NOT NULL,
-    profile_id BIGINT           NOT NULL,
+    user_id    BIGINT           NOT NULL,
     value      TINYINT UNSIGNED NOT NULL,
-    CONSTRAINT unique_product_ratings_product_id_profile_id UNIQUE (product_id, profile_id),
+    CONSTRAINT unique_product_ratings_product_id_user_id UNIQUE (product_id, user_id),
     CONSTRAINT fk_product_ratings_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT fk_product_ratings_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    CONSTRAINT fk_product_ratings_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
@@ -127,16 +127,16 @@ CREATE TABLE IF NOT EXISTS product_reviews
 (
     id         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
     product_id BIGINT   NOT NULL,
-    profile_id BIGINT   NOT NULL,
+    user_id    BIGINT   NOT NULL,
     text       TEXT     NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_product_reviews_product_id_profile_id UNIQUE (product_id, profile_id),
+    CONSTRAINT unique_product_reviews_product_id_user_id UNIQUE (product_id, user_id),
     CONSTRAINT fk_product_reviews_products
         FOREIGN KEY (product_id) REFERENCES products (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT fk_product_reviews_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    CONSTRAINT fk_product_reviews_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
 );
@@ -194,24 +194,24 @@ CREATE TABLE IF NOT EXISTS coupons
     expiration_date DATETIME       NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS profile_coupons
+CREATE TABLE IF NOT EXISTS user_coupons
 (
-    profile_id  BIGINT      NOT NULL,
+    user_id     BIGINT      NOT NULL,
     coupon_code VARCHAR(25) NOT NULL,
     created_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     redeemed    TINYINT(1)  NOT NULL DEFAULT 0,
     redeemed_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
     order_id    BIGINT,
-    PRIMARY KEY (profile_id, coupon_code),
-    CONSTRAINT fk_profile_coupons_profiles
-        FOREIGN KEY (profile_id) REFERENCES profiles (user_id)
+    PRIMARY KEY (user_id, coupon_code),
+    CONSTRAINT fk_user_coupons_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE,
-    CONSTRAINT fk_profile_coupons_coupons
+    CONSTRAINT fk_user_coupons_coupons
         FOREIGN KEY (coupon_code) REFERENCES coupons (code)
             ON DELETE NO ACTION
             ON UPDATE CASCADE,
-    CONSTRAINT fk_profile_coupons_orders
+    CONSTRAINT fk_user_coupons_orders
         FOREIGN KEY (order_id) REFERENCES orders (id)
             ON DELETE NO ACTION
             ON UPDATE CASCADE
