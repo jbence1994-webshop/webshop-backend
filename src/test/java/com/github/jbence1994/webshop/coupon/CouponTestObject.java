@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.coupon;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_DESCRIPTION;
@@ -9,6 +10,7 @@ import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_DESCRIPTION;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.EXPIRED_COUPON_EXPIRATION_DATE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.NOT_EXPIRED_COUPON_EXPIRATION_DATE;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 
 public final class CouponTestObject {
     public static Coupon percentOffNotExpiredCoupon() {
@@ -43,7 +45,8 @@ public final class CouponTestObject {
                 type,
                 value,
                 description,
-                expirationDate
+                expirationDate,
+                List.of(user1WithoutAvatar())
         );
     }
 }

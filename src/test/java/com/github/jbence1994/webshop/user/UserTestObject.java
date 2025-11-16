@@ -36,7 +36,6 @@ public final class UserTestObject {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 profile,
-                new ArrayList<>(),
                 new ArrayList<>()
         );
     }

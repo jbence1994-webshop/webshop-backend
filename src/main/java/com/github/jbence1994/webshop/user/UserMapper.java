@@ -6,18 +6,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    // TODO: Need to filter that a non-expired coupon is already redeemed in any order or not.
-    @Mapping(
-            target = "coupons",
-            expression = """
-                    java(
-                    user.getCoupons().stream()
-                    .filter(coupon -> !coupon.isExpired())
-                    .map(coupon -> new UserCouponDto(coupon.getCode(), coupon.getExpirationDate()))
-                    .toList();
-                    )
-                    """
-    )
     UserDto toUserDto(User user);
 
     ProfileDto toProfileDto(Profile profile);
@@ -32,7 +20,6 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "profile", ignore = true)
     @Mapping(target = "profileAvatar", ignore = true)
-    @Mapping(target = "coupons", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
     User toUser(RegistrationRequest.UserDto user);
 
