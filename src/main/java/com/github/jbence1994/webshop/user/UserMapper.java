@@ -1,25 +1,24 @@
 package com.github.jbence1994.webshop.user;
 
-import com.github.jbence1994.webshop.coupon.Coupon;
-import com.github.jbence1994.webshop.coupon.UserCouponDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(target = "coupons", expression = "java(getNotExpiredCoupons(user.getCoupons()))")
-    UserDto toUserDto(User user);
-
     // TODO: Need to filter that a non-expired coupon is already redeemed in any order or not.
-    default List<UserCouponDto> getNotExpiredCoupons(List<Coupon> coupons) {
-        return coupons.stream()
-                .filter(coupon -> !coupon.isExpired())
-                .map(coupon -> new UserCouponDto(coupon.getCode(), coupon.getExpirationDate()))
-                .toList();
-    }
+    @Mapping(
+            target = "coupons",
+            expression = """
+                    java(
+                    user.getCoupons().stream()
+                    .filter(coupon -> !coupon.isExpired())
+                    .map(coupon -> new UserCouponDto(coupon.getCode(), coupon.getExpirationDate()))
+                    .toList();
+                    )
+                    """
+    )
+    UserDto toUserDto(User user);
 
     ProfileDto toProfileDto(Profile profile);
 

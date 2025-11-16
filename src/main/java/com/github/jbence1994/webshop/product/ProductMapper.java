@@ -2,7 +2,6 @@ package com.github.jbence1994.webshop.product;
 
 import com.github.jbence1994.webshop.image.ImageUrlBuilder;
 import com.github.jbence1994.webshop.image.ProductPhoto;
-import com.github.jbence1994.webshop.user.Profile;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,14 +21,19 @@ public interface ProductMapper {
     @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
     ProductByIdDto toProductByIdDto(Product product);
 
-    @Mapping(target = "name", expression = "java(getName(productReview.getUser().getProfile()))")
+    @Mapping(
+            target = "name",
+            expression = """
+                    java(
+                    productReview.getUser().getProfile().getFirstName() + " " +
+                    productReview.getUser().getProfile().getMiddleName() != null ?
+                    productReview.getUser().getProfile().getMiddleName() : "" +
+                    " " +
+                    productReview.getUser().getProfile().getLastName()
+                    )
+                    """
+    )
     ProductReviewDto toProductReviewDto(ProductReview productReview);
-
-    default String getName(Profile profile) {
-        return profile.getFirstName() + " " +
-                (profile.getMiddleName() != null ? profile.getMiddleName() : "") + " " +
-                profile.getLastName();
-    }
 
     WishlistProductDto toWishlistProductDto(Product product);
 
