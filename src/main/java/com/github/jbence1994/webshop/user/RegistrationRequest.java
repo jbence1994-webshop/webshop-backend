@@ -30,13 +30,6 @@ public record RegistrationRequest(
             @NotBlank(message = "Confirm password must be not empty.")
             String confirmPassword,
 
-            @Valid
-            ProfileDto profile
-    ) {
-    }
-
-    public record ProfileDto(
-
             @NotNull(message = "First name must be provided.")
             @NotBlank(message = "First name must be not empty.")
             String firstName,

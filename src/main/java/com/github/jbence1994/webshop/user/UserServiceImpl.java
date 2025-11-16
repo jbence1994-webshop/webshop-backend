@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistsException(email);
         }
 
-        if (userRepository.existsByProfilePhoneNumber(phoneNumber)) {
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new PhoneNumberAlreadyExistsException(phoneNumber);
         }
 

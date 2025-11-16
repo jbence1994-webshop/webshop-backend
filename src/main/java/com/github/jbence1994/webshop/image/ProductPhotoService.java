@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductPhotoService implements ImageService {
-    private final ImageUploadsConfig imageUploadsConfig;
-    private final ProductQueryService productQueryService;
-    private final ProductService productService;
     private final FileExtensionValidator fileExtensionValidator;
+    private final ProductQueryService productQueryService;
+    private final ImageUploadsConfig imageUploadsConfig;
     private final FileNameGenerator fileNameGenerator;
+    private final ProductService productService;
     private final FileUtils fileUtils;
 
     @Override
