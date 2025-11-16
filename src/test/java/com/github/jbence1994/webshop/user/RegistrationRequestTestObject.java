@@ -5,15 +5,15 @@ import static com.github.jbence1994.webshop.user.AddressTestConstants.COUNTRY;
 import static com.github.jbence1994.webshop.user.AddressTestConstants.MUNICIPALITY;
 import static com.github.jbence1994.webshop.user.AddressTestConstants.POSTAL_CODE;
 import static com.github.jbence1994.webshop.user.AddressTestConstants.PROVINCE;
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.DATE_OF_BIRTH;
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.FIRST_NAME;
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.LAST_NAME;
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.MIDDLE_NAME;
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMBER;
 import static com.github.jbence1994.webshop.user.UserTestConstants.CONFIRM_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.DATE_OF_BIRTH;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
+import static com.github.jbence1994.webshop.user.UserTestConstants.FIRST_NAME;
 import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_CONFIRM_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.LAST_NAME;
+import static com.github.jbence1994.webshop.user.UserTestConstants.MIDDLE_NAME;
 import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestConstants.PHONE_NUMBER;
 
 public final class RegistrationRequestTestObject {
     public static RegistrationRequest registrationRequest() {
@@ -65,32 +65,6 @@ public final class RegistrationRequestTestObject {
                     EMAIL_1,
                     password,
                     confirmPassword,
-                    ProfileDtoTestObject.profileDto()
-            );
-        }
-
-        public static RegistrationRequest.UserDto notSanitizedUserDto() {
-            return new RegistrationRequest.UserDto(
-                    " " + EMAIL_1 + " ",
-                    " " + PASSWORD + " ",
-                    " " + CONFIRM_PASSWORD + " ",
-                    ProfileDtoTestObject.notSanitizedProfileDto()
-            );
-        }
-
-        public static RegistrationRequest.UserDto notSanitizedUserDtoWithNullMiddleName() {
-            return new RegistrationRequest.UserDto(
-                    " " + EMAIL_1 + " ",
-                    " " + PASSWORD + " ",
-                    " " + CONFIRM_PASSWORD + " ",
-                    ProfileDtoTestObject.notSanitizedProfileDtoWithNullMiddleName()
-            );
-        }
-    }
-
-    private static final class ProfileDtoTestObject {
-        public static RegistrationRequest.ProfileDto profileDto() {
-            return new RegistrationRequest.ProfileDto(
                     FIRST_NAME,
                     MIDDLE_NAME,
                     LAST_NAME,
@@ -100,8 +74,11 @@ public final class RegistrationRequestTestObject {
             );
         }
 
-        public static RegistrationRequest.ProfileDto notSanitizedProfileDto() {
-            return new RegistrationRequest.ProfileDto(
+        public static RegistrationRequest.UserDto notSanitizedUserDto() {
+            return new RegistrationRequest.UserDto(
+                    " " + EMAIL_1 + " ",
+                    " " + PASSWORD + " ",
+                    " " + CONFIRM_PASSWORD + " ",
                     " " + FIRST_NAME + " ",
                     " " + MIDDLE_NAME + " ",
                     " " + LAST_NAME + " ",
@@ -111,8 +88,11 @@ public final class RegistrationRequestTestObject {
             );
         }
 
-        public static RegistrationRequest.ProfileDto notSanitizedProfileDtoWithNullMiddleName() {
-            return new RegistrationRequest.ProfileDto(
+        public static RegistrationRequest.UserDto notSanitizedUserDtoWithNullMiddleName() {
+            return new RegistrationRequest.UserDto(
+                    " " + EMAIL_1 + " ",
+                    " " + PASSWORD + " ",
+                    " " + CONFIRM_PASSWORD + " ",
                     " " + FIRST_NAME + " ",
                     null,
                     " " + LAST_NAME + " ",

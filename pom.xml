@@ -227,7 +227,7 @@
                         <exclude>com/github/jbence1994/webshop/common/FreeMarkerEmailTemplateBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/FileSystemUtils*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/ProductPhotoUrlBuilder*</exclude>
-                        <exclude>com/github/jbence1994/webshop/image/ProfileAvatarUrlBuilder*</exclude>
+                        <exclude>com/github/jbence1994/webshop/image/UserAvatarUrlBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/Application*</exclude>
                     </excludes>
                 </configuration>

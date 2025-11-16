@@ -14,18 +14,12 @@ public class RegistrationRequestSanitizer {
                 userDto.email().trim(),
                 userDto.password().trim(),
                 userDto.confirmPassword().trim(),
-                sanitize(userDto.profile())
-        );
-    }
-
-    private RegistrationRequest.ProfileDto sanitize(RegistrationRequest.ProfileDto profileDto) {
-        return new RegistrationRequest.ProfileDto(
-                profileDto.firstName().trim(),
-                profileDto.middleName() != null ? profileDto.middleName().trim() : null,
-                profileDto.lastName().trim(),
-                profileDto.dateOfBirth(),
-                profileDto.phoneNumber().trim(),
-                sanitize(profileDto.address())
+                userDto.firstName().trim(),
+                userDto.middleName() != null ? userDto.middleName().trim() : null,
+                userDto.lastName().trim(),
+                userDto.dateOfBirth(),
+                userDto.phoneNumber().trim(),
+                sanitize(userDto.address())
         );
     }
 

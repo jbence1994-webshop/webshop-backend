@@ -1,5 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
+import java.time.LocalDate;
+
 public interface UserTestConstants {
     String EMAIL_1 = "juhasz.bence.zsolt@gmail.com";
     String EMAIL_2 = "juhasz.bence@outlook.hu";
@@ -14,4 +16,9 @@ public interface UserTestConstants {
     String CONFIRM_NEW_PASSWORD = NEW_PASSWORD;
     String INVALID_CONFIRM_PASSWORD = "0123456789";
     String INVALID_CONFIRM_NEW_PASSWORD = "0123456789";
+    String FIRST_NAME = "Bence";
+    String MIDDLE_NAME = "Zsolt";
+    String LAST_NAME = "Juhász";
+    LocalDate DATE_OF_BIRTH = LocalDate.of(1994, 3, 27);
+    String PHONE_NUMBER = "+36501323566";
 }

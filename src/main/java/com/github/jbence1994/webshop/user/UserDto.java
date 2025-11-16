@@ -1,4 +1,15 @@
 package com.github.jbence1994.webshop.user;
 
-public record UserDto(Long id, String email, ProfileDto profile) {
+import java.time.LocalDate;
+
+public record UserDto(
+        Long id,
+        String email,
+        String firstName,
+        String middleName,
+        String lastName,
+        LocalDate dateOfBirth,
+        String phoneNumber,
+        AddressDto address
+) {
 }

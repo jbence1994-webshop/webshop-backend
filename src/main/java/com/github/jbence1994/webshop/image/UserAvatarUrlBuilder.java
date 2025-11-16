@@ -6,14 +6,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Component
 @RequiredArgsConstructor
-public class ProfileAvatarUrlBuilder implements ImageUrlBuilder {
+public class UserAvatarUrlBuilder implements ImageUrlBuilder {
     private final ImageUploadsConfig imageUploadsConfig;
 
     @Override
     public String buildUrl(String fileName) {
         return ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path(imageUploadsConfig.profileAvatarDirectory() + "/")
+                .path(imageUploadsConfig.userAvatarDirectory() + "/")
                 .path(fileName)
                 .toUriString();
     }
