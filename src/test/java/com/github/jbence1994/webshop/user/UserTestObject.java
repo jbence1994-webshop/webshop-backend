@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profileWithAvatar;
 import static com.github.jbence1994.webshop.user.ProfileTestObject.profileWithoutAvatar;
@@ -34,7 +35,8 @@ public final class UserTestObject {
                 role,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                profile
+                profile,
+                new ArrayList<>()
         );
     }
 }

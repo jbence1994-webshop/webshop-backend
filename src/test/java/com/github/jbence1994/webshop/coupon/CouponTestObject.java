@@ -10,7 +10,7 @@ import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_DESCRIPTION;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.EXPIRED_COUPON_EXPIRATION_DATE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.NOT_EXPIRED_COUPON_EXPIRATION_DATE;
-import static com.github.jbence1994.webshop.user.ProfileTestObject.profileWithoutAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 
 public final class CouponTestObject {
     public static Coupon percentOffNotExpiredCoupon() {
@@ -46,7 +46,7 @@ public final class CouponTestObject {
                 value,
                 description,
                 expirationDate,
-                List.of(profileWithoutAvatar())
+                List.of(user1WithoutAvatar())
         );
     }
 }

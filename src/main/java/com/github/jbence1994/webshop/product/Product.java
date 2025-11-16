@@ -102,7 +102,7 @@ public class Product {
 
     private Optional<ProductRating> getRating(Long profileId) {
         return ratings.stream()
-                .filter(rating -> rating.getProfile().getUserId().equals(profileId))
+                .filter(rating -> rating.getUser().getId().equals(profileId))
                 .findFirst();
     }
 }
