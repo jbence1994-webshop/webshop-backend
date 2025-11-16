@@ -13,16 +13,16 @@ public class ImageResourceLocationConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         var productPhotosUploadDirectoryPath = imageUploadsConfig.productPhotosDirectory();
-        var profileAvatarUploadDirectoryPath = imageUploadsConfig.profileAvatarDirectory();
+        var userAvatarUploadDirectoryPath = imageUploadsConfig.userAvatarDirectory();
 
         registry
                 .addResourceHandler(
                         productPhotosUploadDirectoryPath + "/**",
-                        profileAvatarUploadDirectoryPath + "/**"
+                        userAvatarUploadDirectoryPath + "/**"
                 )
                 .addResourceLocations(
                         "file:" + productPhotosUploadDirectoryPath,
-                        "file:" + profileAvatarUploadDirectoryPath
+                        "file:" + userAvatarUploadDirectoryPath
                 )
                 .setCachePeriod(3600);
     }

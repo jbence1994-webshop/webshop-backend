@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ProfileAvatarService implements ImageService {
+public class UserAvatarService implements ImageService {
     private final ImageUploadsConfig imageUploadsConfig;
     private final UserQueryService userQueryService;
     private final UserService userService;
@@ -22,21 +22,23 @@ public class ProfileAvatarService implements ImageService {
 
             var user = userQueryService.getUser(userId);
 
-            user.getProfileAvatar()
-                    .ifPresent(profileAvatarFileName -> fileUtils.remove(
-                            imageUploadsConfig.profileAvatarDirectory(),
-                            profileAvatarFileName)
+            user.getAvatarFileName()
+                    .ifPresent(
+                            userAvatarFileName -> fileUtils.remove(
+                                    imageUploadsConfig.userAvatarDirectory(),
+                                    userAvatarFileName
+                            )
                     );
 
             var fileName = fileNameGenerator.generate(image.getFileExtension());
 
             fileUtils.store(
-                    imageUploadsConfig.profileAvatarDirectory(),
+                    imageUploadsConfig.userAvatarDirectory(),
                     fileName,
                     image.getInputStream()
             );
 
-            user.setProfileAvatar(fileName);
+            user.setAvatarFileName(fileName);
             userService.updateUser(user);
 
             return fileName;
@@ -51,11 +53,11 @@ public class ProfileAvatarService implements ImageService {
             var user = userQueryService.getUser(userId);
 
             fileUtils.remove(
-                    imageUploadsConfig.profileAvatarDirectory(),
+                    imageUploadsConfig.userAvatarDirectory(),
                     fileName
             );
 
-            user.setProfileAvatar(null);
+            user.setAvatarFileName(null);
             userService.updateUser(user);
         } catch (FileDeletionException exception) {
             throw new ImageDeletionException("The avatar could not be deleted successfully.");

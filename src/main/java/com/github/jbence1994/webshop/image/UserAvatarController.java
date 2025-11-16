@@ -15,18 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/users/{userId}/profile/avatar")
+@RequestMapping("/users/{userId}/avatar")
 @Validated
-public class ProfileAvatarController {
+public class UserAvatarController {
     private final UserQueryService userQueryService;
     private final ImageUrlBuilder imageUrlBuilder;
     private final ImageService imageService;
     private final ImageMapper imageMapper;
 
-    public ProfileAvatarController(
+    public UserAvatarController(
             final UserQueryService userQueryService,
-            @Qualifier("profileAvatarUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
-            @Qualifier("profileAvatarService") final ImageService imageService,
+            @Qualifier("userAvatarUrlBuilder") final ImageUrlBuilder imageUrlBuilder,
+            @Qualifier("userAvatarService") final ImageService imageService,
             final ImageMapper imageMapper
     ) {
         this.userQueryService = userQueryService;
@@ -36,7 +36,7 @@ public class ProfileAvatarController {
     }
 
     @PostMapping
-    public ResponseEntity<ImageResponse> uploadProfileAvatar(
+    public ResponseEntity<ImageResponse> uploadUserAvatar(
             @PathVariable Long userId,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
@@ -49,17 +49,17 @@ public class ProfileAvatarController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getProfileAvatar(@PathVariable Long userId) {
-        return userQueryService.getUser(userId).getProfileAvatar()
-                .map(profileAvatar -> {
-                    var url = imageUrlBuilder.buildUrl(profileAvatar);
-                    return ResponseEntity.ok(new ImageResponse(profileAvatar, url));
+    public ResponseEntity<?> getUserAvatar(@PathVariable Long userId) {
+        return userQueryService.getUser(userId).getAvatarFileName()
+                .map(userAvatar -> {
+                    var url = imageUrlBuilder.buildUrl(userAvatar);
+                    return ResponseEntity.ok(new ImageResponse(userAvatar, url));
                 })
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @DeleteMapping("/{fileName}")
-    public ResponseEntity<Void> deleteProfileAvatar(
+    public ResponseEntity<Void> deleteUserAvatar(
             @PathVariable Long userId,
             @PathVariable String fileName
     ) {

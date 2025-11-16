@@ -26,7 +26,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ProfileAvatarControllerTests {
+public class UserAvatarControllerTests {
 
     @Mock
     private UserQueryService userQueryService;
@@ -41,15 +41,15 @@ public class ProfileAvatarControllerTests {
     private ImageMapper imageMapper;
 
     @InjectMocks
-    private ProfileAvatarController profileAvatarController;
+    private UserAvatarController userAvatarController;
 
     @Test
-    public void uploadProfileAvatarTest() {
+    public void uploadUserAvatarTest() {
         when(imageMapper.toImageUpload(any())).thenReturn(jpegImageUpload());
         when(imageService.uploadImage(any(), any())).thenReturn(PHOTO_FILE_NAME);
         when(imageUrlBuilder.buildUrl(any())).thenReturn(PHOTO_URL);
 
-        var result = profileAvatarController.uploadProfileAvatar(1L, multipartFile());
+        var result = userAvatarController.uploadUserAvatar(1L, multipartFile());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(result.getBody(), not(nullValue()));
@@ -58,31 +58,31 @@ public class ProfileAvatarControllerTests {
     }
 
     @Test
-    public void getProfileAvatarTest_HappyPath_ProfileWithAvatar() {
+    public void getUserAvatarTest_HappyPath_UserWithAvatar() {
         when(userQueryService.getUser(anyLong())).thenReturn(user1WithAvatar());
         when(imageUrlBuilder.buildUrl(any())).thenReturn(AVATAR_URL);
 
-        var result = profileAvatarController.getProfileAvatar(1L);
+        var result = userAvatarController.getUserAvatar(1L);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.OK));
         assertThat(result.getBody(), not(nullValue()));
     }
 
     @Test
-    public void getProfileAvatarTest_UnhappyPath_ProfileWithoutAvatar() {
+    public void getUserAvatarTest_UnhappyPath_UserWithoutAvatar() {
         when(userQueryService.getUser(anyLong())).thenReturn(user1WithoutAvatar());
 
-        var result = profileAvatarController.getProfileAvatar(1L);
+        var result = userAvatarController.getUserAvatar(1L);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
-    public void deleteProfileAvatarTest() {
+    public void deleteUserAvatarTest() {
         doNothing().when(imageService).deleteImage(any(), any());
 
-        var result = profileAvatarController.deleteProfileAvatar(1L, PHOTO_FILE_NAME);
+        var result = userAvatarController.deleteUserAvatar(1L, PHOTO_FILE_NAME);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));

@@ -8,6 +8,6 @@ import java.util.List;
 public record ImageUploadsConfig(
         List<String> allowedFileExtensions,
         String productPhotosDirectory,
-        String profileAvatarDirectory
+        String userAvatarDirectory
 ) {
 }
