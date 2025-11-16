@@ -12,7 +12,6 @@ import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.notSanitizedChangePasswordRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.forgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.notSanitizedForgotPasswordRequest;
-import static com.github.jbence1994.webshop.user.ProfileTestObject.profileAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.registrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationResponseTestObject.registrationResponse;
@@ -68,16 +67,16 @@ public class UserControllerTests {
 
         assertThat(result.id(), equalTo(userDto().id()));
         assertThat(result.email(), equalTo(userDto().email()));
-        assertThat(result.profile().firstName(), equalTo(userDto().profile().firstName()));
-        assertThat(result.profile().middleName(), equalTo(userDto().profile().middleName()));
-        assertThat(result.profile().lastName(), equalTo(userDto().profile().lastName()));
-        assertThat(result.profile().dateOfBirth(), equalTo(userDto().profile().dateOfBirth()));
-        assertThat(result.profile().phoneNumber(), equalTo(userDto().profile().phoneNumber()));
-        assertThat(result.profile().address().addressLine(), equalTo(userDto().profile().address().addressLine()));
-        assertThat(result.profile().address().municipality(), equalTo(userDto().profile().address().municipality()));
-        assertThat(result.profile().address().province(), equalTo(userDto().profile().address().province()));
-        assertThat(result.profile().address().postalCode(), equalTo(userDto().profile().address().postalCode()));
-        assertThat(result.profile().address().country(), equalTo(userDto().profile().address().country()));
+        assertThat(result.firstName(), equalTo(userDto().firstName()));
+        assertThat(result.middleName(), equalTo(userDto().middleName()));
+        assertThat(result.lastName(), equalTo(userDto().lastName()));
+        assertThat(result.dateOfBirth(), equalTo(userDto().dateOfBirth()));
+        assertThat(result.phoneNumber(), equalTo(userDto().phoneNumber()));
+        assertThat(result.address().addressLine(), equalTo(userDto().address().addressLine()));
+        assertThat(result.address().municipality(), equalTo(userDto().address().municipality()));
+        assertThat(result.address().province(), equalTo(userDto().address().province()));
+        assertThat(result.address().postalCode(), equalTo(userDto().address().postalCode()));
+        assertThat(result.address().country(), equalTo(userDto().address().country()));
     }
 
     @Test
@@ -96,7 +95,6 @@ public class UserControllerTests {
     public void registerUserTest() {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
         when(userMapper.toAddress(any())).thenReturn(addressAfterMappingFromDto());
-        when(userMapper.toProfile(any())).thenReturn(profileAfterMappingFromDto());
         when(userMapper.toUser(any())).thenReturn(user1AfterMappingFromDto());
         when(userService.registerUser(any())).thenReturn(user1WithoutAvatar());
         when(userMapper.toRegistrationResponse(any())).thenReturn(registrationResponse());

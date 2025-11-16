@@ -96,7 +96,7 @@ public class UserServiceImplTests {
         assertThat(result.getMessage(), equalTo("Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."));
 
         verify(userRepository, times(1)).existsByEmail(any());
-        verify(userRepository, never()).existsByProfilePhoneNumber(any());
+        verify(userRepository, never()).existsByPhoneNumber(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
@@ -104,7 +104,7 @@ public class UserServiceImplTests {
     @Test
     public void registerUserTest_UnhappyPath_PhoneNumberAlreadyExistsException() {
         when(userRepository.existsByEmail(any())).thenReturn(false);
-        when(userRepository.existsByProfilePhoneNumber(any())).thenReturn(true);
+        when(userRepository.existsByPhoneNumber(any())).thenReturn(true);
 
         var result = assertThrows(
                 PhoneNumberAlreadyExistsException.class,
@@ -114,7 +114,7 @@ public class UserServiceImplTests {
         assertThat(result.getMessage(), equalTo("Phone number '+36501323566' is already registered. Please use a different."));
 
         verify(userRepository, times(1)).existsByEmail(any());
-        verify(userRepository, times(1)).existsByProfilePhoneNumber(any());
+        verify(userRepository, times(1)).existsByPhoneNumber(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
