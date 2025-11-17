@@ -1,5 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.product.Product;
+
 public interface UserService {
     User registerUser(User user);
 
@@ -12,4 +14,8 @@ public interface UserService {
     void updateUser(User user);
 
     void deleteUser(Long id);
+
+    Product addProductToWishlist(Long id, Long productId);
+
+    void deleteProductFromWishlist(Long id, Long productId);
 }

@@ -96,4 +96,26 @@ public class UserController {
                 .map(productMapper::toWishlistProductDto)
                 .toList();
     }
+
+    @PostMapping("/{id}/wishlist/{productId}")
+    public ResponseEntity<WishlistProductDto> addProductToWishlist(
+            @PathVariable Long id,
+            @PathVariable Long productId
+    ) {
+        var product = userService.addProductToWishlist(id, productId);
+
+        var wishlistProductDto = productMapper.toWishlistProductDto(product);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(wishlistProductDto);
+    }
+
+    @DeleteMapping("/{id}/wishlist/{productId}")
+    public ResponseEntity<Void> deleteProductFromWishlist(
+            @PathVariable Long id,
+            @PathVariable Long productId
+    ) {
+        userService.deleteProductFromWishlist(id, productId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
