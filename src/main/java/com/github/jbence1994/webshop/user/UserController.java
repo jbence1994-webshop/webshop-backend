@@ -1,5 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.product.ProductMapper;
+import com.github.jbence1994.webshop.product.WishlistProductDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class UserController {
     private final ResetPasswordRequestSanitizer resetPasswordRequestSanitizer;
     private final RegistrationRequestSanitizer registrationRequestSanitizer;
     private final UserQueryService userQueryService;
+    private final ProductMapper productMapper;
     private final UserService userService;
     private final UserMapper userMapper;
 
@@ -79,6 +84,31 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/wishlist")
+    public List<WishlistProductDto> getWishlist() {
+        var wishlist = userQueryService.getWishlist();
+
+        return wishlist.stream()
+                .map(productMapper::toWishlistProductDto)
+                .toList();
+    }
+
+    @PostMapping("/wishlist")
+    public ResponseEntity<WishlistProductDto> addProductToWishlist(@Valid @RequestBody AddProductToWishlistRequest request) {
+        var product = userService.addProductToWishlist(request.productId());
+
+        var wishlistProductDto = productMapper.toWishlistProductDto(product);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(wishlistProductDto);
+    }
+
+    @DeleteMapping("/wishlist")
+    public ResponseEntity<Void> deleteProductFromWishlist(@Valid @RequestBody DeleteProductFromWishlistRequest request) {
+        userService.deleteProductFromWishlist(request.productId());
 
         return ResponseEntity.noContent().build();
     }
