@@ -88,33 +88,27 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}/wishlist")
-    public List<WishlistProductDto> getWishlist(@PathVariable Long id) {
-        var wishlist = userQueryService.getWishlist(id);
+    @GetMapping("/wishlist")
+    public List<WishlistProductDto> getWishlist() {
+        var wishlist = userQueryService.getWishlist();
 
         return wishlist.stream()
                 .map(productMapper::toWishlistProductDto)
                 .toList();
     }
 
-    @PostMapping("/{id}/wishlist/{productId}")
-    public ResponseEntity<WishlistProductDto> addProductToWishlist(
-            @PathVariable Long id,
-            @PathVariable Long productId
-    ) {
-        var product = userService.addProductToWishlist(id, productId);
+    @PostMapping("/wishlist")
+    public ResponseEntity<WishlistProductDto> addProductToWishlist(@Valid @RequestBody AddProductToWishlistRequest request) {
+        var product = userService.addProductToWishlist(request.productId());
 
         var wishlistProductDto = productMapper.toWishlistProductDto(product);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(wishlistProductDto);
     }
 
-    @DeleteMapping("/{id}/wishlist/{productId}")
-    public ResponseEntity<Void> deleteProductFromWishlist(
-            @PathVariable Long id,
-            @PathVariable Long productId
-    ) {
-        userService.deleteProductFromWishlist(id, productId);
+    @DeleteMapping("/wishlist")
+    public ResponseEntity<Void> deleteProductFromWishlist(@Valid @RequestBody DeleteProductFromWishlistRequest request) {
+        userService.deleteProductFromWishlist(request.productId());
 
         return ResponseEntity.noContent().build();
     }

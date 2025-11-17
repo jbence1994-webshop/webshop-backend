@@ -8,7 +8,6 @@ import java.util.List;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
-import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.user.AddressTestObject.address;
 import static com.github.jbence1994.webshop.user.UserTestConstants.DATE_OF_BIRTH;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
@@ -34,7 +33,7 @@ public final class UserTestObject {
     }
 
     public static User user1WithFavoriteProducts() {
-        return buildUser(1L, EMAIL_1, HASHED_PASSWORD, AVATAR_FILE_NAME, Role.ADMIN, List.of(product1(), product2()));
+        return buildUser(1L, EMAIL_1, HASHED_PASSWORD, AVATAR_FILE_NAME, Role.ADMIN, List.of(product1()));
     }
 
     public static User user2WithoutAvatar() {

@@ -127,9 +127,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Product addProductToWishlist(Long id, Long productId) {
+    public Product addProductToWishlist(Long productId) {
         try {
-            var user = userQueryService.getUser(id);
+            var user = authService.getCurrentUser();
             var product = productQueryService.getProduct(productId);
 
             user.addFavoriteProduct(product);
@@ -143,8 +143,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteProductFromWishlist(Long id, Long productId) {
-        var user = userQueryService.getUser(id);
+    public void deleteProductFromWishlist(Long productId) {
+        var user = authService.getCurrentUser();
 
         user.removeFavoriteProduct(productId);
 

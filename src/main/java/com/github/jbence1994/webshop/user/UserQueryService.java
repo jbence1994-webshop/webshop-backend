@@ -9,5 +9,5 @@ public interface UserQueryService {
 
     User getUser(String email);
 
-    List<Product> getWishlist(Long id);
+    List<Product> getWishlist();
 }

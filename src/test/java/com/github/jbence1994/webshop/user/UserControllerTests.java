@@ -13,9 +13,11 @@ import java.util.List;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.product.WishlistProductDtoTestObject.wishlistProductDto;
+import static com.github.jbence1994.webshop.user.AddProductToWishlistRequestTestObject.addProductToWishlistRequest;
 import static com.github.jbence1994.webshop.user.AddressTestObject.addressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.notSanitizedChangePasswordRequest;
+import static com.github.jbence1994.webshop.user.DeleteProductFromWishlistRequestTestObject.deleteProductFromWishlistRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.forgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.notSanitizedForgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequest;
@@ -35,6 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -155,12 +159,39 @@ public class UserControllerTests {
 
     @Test
     public void getWishlistTest() {
-        when(userQueryService.getWishlist(any())).thenReturn(List.of(product1(), product2()));
+        when(userQueryService.getWishlist()).thenReturn(List.of(product1(), product2()));
         when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
 
-        var result = userController.getWishlist(1L);
+        var result = userController.getWishlist();
 
         assertThat(result, not(nullValue()));
         assertThat(result.size(), equalTo(2));
+    }
+
+    @Test
+    public void addProductToWishlistTest() {
+        when(userService.addProductToWishlist(any())).thenReturn(product1());
+        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
+
+        var result = userController.addProductToWishlist(addProductToWishlistRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().id(), equalTo(wishlistProductDto().id()));
+
+        verify(userService, times(1)).addProductToWishlist(any());
+        verify(productMapper, times(1)).toWishlistProductDto(any());
+    }
+
+    @Test
+    public void deleteProductFromWishlistTest() {
+        doNothing().when(userService).deleteProductFromWishlist(any());
+
+        var result = userController.deleteProductFromWishlist(deleteProductFromWishlistRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
+
+        verify(userService, times(1)).deleteProductFromWishlist(any());
     }
 }

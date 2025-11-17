@@ -15,7 +15,7 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-    Product addProductToWishlist(Long id, Long productId);
+    Product addProductToWishlist(Long productId);
 
-    void deleteProductFromWishlist(Long id, Long productId);
+    void deleteProductFromWishlist(Long productId);
 }

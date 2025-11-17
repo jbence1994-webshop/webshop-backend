@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.auth.AuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,9 @@ public class UserQueryServiceImplTests {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private AuthService authService;
 
     @InjectMocks
     private UserQueryServiceImpl userQueryService;
@@ -87,11 +91,11 @@ public class UserQueryServiceImplTests {
 
     @Test
     public void getWishlistTest() {
-        when(userRepository.findById(any())).thenReturn(Optional.of(user1WithFavoriteProducts()));
+        when(authService.getCurrentUser()).thenReturn(user1WithFavoriteProducts());
 
-        var result = assertDoesNotThrow(() -> userQueryService.getWishlist(1L));
+        var result = assertDoesNotThrow(() -> userQueryService.getWishlist());
 
         assertThat(result, not(nullValue()));
-        assertThat(result.size(), equalTo(2));
+        assertThat(result.size(), equalTo(1));
     }
 }
