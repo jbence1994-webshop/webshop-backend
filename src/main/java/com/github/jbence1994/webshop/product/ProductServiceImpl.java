@@ -1,7 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
 import com.github.jbence1994.webshop.auth.AuthService;
-import com.github.jbence1994.webshop.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProductQueryService productQueryService;
     private final ProductRepository productRepository;
     private final AuthService authService;
-    private final UserService userService;
 
     @Override
     public void createProduct(Product product) {
@@ -24,31 +22,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void updateProduct(Product product) {
         save(product);
-    }
-
-    @Override
-    public Product addProductToWishlist(Long productId) {
-        try {
-            var user = authService.getCurrentUser();
-            var product = productQueryService.getProduct(productId);
-
-            user.addFavoriteProduct(product);
-
-            userService.updateUser(user);
-
-            return product;
-        } catch (Exception exception) {
-            throw new ProductAlreadyOnWishlistException(productId);
-        }
-    }
-
-    @Override
-    public void deleteProductFromWishlist(Long productId) {
-        var user = authService.getCurrentUser();
-
-        user.removeFavoriteProduct(productId);
-
-        userService.updateUser(user);
     }
 
     @Override

@@ -37,7 +37,6 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product1Wi
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2WithPhotos;
 import static com.github.jbence1994.webshop.product.UpdateProductRatingRequestTestObject.updateProductRatingRequest;
-import static com.github.jbence1994.webshop.product.WishlistProductDtoTestObject.wishlistProductDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -57,7 +56,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class ProductControllerTests {
+public class ProductControllerTests {
 
     @Mock
     private CreateProductReviewRequestSanitizer createProductReviewRequestSanitizer;
@@ -177,33 +176,6 @@ class ProductControllerTests {
         verify(categoryQueryService, times(1)).getCategory(any());
         verify(productMapper, times(1)).toProduct(any());
         verify(productService, times(1)).createProduct(any());
-    }
-
-    @Test
-    public void addProductToWishlistTest() {
-        when(productService.addProductToWishlist(any())).thenReturn(product1());
-        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
-
-        var result = productController.addProductToWishlist(1L);
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().id(), equalTo(wishlistProductDto().id()));
-
-        verify(productService, times(1)).addProductToWishlist(any());
-        verify(productMapper, times(1)).toWishlistProductDto(any());
-    }
-
-    @Test
-    public void deleteProductFromWishlistTest() {
-        doNothing().when(productService).deleteProductFromWishlist(any());
-
-        var result = productController.deleteProductFromWishlist(1L);
-
-        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
-        assertThat(result.getBody(), is(nullValue()));
-
-        verify(productService, times(1)).deleteProductFromWishlist(any());
     }
 
     @Test

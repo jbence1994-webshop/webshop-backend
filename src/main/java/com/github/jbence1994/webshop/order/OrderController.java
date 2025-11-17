@@ -25,7 +25,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public OrderDto getOrder(@PathVariable("id") Long id) {
+    public OrderDto getOrder(@PathVariable Long id) {
         var order = orderQueryService.getOrder(id);
 
         return orderMapper.toDto(order);

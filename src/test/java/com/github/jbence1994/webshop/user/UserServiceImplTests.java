@@ -4,6 +4,8 @@ import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.common.EmailService;
 import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
+import com.github.jbence1994.webshop.product.ProductAlreadyOnWishlistException;
+import com.github.jbence1994.webshop.product.ProductQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.common.EmailContentTestObject.emailContent;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.HASHED_TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.expiredTemporaryPassword;
@@ -25,6 +28,7 @@ import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_OLD_P
 import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.OLD_PASSWORD;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithFavoriteProducts;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -33,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,6 +59,9 @@ public class UserServiceImplTests {
     private EmailTemplateBuilder emailTemplateBuilder;
 
     @Mock
+    private ProductQueryService productQueryService;
+
+    @Mock
     private UserQueryService userQueryService;
 
     @Mock
@@ -70,6 +78,8 @@ public class UserServiceImplTests {
 
     @InjectMocks
     private UserServiceImpl userService;
+
+    private final User user = user1WithoutAvatar();
 
     @Test
     public void registerUserTest_HappyPath() {
@@ -259,5 +269,52 @@ public class UserServiceImplTests {
         doNothing().when(userRepository).deleteById(any());
 
         assertDoesNotThrow(() -> userService.deleteUser(any()));
+    }
+
+    @Test
+    public void addProductToWishlistTest_HappyPath() {
+        when(authService.getCurrentUser()).thenReturn(user);
+        when(productQueryService.getProduct(any())).thenReturn(product1());
+        when(userRepository.save(any())).thenReturn(user1WithFavoriteProducts());
+
+        var result = userService.addProductToWishlist(1L);
+
+        assertThat(result.getId(), equalTo(product1().getId()));
+        assertThat(user.getFavoriteProducts().size(), equalTo(1));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void addProductToWishlistTest_UnhappyPath_ProductAlreadyOnWishlistException() {
+        when(authService.getCurrentUser()).thenReturn(user);
+        when(productQueryService.getProduct(any())).thenReturn(product1());
+        doThrow(new ProductAlreadyOnWishlistException(1L)).when(userRepository).save(any());
+
+        var result = assertThrows(
+                ProductAlreadyOnWishlistException.class,
+                () -> userService.addProductToWishlist(1L)
+        );
+
+        assertThat(result.getMessage(), equalTo("This product with the given ID: #1 is already on your wishlist."));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void deleteProductFromWishlistTest() {
+        when(authService.getCurrentUser()).thenReturn(user);
+        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
+
+        userService.deleteProductFromWishlist(1L);
+
+        assertThat(user.getFavoriteProducts().size(), equalTo(0));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(userRepository, times(1)).save(any());
     }
 }
