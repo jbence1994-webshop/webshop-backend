@@ -1,11 +1,13 @@
 package com.github.jbence1994.webshop.auth;
 
-import com.github.jbence1994.webshop.user.UserQueryService;
+import com.github.jbence1994.webshop.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,14 +24,14 @@ import static org.mockito.Mockito.when;
 public class FakeAuthServiceTests {
 
     @Mock
-    private UserQueryService userQueryService;
+    private UserRepository userRepository;
 
     @InjectMocks
     private FakeAuthService authService;
 
     @Test
     public void getCurrentUserTest() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user1WithoutAvatar());
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user1WithoutAvatar()));
 
         var result = assertDoesNotThrow(() -> authService.getCurrentUser());
 

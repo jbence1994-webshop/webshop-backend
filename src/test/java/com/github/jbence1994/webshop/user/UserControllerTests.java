@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.product.ProductMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,9 +8,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
+import static com.github.jbence1994.webshop.product.WishlistProductDtoTestObject.wishlistProductDto;
+import static com.github.jbence1994.webshop.user.AddProductToWishlistRequestTestObject.addProductToWishlistRequest;
 import static com.github.jbence1994.webshop.user.AddressTestObject.addressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.notSanitizedChangePasswordRequest;
+import static com.github.jbence1994.webshop.user.DeleteProductFromWishlistRequestTestObject.deleteProductFromWishlistRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.forgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.notSanitizedForgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequest;
@@ -29,6 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,6 +58,9 @@ public class UserControllerTests {
 
     @Mock
     private UserQueryService userQueryService;
+
+    @Mock
+    private ProductMapper productMapper;
 
     @Mock
     private UserService userService;
@@ -83,10 +96,7 @@ public class UserControllerTests {
     public void getUserTest_UnhappyPath_UserNotFoundException() {
         when(userQueryService.getUser(anyLong())).thenThrow(new UserNotFoundException(1L));
 
-        var result = assertThrows(
-                UserNotFoundException.class,
-                () -> userController.getUser(1L)
-        );
+        var result = assertThrows(UserNotFoundException.class, () -> userController.getUser(1L));
 
         assertThat(result.getMessage(), equalTo("No user was found with the given ID: #1."));
     }
@@ -145,5 +155,43 @@ public class UserControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
+    }
+
+    @Test
+    public void getWishlistTest() {
+        when(userQueryService.getWishlist()).thenReturn(List.of(product1(), product2()));
+        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
+
+        var result = userController.getWishlist();
+
+        assertThat(result, not(nullValue()));
+        assertThat(result.size(), equalTo(2));
+    }
+
+    @Test
+    public void addProductToWishlistTest() {
+        when(userService.addProductToWishlist(any())).thenReturn(product1());
+        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
+
+        var result = userController.addProductToWishlist(addProductToWishlistRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().id(), equalTo(wishlistProductDto().id()));
+
+        verify(userService, times(1)).addProductToWishlist(any());
+        verify(productMapper, times(1)).toWishlistProductDto(any());
+    }
+
+    @Test
+    public void deleteProductFromWishlistTest() {
+        doNothing().when(userService).deleteProductFromWishlist(any());
+
+        var result = userController.deleteProductFromWishlist(deleteProductFromWishlistRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
+
+        verify(userService, times(1)).deleteProductFromWishlist(any());
     }
 }
