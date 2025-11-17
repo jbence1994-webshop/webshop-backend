@@ -1,7 +1,10 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,5 +23,12 @@ public class UserQueryServiceImpl implements UserQueryService {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
+    }
+
+    @Override
+    public List<Product> getWishlist(Long id) {
+        var user = getUser(id);
+
+        return user.getFavoriteProducts();
     }
 }
