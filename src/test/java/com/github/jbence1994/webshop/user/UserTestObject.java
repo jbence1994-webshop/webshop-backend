@@ -1,9 +1,14 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.product.Product;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.user.AddressTestObject.address;
 import static com.github.jbence1994.webshop.user.UserTestConstants.DATE_OF_BIRTH;
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
@@ -17,19 +22,23 @@ import static com.github.jbence1994.webshop.user.UserTestConstants.PHONE_NUMBER;
 
 public final class UserTestObject {
     public static User user1WithoutAvatar() {
-        return buildUser(1L, EMAIL_1, HASHED_PASSWORD, null, Role.ADMIN);
-    }
-
-    public static User user2WithoutAvatar() {
-        return buildUser(2L, EMAIL_2, HASHED_PASSWORD, null, Role.USER);
+        return buildUser(1L, EMAIL_1, HASHED_PASSWORD, null, Role.ADMIN, new ArrayList<>());
     }
 
     public static User user1WithAvatar() {
-        return buildUser(1L, EMAIL_1, HASHED_PASSWORD, AVATAR_FILE_NAME, Role.ADMIN);
+        return buildUser(1L, EMAIL_1, HASHED_PASSWORD, AVATAR_FILE_NAME, Role.ADMIN, new ArrayList<>());
     }
 
     public static User user1AfterMappingFromDto() {
-        return buildUser(null, EMAIL_1, PASSWORD, null, Role.ADMIN);
+        return buildUser(null, EMAIL_1, PASSWORD, null, Role.ADMIN, new ArrayList<>());
+    }
+
+    public static User user1WithFavoriteProducts() {
+        return buildUser(1L, EMAIL_1, HASHED_PASSWORD, AVATAR_FILE_NAME, Role.ADMIN, List.of(product1(), product2()));
+    }
+
+    public static User user2WithoutAvatar() {
+        return buildUser(2L, EMAIL_2, HASHED_PASSWORD, null, Role.USER, new ArrayList<>());
     }
 
     private static User buildUser(
@@ -37,7 +46,8 @@ public final class UserTestObject {
             String email,
             String password,
             String avatarFileName,
-            Role role
+            Role role,
+            List<Product> favoriteProducts
     ) {
         return new User(
                 id,
@@ -53,7 +63,7 @@ public final class UserTestObject {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 address(),
-                new ArrayList<>()
+                favoriteProducts
         );
     }
 }

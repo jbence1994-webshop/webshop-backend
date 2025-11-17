@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithFavoriteProducts;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -82,5 +83,15 @@ public class UserQueryServiceImplTests {
         );
 
         assertThat(result.getMessage(), equalTo("No user was found with the given e-mail: 'juhasz.bence.zsolt@gmail.com'."));
+    }
+
+    @Test
+    public void getWishlistTest() {
+        when(userRepository.findById(any())).thenReturn(Optional.of(user1WithFavoriteProducts()));
+
+        var result = assertDoesNotThrow(() -> userQueryService.getWishlist(1L));
+
+        assertThat(result, not(nullValue()));
+        assertThat(result.size(), equalTo(2));
     }
 }

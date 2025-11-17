@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.product.ProductMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,6 +8,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
+import static com.github.jbence1994.webshop.product.WishlistProductDtoTestObject.wishlistProductDto;
 import static com.github.jbence1994.webshop.user.AddressTestObject.addressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.notSanitizedChangePasswordRequest;
@@ -50,6 +56,9 @@ public class UserControllerTests {
     private UserQueryService userQueryService;
 
     @Mock
+    private ProductMapper productMapper;
+
+    @Mock
     private UserService userService;
 
     @Mock
@@ -83,10 +92,7 @@ public class UserControllerTests {
     public void getUserTest_UnhappyPath_UserNotFoundException() {
         when(userQueryService.getUser(anyLong())).thenThrow(new UserNotFoundException(1L));
 
-        var result = assertThrows(
-                UserNotFoundException.class,
-                () -> userController.getUser(1L)
-        );
+        var result = assertThrows(UserNotFoundException.class, () -> userController.getUser(1L));
 
         assertThat(result.getMessage(), equalTo("No user was found with the given ID: #1."));
     }
@@ -145,5 +151,16 @@ public class UserControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
+    }
+
+    @Test
+    public void getWishlistTest() {
+        when(userQueryService.getWishlist(any())).thenReturn(List.of(product1(), product2()));
+        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
+
+        var result = userController.getWishlist(1L);
+
+        assertThat(result, not(nullValue()));
+        assertThat(result.size(), equalTo(2));
     }
 }
