@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.7</version>
+        <version>3.5.8</version>
         <relativePath/>
     </parent>
 
@@ -33,7 +33,7 @@
         <!-- Maven plugin versions -->
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
-        <flyway-maven-plugin.version>11.17.0</flyway-maven-plugin.version>
+        <flyway-maven-plugin.version>11.17.1</flyway-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <checkstyle.version>12.1.2</checkstyle.version>
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
