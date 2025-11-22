@@ -11,6 +11,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,7 @@ import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_2_CODE;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,6 +38,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class CouponQueryServiceImplTests {
 
     @Mock
@@ -60,14 +64,13 @@ public class CouponQueryServiceImplTests {
 
     @Test
     public void getCouponsTest() {
-        when(couponRepository.findAllByUser(any())).thenReturn(List.of(percentOffNotExpiredCoupon()));
+        when(couponRepository.findAll()).thenReturn(List.of(percentOffNotExpiredCoupon(), fixedAmountExpiredCoupon()));
 
         var result = couponQueryService.getCoupons();
 
         assertThat(result.size(), equalTo(1));
 
-        verify(authService, times(1)).getCurrentUser();
-        verify(couponRepository, times(1)).findAllByUser(any());
+        verify(couponRepository, times(1)).findAll();
     }
 
     @Test
