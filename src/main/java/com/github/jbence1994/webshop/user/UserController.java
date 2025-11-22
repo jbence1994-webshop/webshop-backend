@@ -1,7 +1,5 @@
 package com.github.jbence1994.webshop.user;
 
-import com.github.jbence1994.webshop.product.ProductMapper;
-import com.github.jbence1994.webshop.product.WishlistProductDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +24,6 @@ public class UserController {
     private final ResetPasswordRequestSanitizer resetPasswordRequestSanitizer;
     private final RegistrationRequestSanitizer registrationRequestSanitizer;
     private final UserQueryService userQueryService;
-    private final ProductMapper productMapper;
     private final UserService userService;
     private final UserMapper userMapper;
 
@@ -34,15 +31,15 @@ public class UserController {
     public UserDto getUser(@PathVariable Long id) {
         var user = userQueryService.getUser(id);
 
-        return userMapper.toUserDto(user);
+        return userMapper.toDto(user);
     }
 
     @PostMapping
     public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
         var sanitizedRequest = registrationRequestSanitizer.sanitize(request);
 
-        var address = userMapper.toAddress(sanitizedRequest.user().address());
-        var user = userMapper.toUser(sanitizedRequest.user());
+        var address = userMapper.toEntity(sanitizedRequest.user().address());
+        var user = userMapper.toEntity(sanitizedRequest.user());
 
         address.setUser(user);
         user.setAddress(address);
@@ -93,7 +90,7 @@ public class UserController {
         var wishlist = userQueryService.getWishlist();
 
         return wishlist.stream()
-                .map(productMapper::toWishlistProductDto)
+                .map(userMapper::toDto)
                 .toList();
     }
 
@@ -101,7 +98,7 @@ public class UserController {
     public ResponseEntity<WishlistProductDto> addProductToWishlist(@Valid @RequestBody AddProductToWishlistRequest request) {
         var product = userService.addProductToWishlist(request.productId());
 
-        var wishlistProductDto = productMapper.toWishlistProductDto(product);
+        var wishlistProductDto = userMapper.toDto(product);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(wishlistProductDto);
     }
