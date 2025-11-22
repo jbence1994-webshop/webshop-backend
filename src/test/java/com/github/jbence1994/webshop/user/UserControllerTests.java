@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
-import com.github.jbence1994.webshop.product.ProductMapper;
+import com.github.jbence1994.webshop.product.Product;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +12,6 @@ import java.util.List;
 
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
-import static com.github.jbence1994.webshop.product.WishlistProductDtoTestObject.wishlistProductDto;
 import static com.github.jbence1994.webshop.user.AddProductToWishlistRequestTestObject.addProductToWishlistRequest;
 import static com.github.jbence1994.webshop.user.AddressTestObject.addressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
@@ -28,6 +27,7 @@ import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1AfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.WishlistProductDtoTestObject.wishlistProductDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -60,9 +60,6 @@ public class UserControllerTests {
     private UserQueryService userQueryService;
 
     @Mock
-    private ProductMapper productMapper;
-
-    @Mock
     private UserService userService;
 
     @Mock
@@ -74,7 +71,7 @@ public class UserControllerTests {
     @Test
     public void getUserTest_HappyPath() {
         when(userQueryService.getUser(anyLong())).thenReturn(user1WithoutAvatar());
-        when(userMapper.toUserDto(any())).thenReturn(userDto());
+        when(userMapper.toDto(any(User.class))).thenReturn(userDto());
 
         var result = userController.getUser(1L);
 
@@ -104,8 +101,8 @@ public class UserControllerTests {
     @Test
     public void registerUserTest() {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
-        when(userMapper.toAddress(any())).thenReturn(addressAfterMappingFromDto());
-        when(userMapper.toUser(any())).thenReturn(user1AfterMappingFromDto());
+        when(userMapper.toEntity(any(RegistrationRequest.AddressDto.class))).thenReturn(addressAfterMappingFromDto());
+        when(userMapper.toEntity(any(RegistrationRequest.UserDto.class))).thenReturn(user1AfterMappingFromDto());
         when(userService.registerUser(any())).thenReturn(user1WithoutAvatar());
         when(userMapper.toRegistrationResponse(any())).thenReturn(registrationResponse());
 
@@ -160,7 +157,7 @@ public class UserControllerTests {
     @Test
     public void getWishlistTest() {
         when(userQueryService.getWishlist()).thenReturn(List.of(product1(), product2()));
-        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
+        when(userMapper.toDto(any(Product.class))).thenReturn(wishlistProductDto());
 
         var result = userController.getWishlist();
 
@@ -171,7 +168,7 @@ public class UserControllerTests {
     @Test
     public void addProductToWishlistTest() {
         when(userService.addProductToWishlist(any())).thenReturn(product1());
-        when(productMapper.toWishlistProductDto(any())).thenReturn(wishlistProductDto());
+        when(userMapper.toDto(any(Product.class))).thenReturn(wishlistProductDto());
 
         var result = userController.addProductToWishlist(addProductToWishlistRequest());
 
@@ -180,7 +177,7 @@ public class UserControllerTests {
         assertThat(result.getBody().id(), equalTo(wishlistProductDto().id()));
 
         verify(userService, times(1)).addProductToWishlist(any());
-        verify(productMapper, times(1)).toWishlistProductDto(any());
+        verify(userMapper, times(1)).toDto(any(Product.class));
     }
 
     @Test

@@ -21,8 +21,6 @@ public interface ProductMapper {
     @Mapping(target = "averageRating", expression = "java(product.calculateAverageRating())")
     ProductByIdDto toProductByIdDto(Product product);
 
-    WishlistProductDto toWishlistProductDto(Product product);
-
     @Mapping(
             target = "name",
             expression = """

@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.product;
+package com.github.jbence1994.webshop.user;
 
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_NAME;
 
