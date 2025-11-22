@@ -7,11 +7,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
+import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CouponServiceImplTests {
@@ -21,6 +23,15 @@ public class CouponServiceImplTests {
 
     @InjectMocks
     private CouponServiceImpl couponService;
+
+    @Test
+    public void createCouponTest() {
+        when(couponRepository.save(any())).thenReturn(percentOffNotExpiredCoupon());
+
+        assertDoesNotThrow(() -> couponService.createCoupon(percentOffNotExpiredCoupon()));
+
+        verify(couponRepository, times(1)).save(any());
+    }
 
     @Test
     public void getCouponsTest() {
