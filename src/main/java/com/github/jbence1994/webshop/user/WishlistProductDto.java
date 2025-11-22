@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.product;
+package com.github.jbence1994.webshop.user;
 
 public record WishlistProductDto(Long id, String name) {
 }
