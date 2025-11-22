@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
@@ -75,7 +74,7 @@ public class CouponQueryServiceImplTests {
 
     @Test
     public void getCouponTest_HappyPath() {
-        when(couponRepository.findByCouponCodeAndUserId(any(), any())).thenReturn(Optional.of(percentOffNotExpiredCoupon()));
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
 
         var result = assertDoesNotThrow(() -> couponQueryService.getCoupon(COUPON_1_CODE));
 
@@ -89,12 +88,11 @@ public class CouponQueryServiceImplTests {
         ));
 
         verify(authService, times(1)).getCurrentUser();
-        verify(couponRepository, times(1)).findByCouponCodeAndUserId(any(), any());
     }
 
     @Test
     public void getCouponTest_UnhappyPath_CouponNotFoundException() {
-        when(couponRepository.findByCouponCodeAndUserId(any(), any())).thenReturn(Optional.empty());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
 
         var result = assertThrows(
                 CouponNotFoundException.class,
@@ -104,7 +102,6 @@ public class CouponQueryServiceImplTests {
         assertThat(result.getMessage(), equalTo("No coupon was found with the given coupon code: 'SPRING15'."));
 
         verify(authService, times(1)).getCurrentUser();
-        verify(couponRepository, times(1)).findByCouponCodeAndUserId(any(), any());
     }
 
     @ParameterizedTest(name = "{index} => {0}")

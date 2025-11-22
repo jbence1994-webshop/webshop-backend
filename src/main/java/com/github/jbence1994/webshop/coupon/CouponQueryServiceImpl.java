@@ -23,8 +23,7 @@ public class CouponQueryServiceImpl implements CouponQueryService {
     public Coupon getCoupon(String code) {
         var user = authService.getCurrentUser();
 
-        return couponRepository
-                .findByCouponCodeAndUserId(code, user.getId())
+        return user.getCoupon(code)
                 .orElseThrow(() -> new CouponNotFoundException(code));
     }
 
