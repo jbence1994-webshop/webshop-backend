@@ -14,17 +14,16 @@ public class CouponQueryServiceImpl implements CouponQueryService {
 
     @Override
     public List<Coupon> getCoupons() {
-        var user = authService.getCurrentUser();
-
-        return couponRepository.findAllByUser(user.getId());
+        return couponRepository.findAll().stream()
+                .filter(coupon -> !coupon.isExpired())
+                .toList();
     }
 
     @Override
     public Coupon getCoupon(String code) {
         var user = authService.getCurrentUser();
 
-        return couponRepository
-                .findByCouponCodeAndUserId(code, user.getId())
+        return user.getCoupon(code)
                 .orElseThrow(() -> new CouponNotFoundException(code));
     }
 

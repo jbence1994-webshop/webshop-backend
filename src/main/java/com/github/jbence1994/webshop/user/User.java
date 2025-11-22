@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -69,9 +70,13 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
 
-    public Optional<String> getAvatarFileName() {
-        return Optional.ofNullable(avatarFileName);
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "user_coupons",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_code", referencedColumnName = "code")
+    )
+    private List<Coupon> coupons = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -80,6 +85,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
     private List<Product> favoriteProducts = new ArrayList<>();
+
+    public Optional<String> getAvatarFileName() {
+        return Optional.ofNullable(avatarFileName);
+    }
+
+    public Optional<Coupon> getCoupon(String code) {
+        return coupons.stream()
+                .filter(coupon -> coupon.getCode().equals(code))
+                .findFirst();
+    }
 
     public void addFavoriteProduct(Product product) {
         favoriteProducts.add(product);
