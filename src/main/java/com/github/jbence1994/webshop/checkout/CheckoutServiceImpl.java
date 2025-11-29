@@ -37,10 +37,6 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new EmptyCartException(cartId);
         }
 
-        if (checkoutQueryService.existsByCartId(cartId)) {
-            throw new CheckoutSessionAlreadyExistsByCartIdException(cartId);
-        }
-
         var checkoutSession = CheckoutSession.from(cart);
 
         save(checkoutSession);
@@ -102,8 +98,8 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new ExpiredCheckoutSessionException(checkoutSessionId);
         }
 
-        if (CheckoutStatus.COMPLETED.equals(checkoutSession.getStatus())) {
-            throw new CheckoutSessionAlreadyCompletedException(checkoutSessionId);
+        if (checkoutSession.isCanceled() || checkoutSession.isCompleted() || checkoutSession.isFailed()) {
+            throw new InvalidCheckoutSessionStateException(checkoutSessionId, checkoutSession.getStatus());
         }
 
         var cart = checkoutSession.getCart();

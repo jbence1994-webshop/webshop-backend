@@ -9,23 +9,30 @@ import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.cart.CartTestObject.cartWithOneItem;
 import static com.github.jbence1994.webshop.cart.CartTestObject.emptyCart;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.canceledCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithEmptyCart;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.completedCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.expiredCheckoutSessionWithPercentOffTypeOfAppliedCoupon;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.failedCheckoutSession;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
 import static com.github.jbence1994.webshop.checkout.PaymentResultTestObject.paymentIntentSucceeded;
 import static com.github.jbence1994.webshop.checkout.PaymentSessionResponseTestObject.paymentSessionResponse;
@@ -83,10 +90,17 @@ public class CheckoutServiceImplTests {
     @InjectMocks
     private CheckoutServiceImpl checkoutService;
 
+    private static Stream<Arguments> invalidCheckoutSessionStateParams() {
+        return Stream.of(
+                Arguments.of(Named.of("CANCELED", canceledCheckoutSession()), CheckoutStatus.CANCELED),
+                Arguments.of(Named.of("COMPLETED", completedCheckoutSession()), CheckoutStatus.COMPLETED),
+                Arguments.of(Named.of("FAILED", failedCheckoutSession()), CheckoutStatus.FAILED)
+        );
+    }
+
     @Test
     public void createCheckoutSession_HappyPath() {
         when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-        when(checkoutQueryService.existsByCartId(any())).thenReturn(false);
         when(checkoutRepository.save(any())).thenReturn(checkoutSession());
 
         var result = checkoutService.createCheckoutSession(CART_ID);
@@ -94,7 +108,6 @@ public class CheckoutServiceImplTests {
         assertThat(result, not(nullValue()));
 
         verify(cartQueryService, times(1)).getCart(any());
-        verify(checkoutQueryService, times(1)).existsByCartId(any());
         verify(checkoutRepository, times(1)).save(any());
     }
 
@@ -110,24 +123,6 @@ public class CheckoutServiceImplTests {
         assertThat(result.getMessage(), equalTo("Cart with the given ID: 00492884-e657-4c6a-abaa-aef8f4240a69 is empty."));
 
         verify(cartQueryService, times(1)).getCart(any());
-        verify(checkoutQueryService, never()).existsByCartId(any());
-        verify(checkoutRepository, never()).save(any());
-    }
-
-    @Test
-    public void createCheckoutSession_UnhappyPath_CheckoutSessionAlreadyExistsByCartIdException() {
-        when(cartQueryService.getCart(any())).thenReturn(cartWithOneItem());
-        when(checkoutQueryService.existsByCartId(any())).thenReturn(true);
-
-        var result = assertThrows(
-                CheckoutSessionAlreadyExistsByCartIdException.class,
-                () -> checkoutService.createCheckoutSession(CART_ID)
-        );
-
-        assertThat(result.getMessage(), equalTo("Checkout session with the given cart ID: 00492884-e657-4c6a-abaa-aef8f4240a69 already exists."));
-
-        verify(cartQueryService, times(1)).getCart(any());
-        verify(checkoutQueryService, times(1)).existsByCartId(any());
         verify(checkoutRepository, never()).save(any());
     }
 
@@ -195,7 +190,7 @@ public class CheckoutServiceImplTests {
                 () -> checkoutService.applyCouponToCheckoutSession(CART_ID, COUPON_1_CODE)
         );
 
-        assertThat(result.getMessage(), equalTo("Coupon with the given code: 'WELCOME10' is already redeemed. Try another one."));
+        assertThat(result.getMessage(), equalTo("Coupon with the given code: 'WELCOME10' is already redeemed."));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(couponQueryService, times(1)).getCoupon(any());
@@ -289,16 +284,20 @@ public class CheckoutServiceImplTests {
         verify(orderService, never()).deleteOrder(any());
     }
 
-    @Test
-    public void completeCheckoutSessionTest_UnhappyPath_CheckoutSessionAlreadyCompletedException() {
-        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(completedCheckoutSession());
+    @ParameterizedTest(name = "{index} => {0}")
+    @MethodSource("invalidCheckoutSessionStateParams")
+    public void completeCheckoutSessionTest_UnhappyPaths_InvalidCheckoutSessionStateException(
+            CheckoutSession checkoutSession,
+            CheckoutStatus status
+    ) {
+        when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession);
 
         var result = assertThrows(
-                CheckoutSessionAlreadyCompletedException.class,
+                InvalidCheckoutSessionStateException.class,
                 () -> checkoutService.completeCheckoutSession(CHECKOUT_SESSION_ID)
         );
 
-        assertThat(result.getMessage(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 already completed."));
+        assertThat(result.getMessage(), equalTo(String.format("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 is in the state of: %s.", status)));
 
         verify(checkoutQueryService, times(1)).getCheckoutSession(any());
         verify(authService, never()).getCurrentUser();
