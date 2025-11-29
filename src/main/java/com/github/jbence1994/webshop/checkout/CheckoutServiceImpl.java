@@ -98,7 +98,11 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new ExpiredCheckoutSessionException(checkoutSessionId);
         }
 
-        if (checkoutSession.isCanceled() || checkoutSession.isCompleted() || checkoutSession.isFailed()) {
+        if (
+                CheckoutStatus.CANCELED.equals(checkoutSession.getStatus()) ||
+                        CheckoutStatus.COMPLETED.equals(checkoutSession.getStatus()) ||
+                        CheckoutStatus.FAILED.equals(checkoutSession.getStatus())
+        ) {
             throw new InvalidCheckoutSessionStateException(checkoutSessionId, checkoutSession.getStatus());
         }
 
