@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.coupon;
 
-import com.github.jbence1994.webshop.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,28 +11,22 @@ import java.util.List;
 @Slf4j
 public class CouponQueryServiceImpl implements CouponQueryService {
     private final CouponRepository couponRepository;
-    private final AuthService authService;
 
     @Override
     public List<Coupon> getCoupons() {
-        var user = authService.getCurrentUser();
-
-        return couponRepository.findAllByUser(user.getId());
+        return couponRepository.findAll().stream()
+                .filter(coupon -> !coupon.isExpired())
+                .toList();
     }
 
     @Override
     public Coupon getCoupon(String code) {
-        var user = authService.getCurrentUser();
-
-        return couponRepository
-                .findByCouponCodeAndUserId(code, user.getId())
+        return couponRepository.findById(code)
                 .orElseThrow(() -> new CouponNotFoundException(code));
     }
 
     @Override
-    public boolean isCouponRedeemed(String code) {
-        var user = authService.getCurrentUser();
-
-        return couponRepository.isCouponRedeemed(user.getId(), code) == 1;
+    public boolean hasUserRedeemedCoupon(Long userId, String code) {
+        return couponRepository.existsUserRedeemedCoupon(userId, code) == 1;
     }
 }

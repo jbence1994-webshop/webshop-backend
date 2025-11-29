@@ -102,13 +102,6 @@ INSERT INTO coupons (code, type, value, description, expiration_date)
 VALUES ('WELCOME10', 'PERCENT_OFF', 0.10, '10% off welcome coupon', '9999-12-31 23:59:59'),
        ('SPRING15', 'FIXED_AMOUNT', 15.00, '$15 cashback spring promotion', '2025-03-31 23:59:59');
 
-SET @couponCode := (SELECT code
-                    FROM coupons
-                    WHERE code = 'WELCOME10');
-
-INSERT INTO user_coupons (user_id, coupon_code)
-VALUES (@userId, @couponCode);
-
 INSERT INTO product_ratings (product_id, user_id, value)
 VALUES (1, @userId, 5),
        (2, @userId, 3),

@@ -10,7 +10,7 @@ public final class CouponDtoTestObject {
     public static CouponDto couponDto1() {
         return new CouponDto(
                 COUPON_1_CODE,
-                DiscountType.PERCENT_OFF.name(),
+                DiscountType.PERCENT_OFF,
                 BigDecimal.valueOf(0.10),
                 COUPON_1_DESCRIPTION,
                 NOT_EXPIRED_COUPON_EXPIRATION_DATE
