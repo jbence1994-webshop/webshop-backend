@@ -2,8 +2,8 @@ package com.github.jbence1994.webshop.order;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,12 +32,12 @@ public class OrderController {
         return orderMapper.toDto(order);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public OrderDto updateOrderStatus(
             @PathVariable("id") Long id,
-            @RequestBody OrderStatus orderStatus
+            @RequestBody OrderStatus status
     ) {
-        var order = orderService.updateOrderStatus(id, orderStatus);
+        var order = orderService.updateOrderStatus(id, status);
 
         return orderMapper.toDto(order);
     }
