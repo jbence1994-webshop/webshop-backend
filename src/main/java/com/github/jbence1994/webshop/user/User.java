@@ -90,12 +90,6 @@ public class User {
         return Optional.ofNullable(avatarFileName);
     }
 
-    public Optional<Coupon> getCoupon(String code) {
-        return coupons.stream()
-                .filter(coupon -> coupon.getCode().equals(code))
-                .findFirst();
-    }
-
     public void addFavoriteProduct(Product product) {
         favoriteProducts.add(product);
     }
