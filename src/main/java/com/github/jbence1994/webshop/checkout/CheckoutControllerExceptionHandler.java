@@ -28,21 +28,14 @@ public class CheckoutControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(exception = CheckoutSessionAlreadyCompletedException.class)
-    public ResponseEntity<ErrorDto> handleCheckoutSessionAlreadyCompletedException(CheckoutSessionAlreadyCompletedException exception) {
+    @ExceptionHandler(exception = InvalidCheckoutSessionStateException.class)
+    public ResponseEntity<ErrorDto> handleInvalidCheckoutSessionStateException(InvalidCheckoutSessionStateException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = CheckoutSessionNotFoundException.class)
     public ResponseEntity<ErrorDto> handleCheckoutSessionNotFoundException(CheckoutSessionNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
-    }
-
-    @ExceptionHandler(exception = CheckoutSessionAlreadyExistsByCartIdException.class)
-    public ResponseEntity<ErrorDto> handleCheckoutSessionAlreadyExistsByCartIdException(
-            CheckoutSessionAlreadyExistsByCartIdException exception
-    ) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(exception = ExpiredCheckoutSessionException.class)

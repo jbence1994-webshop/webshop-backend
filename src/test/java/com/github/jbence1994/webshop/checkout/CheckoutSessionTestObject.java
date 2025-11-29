@@ -88,6 +88,20 @@ public final class CheckoutSessionTestObject {
         );
     }
 
+    public static CheckoutSession canceledCheckoutSession() {
+        return buildCheckoutSession(
+                cartWithOneItem(),
+                BigDecimal.valueOf(49.99),
+                BigDecimal.valueOf(49.99),
+                BigDecimal.ZERO,
+                null,
+                CheckoutStatus.CANCELED,
+                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                null,
+                null
+        );
+    }
+
     public static CheckoutSession completedCheckoutSession() {
         return buildCheckoutSession(
                 cartWithOneItem(),
@@ -96,6 +110,20 @@ public final class CheckoutSessionTestObject {
                 BigDecimal.ZERO,
                 null,
                 CheckoutStatus.COMPLETED,
+                NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
+                order1(),
+                CHECKOUT_URL
+        );
+    }
+
+    public static CheckoutSession failedCheckoutSession() {
+        return buildCheckoutSession(
+                cartWithOneItem(),
+                BigDecimal.valueOf(49.99),
+                BigDecimal.valueOf(49.99),
+                BigDecimal.ZERO,
+                null,
+                CheckoutStatus.FAILED,
                 NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
                 order1(),
                 CHECKOUT_URL
