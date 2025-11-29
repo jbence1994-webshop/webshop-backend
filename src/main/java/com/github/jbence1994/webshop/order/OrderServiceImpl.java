@@ -23,6 +23,32 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrderStatus(Long id, OrderStatus status) {
         var order = orderQueryService.getOrder(id);
 
+        var currentStatus = order.getStatus();
+
+        if (OrderStatus.CREATED.equals(currentStatus) ||
+                OrderStatus.CANCELED.equals(currentStatus) ||
+                OrderStatus.FAILED.equals(currentStatus) ||
+                OrderStatus.REFUNDED.equals(currentStatus)
+        ) {
+            throw new InvalidOrderStatusException(currentStatus);
+        }
+
+        if (OrderStatus.CONFIRMED.equals(currentStatus) && !OrderStatus.SHIPPED.equals(status)) {
+            throw new InvalidOrderStatusException(currentStatus, status);
+        }
+
+        if (OrderStatus.SHIPPED.equals(currentStatus) && !OrderStatus.DELIVERED.equals(status)) {
+            throw new InvalidOrderStatusException(currentStatus, status);
+        }
+
+        if (OrderStatus.DELIVERED.equals(currentStatus) && !OrderStatus.RETURNED.equals(status)) {
+            throw new InvalidOrderStatusException(currentStatus, status);
+        }
+
+        if (OrderStatus.RETURNED.equals(currentStatus) && !OrderStatus.REFUNDED.equals(status)) {
+            throw new InvalidOrderStatusException(currentStatus, status);
+        }
+
         order.setStatus(status);
 
         save(order);

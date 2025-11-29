@@ -14,7 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
+import static com.github.jbence1994.webshop.order.OrderTestObject.createdOrder1;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static com.github.jbence1994.webshop.user.UserTestObject.user2WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +49,7 @@ public class OrderQueryServiceImplTests {
 
     @Test
     public void getOrdersTest() {
-        when(orderRepository.findAllByCustomer(any())).thenReturn(List.of(order1()));
+        when(orderRepository.findAllByCustomer(any())).thenReturn(List.of(createdOrder1()));
 
         var result = orderQueryService.getOrders();
 
@@ -59,16 +59,16 @@ public class OrderQueryServiceImplTests {
 
     @Test
     public void getOrderTest_HappyPath() {
-        when(orderRepository.findById(any())).thenReturn(Optional.of(order1()));
+        when(orderRepository.findById(any())).thenReturn(Optional.of(createdOrder1()));
 
         var result = assertDoesNotThrow(() -> orderQueryService.getOrder(1L));
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
-                hasProperty("id", equalTo(order1().getId())),
-                hasProperty("totalPrice", equalTo(order1().getTotalPrice())),
-                hasProperty("status", equalTo(order1().getStatus())),
-                hasProperty("createdAt", equalTo(order1().getCreatedAt()))
+                hasProperty("id", equalTo(createdOrder1().getId())),
+                hasProperty("totalPrice", equalTo(createdOrder1().getTotalPrice())),
+                hasProperty("status", equalTo(createdOrder1().getStatus())),
+                hasProperty("createdAt", equalTo(createdOrder1().getCreatedAt()))
         ));
     }
 
@@ -87,7 +87,7 @@ public class OrderQueryServiceImplTests {
     @Test
     public void getOrderTest_UnhappyPath_AccessDeniedException() {
         when(authService.getCurrentUser()).thenReturn(user2WithoutAvatar());
-        when(orderRepository.findById(any())).thenReturn(Optional.of(order1()));
+        when(orderRepository.findById(any())).thenReturn(Optional.of(createdOrder1()));
 
         var result = assertThrows(
                 AccessDeniedException.class,

@@ -9,15 +9,39 @@ import static com.github.jbence1994.webshop.order.OrderTestConstants.DISCOUNT_AM
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 
 public final class OrderTestObject {
-    public static Order order1() {
+    public static Order createdOrder1() {
         return buildOrder(BigDecimal.valueOf(49.99), OrderStatus.CREATED, List.of(orderItem()));
     }
 
-    public static Order updatedOrder1() {
+    public static Order canceledOrder1() {
+        return buildOrder(BigDecimal.valueOf(49.99), OrderStatus.CANCELED, List.of(orderItem()));
+    }
+
+    public static Order failedOrder1() {
+        return buildOrder(BigDecimal.valueOf(49.99), OrderStatus.FAILED, List.of(orderItem()));
+    }
+
+    public static Order confirmedOrder1() {
         return buildOrder(BigDecimal.valueOf(49.99), OrderStatus.CONFIRMED, List.of(orderItem()));
     }
 
-    public static Order order2() {
+    public static Order shippedOrder1() {
+        return buildOrder(BigDecimal.valueOf(49.99), OrderStatus.SHIPPED, List.of(orderItem()));
+    }
+
+    public static Order deliveredOrder1() {
+        return buildOrder(BigDecimal.valueOf(49.99), OrderStatus.DELIVERED, List.of(orderItem()));
+    }
+
+    public static Order returnedOrder1() {
+        return buildOrder(BigDecimal.valueOf(49.99), OrderStatus.RETURNED, List.of(orderItem()));
+    }
+
+    public static Order refundedOrder1() {
+        return buildOrder(BigDecimal.valueOf(49.99), OrderStatus.REFUNDED, List.of(orderItem()));
+    }
+
+    public static Order createdOrder2() {
         return buildOrder(BigDecimal.valueOf(249.95), OrderStatus.CREATED, List.of(orderItem()));
     }
 
