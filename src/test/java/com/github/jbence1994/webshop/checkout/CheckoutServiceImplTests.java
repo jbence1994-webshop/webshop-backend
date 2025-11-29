@@ -40,7 +40,7 @@ import static com.github.jbence1994.webshop.checkout.WebhookRequestTestObject.we
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
-import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
+import static com.github.jbence1994.webshop.order.OrderTestObject.createdOrder1;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
 import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -351,7 +351,7 @@ public class CheckoutServiceImplTests {
     @Test
     public void handleCompleteCheckoutSessionWebhookEventTest_HappyPath_PaymentIntentSucceeded() {
         when(paymentGateway.parseWebhookRequest(any())).thenReturn(Optional.of(paymentIntentSucceeded()));
-        when(orderQueryService.getOrder(any())).thenReturn(order1());
+        when(orderQueryService.getOrder(any())).thenReturn(createdOrder1());
         doNothing().when(orderService).updateOrder(any());
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(checkoutRepository.save(any())).thenReturn(completedCheckoutSession());

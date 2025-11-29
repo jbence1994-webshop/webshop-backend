@@ -13,4 +13,9 @@ public class OrderControllerExceptionHandler {
     public ResponseEntity<ErrorDto> handleOrderNotFoundException(OrderNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(exception.getMessage()));
     }
+
+    @ExceptionHandler(InvalidOrderStatusException.class)
+    public ResponseEntity<ErrorDto> handleInvalidOrderStatusException(InvalidOrderStatusException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
+    }
 }

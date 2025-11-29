@@ -15,7 +15,7 @@ import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CREAT
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
-import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
+import static com.github.jbence1994.webshop.order.OrderTestObject.createdOrder1;
 
 public final class CheckoutSessionTestObject {
     public static CheckoutSession checkoutSession() {
@@ -41,7 +41,7 @@ public final class CheckoutSessionTestObject {
                 null,
                 CheckoutStatus.PENDING,
                 NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
-                order1(),
+                createdOrder1(),
                 CHECKOUT_URL
         );
     }
@@ -111,7 +111,7 @@ public final class CheckoutSessionTestObject {
                 null,
                 CheckoutStatus.COMPLETED,
                 NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
-                order1(),
+                createdOrder1(),
                 CHECKOUT_URL
         );
     }
@@ -125,7 +125,7 @@ public final class CheckoutSessionTestObject {
                 null,
                 CheckoutStatus.FAILED,
                 NOT_EXPIRED_CHECKOUT_SESSION_EXPIRATION_DATE,
-                order1(),
+                createdOrder1(),
                 CHECKOUT_URL
         );
     }
