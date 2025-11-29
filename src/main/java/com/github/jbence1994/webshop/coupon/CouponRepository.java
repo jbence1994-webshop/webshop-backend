@@ -6,19 +6,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface CouponRepository extends JpaRepository<Coupon, String> {
+
     @Query(
-            value = "SELECT EXISTS (SELECT * FROM user_coupons WHERE user_id = :userId AND coupon_code = :couponCode AND redeemed = 1);",
+            value = "SELECT EXISTS (SELECT * FROM user_coupon_redemptions WHERE user_id = :userId AND coupon_code = :couponCode);",
             nativeQuery = true
     )
-    int isCouponRedeemed(@Param("userId") Long userId, @Param("couponCode") String couponCode);
+    int existsUserRedeemedCoupon(
+            @Param("userId") Long userId,
+            @Param("couponCode") String couponCode
+    );
 
     @Modifying
     @Query(
-            value = """
-                    UPDATE user_coupons
-                    SET redeemed = 1, redeemed_at = CURRENT_TIMESTAMP, order_id = :orderId
-                    WHERE user_id = :userId AND coupon_code = :couponCode
-                    """,
+            value = "INSERT INTO user_coupon_redemptions (user_id, coupon_code, order_id) VALUES (:userId, :couponCode, :orderId)",
             nativeQuery = true
     )
     void redeemCoupon(

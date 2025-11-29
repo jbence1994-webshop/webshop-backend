@@ -63,7 +63,9 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new ExpiredCouponException(couponCode);
         }
 
-        if (couponQueryService.isCouponRedeemed(couponCode)) {
+        var user = authService.getCurrentUser();
+
+        if (couponQueryService.hasUserRedeemedCoupon(user.getId(), couponCode)) {
             throw new CouponAlreadyRedeemedException(couponCode);
         }
 
@@ -118,13 +120,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         orderService.createOrder(order);
 
         checkoutSession.getAppliedCoupon()
-                .ifPresent(
-                        coupon -> couponService.redeemCoupon(
-                                user.getId(),
-                                coupon.getCode(),
-                                order.getId()
-                        )
-                );
+                .ifPresent(coupon -> couponService.redeemCoupon(user.getId(), coupon.getCode(), order.getId()));
 
         try {
             var paymentSessionRequest = new PaymentSessionRequest(checkoutSession, order);
