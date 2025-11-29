@@ -20,7 +20,6 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "avatarFileName", ignore = true)
-    @Mapping(target = "coupons", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
     User toEntity(RegistrationRequest.UserDto user);
 

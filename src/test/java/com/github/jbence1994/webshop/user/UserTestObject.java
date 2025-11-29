@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.user.AddressTestObject.address;
@@ -63,7 +62,6 @@ public final class UserTestObject {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 address(),
-                List.of(percentOffNotExpiredCoupon()),
                 favoriteProducts
         );
     }
