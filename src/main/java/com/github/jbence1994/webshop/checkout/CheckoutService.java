@@ -9,7 +9,7 @@ public interface CheckoutService {
 
     CheckoutSession removeCouponFromCheckoutSession(UUID id);
 
-    CompleteCheckoutSession completeCheckoutSession(UUID checkoutSessionId, RewardPointsAction action);
+    CheckoutSession completeCheckoutSession(UUID checkoutSessionId);
 
     void handleCompleteCheckoutSessionWebhookEvent(WebhookRequest request);
 }

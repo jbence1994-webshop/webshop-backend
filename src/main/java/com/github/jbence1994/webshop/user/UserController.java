@@ -6,11 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -28,22 +31,18 @@ public class UserController {
     public UserDto getUser(@PathVariable Long id) {
         var user = userQueryService.getUser(id);
 
-        return userMapper.toUserDto(user);
+        return userMapper.toDto(user);
     }
 
     @PostMapping
     public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
         var sanitizedRequest = registrationRequestSanitizer.sanitize(request);
 
-        var address = userMapper.toAddress(sanitizedRequest.user().profile().address());
-        var profile = userMapper.toProfile(sanitizedRequest.user().profile());
-        var user = userMapper.toUser(sanitizedRequest.user());
+        var address = userMapper.toEntity(sanitizedRequest.user().address());
+        var user = userMapper.toEntity(sanitizedRequest.user());
 
-        address.setProfile(profile);
-        profile.setAddress(address);
-
-        profile.setUser(user);
-        user.setProfile(profile);
+        address.setUser(user);
+        user.setAddress(address);
 
         var registeredUser = userService.registerUser(user);
 
@@ -52,30 +51,61 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/change-password")
-    public void changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         var sanitizedRequest = changePasswordRequestSanitizer.sanitize(request);
 
         userService.changePassword(sanitizedRequest.oldPassword(), sanitizedRequest.newPassword());
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/forgot-password")
-    public void forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         var sanitizedRequest = forgotPasswordRequestSanitizer.sanitize(request);
 
         userService.forgotPassword(sanitizedRequest.email());
+
+        return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/reset-password")
-    public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         var sanitizedRequest = resetPasswordRequestSanitizer.sanitize(request);
 
         userService.resetPassword(sanitizedRequest.temporaryPassword(), sanitizedRequest.newPassword());
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/wishlist")
+    public List<WishlistProductDto> getWishlist() {
+        var wishlist = userQueryService.getWishlist();
+
+        return wishlist.stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
+
+    @PostMapping("/wishlist")
+    public ResponseEntity<WishlistProductDto> addProductToWishlist(@Valid @RequestBody AddProductToWishlistRequest request) {
+        var product = userService.addProductToWishlist(request.productId());
+
+        var wishlistProductDto = userMapper.toDto(product);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(wishlistProductDto);
+    }
+
+    @DeleteMapping("/wishlist")
+    public ResponseEntity<Void> deleteProductFromWishlist(@Valid @RequestBody DeleteProductFromWishlistRequest request) {
+        userService.deleteProductFromWishlist(request.productId());
 
         return ResponseEntity.noContent().build();
     }

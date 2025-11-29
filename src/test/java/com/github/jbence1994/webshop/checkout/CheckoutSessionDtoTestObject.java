@@ -4,25 +4,36 @@ import java.math.BigDecimal;
 
 import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_SESSION_ID;
+import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.CHECKOUT_URL;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 
 public final class CheckoutSessionDtoTestObject {
     public static CheckoutSessionDto checkoutSessionDto() {
-        return buildCheckoutSessionDto(null);
+        return buildCheckoutSessionDto(null, null, null);
+    }
+
+    public static CheckoutSessionDto checkoutSessionDtoWithOrderAndCheckoutUrl() {
+        return buildCheckoutSessionDto(null, 1L, CHECKOUT_URL);
     }
 
     public static CheckoutSessionDto checkoutSessionDtoWithPercentOffTypeOfAppliedCoupon() {
-        return buildCheckoutSessionDto(COUPON_1_CODE);
+        return buildCheckoutSessionDto(COUPON_1_CODE, null, null);
     }
 
-    private static CheckoutSessionDto buildCheckoutSessionDto(String appliedCoupon) {
+    private static CheckoutSessionDto buildCheckoutSessionDto(
+            String appliedCoupon,
+            Long orderId,
+            String checkoutUrl
+    ) {
         return new CheckoutSessionDto(
                 CHECKOUT_SESSION_ID,
                 CART_ID,
                 BigDecimal.valueOf(49.99),
                 BigDecimal.valueOf(49.99),
                 appliedCoupon,
-                CheckoutStatus.PENDING.name()
+                CheckoutStatus.PENDING.name(),
+                orderId,
+                checkoutUrl
         );
     }
 }

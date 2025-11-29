@@ -17,9 +17,9 @@ public final class AddressTestObject {
         return buildAddress(null, null, null);
     }
 
-    private static Address buildAddress(Long profileId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private static Address buildAddress(Long userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return new Address(
-                profileId,
+                userId,
                 null,
                 ADDRESS_LINE,
                 MUNICIPALITY,

@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
-import com.github.jbence1994.webshop.user.Profile;
+import com.github.jbence1994.webshop.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,8 +34,8 @@ public class ProductReview {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "profile_id")
-    private Profile profile;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String text;
 
@@ -43,13 +43,9 @@ public class ProductReview {
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
-    public static ProductReview of(Product product, Profile profile, String text) {
-        var productReview = new ProductReview();
-
-        productReview.product = product;
-        productReview.profile = profile;
-        productReview.text = text;
-
-        return productReview;
+    public ProductReview(Product product, User user, String text) {
+        this.product = product;
+        this.user = user;
+        this.text = text;
     }
 }

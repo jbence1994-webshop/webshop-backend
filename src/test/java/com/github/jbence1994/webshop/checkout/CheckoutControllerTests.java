@@ -13,14 +13,14 @@ import static com.github.jbence1994.webshop.cart.CartTestConstants.CART_ID;
 import static com.github.jbence1994.webshop.checkout.ApplyCouponToCheckoutSessionRequestTestObject.applyCouponToCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.checkout.ApplyCouponToCheckoutSessionRequestTestObject.notSanitizedApplyCouponToCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObject.checkoutSessionDto;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObject.checkoutSessionDtoWithOrderAndCheckoutUrl;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionDtoTestObject.checkoutSessionDtoWithPercentOffTypeOfAppliedCoupon;
-import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession1;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSession;
+import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithOrderAndCheckoutUrl;
 import static com.github.jbence1994.webshop.checkout.CheckoutSessionTestObject.checkoutSessionWithPercentOffTypeOfAppliedCoupon;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.STRIPE_PAYLOAD;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.STRIPE_SIGNATURE;
-import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequestWithRewardPointsEarn;
-import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionResponseTestObject.completeCheckoutSessionResponse;
-import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionTestObject.completeCheckoutSession;
+import static com.github.jbence1994.webshop.checkout.CompleteCheckoutSessionRequestTestObject.completeCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.checkout.CreateCheckoutSessionRequestTestObject.createCheckoutSessionRequest;
 import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_CODE;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -52,7 +52,7 @@ public class CheckoutControllerTests {
 
     @Test
     public void createCheckoutSessionTest() {
-        when(checkoutService.createCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutService.createCheckoutSession(any())).thenReturn(checkoutSession());
         when(checkoutMapper.toDto(any())).thenReturn(checkoutSessionDto());
 
         var result = checkoutController.createCheckoutSession(createCheckoutSessionRequest());
@@ -87,7 +87,7 @@ public class CheckoutControllerTests {
 
     @Test
     public void removeCouponFromCheckoutSessionTest() {
-        when(checkoutService.removeCouponFromCheckoutSession(any())).thenReturn(checkoutSession1());
+        when(checkoutService.removeCouponFromCheckoutSession(any())).thenReturn(checkoutSession());
         when(checkoutMapper.toDto(any())).thenReturn(checkoutSessionDto());
 
         var result = checkoutController.removeCouponFromCheckoutSession(CART_ID);
@@ -101,16 +101,16 @@ public class CheckoutControllerTests {
 
     @Test
     public void completeCheckoutSessionTest() {
-        when(checkoutService.completeCheckoutSession(any(), any())).thenReturn(completeCheckoutSession());
-        when(checkoutMapper.toCompleteCheckoutSessionResponse(any())).thenReturn(completeCheckoutSessionResponse());
+        when(checkoutService.completeCheckoutSession(any())).thenReturn(checkoutSessionWithOrderAndCheckoutUrl());
+        when(checkoutMapper.toDto(any())).thenReturn(checkoutSessionDtoWithOrderAndCheckoutUrl());
 
-        var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequestWithRewardPointsEarn());
+        var result = checkoutController.completeCheckoutSession(completeCheckoutSessionRequest());
 
         assertThat(result, not(nullValue()));
         assertThat(result.orderId(), equalTo(1L));
 
-        verify(checkoutService, times(1)).completeCheckoutSession(any(), any());
-        verify(checkoutMapper, times(1)).toCompleteCheckoutSessionResponse(any());
+        verify(checkoutService, times(1)).completeCheckoutSession(any());
+        verify(checkoutMapper, times(1)).toDto(any());
     }
 
     @Test

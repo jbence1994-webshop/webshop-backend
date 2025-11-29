@@ -25,12 +25,12 @@ import java.time.LocalDateTime;
 public class Address {
 
     @Id
-    private Long profileId;
+    private Long userId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "user_id")
     @MapsId
-    private Profile profile;
+    private User user;
 
     private String addressLine;
 

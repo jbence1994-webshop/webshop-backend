@@ -25,15 +25,15 @@ public interface ProductMapper {
             target = "name",
             expression = """
                     java(
-                    productReview.getProfile().getFirstName() + " " +
-                    (productReview.getProfile().getMiddleName() != null ? productReview.getProfile().getMiddleName() + " " : "") +
-                    productReview.getProfile().getLastName()
+                    productReview.getUser().getFirstName() + " " +
+                    productReview.getUser().getMiddleName() != null ?
+                    productReview.getUser().getMiddleName() : "" +
+                    " " +
+                    productReview.getUser().getLastName()
                     )
                     """
     )
     ProductReviewDto toProductReviewDto(ProductReview productReview);
-
-    WishlistProductDto toWishlistProductDto(Product product);
 
     @Mapping(target = "productId", source = "product.id")
     @Mapping(target = "yourRating", source = "request.ratingValue")

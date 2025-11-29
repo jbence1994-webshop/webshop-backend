@@ -9,6 +9,8 @@ public record CheckoutSessionDto(
         BigDecimal cartTotal,
         BigDecimal discountAmount,
         String appliedCoupon,
-        String status
+        String status,
+        Long orderId,
+        String checkoutUrl
 ) {
 }

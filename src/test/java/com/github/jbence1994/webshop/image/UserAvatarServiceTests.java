@@ -16,9 +16,9 @@ import java.io.ByteArrayInputStream;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.FILE_SIZE;
-import static com.github.jbence1994.webshop.image.ImageTestConstants.PROFILE_AVATAR_DIRECTORY;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
-import static com.github.jbence1994.webshop.user.UserTestObject.userWithAvatar;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.USER_AVATAR_DIRECTORY;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,10 +35,16 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ProfileAvatarServiceTests {
+public class UserAvatarServiceTests {
+
+    @Mock
+    private FileExtensionValidator fileExtensionValidator;
 
     @Mock
     private ImageUploadsConfig imageUploadsConfig;
+
+    @Mock
+    private FileNameGenerator fileNameGenerator;
 
     @Mock
     private UserQueryService userQueryService;
@@ -47,19 +53,13 @@ public class ProfileAvatarServiceTests {
     private UserService userService;
 
     @Mock
-    private FileExtensionValidator fileExtensionValidator;
-
-    @Mock
-    private FileNameGenerator fileNameGenerator;
-
-    @Mock
     private FileUtils fileUtils;
 
     @InjectMocks
-    private ProfileAvatarService profileAvatarService;
+    private UserAvatarService userAvatarService;
 
-    private final User userWithoutAvatar = spy(user());
-    private final User user = spy(userWithAvatar());
+    private final User userWithoutAvatar = spy(user1WithoutAvatar());
+    private final User user = spy(user1WithAvatar());
     private final ImageUpload image = mock(ImageUpload.class);
 
     @BeforeEach
@@ -67,7 +67,7 @@ public class ProfileAvatarServiceTests {
         doNothing().when(fileExtensionValidator).validate(any());
         when(userQueryService.getUser(anyLong())).thenReturn(userWithoutAvatar);
         when(fileNameGenerator.generate(any())).thenReturn(AVATAR_FILE_NAME);
-        when(imageUploadsConfig.profileAvatarDirectory()).thenReturn(PROFILE_AVATAR_DIRECTORY);
+        when(imageUploadsConfig.userAvatarDirectory()).thenReturn(USER_AVATAR_DIRECTORY);
         when(image.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
         doNothing().when(userService).updateUser(any());
     }
@@ -75,9 +75,9 @@ public class ProfileAvatarServiceTests {
     @Test
     public void uploadImageTest_HappyPath_UserDoNotHaveAvatarUploadedYet() {
         doNothing().when(fileUtils).store(any(), any(), any());
-        doNothing().when(userWithoutAvatar).setProfileAvatar(any());
+        doNothing().when(userWithoutAvatar).setAvatarFileName(any());
 
-        var result = profileAvatarService.uploadImage(1L, image);
+        var result = userAvatarService.uploadImage(1L, image);
 
         assertThat(result, equalTo(AVATAR_FILE_NAME));
 
@@ -85,10 +85,10 @@ public class ProfileAvatarServiceTests {
         verify(userQueryService, times(1)).getUser(anyLong());
         verify(fileUtils, never()).remove(any(), any());
         verify(fileNameGenerator, times(1)).generate(any());
-        verify(imageUploadsConfig, times(1)).profileAvatarDirectory();
+        verify(imageUploadsConfig, times(1)).userAvatarDirectory();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
-        verify(userWithoutAvatar, times(1)).setProfileAvatar(any());
+        verify(userWithoutAvatar, times(1)).setAvatarFileName(any());
         verify(userService, times(1)).updateUser(any());
     }
 
@@ -97,9 +97,9 @@ public class ProfileAvatarServiceTests {
         when(userQueryService.getUser(anyLong())).thenReturn(user);
         doNothing().when(fileUtils).remove(any(), any());
         doNothing().when(fileUtils).store(any(), any(), any());
-        doNothing().when(userWithoutAvatar).setProfileAvatar(any());
+        doNothing().when(userWithoutAvatar).setAvatarFileName(any());
 
-        var result = profileAvatarService.uploadImage(1L, image);
+        var result = userAvatarService.uploadImage(1L, image);
 
         assertThat(result, equalTo(AVATAR_FILE_NAME));
 
@@ -107,10 +107,10 @@ public class ProfileAvatarServiceTests {
         verify(fileUtils, times(1)).remove(any(), any());
         verify(userQueryService, times(1)).getUser(anyLong());
         verify(fileNameGenerator, times(1)).generate(any());
-        verify(imageUploadsConfig, times(2)).profileAvatarDirectory();
+        verify(imageUploadsConfig, times(2)).userAvatarDirectory();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
-        verify(user, times(1)).setProfileAvatar(any());
+        verify(user, times(1)).setAvatarFileName(any());
         verify(userService, times(1)).updateUser(any());
     }
 
@@ -120,7 +120,7 @@ public class ProfileAvatarServiceTests {
 
         var result = assertThrows(
                 ImageUploadException.class,
-                () -> profileAvatarService.uploadImage(1L, image)
+                () -> userAvatarService.uploadImage(1L, image)
         );
 
         assertThat(result.getMessage(), equalTo("The avatar could not be uploaded successfully."));
@@ -128,22 +128,22 @@ public class ProfileAvatarServiceTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(userQueryService, times(1)).getUser(anyLong());
         verify(fileNameGenerator, times(1)).generate(any());
-        verify(imageUploadsConfig, times(1)).profileAvatarDirectory();
+        verify(imageUploadsConfig, times(1)).userAvatarDirectory();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
-        verify(userWithoutAvatar, never()).setProfileAvatar(any());
+        verify(userWithoutAvatar, never()).setAvatarFileName(any());
         verify(userService, never()).updateUser(any());
     }
 
     @Test
     public void deleteImageTest_HappyPath() {
         doNothing().when(fileUtils).remove(any(), any());
-        doNothing().when(userWithoutAvatar).setProfileAvatar(any());
+        doNothing().when(userWithoutAvatar).setAvatarFileName(any());
 
-        profileAvatarService.deleteImage(1L, AVATAR_FILE_NAME);
+        userAvatarService.deleteImage(1L, AVATAR_FILE_NAME);
 
         verify(fileUtils, times(1)).remove(any(), any());
-        verify(userWithoutAvatar, times(1)).setProfileAvatar(any());
+        verify(userWithoutAvatar, times(1)).setAvatarFileName(any());
         verify(userService, times(1)).updateUser(any());
     }
 
@@ -153,13 +153,13 @@ public class ProfileAvatarServiceTests {
 
         var result = assertThrows(
                 ImageDeletionException.class,
-                () -> profileAvatarService.deleteImage(1L, AVATAR_FILE_NAME)
+                () -> userAvatarService.deleteImage(1L, AVATAR_FILE_NAME)
         );
 
         assertThat(result.getMessage(), equalTo("The avatar could not be deleted successfully."));
 
         verify(fileUtils, times(1)).remove(any(), any());
-        verify(userWithoutAvatar, never()).setProfileAvatar(any());
+        verify(userWithoutAvatar, never()).setAvatarFileName(any());
         verify(userService, never()).updateUser(any());
     }
 }

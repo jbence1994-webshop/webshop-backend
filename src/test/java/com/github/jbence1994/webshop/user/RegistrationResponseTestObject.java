@@ -1,9 +1,9 @@
 package com.github.jbence1994.webshop.user;
 
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 
 public final class RegistrationResponseTestObject {
     public static RegistrationResponse registrationResponse() {
-        return new RegistrationResponse(1L, EMAIL);
+        return new RegistrationResponse(1L, EMAIL_1);
     }
 }

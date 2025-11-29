@@ -28,8 +28,8 @@ public class CheckoutControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(exception = CheckoutSessionAlreadyCompletedException.class)
-    public ResponseEntity<ErrorDto> handleCheckoutSessionAlreadyCompletedException(CheckoutSessionAlreadyCompletedException exception) {
+    @ExceptionHandler(exception = InvalidCheckoutSessionStateException.class)
+    public ResponseEntity<ErrorDto> handleInvalidCheckoutSessionStateException(InvalidCheckoutSessionStateException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
     }
 

@@ -4,6 +4,8 @@ import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.common.EmailService;
 import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
+import com.github.jbence1994.webshop.product.ProductAlreadyOnWishlistException;
+import com.github.jbence1994.webshop.product.ProductQueryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,17 +17,19 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.common.EmailContentTestObject.emailContent;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.HASHED_TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.expiredTemporaryPassword;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.notExpiredTemporaryPassword;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_OLD_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_HASHED_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_PASSWORD;
 import static com.github.jbence1994.webshop.user.UserTestConstants.OLD_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithFavoriteProducts;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -33,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,6 +59,9 @@ public class UserServiceImplTests {
     private EmailTemplateBuilder emailTemplateBuilder;
 
     @Mock
+    private ProductQueryService productQueryService;
+
+    @Mock
     private UserQueryService userQueryService;
 
     @Mock
@@ -71,13 +79,15 @@ public class UserServiceImplTests {
     @InjectMocks
     private UserServiceImpl userService;
 
+    private final User user = user1WithoutAvatar();
+
     @Test
     public void registerUserTest_HappyPath() {
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(passwordManager.encode(any())).thenReturn(HASHED_PASSWORD);
-        when(userRepository.save(any())).thenReturn(user());
+        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
 
-        assertDoesNotThrow(() -> userService.registerUser(user()));
+        assertDoesNotThrow(() -> userService.registerUser(user1WithoutAvatar()));
 
         verify(userRepository, times(1)).existsByEmail(any());
         verify(passwordManager, times(1)).encode(any());
@@ -90,13 +100,13 @@ public class UserServiceImplTests {
 
         var result = assertThrows(
                 EmailAlreadyExistsException.class,
-                () -> userService.registerUser(user())
+                () -> userService.registerUser(user1WithoutAvatar())
         );
 
         assertThat(result.getMessage(), equalTo("Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."));
 
         verify(userRepository, times(1)).existsByEmail(any());
-        verify(userRepository, never()).existsByProfilePhoneNumber(any());
+        verify(userRepository, never()).existsByPhoneNumber(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
@@ -104,27 +114,27 @@ public class UserServiceImplTests {
     @Test
     public void registerUserTest_UnhappyPath_PhoneNumberAlreadyExistsException() {
         when(userRepository.existsByEmail(any())).thenReturn(false);
-        when(userRepository.existsByProfilePhoneNumber(any())).thenReturn(true);
+        when(userRepository.existsByPhoneNumber(any())).thenReturn(true);
 
         var result = assertThrows(
                 PhoneNumberAlreadyExistsException.class,
-                () -> userService.registerUser(user())
+                () -> userService.registerUser(user1WithoutAvatar())
         );
 
         assertThat(result.getMessage(), equalTo("Phone number '+36501323566' is already registered. Please use a different."));
 
         verify(userRepository, times(1)).existsByEmail(any());
-        verify(userRepository, times(1)).existsByProfilePhoneNumber(any());
+        verify(userRepository, times(1)).existsByPhoneNumber(any());
         verify(passwordManager, never()).encode(any());
         verify(userRepository, never()).save(any());
     }
 
     @Test
     public void changePasswordTest_HappyPath() {
-        when(authService.getCurrentUser()).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
-        when(userRepository.save(any())).thenReturn(user());
+        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
 
         assertDoesNotThrow(() -> userService.changePassword(OLD_PASSWORD, NEW_PASSWORD));
 
@@ -136,7 +146,7 @@ public class UserServiceImplTests {
 
     @Test
     public void changePasswordTest_UnhappyPath_AccessDeniedException() {
-        when(authService.getCurrentUser()).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
         when(passwordManager.verify(any(), any())).thenReturn(false);
 
         var result = assertThrows(
@@ -154,7 +164,7 @@ public class UserServiceImplTests {
 
     @Test
     public void forgotPasswordTest() {
-        when(userQueryService.getUser(anyString())).thenReturn(user());
+        when(userQueryService.getUser(anyString())).thenReturn(user1WithoutAvatar());
         when(temporaryPasswordGenerator.generate()).thenReturn(TEMPORARY_PASSWORD);
         when(passwordManager.encode(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
         when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
@@ -162,7 +172,7 @@ public class UserServiceImplTests {
         when(webshopEmailAddressConfig.username()).thenReturn("from@example.com");
         doNothing().when(emailService).sendEmail(any(), any(), any(), any());
 
-        assertDoesNotThrow(() -> userService.forgotPassword(EMAIL));
+        assertDoesNotThrow(() -> userService.forgotPassword(EMAIL_1));
 
         verify(userQueryService, times(1)).getUser(anyString());
         verify(temporaryPasswordGenerator, times(1)).generate();
@@ -175,13 +185,13 @@ public class UserServiceImplTests {
 
     @Test
     public void resetPasswordTest_HappyPath() {
-        when(authService.getCurrentUser()).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
         when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword(), notExpiredTemporaryPassword()));
         when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
         doNothing().when(temporaryPasswordRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(true);
         when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
-        when(userRepository.save(any())).thenReturn(user());
+        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
         doNothing().when(temporaryPasswordRepository).delete(any());
 
         assertDoesNotThrow(() -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD));
@@ -198,7 +208,7 @@ public class UserServiceImplTests {
 
     @Test
     public void resetPasswordTest_UnhappyPath_AccessDeniedException() {
-        when(authService.getCurrentUser()).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
         when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword(), notExpiredTemporaryPassword()));
         when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
         doNothing().when(temporaryPasswordRepository).deleteAll(any());
@@ -223,7 +233,7 @@ public class UserServiceImplTests {
 
     @Test
     public void resetPasswordTest_UnhappyPath_ExpiredTemporaryPasswordException() {
-        when(authService.getCurrentUser()).thenReturn(user());
+        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
         when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword()));
         when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(expiredTemporaryPassword()));
         doNothing().when(temporaryPasswordRepository).deleteAll(any());
@@ -249,9 +259,9 @@ public class UserServiceImplTests {
 
     @Test
     public void updateUserTest() {
-        when(userRepository.save(any())).thenReturn(user());
+        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
 
-        assertDoesNotThrow(() -> userService.updateUser(user()));
+        assertDoesNotThrow(() -> userService.updateUser(user1WithoutAvatar()));
     }
 
     @Test
@@ -259,5 +269,52 @@ public class UserServiceImplTests {
         doNothing().when(userRepository).deleteById(any());
 
         assertDoesNotThrow(() -> userService.deleteUser(any()));
+    }
+
+    @Test
+    public void addProductToWishlistTest_HappyPath() {
+        when(authService.getCurrentUser()).thenReturn(user);
+        when(productQueryService.getProduct(any())).thenReturn(product1());
+        when(userRepository.save(any())).thenReturn(user1WithFavoriteProducts());
+
+        var result = userService.addProductToWishlist(1L);
+
+        assertThat(result.getId(), equalTo(product1().getId()));
+        assertThat(user.getFavoriteProducts().size(), equalTo(1));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void addProductToWishlistTest_UnhappyPath_ProductAlreadyOnWishlistException() {
+        when(authService.getCurrentUser()).thenReturn(user);
+        when(productQueryService.getProduct(any())).thenReturn(product1());
+        doThrow(new ProductAlreadyOnWishlistException(1L)).when(userRepository).save(any());
+
+        var result = assertThrows(
+                ProductAlreadyOnWishlistException.class,
+                () -> userService.addProductToWishlist(1L)
+        );
+
+        assertThat(result.getMessage(), equalTo("This product with the given ID: #1 is already on your wishlist."));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(productQueryService, times(1)).getProduct(any());
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void deleteProductFromWishlistTest() {
+        when(authService.getCurrentUser()).thenReturn(user);
+        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
+
+        userService.deleteProductFromWishlist(1L);
+
+        assertThat(user.getFavoriteProducts().size(), equalTo(0));
+
+        verify(authService, times(1)).getCurrentUser();
+        verify(userRepository, times(1)).save(any());
     }
 }

@@ -49,16 +49,16 @@ public class CheckoutControllerExceptionHandlerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("Coupon with the given code: 'SPRING15' is already redeemed. Try another one."));
+        assertThat(result.getBody().error(), equalTo("Coupon with the given code: 'SPRING15' is already redeemed."));
     }
 
     @Test
-    public void handleCheckoutSessionAlreadyCompletedExceptionTest() {
-        var result = checkoutControllerExceptionHandler.handleCheckoutSessionAlreadyCompletedException(new CheckoutSessionAlreadyCompletedException(CHECKOUT_SESSION_ID));
+    public void handleInvalidCheckoutSessionStateExceptionTest() {
+        var result = checkoutControllerExceptionHandler.handleInvalidCheckoutSessionStateException(new InvalidCheckoutSessionStateException(CHECKOUT_SESSION_ID, CheckoutStatus.CANCELED));
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 already completed."));
+        assertThat(result.getBody().error(), equalTo("Checkout session with the given ID: 401c3a9e-c1ae-4a39-956b-9af3ed28a4e2 is in the state of: CANCELED."));
     }
 
     @Test

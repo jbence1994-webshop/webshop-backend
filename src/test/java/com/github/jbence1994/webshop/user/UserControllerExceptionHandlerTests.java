@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 
 import java.util.stream.Stream;
 
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.PHONE_NUMBER;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL;
+import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
+import static com.github.jbence1994.webshop.user.UserTestConstants.PHONE_NUMBER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -27,7 +27,7 @@ public class UserControllerExceptionHandlerTests {
     private static Stream<Arguments> handleEmailOrPhoneNumberAlreadyExistsExceptionParams() {
         return Stream.of(
                 Arguments.of(
-                        Named.of("EmailAlreadyExistsException", new EmailAlreadyExistsException(EMAIL)),
+                        Named.of("EmailAlreadyExistsException", new EmailAlreadyExistsException(EMAIL_1)),
                         "Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."
                 ),
                 Arguments.of(

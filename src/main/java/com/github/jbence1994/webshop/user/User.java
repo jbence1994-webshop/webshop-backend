@@ -1,6 +1,5 @@
 package com.github.jbence1994.webshop.user;
 
-import com.github.jbence1994.webshop.coupon.Coupon;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +10,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,18 @@ public class User {
 
     private String password;
 
+    private String firstName;
+
+    private String middleName;
+
+    private String lastName;
+
+    private LocalDate dateOfBirth;
+
+    private String phoneNumber;
+
+    private String avatarFileName;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -53,52 +67,25 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Profile profile;
+    private Address address;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private List<Coupon> coupons = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "wishlist",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
+    )
+    private List<Product> favoriteProducts = new ArrayList<>();
 
-    public String getFirstName() {
-        return profile.getFirstName();
-    }
-
-    public String getPhoneNumber() {
-        return profile.getPhoneNumber();
-    }
-
-    public void setProfileAvatar(String fileName) {
-        profile.setAvatarFileName(fileName);
-    }
-
-    public Optional<String> getProfileAvatar() {
-        return profile.getProfileAvatar();
-    }
-
-    public void earnLoyaltyPoints(int value) {
-        profile.earnLoyaltyPoints(value);
-    }
-
-    public int getRewardPoints() {
-        return profile.getRewardPoints();
-    }
-
-    public void earnRewardPoints(int value) {
-        profile.earnRewardPoints(value);
-    }
-
-    public void burnRewardPoints(int value) {
-        profile.burnRewardPoints(value);
-    }
-
-    public MembershipTier getMembershipTier() {
-        return profile.getMembershipTier();
+    public Optional<String> getAvatarFileName() {
+        return Optional.ofNullable(avatarFileName);
     }
 
     public void addFavoriteProduct(Product product) {
-        profile.addFavoriteProduct(product);
+        favoriteProducts.add(product);
     }
 
     public void removeFavoriteProduct(Long productId) {
-        profile.removeFavoriteProduct(productId);
+        favoriteProducts.removeIf(product -> productId.equals(product.getId()));
     }
 }

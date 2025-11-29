@@ -36,16 +36,16 @@ import static org.mockito.Mockito.when;
 public class ProductPhotoServiceTests {
 
     @Mock
-    private ImageUploadsConfig imageUploadsConfig;
+    private FileExtensionValidator fileExtensionValidator;
 
     @Mock
     private ProductQueryService productQueryService;
 
     @Mock
-    private ProductService productService;
+    private ImageUploadsConfig imageUploadsConfig;
 
     @Mock
-    private FileExtensionValidator fileExtensionValidator;
+    private ProductService productService;
 
     @Mock
     private FileNameGenerator fileNameGenerator;

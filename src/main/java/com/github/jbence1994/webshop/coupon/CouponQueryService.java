@@ -7,5 +7,5 @@ public interface CouponQueryService {
 
     Coupon getCoupon(String code);
 
-    boolean isCouponRedeemed(String code);
+    boolean hasUserRedeemedCoupon(Long userId, String code);
 }

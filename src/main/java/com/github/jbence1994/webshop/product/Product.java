@@ -78,8 +78,8 @@ public class Product {
         ratings.add(productRating);
     }
 
-    public void updateRating(Long profileId, Byte ratingValue) {
-        getRating(profileId)
+    public void updateRating(Long userId, Byte ratingValue) {
+        getRating(userId)
                 .ifPresent(productRating -> productRating.setValue(ratingValue));
     }
 
@@ -100,9 +100,9 @@ public class Product {
                 .findFirst();
     }
 
-    private Optional<ProductRating> getRating(Long profileId) {
+    private Optional<ProductRating> getRating(Long userId) {
         return ratings.stream()
-                .filter(rating -> rating.getProfile().getUserId().equals(profileId))
+                .filter(rating -> userId.equals(rating.getUser().getId()))
                 .findFirst();
     }
 }

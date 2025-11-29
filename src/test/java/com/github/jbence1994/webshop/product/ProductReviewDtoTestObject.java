@@ -1,9 +1,9 @@
 package com.github.jbence1994.webshop.product;
 
 import static com.github.jbence1994.webshop.product.ProductTestConstants.PRODUCT_1_REVIEW_CREATED_AT;
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.FIRST_NAME;
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.LAST_NAME;
-import static com.github.jbence1994.webshop.user.ProfileTestConstants.MIDDLE_NAME;
+import static com.github.jbence1994.webshop.user.UserTestConstants.FIRST_NAME;
+import static com.github.jbence1994.webshop.user.UserTestConstants.LAST_NAME;
+import static com.github.jbence1994.webshop.user.UserTestConstants.MIDDLE_NAME;
 
 public final class ProductReviewDtoTestObject {
     public static ProductReviewDto productReviewDto() {

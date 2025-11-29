@@ -1,6 +1,4 @@
-package com.github.jbence1994.webshop.checkout;
-
-import org.apache.commons.lang3.tuple.Pair;
+package com.github.jbence1994.webshop.cart;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -8,7 +6,7 @@ import java.math.RoundingMode;
 public class FixedAmountCartTotalAdjustmentStrategy implements CartTotalAdjustmentStrategy {
 
     @Override
-    public Pair<BigDecimal, BigDecimal> adjustCartTotal(BigDecimal cartTotal, BigDecimal discountValue) {
+    public AdjustedCartTotal adjustCartTotal(BigDecimal cartTotal, BigDecimal discountValue) {
         var discountedCartTotal = cartTotal
                 .subtract(discountValue)
                 .max(BigDecimal.ZERO);
@@ -17,6 +15,6 @@ public class FixedAmountCartTotalAdjustmentStrategy implements CartTotalAdjustme
 
         var normalizedDiscountValue = discountValue.setScale(2, RoundingMode.HALF_UP);
 
-        return Pair.of(discountedCartTotal, normalizedDiscountValue);
+        return AdjustedCartTotal.of(discountedCartTotal, normalizedDiscountValue);
     }
 }

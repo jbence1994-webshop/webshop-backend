@@ -8,21 +8,17 @@ import com.github.jbence1994.webshop.coupon.CouponQueryService;
 import com.github.jbence1994.webshop.coupon.CouponService;
 import com.github.jbence1994.webshop.coupon.ExpiredCouponException;
 import com.github.jbence1994.webshop.order.Order;
-import com.github.jbence1994.webshop.order.OrderPricing;
 import com.github.jbence1994.webshop.order.OrderQueryService;
 import com.github.jbence1994.webshop.order.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
-    private final LoyaltyPointsCalculator loyaltyPointsCalculator;
-    private final RewardPointsConverter rewardPointsConverter;
     private final CheckoutQueryService checkoutQueryService;
     private final CheckoutRepository checkoutRepository;
     private final CouponQueryService couponQueryService;
@@ -43,7 +39,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var checkoutSession = CheckoutSession.from(cart);
 
-        checkoutRepository.save(checkoutSession);
+        save(checkoutSession);
 
         return checkoutSession;
     }
@@ -63,13 +59,15 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new ExpiredCouponException(couponCode);
         }
 
-        if (couponQueryService.isCouponRedeemed(couponCode)) {
+        var user = authService.getCurrentUser();
+
+        if (couponQueryService.hasUserRedeemedCoupon(user.getId(), couponCode)) {
             throw new CouponAlreadyRedeemedException(couponCode);
         }
 
         checkoutSession.applyCoupon(coupon);
 
-        checkoutRepository.save(checkoutSession);
+        save(checkoutSession);
 
         return checkoutSession;
     }
@@ -85,14 +83,14 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         checkoutSession.removeCoupon();
 
-        checkoutRepository.save(checkoutSession);
+        save(checkoutSession);
 
         return checkoutSession;
     }
 
     @Override
     @Transactional
-    public CompleteCheckoutSession completeCheckoutSession(UUID checkoutSessionId, RewardPointsAction action) {
+    public CheckoutSession completeCheckoutSession(UUID checkoutSessionId) {
         var checkoutSession = checkoutQueryService.getCheckoutSession(checkoutSessionId);
 
         if (checkoutSession.isExpired()) {
@@ -100,8 +98,8 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new ExpiredCheckoutSessionException(checkoutSessionId);
         }
 
-        if (CheckoutStatus.COMPLETED.equals(checkoutSession.getStatus())) {
-            throw new CheckoutSessionAlreadyCompletedException(checkoutSessionId);
+        if (checkoutSession.isCanceled() || checkoutSession.isCompleted() || checkoutSession.isFailed()) {
+            throw new InvalidCheckoutSessionStateException(checkoutSessionId, checkoutSession.getStatus());
         }
 
         var cart = checkoutSession.getCart();
@@ -113,29 +111,12 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         var user = authService.getCurrentUser();
 
-        var cartTotal = checkoutSession.getCartTotal();
-
-        var orderPricing = OrderPricing.of();
-
-        if (RewardPointsAction.EARN.equals(action)) {
-            var earnedRewardPoints = rewardPointsConverter.toRewardPoints(cartTotal, user.getMembershipTier());
-
-            user.earnRewardPoints(earnedRewardPoints);
-
-            orderPricing = OrderPricing.of(cartTotal, cartTotal, BigDecimal.ZERO);
-        }
-        // TODO: Implement 'BURN' path in else branch.
-
-        var order = Order.from(user, checkoutSession, orderPricing);
+        var order = Order.from(user, checkoutSession);
 
         orderService.createOrder(order);
 
         checkoutSession.getAppliedCoupon()
                 .ifPresent(coupon -> couponService.redeemCoupon(user.getId(), coupon.getCode(), order.getId()));
-
-        var loyaltyPoints = loyaltyPointsCalculator.calculateLoyaltyPoints(order.getTotalPrice());
-        user.earnLoyaltyPoints(loyaltyPoints);
-        order.setEarnedLoyaltyPoints(loyaltyPoints);
 
         try {
             var paymentSessionRequest = new PaymentSessionRequest(checkoutSession, order);
@@ -144,7 +125,10 @@ public class CheckoutServiceImpl implements CheckoutService {
 
             cart.clear();
 
-            return new CompleteCheckoutSession(order.getId(), paymentSessionResponse.checkoutUrl());
+            checkoutSession.setOrder(order);
+            checkoutSession.setCheckoutUrl(paymentSessionResponse.checkoutUrl());
+
+            return checkoutSession;
         } catch (PaymentException exception) {
             orderService.deleteOrder(order.getId());
             throw exception;
@@ -162,7 +146,11 @@ public class CheckoutServiceImpl implements CheckoutService {
 
                     var checkoutSession = checkoutQueryService.getCheckoutSession(paymentResult.checkoutSessionId());
                     checkoutSession.setStatus(paymentResult.checkoutStatus());
-                    checkoutRepository.save(checkoutSession);
+                    save(checkoutSession);
                 });
+    }
+
+    private void save(CheckoutSession checkoutSession) {
+        checkoutRepository.save(checkoutSession);
     }
 }

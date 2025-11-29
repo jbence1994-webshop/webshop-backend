@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.checkout;
+package com.github.jbence1994.webshop.cart;
 
 import com.github.jbence1994.webshop.coupon.DiscountType;
 import org.junit.jupiter.api.Test;
@@ -13,10 +13,10 @@ public class FixedAmountCartTotalAdjustmentStrategyTests {
     @Test
     public void adjustCartTotalTest() {
         var result = CartTotalAdjustmentStrategyFactory
-                .getCartTotalAdjustmentStrategy(DiscountType.FIXED_AMOUNT)
+                .getStrategy(DiscountType.FIXED_AMOUNT)
                 .adjustCartTotal(BigDecimal.valueOf(49.99), BigDecimal.valueOf(15.00));
 
-        assertThat(result.getLeft(), comparesEqualTo(BigDecimal.valueOf(34.99)));
-        assertThat(result.getRight(), comparesEqualTo(BigDecimal.valueOf(15.00)));
+        assertThat(result.getCartTotal(), comparesEqualTo(BigDecimal.valueOf(34.99)));
+        assertThat(result.getDiscountAmount(), comparesEqualTo(BigDecimal.valueOf(15.00)));
     }
 }

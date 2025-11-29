@@ -32,14 +32,10 @@ public class ProductReviewSummary {
 
     private LocalDateTime expirationDate;
 
-    public static ProductReviewSummary of(Product product, String text) {
-        var productReviewSummary = new ProductReviewSummary();
-
-        productReviewSummary.product = product;
-        productReviewSummary.text = text;
-        productReviewSummary.expirationDate = LocalDateTime.now().plusDays(7);
-
-        return productReviewSummary;
+    public ProductReviewSummary(Product product, String text) {
+        this.product = product;
+        this.text = text;
+        this.expirationDate = LocalDateTime.now().plusDays(7);
     }
 
     public boolean isExpired() {

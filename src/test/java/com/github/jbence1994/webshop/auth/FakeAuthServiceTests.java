@@ -1,13 +1,15 @@
 package com.github.jbence1994.webshop.auth;
 
-import com.github.jbence1994.webshop.user.UserQueryService;
+import com.github.jbence1994.webshop.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
+import java.util.Optional;
+
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -22,23 +24,23 @@ import static org.mockito.Mockito.when;
 public class FakeAuthServiceTests {
 
     @Mock
-    private UserQueryService userQueryService;
+    private UserRepository userRepository;
 
     @InjectMocks
     private FakeAuthService authService;
 
     @Test
     public void getCurrentUserTest() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user());
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user1WithoutAvatar()));
 
         var result = assertDoesNotThrow(() -> authService.getCurrentUser());
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
-                hasProperty("id", equalTo(user().getId())),
-                hasProperty("email", equalTo(user().getEmail())),
-                hasProperty("password", equalTo(user().getPassword())),
-                hasProperty("role", equalTo(user().getRole()))
+                hasProperty("id", equalTo(user1WithoutAvatar().getId())),
+                hasProperty("email", equalTo(user1WithoutAvatar().getEmail())),
+                hasProperty("password", equalTo(user1WithoutAvatar().getPassword())),
+                hasProperty("role", equalTo(user1WithoutAvatar().getRole()))
         ));
     }
 }

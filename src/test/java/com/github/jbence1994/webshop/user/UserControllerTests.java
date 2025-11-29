@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.product.Product;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,30 +8,37 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
+import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
+import static com.github.jbence1994.webshop.user.AddProductToWishlistRequestTestObject.addProductToWishlistRequest;
 import static com.github.jbence1994.webshop.user.AddressTestObject.addressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.notSanitizedChangePasswordRequest;
+import static com.github.jbence1994.webshop.user.DeleteProductFromWishlistRequestTestObject.deleteProductFromWishlistRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.forgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.notSanitizedForgotPasswordRequest;
-import static com.github.jbence1994.webshop.user.ProfileTestObject.profileAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.registrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationResponseTestObject.registrationResponse;
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.notSanitizedResetPasswordRequest;
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequest;
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
-import static com.github.jbence1994.webshop.user.UserTestObject.user;
-import static com.github.jbence1994.webshop.user.UserTestObject.userAfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1AfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.WishlistProductDtoTestObject.wishlistProductDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,35 +70,30 @@ public class UserControllerTests {
 
     @Test
     public void getUserTest_HappyPath() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user());
-        when(userMapper.toUserDto(any())).thenReturn(userDto());
+        when(userQueryService.getUser(anyLong())).thenReturn(user1WithoutAvatar());
+        when(userMapper.toDto(any(User.class))).thenReturn(userDto());
 
         var result = userController.getUser(1L);
 
         assertThat(result.id(), equalTo(userDto().id()));
         assertThat(result.email(), equalTo(userDto().email()));
-        assertThat(result.profile().firstName(), equalTo(userDto().profile().firstName()));
-        assertThat(result.profile().middleName(), equalTo(userDto().profile().middleName()));
-        assertThat(result.profile().lastName(), equalTo(userDto().profile().lastName()));
-        assertThat(result.profile().dateOfBirth(), equalTo(userDto().profile().dateOfBirth()));
-        assertThat(result.profile().phoneNumber(), equalTo(userDto().profile().phoneNumber()));
-        assertThat(result.profile().loyaltyPoints(), equalTo(userDto().profile().loyaltyPoints()));
-        assertThat(result.profile().membershipTier(), equalTo(userDto().profile().membershipTier()));
-        assertThat(result.profile().address().addressLine(), equalTo(userDto().profile().address().addressLine()));
-        assertThat(result.profile().address().municipality(), equalTo(userDto().profile().address().municipality()));
-        assertThat(result.profile().address().province(), equalTo(userDto().profile().address().province()));
-        assertThat(result.profile().address().postalCode(), equalTo(userDto().profile().address().postalCode()));
-        assertThat(result.profile().address().country(), equalTo(userDto().profile().address().country()));
+        assertThat(result.firstName(), equalTo(userDto().firstName()));
+        assertThat(result.middleName(), equalTo(userDto().middleName()));
+        assertThat(result.lastName(), equalTo(userDto().lastName()));
+        assertThat(result.dateOfBirth(), equalTo(userDto().dateOfBirth()));
+        assertThat(result.phoneNumber(), equalTo(userDto().phoneNumber()));
+        assertThat(result.address().addressLine(), equalTo(userDto().address().addressLine()));
+        assertThat(result.address().municipality(), equalTo(userDto().address().municipality()));
+        assertThat(result.address().province(), equalTo(userDto().address().province()));
+        assertThat(result.address().postalCode(), equalTo(userDto().address().postalCode()));
+        assertThat(result.address().country(), equalTo(userDto().address().country()));
     }
 
     @Test
     public void getUserTest_UnhappyPath_UserNotFoundException() {
         when(userQueryService.getUser(anyLong())).thenThrow(new UserNotFoundException(1L));
 
-        var result = assertThrows(
-                UserNotFoundException.class,
-                () -> userController.getUser(1L)
-        );
+        var result = assertThrows(UserNotFoundException.class, () -> userController.getUser(1L));
 
         assertThat(result.getMessage(), equalTo("No user was found with the given ID: #1."));
     }
@@ -98,10 +101,9 @@ public class UserControllerTests {
     @Test
     public void registerUserTest() {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
-        when(userMapper.toAddress(any())).thenReturn(addressAfterMappingFromDto());
-        when(userMapper.toProfile(any())).thenReturn(profileAfterMappingFromDto());
-        when(userMapper.toUser(any())).thenReturn(userAfterMappingFromDto());
-        when(userService.registerUser(any())).thenReturn(user());
+        when(userMapper.toEntity(any(RegistrationRequest.AddressDto.class))).thenReturn(addressAfterMappingFromDto());
+        when(userMapper.toEntity(any(RegistrationRequest.UserDto.class))).thenReturn(user1AfterMappingFromDto());
+        when(userService.registerUser(any())).thenReturn(user1WithoutAvatar());
         when(userMapper.toRegistrationResponse(any())).thenReturn(registrationResponse());
 
         var result = userController.registerUser(notSanitizedRegistrationRequest());
@@ -116,21 +118,30 @@ public class UserControllerTests {
     public void changePasswordTest() {
         when(changePasswordRequestSanitizer.sanitize(any())).thenReturn(changePasswordRequest());
 
-        assertDoesNotThrow(() -> userController.changePassword(notSanitizedChangePasswordRequest()));
+        var result = userController.changePassword(notSanitizedChangePasswordRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
     public void forgotPasswordTest() {
         when(forgotPasswordRequestSanitizer.sanitize(any())).thenReturn(forgotPasswordRequest());
 
-        assertDoesNotThrow(() -> userController.forgotPassword(notSanitizedForgotPasswordRequest()));
+        var result = userController.forgotPassword(notSanitizedForgotPasswordRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.ACCEPTED));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
     public void resetPasswordTest() {
         when(resetPasswordRequestSanitizer.sanitize(any())).thenReturn(resetPasswordRequest());
 
-        assertDoesNotThrow(() -> userController.resetPassword(notSanitizedResetPasswordRequest()));
+        var result = userController.resetPassword(notSanitizedResetPasswordRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
@@ -141,5 +152,43 @@ public class UserControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
+    }
+
+    @Test
+    public void getWishlistTest() {
+        when(userQueryService.getWishlist()).thenReturn(List.of(product1(), product2()));
+        when(userMapper.toDto(any(Product.class))).thenReturn(wishlistProductDto());
+
+        var result = userController.getWishlist();
+
+        assertThat(result, not(nullValue()));
+        assertThat(result.size(), equalTo(2));
+    }
+
+    @Test
+    public void addProductToWishlistTest() {
+        when(userService.addProductToWishlist(any())).thenReturn(product1());
+        when(userMapper.toDto(any(Product.class))).thenReturn(wishlistProductDto());
+
+        var result = userController.addProductToWishlist(addProductToWishlistRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
+        assertThat(result.getBody(), not(nullValue()));
+        assertThat(result.getBody().id(), equalTo(wishlistProductDto().id()));
+
+        verify(userService, times(1)).addProductToWishlist(any());
+        verify(userMapper, times(1)).toDto(any(Product.class));
+    }
+
+    @Test
+    public void deleteProductFromWishlistTest() {
+        doNothing().when(userService).deleteProductFromWishlist(any());
+
+        var result = userController.deleteProductFromWishlist(deleteProductFromWishlistRequest());
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
+
+        verify(userService, times(1)).deleteProductFromWishlist(any());
     }
 }

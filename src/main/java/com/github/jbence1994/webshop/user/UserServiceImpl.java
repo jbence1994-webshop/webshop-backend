@@ -4,6 +4,9 @@ import com.github.jbence1994.webshop.auth.AuthService;
 import com.github.jbence1994.webshop.common.EmailService;
 import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
+import com.github.jbence1994.webshop.product.Product;
+import com.github.jbence1994.webshop.product.ProductAlreadyOnWishlistException;
+import com.github.jbence1994.webshop.product.ProductQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final TemporaryPasswordGenerator temporaryPasswordGenerator;
     private final WebshopEmailAddressConfig webshopEmailAddressConfig;
     private final EmailTemplateBuilder emailTemplateBuilder;
+    private final ProductQueryService productQueryService;
     private final UserQueryService userQueryService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
@@ -34,7 +38,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistsException(email);
         }
 
-        if (userRepository.existsByProfilePhoneNumber(phoneNumber)) {
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new PhoneNumberAlreadyExistsException(phoneNumber);
         }
 
@@ -65,7 +69,7 @@ public class UserServiceImpl implements UserService {
         var rawTemporaryPassword = temporaryPasswordGenerator.generate();
         var hashedTemporaryPassword = passwordManager.encode(rawTemporaryPassword);
 
-        temporaryPasswordRepository.save(TemporaryPassword.of(hashedTemporaryPassword, user));
+        temporaryPasswordRepository.save(new TemporaryPassword(hashedTemporaryPassword, user));
 
         user.setPassword(hashedTemporaryPassword);
 
@@ -120,5 +124,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public Product addProductToWishlist(Long productId) {
+        try {
+            var user = authService.getCurrentUser();
+            var product = productQueryService.getProduct(productId);
+
+            user.addFavoriteProduct(product);
+
+            updateUser(user);
+
+            return product;
+        } catch (Exception exception) {
+            throw new ProductAlreadyOnWishlistException(productId);
+        }
+    }
+
+    @Override
+    public void deleteProductFromWishlist(Long productId) {
+        var user = authService.getCurrentUser();
+
+        user.removeFavoriteProduct(productId);
+
+        updateUser(user);
     }
 }
