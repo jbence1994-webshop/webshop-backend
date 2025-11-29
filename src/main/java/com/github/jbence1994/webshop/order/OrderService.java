@@ -5,7 +5,7 @@ public interface OrderService {
 
     void updateOrder(Order order);
 
-    Order updateOrderStatus(Long id, OrderStatus status);
+    void updateOrderStatus(Long id, OrderStatus status);
 
     void deleteOrder(Long id);
 }

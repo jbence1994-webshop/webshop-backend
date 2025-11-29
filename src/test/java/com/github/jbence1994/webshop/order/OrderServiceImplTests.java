@@ -11,10 +11,14 @@ import static com.github.jbence1994.webshop.order.OrderTestObject.updatedOrder1;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceImplTests {
+
+    @Mock
+    private OrderQueryService orderQueryService;
 
     @Mock
     private OrderRepository orderRepository;
@@ -27,6 +31,8 @@ public class OrderServiceImplTests {
         when(orderRepository.save(any())).thenReturn(order1());
 
         assertDoesNotThrow(() -> orderService.createOrder(order1()));
+
+        verify(orderRepository).save(any());
     }
 
     @Test
@@ -34,6 +40,17 @@ public class OrderServiceImplTests {
         when(orderRepository.save(any())).thenReturn(updatedOrder1());
 
         assertDoesNotThrow(() -> orderService.updateOrder(order1()));
+
+        verify(orderRepository).save(any());
+    }
+
+    @Test
+    public void updateOrderStatusTest() {
+        when(orderQueryService.getOrder(any())).thenReturn(updatedOrder1());
+
+        assertDoesNotThrow(() -> orderService.updateOrderStatus(1L, OrderStatus.SHIPPED));
+
+        verify(orderRepository).save(any());
     }
 
     @Test
@@ -41,5 +58,7 @@ public class OrderServiceImplTests {
         doNothing().when(orderRepository).deleteById(any());
 
         assertDoesNotThrow(() -> orderService.deleteOrder(1L));
+
+        verify(orderRepository).deleteById(any());
     }
 }

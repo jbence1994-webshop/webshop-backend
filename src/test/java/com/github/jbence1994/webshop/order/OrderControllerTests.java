@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -12,7 +13,10 @@ import static com.github.jbence1994.webshop.order.OrderDtoTestObject.orderDto;
 import static com.github.jbence1994.webshop.order.OrderTestObject.order1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -20,6 +24,9 @@ public class OrderControllerTests {
 
     @Mock
     private OrderQueryService orderQueryService;
+
+    @Mock
+    private OrderService orderService;
 
     @Mock
     private OrderMapper orderMapper;
@@ -49,5 +56,15 @@ public class OrderControllerTests {
         assertThat(result.discountAmount(), equalTo(orderDto().discountAmount()));
         assertThat(result.status(), equalTo(orderDto().status()));
         assertThat(result.createdAt(), equalTo(orderDto().createdAt()));
+    }
+
+    @Test
+    public void updateOrderStatusTest() {
+        doNothing().when(orderService).updateOrderStatus(any(), any());
+
+        var result = orderController.updateOrderStatus(1L, OrderStatus.SHIPPED);
+
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+        assertThat(result.getBody(), is(nullValue()));
     }
 }

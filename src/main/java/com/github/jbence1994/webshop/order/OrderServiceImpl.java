@@ -20,13 +20,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order updateOrderStatus(Long id, OrderStatus status) {
+    public void updateOrderStatus(Long id, OrderStatus status) {
         var order = orderQueryService.getOrder(id);
+
         order.setStatus(status);
 
         save(order);
-
-        return order;
     }
 
     @Override
