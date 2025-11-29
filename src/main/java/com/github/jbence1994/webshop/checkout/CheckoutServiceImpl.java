@@ -37,10 +37,6 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new EmptyCartException(cartId);
         }
 
-        if (checkoutQueryService.existsByCartId(cartId)) {
-            throw new CheckoutSessionAlreadyExistsByCartIdException(cartId);
-        }
-
         var checkoutSession = CheckoutSession.from(cart);
 
         save(checkoutSession);
@@ -63,7 +59,9 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new ExpiredCouponException(couponCode);
         }
 
-        if (couponQueryService.isCouponRedeemed(couponCode)) {
+        var user = authService.getCurrentUser();
+
+        if (couponQueryService.hasUserRedeemedCoupon(user.getId(), couponCode)) {
             throw new CouponAlreadyRedeemedException(couponCode);
         }
 
@@ -100,8 +98,8 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new ExpiredCheckoutSessionException(checkoutSessionId);
         }
 
-        if (CheckoutStatus.COMPLETED.equals(checkoutSession.getStatus())) {
-            throw new CheckoutSessionAlreadyCompletedException(checkoutSessionId);
+        if (checkoutSession.isCanceled() || checkoutSession.isCompleted() || checkoutSession.isFailed()) {
+            throw new InvalidCheckoutSessionStateException(checkoutSessionId, checkoutSession.getStatus());
         }
 
         var cart = checkoutSession.getCart();
@@ -118,13 +116,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         orderService.createOrder(order);
 
         checkoutSession.getAppliedCoupon()
-                .ifPresent(
-                        coupon -> couponService.redeemCoupon(
-                                user.getId(),
-                                coupon.getCode(),
-                                order.getId()
-                        )
-                );
+                .ifPresent(coupon -> couponService.redeemCoupon(user.getId(), coupon.getCode(), order.getId()));
 
         try {
             var paymentSessionRequest = new PaymentSessionRequest(checkoutSession, order);

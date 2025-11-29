@@ -69,10 +69,6 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
 
-    public Optional<String> getAvatarFileName() {
-        return Optional.ofNullable(avatarFileName);
-    }
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "wishlist",
@@ -80,6 +76,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
     private List<Product> favoriteProducts = new ArrayList<>();
+
+    public Optional<String> getAvatarFileName() {
+        return Optional.ofNullable(avatarFileName);
+    }
 
     public void addFavoriteProduct(Product product) {
         favoriteProducts.add(product);
