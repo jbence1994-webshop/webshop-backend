@@ -105,18 +105,6 @@ public class CheckoutSession {
         this.discountAmount = BigDecimal.ZERO;
     }
 
-    public boolean isCanceled() {
-        return CheckoutStatus.CANCELED.equals(status);
-    }
-
-    public boolean isCompleted() {
-        return CheckoutStatus.COMPLETED.equals(status);
-    }
-
-    public boolean isFailed() {
-        return CheckoutStatus.FAILED.equals(status);
-    }
-
     public boolean isExpired() {
         return expirationDate.isBefore(LocalDateTime.now());
     }
