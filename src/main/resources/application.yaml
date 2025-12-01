@@ -43,7 +43,7 @@ webshop:
     user-avatar-directory: ${USER_AVATAR_DIRECTORY}
 
   stripe:
-    secretKey: ${STRIPE_SECRET_KEY}
-    webhookSecretKey: ${STRIPE_WEBHOOK_SECRET_KEY}
-    shippingCostId: ${STRIPE_SHIPPING_COST_ID}
-    freeShippingId: ${STRIPE_FREE_SHIPPING_ID}
+    secret-key: ${STRIPE_SECRET_KEY}
+    webhook-secret-key: ${STRIPE_WEBHOOK_SECRET_KEY}
+    shipping-cost-id: ${STRIPE_SHIPPING_COST_ID}
+    free-shipping-id: ${STRIPE_FREE_SHIPPING_ID}
