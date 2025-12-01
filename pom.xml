@@ -215,6 +215,7 @@
                 <configuration>
                     <excludes>
                         <exclude>com/github/jbence1994/webshop/**/*Config*</exclude>
+                        <exclude>com/github/jbence1994/webshop/**/*ManagerImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/**/*MapperImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/ai/*SystemPromptUtil*</exclude>
                         <exclude>com/github/jbence1994/webshop/checkout/StripePaymentGateway*</exclude>
