@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
             throw new PhoneNumberAlreadyExistsException(phoneNumber);
         }
 
-        user.setPassword(passwordManager.encode(user.getPassword()));
+        user.setPassword(passwordManager.hash(user.getPassword()));
         user.setRole(Role.USER);
         userRepository.save(user);
 
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
             throw new AccessDeniedException("Invalid old password.");
         }
 
-        user.setPassword(passwordManager.encode(newPassword));
+        user.setPassword(passwordManager.hash(newPassword));
         userRepository.save(user);
     }
 
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
         var user = userQueryService.getUser(email);
 
         var rawTemporaryPassword = temporaryPasswordGenerator.generate();
-        var hashedTemporaryPassword = passwordManager.encode(rawTemporaryPassword);
+        var hashedTemporaryPassword = passwordManager.hash(rawTemporaryPassword);
 
         temporaryPasswordRepository.save(new TemporaryPassword(hashedTemporaryPassword, user));
 
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
             throw new ExpiredTemporaryPasswordException();
         }
 
-        user.setPassword(passwordManager.encode(newPassword));
+        user.setPassword(passwordManager.hash(newPassword));
         userRepository.save(user);
 
         temporaryPasswordRepository.delete(latestTemporaryPassword);
