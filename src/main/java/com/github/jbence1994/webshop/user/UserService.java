@@ -3,7 +3,7 @@ package com.github.jbence1994.webshop.user;
 import com.github.jbence1994.webshop.product.Product;
 
 public interface UserService {
-    User registerUser(User user);
+    void registerUser(User user);
 
     void changePassword(String oldPassword, String newPassword);
 

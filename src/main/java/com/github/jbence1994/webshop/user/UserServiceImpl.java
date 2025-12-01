@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private final AuthService authService;
 
     @Override
-    public User registerUser(User user) {
+    public void registerUser(User user) {
         var email = user.getEmail();
         var phoneNumber = user.getPhoneNumber();
 
@@ -44,9 +44,8 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordManager.hash(user.getPassword()));
         user.setRole(Role.USER);
-        userRepository.save(user);
 
-        return user;
+        userRepository.save(user);
     }
 
     @Override

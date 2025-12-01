@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
+    public ResponseEntity<Void> registerUser(@Valid @RequestBody RegistrationRequest request) {
         var sanitizedRequest = registrationRequestSanitizer.sanitize(request);
 
         var address = userMapper.toEntity(sanitizedRequest.user().address());
@@ -44,11 +44,9 @@ public class UserController {
         address.setUser(user);
         user.setAddress(address);
 
-        var registeredUser = userService.registerUser(user);
+        userService.registerUser(user);
 
-        var response = userMapper.toRegistrationResponse(registeredUser);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/change-password")

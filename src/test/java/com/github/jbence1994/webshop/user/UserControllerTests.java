@@ -21,7 +21,6 @@ import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.notSanitizedForgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.notSanitizedRegistrationRequest;
 import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.registrationRequest;
-import static com.github.jbence1994.webshop.user.RegistrationResponseTestObject.registrationResponse;
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.notSanitizedResetPasswordRequest;
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequest;
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
@@ -103,15 +102,12 @@ public class UserControllerTests {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
         when(userMapper.toEntity(any(RegistrationRequest.AddressDto.class))).thenReturn(addressAfterMappingFromDto());
         when(userMapper.toEntity(any(RegistrationRequest.UserDto.class))).thenReturn(user1AfterMappingFromDto());
-        when(userService.registerUser(any())).thenReturn(user1WithoutAvatar());
-        when(userMapper.toRegistrationResponse(any())).thenReturn(registrationResponse());
+        doNothing().when(userService).registerUser(any());
 
         var result = userController.registerUser(notSanitizedRegistrationRequest());
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CREATED));
-        assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().id(), equalTo(registrationResponse().id()));
-        assertThat(result.getBody().email(), equalTo(registrationResponse().email()));
+        assertThat(result.getBody(), is(nullValue()));
     }
 
     @Test
