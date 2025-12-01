@@ -31,7 +31,7 @@ public class ChatControllerTests {
 
     @Test
     public void chatTest() {
-        when(chatService.chat(any())).thenReturn(CHAT_RESPONSE_TEXT);
+        when(chatService.chat(any(), any())).thenReturn(CHAT_RESPONSE_TEXT);
         when(chatMapper.toChatResponse(any())).thenReturn(chatResponse());
 
         var result = chatController.chat(chatRequest());
@@ -39,7 +39,7 @@ public class ChatControllerTests {
         assertThat(result, not(nullValue()));
         assertThat(result.message(), not(nullValue()));
 
-        verify(chatService, times(1)).chat(any());
+        verify(chatService, times(1)).chat(any(), any());
         verify(chatMapper, times(1)).toChatResponse(any());
     }
 }
