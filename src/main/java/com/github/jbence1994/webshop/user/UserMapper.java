@@ -11,8 +11,6 @@ public interface UserMapper {
 
     AddressDto toDto(Address address);
 
-    RegistrationResponse toRegistrationResponse(User user);
-
     WishlistProductDto toDto(Product product);
 
     @Mapping(target = "id", ignore = true)

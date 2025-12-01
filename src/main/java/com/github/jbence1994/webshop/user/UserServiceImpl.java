@@ -30,23 +30,22 @@ public class UserServiceImpl implements UserService {
     private final AuthService authService;
 
     @Override
-    public User registerUser(User user) {
+    public void registerUser(User user) {
         var email = user.getEmail();
         var phoneNumber = user.getPhoneNumber();
 
         if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException(email);
+            throw new EmailAlreadyExistsException();
         }
 
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new PhoneNumberAlreadyExistsException(phoneNumber);
+            throw new PhoneNumberAlreadyExistsException();
         }
 
         user.setPassword(passwordManager.hash(user.getPassword()));
         user.setRole(Role.USER);
-        userRepository.save(user);
 
-        return user;
+        userRepository.save(user);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class UserQueryServiceImpl implements UserQueryService {
     public User getUser(String email) {
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override

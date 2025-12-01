@@ -22,6 +22,8 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,6 +56,10 @@ public class ProductPhotoControllerTests {
         assertThat(result.getBody(), not(nullValue()));
         assertThat(result.getBody().fileName(), equalTo(PHOTO_FILE_NAME));
         assertThat(result.getBody().url(), equalTo(PHOTO_URL));
+
+        verify(imageMapper, times(1)).toImageUpload(any());
+        verify(imageService, times(1)).uploadImage(any(), any());
+        verify(imageUrlBuilder, times(1)).buildUrl(any());
     }
 
     @Test
@@ -64,6 +70,9 @@ public class ProductPhotoControllerTests {
         var result = productPhotoController.getProductPhotos(1L);
 
         assertThat(result.size(), equalTo(1));
+
+        verify(productPhotoQueryService, times(1)).getProductPhotos(any());
+        verify(imageMapper, times(1)).toImageResponses(any(), any());
     }
 
     @Test
@@ -74,5 +83,7 @@ public class ProductPhotoControllerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
+
+        verify(imageService, times(1)).deleteImage(any(), any());
     }
 }

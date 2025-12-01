@@ -103,7 +103,7 @@ public class UserServiceImplTests {
                 () -> userService.registerUser(user1WithoutAvatar())
         );
 
-        assertThat(result.getMessage(), equalTo("Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."));
+        assertThat(result.getMessage(), equalTo("Email address is already in use."));
 
         verify(userRepository, times(1)).existsByEmail(any());
         verify(userRepository, never()).existsByPhoneNumber(any());
@@ -121,7 +121,7 @@ public class UserServiceImplTests {
                 () -> userService.registerUser(user1WithoutAvatar())
         );
 
-        assertThat(result.getMessage(), equalTo("Phone number '+36501323566' is already registered. Please use a different."));
+        assertThat(result.getMessage(), equalTo("Phone number is already registered."));
 
         verify(userRepository, times(1)).existsByEmail(any());
         verify(userRepository, times(1)).existsByPhoneNumber(any());
