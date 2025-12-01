@@ -10,7 +10,7 @@ public class PasswordManagerImpl implements PasswordManager {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public String encode(String rawPassword) {
+    public String hash(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
     }
 

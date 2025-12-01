@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PasswordManagerImplTests {
+public class PasswordManagerImplTests {
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -27,10 +27,10 @@ class PasswordManagerImplTests {
     private PasswordManagerImpl passwordManager;
 
     @Test
-    public void encodeTest() {
+    public void hashTest() {
         when(passwordEncoder.encode(any())).thenReturn(HASHED_PASSWORD);
 
-        var result = passwordManager.encode(PASSWORD);
+        var result = passwordManager.hash(PASSWORD);
 
         assertThat(result, equalTo(HASHED_PASSWORD));
     }
