@@ -84,13 +84,13 @@ public class UserServiceImplTests {
     @Test
     public void registerUserTest_HappyPath() {
         when(userRepository.existsByEmail(any())).thenReturn(false);
-        when(passwordManager.encode(any())).thenReturn(HASHED_PASSWORD);
+        when(passwordManager.hash(any())).thenReturn(HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
 
         assertDoesNotThrow(() -> userService.registerUser(user1WithoutAvatar()));
 
         verify(userRepository, times(1)).existsByEmail(any());
-        verify(passwordManager, times(1)).encode(any());
+        verify(passwordManager, times(1)).hash(any());
         verify(userRepository, times(1)).save(any());
     }
 
@@ -107,7 +107,7 @@ public class UserServiceImplTests {
 
         verify(userRepository, times(1)).existsByEmail(any());
         verify(userRepository, never()).existsByPhoneNumber(any());
-        verify(passwordManager, never()).encode(any());
+        verify(passwordManager, never()).hash(any());
         verify(userRepository, never()).save(any());
     }
 
@@ -125,7 +125,7 @@ public class UserServiceImplTests {
 
         verify(userRepository, times(1)).existsByEmail(any());
         verify(userRepository, times(1)).existsByPhoneNumber(any());
-        verify(passwordManager, never()).encode(any());
+        verify(passwordManager, never()).hash(any());
         verify(userRepository, never()).save(any());
     }
 
@@ -133,14 +133,14 @@ public class UserServiceImplTests {
     public void changePasswordTest_HappyPath() {
         when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
         when(passwordManager.verify(any(), any())).thenReturn(true);
-        when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
+        when(passwordManager.hash(any())).thenReturn(NEW_HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
 
         assertDoesNotThrow(() -> userService.changePassword(OLD_PASSWORD, NEW_PASSWORD));
 
         verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
-        verify(passwordManager, times(1)).encode(any());
+        verify(passwordManager, times(1)).hash(any());
         verify(userRepository, times(1)).save(any());
     }
 
@@ -158,7 +158,7 @@ public class UserServiceImplTests {
 
         verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
-        verify(passwordManager, never()).encode(any());
+        verify(passwordManager, never()).hash(any());
         verify(userRepository, never()).save(any());
     }
 
@@ -166,7 +166,7 @@ public class UserServiceImplTests {
     public void forgotPasswordTest() {
         when(userQueryService.getUser(anyString())).thenReturn(user1WithoutAvatar());
         when(temporaryPasswordGenerator.generate()).thenReturn(TEMPORARY_PASSWORD);
-        when(passwordManager.encode(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
+        when(passwordManager.hash(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
         when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
         when(emailTemplateBuilder.buildForForgotPassword(any(), any(), any())).thenReturn(emailContent());
         when(webshopEmailAddressConfig.username()).thenReturn("from@example.com");
@@ -176,7 +176,7 @@ public class UserServiceImplTests {
 
         verify(userQueryService, times(1)).getUser(anyString());
         verify(temporaryPasswordGenerator, times(1)).generate();
-        verify(passwordManager, times(1)).encode(any());
+        verify(passwordManager, times(1)).hash(any());
         verify(temporaryPasswordRepository, times(1)).save(any());
         verify(emailTemplateBuilder, times(1)).buildForForgotPassword(any(), any(), any());
         verify(webshopEmailAddressConfig, times(1)).username();
@@ -190,7 +190,7 @@ public class UserServiceImplTests {
         when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
         doNothing().when(temporaryPasswordRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(true);
-        when(passwordManager.encode(any())).thenReturn(NEW_HASHED_PASSWORD);
+        when(passwordManager.hash(any())).thenReturn(NEW_HASHED_PASSWORD);
         when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
         doNothing().when(temporaryPasswordRepository).delete(any());
 
@@ -201,7 +201,7 @@ public class UserServiceImplTests {
         verify(temporaryPasswordRepository, times(1)).findTopByUserIdOrderByExpirationDateDesc(any());
         verify(temporaryPasswordRepository, times(1)).deleteAll(any());
         verify(passwordManager, times(1)).verify(any(), any());
-        verify(passwordManager, times(1)).encode(any());
+        verify(passwordManager, times(1)).hash(any());
         verify(userRepository, times(1)).save(any());
         verify(temporaryPasswordRepository, times(1)).delete(any());
     }
@@ -227,7 +227,7 @@ public class UserServiceImplTests {
         verify(temporaryPasswordRepository, times(1)).deleteAll(any());
         verify(temporaryPasswordRepository, never()).delete(any());
         verify(passwordManager, times(1)).verify(any(), any());
-        verify(passwordManager, never()).encode(any());
+        verify(passwordManager, never()).hash(any());
         verify(userRepository, never()).save(any());
     }
 
@@ -253,7 +253,7 @@ public class UserServiceImplTests {
         verify(temporaryPasswordRepository, times(1)).deleteAll(any());
         verify(passwordManager, times(1)).verify(any(), any());
         verify(temporaryPasswordRepository, times(1)).delete(any());
-        verify(passwordManager, never()).encode(any());
+        verify(passwordManager, never()).hash(any());
         verify(userRepository, never()).save(any());
     }
 
