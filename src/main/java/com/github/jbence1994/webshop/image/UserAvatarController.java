@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/users/{userId}/avatar")
+@RequestMapping("/users/{id}/avatar")
 @Validated
 public class UserAvatarController {
     private final UserQueryService userQueryService;
@@ -36,21 +36,19 @@ public class UserAvatarController {
     }
 
     @PostMapping
-    public ResponseEntity<ImageResponse> uploadUserAvatar(
-            @PathVariable Long userId,
+    public ResponseEntity<Void> uploadUserAvatar(
+            @PathVariable Long id,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
         var uploadImage = imageMapper.toImageUpload(file);
-        var uploadedImageFileName = imageService.uploadImage(userId, uploadImage);
+        imageService.uploadImage(id, uploadImage);
 
-        var url = imageUrlBuilder.buildUrl(uploadedImageFileName);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ImageResponse(uploadedImageFileName, url));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<?> getUserAvatar(@PathVariable Long userId) {
-        return userQueryService.getUser(userId).getAvatarFileName()
+    public ResponseEntity<?> getUserAvatar(@PathVariable Long id) {
+        return userQueryService.getUser(id).getAvatarFileName()
                 .map(userAvatar -> {
                     var url = imageUrlBuilder.buildUrl(userAvatar);
                     return ResponseEntity.ok(new ImageResponse(userAvatar, url));
@@ -60,10 +58,10 @@ public class UserAvatarController {
 
     @DeleteMapping("/{fileName}")
     public ResponseEntity<Void> deleteUserAvatar(
-            @PathVariable Long userId,
+            @PathVariable Long id,
             @PathVariable String fileName
     ) {
-        imageService.deleteImage(userId, fileName);
+        imageService.deleteImage(id, fileName);
 
         return ResponseEntity.noContent().build();
     }
