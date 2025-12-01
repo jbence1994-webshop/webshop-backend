@@ -26,13 +26,13 @@ public class StripePaymentGateway implements PaymentGateway {
     private final FreeShippingConfig freeShippingConfig;
     private final ClientAppConfig clientAppConfig;
 
-    @Value("${webshop.stripe.webhookSecretKey}")
+    @Value("${webshop.stripe.webhook-secret-key}")
     private String webhookSecretKey;
 
-    @Value("${webshop.stripe.shippingCostId}")
+    @Value("${webshop.stripe.shipping-cost-id}")
     private String shippingCostId;
 
-    @Value("${webshop.stripe.freeShippingId}")
+    @Value("${webshop.stripe.free-shipping-id}")
     private String freeShippingId;
 
     @Override
