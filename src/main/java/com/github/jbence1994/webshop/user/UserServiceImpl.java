@@ -35,11 +35,11 @@ public class UserServiceImpl implements UserService {
         var phoneNumber = user.getPhoneNumber();
 
         if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException(email);
+            throw new EmailAlreadyExistsException();
         }
 
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new PhoneNumberAlreadyExistsException(phoneNumber);
+            throw new PhoneNumberAlreadyExistsException();
         }
 
         user.setPassword(passwordManager.hash(user.getPassword()));

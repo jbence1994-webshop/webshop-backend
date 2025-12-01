@@ -86,7 +86,7 @@ public class UserQueryServiceImplTests {
                 () -> userQueryService.getUser(EMAIL_1)
         );
 
-        assertThat(result.getMessage(), equalTo("No user was found with the given e-mail: 'juhasz.bence.zsolt@gmail.com'."));
+        assertThat(result.getMessage(), equalTo("No user was found."));
     }
 
     @Test

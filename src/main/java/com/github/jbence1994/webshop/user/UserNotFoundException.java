@@ -5,7 +5,7 @@ public final class UserNotFoundException extends RuntimeException {
         super(String.format("No user was found with the given ID: #%d.", id));
     }
 
-    public UserNotFoundException(String email) {
-        super(String.format("No user was found with the given e-mail: '%s'.", email));
+    public UserNotFoundException() {
+        super("No user was found.");
     }
 }
