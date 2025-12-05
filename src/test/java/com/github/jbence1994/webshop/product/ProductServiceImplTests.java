@@ -23,7 +23,7 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithOneReview;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithRating;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1WithUpdatedRating;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -85,7 +85,7 @@ public class ProductServiceImplTests {
     @Test
     public void createProductRatingTest_HappyPath() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(productRepository.save(any())).thenReturn(product1WithRating());
 
         var result = productService.createProductRating(1L, (byte) 5);
@@ -116,7 +116,7 @@ public class ProductServiceImplTests {
     @Test
     public void createProductRatingTest_UnhappyPath_ProductAlreadyRatedException() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         doThrow(new RuntimeException(new SQLIntegrityConstraintViolationException("Duplicate entry '1-1' for key [...]")))
                 .when(productRepository).save(any());
 
@@ -135,7 +135,7 @@ public class ProductServiceImplTests {
     @Test
     public void updateProductRatingTest_HappyPath() {
         when(productQueryService.getProduct(any())).thenReturn(product1WithRating());
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(productRepository.save(any())).thenReturn(product1WithUpdatedRating());
 
         var result = productService.updateProductRating(1L, (byte) 4);
@@ -166,7 +166,7 @@ public class ProductServiceImplTests {
     @Test
     public void createProductReviewTest() {
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(productRepository.save(any())).thenReturn(product1WithOneReview());
 
         var result = productService.createProductReview(1L, PRODUCT_1_REVIEW);

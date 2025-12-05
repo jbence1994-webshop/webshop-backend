@@ -1,23 +1,23 @@
 package com.github.jbence1994.webshop.user;
 
-import static com.github.jbence1994.webshop.user.AddressTestConstants.ADDRESS_LINE;
-import static com.github.jbence1994.webshop.user.AddressTestConstants.COUNTRY;
-import static com.github.jbence1994.webshop.user.AddressTestConstants.MUNICIPALITY;
-import static com.github.jbence1994.webshop.user.AddressTestConstants.POSTAL_CODE;
-import static com.github.jbence1994.webshop.user.AddressTestConstants.PROVINCE;
-import static com.github.jbence1994.webshop.user.UserTestConstants.CONFIRM_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.DATE_OF_BIRTH;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
-import static com.github.jbence1994.webshop.user.UserTestConstants.FIRST_NAME;
-import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_CONFIRM_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.LAST_NAME;
-import static com.github.jbence1994.webshop.user.UserTestConstants.MIDDLE_NAME;
-import static com.github.jbence1994.webshop.user.UserTestConstants.PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.PHONE_NUMBER;
+import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_ADDRESS_LINE;
+import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_COUNTRY;
+import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_MUNICIPALITY;
+import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_POSTAL_CODE;
+import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_PROVINCE;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_DATE_OF_BIRTH;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_EMAIL_1;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_FIRST_NAME;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_LAST_NAME;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_MIDDLE_NAME;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_PHONE_NUMBER;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_CONFIRM_PASSWORD;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_INVALID_CONFIRM_PASSWORD;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_PASSWORD;
 
 public final class RegistrationRequestTestObject {
     public static RegistrationRequest registrationRequest() {
-        return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, CONFIRM_PASSWORD));
+        return buildRegistrationRequest(UserDtoTestObject.userDto(RAW_PASSWORD, RAW_CONFIRM_PASSWORD));
     }
 
     public static RegistrationRequest notSanitizedRegistrationRequest() {
@@ -29,7 +29,7 @@ public final class RegistrationRequestTestObject {
     }
 
     public static RegistrationRequest registrationRequestWithInvalidConfirmPassword() {
-        return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, INVALID_CONFIRM_PASSWORD));
+        return buildRegistrationRequest(UserDtoTestObject.userDto(RAW_PASSWORD, RAW_INVALID_CONFIRM_PASSWORD));
     }
 
     public static RegistrationRequest registrationRequestWithNullUser() {
@@ -37,19 +37,19 @@ public final class RegistrationRequestTestObject {
     }
 
     public static RegistrationRequest registrationRequestWithNullPassword() {
-        return buildRegistrationRequest(UserDtoTestObject.userDto(null, INVALID_CONFIRM_PASSWORD));
+        return buildRegistrationRequest(UserDtoTestObject.userDto(null, RAW_INVALID_CONFIRM_PASSWORD));
     }
 
     public static RegistrationRequest registrationRequestWithNullConfirmPassword() {
-        return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, null));
+        return buildRegistrationRequest(UserDtoTestObject.userDto(RAW_PASSWORD, null));
     }
 
     public static RegistrationRequest registrationRequestWithBlankPassword() {
-        return buildRegistrationRequest(UserDtoTestObject.userDto(" ", INVALID_CONFIRM_PASSWORD));
+        return buildRegistrationRequest(UserDtoTestObject.userDto(" ", RAW_INVALID_CONFIRM_PASSWORD));
     }
 
     public static RegistrationRequest registrationRequestWithBlankConfirmPassword() {
-        return buildRegistrationRequest(UserDtoTestObject.userDto(PASSWORD, " "));
+        return buildRegistrationRequest(UserDtoTestObject.userDto(RAW_PASSWORD, " "));
     }
 
     private static RegistrationRequest buildRegistrationRequest(RegistrationRequest.UserDto userDto) {
@@ -62,42 +62,42 @@ public final class RegistrationRequestTestObject {
                 String confirmPassword
         ) {
             return new RegistrationRequest.UserDto(
-                    EMAIL_1,
+                    DECRYPTED_EMAIL_1,
                     password,
                     confirmPassword,
-                    FIRST_NAME,
-                    MIDDLE_NAME,
-                    LAST_NAME,
-                    DATE_OF_BIRTH,
-                    PHONE_NUMBER,
+                    DECRYPTED_FIRST_NAME,
+                    DECRYPTED_MIDDLE_NAME,
+                    DECRYPTED_LAST_NAME,
+                    DECRYPTED_DATE_OF_BIRTH,
+                    DECRYPTED_PHONE_NUMBER,
                     AddressDtoTestObject.addressDto()
             );
         }
 
         public static RegistrationRequest.UserDto notSanitizedUserDto() {
             return new RegistrationRequest.UserDto(
-                    " " + EMAIL_1 + " ",
-                    " " + PASSWORD + " ",
-                    " " + CONFIRM_PASSWORD + " ",
-                    " " + FIRST_NAME + " ",
-                    " " + MIDDLE_NAME + " ",
-                    " " + LAST_NAME + " ",
-                    DATE_OF_BIRTH,
-                    " " + PHONE_NUMBER + " ",
+                    " " + DECRYPTED_EMAIL_1 + " ",
+                    " " + RAW_PASSWORD + " ",
+                    " " + RAW_CONFIRM_PASSWORD + " ",
+                    " " + DECRYPTED_FIRST_NAME + " ",
+                    " " + DECRYPTED_MIDDLE_NAME + " ",
+                    " " + DECRYPTED_LAST_NAME + " ",
+                    DECRYPTED_DATE_OF_BIRTH,
+                    " " + DECRYPTED_PHONE_NUMBER + " ",
                     AddressDtoTestObject.notSanitizedAddressDto()
             );
         }
 
         public static RegistrationRequest.UserDto notSanitizedUserDtoWithNullMiddleName() {
             return new RegistrationRequest.UserDto(
-                    " " + EMAIL_1 + " ",
-                    " " + PASSWORD + " ",
-                    " " + CONFIRM_PASSWORD + " ",
-                    " " + FIRST_NAME + " ",
+                    " " + DECRYPTED_EMAIL_1 + " ",
+                    " " + RAW_PASSWORD + " ",
+                    " " + RAW_CONFIRM_PASSWORD + " ",
+                    " " + DECRYPTED_FIRST_NAME + " ",
                     null,
-                    " " + LAST_NAME + " ",
-                    DATE_OF_BIRTH,
-                    " " + PHONE_NUMBER + " ",
+                    " " + DECRYPTED_LAST_NAME + " ",
+                    DECRYPTED_DATE_OF_BIRTH,
+                    " " + DECRYPTED_PHONE_NUMBER + " ",
                     AddressDtoTestObject.notSanitizedAddressDto()
             );
         }
@@ -106,21 +106,21 @@ public final class RegistrationRequestTestObject {
     private static final class AddressDtoTestObject {
         public static RegistrationRequest.AddressDto addressDto() {
             return new RegistrationRequest.AddressDto(
-                    ADDRESS_LINE,
-                    MUNICIPALITY,
-                    PROVINCE,
-                    POSTAL_CODE,
-                    COUNTRY
+                    DECRYPTED_ADDRESS_LINE,
+                    DECRYPTED_MUNICIPALITY,
+                    DECRYPTED_PROVINCE,
+                    DECRYPTED_POSTAL_CODE,
+                    DECRYPTED_COUNTRY
             );
         }
 
         public static RegistrationRequest.AddressDto notSanitizedAddressDto() {
             return new RegistrationRequest.AddressDto(
-                    " " + ADDRESS_LINE + " ",
-                    " " + MUNICIPALITY + " ",
-                    " " + PROVINCE + " ",
-                    " " + POSTAL_CODE + " ",
-                    " " + COUNTRY + " "
+                    " " + DECRYPTED_ADDRESS_LINE + " ",
+                    " " + DECRYPTED_MUNICIPALITY + " ",
+                    " " + DECRYPTED_PROVINCE + " ",
+                    " " + DECRYPTED_POSTAL_CODE + " ",
+                    " " + DECRYPTED_COUNTRY + " "
             );
         }
     }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/users/{id}/avatar")
 @Validated
@@ -48,7 +50,9 @@ public class UserAvatarController {
 
     @GetMapping
     public ResponseEntity<?> getUserAvatar(@PathVariable Long id) {
-        return userQueryService.getUser(id).getAvatarFileName()
+        var avatarFileName = Optional.ofNullable(userQueryService.getDecryptedUser(id).getAvatarFileName());
+
+        return avatarFileName
                 .map(userAvatar -> {
                     var url = imageUrlBuilder.buildUrl(userAvatar);
                     return ResponseEntity.ok(new ImageResponse(userAvatar, url));

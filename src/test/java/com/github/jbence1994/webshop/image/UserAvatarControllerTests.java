@@ -12,8 +12,8 @@ import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_URL;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.PHOTO_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageUploadTestObject.jpegImageUpload;
 import static com.github.jbence1994.webshop.image.MultipartFileTestObject.multipartFile;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithAvatar;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -60,7 +60,7 @@ public class UserAvatarControllerTests {
 
     @Test
     public void getUserAvatarTest_HappyPath_UserWithAvatar() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user1WithAvatar());
+        when(userQueryService.getDecryptedUser(anyLong())).thenReturn(decryptedUser1WithAvatar());
         when(imageUrlBuilder.buildUrl(any())).thenReturn(AVATAR_URL);
 
         var result = userAvatarController.getUserAvatar(1L);
@@ -68,20 +68,20 @@ public class UserAvatarControllerTests {
         assertThat(result.getStatusCode(), equalTo(HttpStatus.OK));
         assertThat(result.getBody(), not(nullValue()));
 
-        verify(userQueryService, times(1)).getUser(anyLong());
+        verify(userQueryService, times(1)).getDecryptedUser(anyLong());
         verify(imageUrlBuilder, times(1)).buildUrl(any());
     }
 
     @Test
     public void getUserAvatarTest_UnhappyPath_UserWithoutAvatar() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user1WithoutAvatar());
+        when(userQueryService.getDecryptedUser(anyLong())).thenReturn(decryptedUser1WithoutAvatar());
 
         var result = userAvatarController.getUserAvatar(1L);
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
         assertThat(result.getBody(), is(nullValue()));
 
-        verify(userQueryService, times(1)).getUser(anyLong());
+        verify(userQueryService, times(1)).getDecryptedUser(anyLong());
     }
 
     @Test

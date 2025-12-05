@@ -24,28 +24,33 @@ public class UserServiceImpl implements UserService {
     private final EmailTemplateBuilder emailTemplateBuilder;
     private final ProductQueryService productQueryService;
     private final UserQueryService userQueryService;
+    private final AesCryptoService aesCryptoService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
+    private final UserEncrypter userEncrypter;
     private final EmailService emailService;
     private final AuthService authService;
 
     @Override
-    public void registerUser(User user) {
-        var email = user.getEmail();
-        var phoneNumber = user.getPhoneNumber();
+    public void registerUser(DecryptedUser user) {
+        var encryptedAddress = userEncrypter.encrypt(user.getAddress(), aesCryptoService);
+        var encryptedUser = userEncrypter.encrypt(user, aesCryptoService);
 
-        if (userRepository.existsByEmail(email)) {
+        encryptedAddress.setUser(encryptedUser);
+        encryptedUser.setAddress(encryptedAddress);
+
+        if (userRepository.existsByEmail(encryptedUser.getEmail())) {
             throw new EmailAlreadyExistsException();
         }
 
-        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+        if (userRepository.existsByPhoneNumber(encryptedUser.getPhoneNumber())) {
             throw new PhoneNumberAlreadyExistsException();
         }
 
-        user.setPassword(passwordManager.hash(user.getPassword()));
-        user.setRole(Role.USER);
+        encryptedUser.setPassword(passwordManager.hash(user.getPassword()));
+        encryptedUser.setRole(Role.USER);
 
-        userRepository.save(user);
+        userRepository.save(encryptedUser);
     }
 
     @Override
@@ -116,7 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(EncryptedUser user) {
         userRepository.save(user);
     }
 

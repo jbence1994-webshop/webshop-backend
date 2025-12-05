@@ -21,11 +21,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GeneratedColumn;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name = "users")
@@ -33,7 +31,7 @@ import java.util.Optional;
 @NoArgsConstructor
 @Getter
 @Setter
-public class User {
+public class EncryptedUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +47,7 @@ public class User {
 
     private String lastName;
 
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     private String phoneNumber;
 
@@ -67,7 +65,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Address address;
+    private EncryptedAddress address;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -76,10 +74,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
     private List<Product> favoriteProducts = new ArrayList<>();
-
-    public Optional<String> getAvatarFileName() {
-        return Optional.ofNullable(avatarFileName);
-    }
 
     public void addFavoriteProduct(Product product) {
         favoriteProducts.add(product);

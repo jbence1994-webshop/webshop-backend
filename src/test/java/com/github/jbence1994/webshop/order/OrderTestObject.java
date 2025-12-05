@@ -6,7 +6,7 @@ import java.util.List;
 import static com.github.jbence1994.webshop.order.OrderItemTestObject.orderItem;
 import static com.github.jbence1994.webshop.order.OrderTestConstants.CREATED_AT;
 import static com.github.jbence1994.webshop.order.OrderTestConstants.DISCOUNT_AMOUNT;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithoutAvatar;
 
 public final class OrderTestObject {
     public static Order createdOrder1() {
@@ -52,7 +52,7 @@ public final class OrderTestObject {
     ) {
         return new Order(
                 1L,
-                user1WithoutAvatar(),
+                encryptedUser1WithoutAvatar(),
                 totalPrice,
                 DISCOUNT_AMOUNT,
                 orderStatus,

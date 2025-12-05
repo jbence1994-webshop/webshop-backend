@@ -1,6 +1,9 @@
 package com.github.jbence1994.webshop.image;
 
-import com.github.jbence1994.webshop.user.User;
+import com.github.jbence1994.webshop.user.DecryptedAddress;
+import com.github.jbence1994.webshop.user.DecryptedUser;
+import com.github.jbence1994.webshop.user.EncryptedUser;
+import com.github.jbence1994.webshop.user.UserEncrypter;
 import com.github.jbence1994.webshop.user.UserQueryService;
 import com.github.jbence1994.webshop.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +20,11 @@ import java.io.ByteArrayInputStream;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.FILE_SIZE;
 import static com.github.jbence1994.webshop.image.ImageTestConstants.USER_AVATAR_DIRECTORY;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithAvatar;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedAddressTestObject.encryptedAddress;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,6 +56,9 @@ public class UserAvatarServiceTests {
     private UserQueryService userQueryService;
 
     @Mock
+    private UserEncrypter userEncrypter;
+
+    @Mock
     private UserService userService;
 
     @Mock
@@ -58,46 +67,58 @@ public class UserAvatarServiceTests {
     @InjectMocks
     private UserAvatarService userAvatarService;
 
-    private final User userWithoutAvatar = spy(user1WithoutAvatar());
-    private final User user = spy(user1WithAvatar());
+    private final EncryptedUser encryptedUserWithoutAvatar = spy(encryptedUser1WithoutAvatar());
+    private final DecryptedUser decryptedUserWithoutAvatar = spy(decryptedUser1WithoutAvatar());
+    private final EncryptedUser encryptedUserWithAvatar = spy(encryptedUser1WithAvatar());
+    private final DecryptedUser decryptedUserWithAvatar = spy(decryptedUser1WithAvatar());
     private final ImageUpload image = mock(ImageUpload.class);
 
     @BeforeEach
     public void setUp() {
-        doNothing().when(fileExtensionValidator).validate(any());
-        when(userQueryService.getUser(anyLong())).thenReturn(userWithoutAvatar);
-        when(fileNameGenerator.generate(any())).thenReturn(AVATAR_FILE_NAME);
-        when(imageUploadsConfig.userAvatarDirectory()).thenReturn(USER_AVATAR_DIRECTORY);
         when(image.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[FILE_SIZE.intValue()]));
-        doNothing().when(userService).updateUser(any());
     }
 
     @Test
     public void uploadImageTest_HappyPath_UserDoNotHaveAvatarUploadedYet() {
+        doNothing().when(fileExtensionValidator).validate(any());
+        when(userQueryService.getDecryptedUser(anyLong())).thenReturn(decryptedUserWithoutAvatar);
+        when(fileNameGenerator.generate(any())).thenReturn(AVATAR_FILE_NAME);
+        when(imageUploadsConfig.userAvatarDirectory()).thenReturn(USER_AVATAR_DIRECTORY);
         doNothing().when(fileUtils).store(any(), any(), any());
-        doNothing().when(userWithoutAvatar).setAvatarFileName(any());
+        doNothing().when(decryptedUserWithoutAvatar).setAvatarFileName(any());
+        when(userEncrypter.encrypt(any(DecryptedAddress.class), any())).thenReturn(encryptedAddress());
+        when(userEncrypter.encrypt(any(DecryptedUser.class), any())).thenReturn(encryptedUserWithoutAvatar);
+        doNothing().when(userService).updateUser(any());
 
         var result = userAvatarService.uploadImage(1L, image);
 
         assertThat(result, equalTo(AVATAR_FILE_NAME));
 
         verify(fileExtensionValidator, times(1)).validate(any());
-        verify(userQueryService, times(1)).getUser(anyLong());
+        verify(userQueryService, times(1)).getDecryptedUser(anyLong());
         verify(fileUtils, never()).remove(any(), any());
         verify(fileNameGenerator, times(1)).generate(any());
         verify(imageUploadsConfig, times(1)).userAvatarDirectory();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
-        verify(userWithoutAvatar, times(1)).setAvatarFileName(any());
+        verify(decryptedUserWithoutAvatar, times(1)).setAvatarFileName(any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedUser.class), any());
         verify(userService, times(1)).updateUser(any());
     }
 
     @Test
     public void uploadImageTest_HappyPath_UserDoesHaveAvatarUploadedAlready() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user);
+        doNothing().when(fileExtensionValidator).validate(any());
+        when(userQueryService.getDecryptedUser(anyLong())).thenReturn(decryptedUserWithAvatar);
+        when(fileNameGenerator.generate(any())).thenReturn(AVATAR_FILE_NAME);
+        when(imageUploadsConfig.userAvatarDirectory()).thenReturn(USER_AVATAR_DIRECTORY);
         doNothing().when(fileUtils).remove(any(), any());
         doNothing().when(fileUtils).store(any(), any(), any());
-        doNothing().when(userWithoutAvatar).setAvatarFileName(any());
+        doNothing().when(decryptedUserWithAvatar).setAvatarFileName(any());
+        when(userEncrypter.encrypt(any(DecryptedAddress.class), any())).thenReturn(encryptedAddress());
+        when(userEncrypter.encrypt(any(DecryptedUser.class), any())).thenReturn(encryptedUserWithoutAvatar);
+        doNothing().when(userService).updateUser(any());
 
         var result = userAvatarService.uploadImage(1L, image);
 
@@ -105,17 +126,23 @@ public class UserAvatarServiceTests {
 
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(fileUtils, times(1)).remove(any(), any());
-        verify(userQueryService, times(1)).getUser(anyLong());
+        verify(userQueryService, times(1)).getDecryptedUser(anyLong());
         verify(fileNameGenerator, times(1)).generate(any());
         verify(imageUploadsConfig, times(2)).userAvatarDirectory();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
-        verify(user, times(1)).setAvatarFileName(any());
+        verify(decryptedUserWithAvatar, times(1)).setAvatarFileName(any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedUser.class), any());
         verify(userService, times(1)).updateUser(any());
     }
 
     @Test
     public void uploadImageTest_UnhappyPath_ImageUploadException() {
+        doNothing().when(fileExtensionValidator).validate(any());
+        when(userQueryService.getDecryptedUser(anyLong())).thenReturn(decryptedUserWithoutAvatar);
+        when(fileNameGenerator.generate(any())).thenReturn(AVATAR_FILE_NAME);
+        when(imageUploadsConfig.userAvatarDirectory()).thenReturn(USER_AVATAR_DIRECTORY);
         doThrow(new FileUploadException("Disk error.")).when(fileUtils).store(any(), any(), any());
 
         var result = assertThrows(
@@ -126,29 +153,31 @@ public class UserAvatarServiceTests {
         assertThat(result.getMessage(), equalTo("The avatar could not be uploaded successfully."));
 
         verify(fileExtensionValidator, times(1)).validate(any());
-        verify(userQueryService, times(1)).getUser(anyLong());
+        verify(userQueryService, times(1)).getDecryptedUser(anyLong());
         verify(fileNameGenerator, times(1)).generate(any());
         verify(imageUploadsConfig, times(1)).userAvatarDirectory();
         verify(image, times(1)).getInputStream();
         verify(fileUtils, times(1)).store(any(), any(), any());
-        verify(userWithoutAvatar, never()).setAvatarFileName(any());
+        verify(decryptedUserWithoutAvatar, never()).setAvatarFileName(any());
         verify(userService, never()).updateUser(any());
     }
 
     @Test
     public void deleteImageTest_HappyPath() {
+        when(userQueryService.getEncryptedUser(anyLong())).thenReturn(encryptedUserWithAvatar);
         doNothing().when(fileUtils).remove(any(), any());
-        doNothing().when(userWithoutAvatar).setAvatarFileName(any());
+        doNothing().when(encryptedUserWithoutAvatar).setAvatarFileName(any());
 
         userAvatarService.deleteImage(1L, AVATAR_FILE_NAME);
 
         verify(fileUtils, times(1)).remove(any(), any());
-        verify(userWithoutAvatar, times(1)).setAvatarFileName(any());
+        verify(encryptedUserWithAvatar, times(1)).setAvatarFileName(any());
         verify(userService, times(1)).updateUser(any());
     }
 
     @Test
     public void deleteImageTest_UnhappyPath_ImageDeletionException() {
+        when(userQueryService.getEncryptedUser(anyLong())).thenReturn(encryptedUserWithAvatar);
         doThrow(new FileDeletionException("Disk error.")).when(fileUtils).remove(any(), any());
 
         var result = assertThrows(
@@ -159,7 +188,7 @@ public class UserAvatarServiceTests {
         assertThat(result.getMessage(), equalTo("The avatar could not be deleted successfully."));
 
         verify(fileUtils, times(1)).remove(any(), any());
-        verify(userWithoutAvatar, never()).setAvatarFileName(any());
+        verify(decryptedUserWithoutAvatar, never()).setAvatarFileName(any());
         verify(userService, never()).updateUser(any());
     }
 }

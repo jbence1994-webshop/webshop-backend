@@ -10,18 +10,33 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserQueryServiceImpl implements UserQueryService {
+    private final AesCryptoService aesCryptoService;
     private final UserRepository userRepository;
+    private final UserDecrypter userDecrypter;
     private final AuthService authService;
 
     @Override
-    public User getUser(Long id) {
+    public EncryptedUser getEncryptedUser(Long id) {
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
-    public User getUser(String email) {
+    public DecryptedUser getDecryptedUser(Long id) {
+        var encryptedUser = getEncryptedUser(id);
+
+        var decryptedAddress = userDecrypter.decrypt(encryptedUser.getAddress(), aesCryptoService);
+        var decryptedUser = userDecrypter.decrypt(encryptedUser, aesCryptoService);
+
+        decryptedAddress.setUser(decryptedUser);
+        decryptedUser.setAddress(decryptedAddress);
+
+        return decryptedUser;
+    }
+
+    @Override
+    public EncryptedUser getUser(String email) {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);

@@ -13,9 +13,11 @@ import java.util.List;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.user.AddProductToWishlistRequestTestObject.addProductToWishlistRequest;
-import static com.github.jbence1994.webshop.user.AddressTestObject.addressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.notSanitizedChangePasswordRequest;
+import static com.github.jbence1994.webshop.user.DecryptedAddressTestObject.decryptedAddressAfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1AfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithoutAvatar;
 import static com.github.jbence1994.webshop.user.DeleteProductFromWishlistRequestTestObject.deleteProductFromWishlistRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.forgotPasswordRequest;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.notSanitizedForgotPasswordRequest;
@@ -24,8 +26,6 @@ import static com.github.jbence1994.webshop.user.RegistrationRequestTestObject.r
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.notSanitizedResetPasswordRequest;
 import static com.github.jbence1994.webshop.user.ResetPasswordRequestTestObject.resetPasswordRequest;
 import static com.github.jbence1994.webshop.user.UserDtoTestObject.userDto;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1AfterMappingFromDto;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static com.github.jbence1994.webshop.user.WishlistProductDtoTestObject.wishlistProductDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -69,8 +69,8 @@ public class UserControllerTests {
 
     @Test
     public void getUserTest_HappyPath() {
-        when(userQueryService.getUser(anyLong())).thenReturn(user1WithoutAvatar());
-        when(userMapper.toDto(any(User.class))).thenReturn(userDto());
+        when(userQueryService.getDecryptedUser(anyLong())).thenReturn(decryptedUser1WithoutAvatar());
+        when(userMapper.toDto(any(DecryptedUser.class))).thenReturn(userDto());
 
         var result = userController.getUser(1L);
 
@@ -90,7 +90,7 @@ public class UserControllerTests {
 
     @Test
     public void getUserTest_UnhappyPath_UserNotFoundException() {
-        when(userQueryService.getUser(anyLong())).thenThrow(new UserNotFoundException(1L));
+        when(userQueryService.getDecryptedUser(anyLong())).thenThrow(new UserNotFoundException(1L));
 
         var result = assertThrows(UserNotFoundException.class, () -> userController.getUser(1L));
 
@@ -100,8 +100,8 @@ public class UserControllerTests {
     @Test
     public void registerUserTest() {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
-        when(userMapper.toEntity(any(RegistrationRequest.AddressDto.class))).thenReturn(addressAfterMappingFromDto());
-        when(userMapper.toEntity(any(RegistrationRequest.UserDto.class))).thenReturn(user1AfterMappingFromDto());
+        when(userMapper.toEntity(any(RegistrationRequest.AddressDto.class))).thenReturn(decryptedAddressAfterMappingFromDto());
+        when(userMapper.toEntity(any(RegistrationRequest.UserDto.class))).thenReturn(decryptedUser1AfterMappingFromDto());
         doNothing().when(userService).registerUser(any());
 
         var result = userController.registerUser(notSanitizedRegistrationRequest());

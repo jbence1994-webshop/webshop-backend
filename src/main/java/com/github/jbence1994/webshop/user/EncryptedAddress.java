@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Address {
+public class EncryptedAddress {
 
     @Id
     private Long userId;
@@ -30,7 +30,7 @@ public class Address {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @MapsId
-    private User user;
+    private EncryptedUser user;
 
     private String addressLine;
 

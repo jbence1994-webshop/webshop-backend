@@ -1,9 +1,13 @@
 package com.github.jbence1994.webshop.image;
 
+import com.github.jbence1994.webshop.user.AesCryptoService;
+import com.github.jbence1994.webshop.user.UserEncrypter;
 import com.github.jbence1994.webshop.user.UserQueryService;
 import com.github.jbence1994.webshop.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -12,6 +16,8 @@ public class UserAvatarService implements ImageService {
     private final ImageUploadsConfig imageUploadsConfig;
     private final FileNameGenerator fileNameGenerator;
     private final UserQueryService userQueryService;
+    private final AesCryptoService aesCryptoService;
+    private final UserEncrypter userEncrypter;
     private final UserService userService;
     private final FileUtils fileUtils;
 
@@ -20,15 +26,16 @@ public class UserAvatarService implements ImageService {
         try {
             fileExtensionValidator.validate(image);
 
-            var user = userQueryService.getUser(userId);
+            var user = userQueryService.getDecryptedUser(userId);
 
-            user.getAvatarFileName()
-                    .ifPresent(
-                            userAvatarFileName -> fileUtils.remove(
-                                    imageUploadsConfig.userAvatarDirectory(),
-                                    userAvatarFileName
-                            )
-                    );
+            var avatarFileName = Optional.ofNullable(user.getAvatarFileName());
+
+            avatarFileName.ifPresent(
+                    userAvatarFileName -> fileUtils.remove(
+                            imageUploadsConfig.userAvatarDirectory(),
+                            userAvatarFileName
+                    )
+            );
 
             var fileName = fileNameGenerator.generate(image.getFileExtension());
 
@@ -39,7 +46,14 @@ public class UserAvatarService implements ImageService {
             );
 
             user.setAvatarFileName(fileName);
-            userService.updateUser(user);
+
+            var encryptedAddress = userEncrypter.encrypt(user.getAddress(), aesCryptoService);
+            var encryptedUser = userEncrypter.encrypt(user, aesCryptoService);
+
+            encryptedAddress.setUser(encryptedUser);
+            encryptedUser.setAddress(encryptedAddress);
+
+            userService.updateUser(encryptedUser);
 
             return fileName;
         } catch (FileUploadException exception) {
@@ -50,7 +64,7 @@ public class UserAvatarService implements ImageService {
     @Override
     public void deleteImage(Long userId, String fileName) {
         try {
-            var user = userQueryService.getUser(userId);
+            var user = userQueryService.getEncryptedUser(userId);
 
             fileUtils.remove(
                     imageUploadsConfig.userAvatarDirectory(),

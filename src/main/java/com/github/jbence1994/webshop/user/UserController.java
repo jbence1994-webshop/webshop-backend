@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable Long id) {
-        var user = userQueryService.getUser(id);
+        var user = userQueryService.getDecryptedUser(id);
 
         return userMapper.toDto(user);
     }
@@ -58,6 +58,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // FIXME: Broken functionality: Decrypted e-mail cannot be compared to encrypted e-amil. Only user id is acceptable.
     @PostMapping("/forgot-password")
     public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         var sanitizedRequest = forgotPasswordRequestSanitizer.sanitize(request);
