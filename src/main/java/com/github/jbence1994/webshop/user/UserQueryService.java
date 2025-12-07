@@ -5,9 +5,11 @@ import com.github.jbence1994.webshop.product.Product;
 import java.util.List;
 
 public interface UserQueryService {
-    User getUser(Long id);
+    EncryptedUser getEncryptedUser(Long id);
 
-    User getUser(String email);
+    DecryptedUser getDecryptedUser(Long id);
+
+    EncryptedUser getUser(String email);
 
     List<Product> getWishlist();
 }

@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products/{productId}/photos")
+@RequestMapping("/products/{id}/photos")
 @Validated
 public class ProductPhotoController {
     private final ProductPhotoQueryService productPhotoQueryService;
@@ -38,11 +38,11 @@ public class ProductPhotoController {
 
     @PostMapping
     public ResponseEntity<ImageResponse> uploadProductPhoto(
-            @PathVariable Long productId,
+            @PathVariable Long id,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
         var uploadImage = imageMapper.toImageUpload(file);
-        var uploadedImageFileName = imageService.uploadImage(productId, uploadImage);
+        var uploadedImageFileName = imageService.uploadImage(id, uploadImage);
 
         var url = imageUrlBuilder.buildUrl(uploadedImageFileName);
 
@@ -51,17 +51,17 @@ public class ProductPhotoController {
     }
 
     @GetMapping
-    public List<ImageResponse> getProductPhotos(@PathVariable Long productId) {
-        var productPhotos = productPhotoQueryService.getProductPhotos(productId);
+    public List<ImageResponse> getProductPhotos(@PathVariable Long id) {
+        var productPhotos = productPhotoQueryService.getProductPhotos(id);
         return imageMapper.toImageResponses(productPhotos, imageUrlBuilder);
     }
 
     @DeleteMapping("/{fileName}")
     public ResponseEntity<Void> deleteProductPhoto(
-            @PathVariable Long productId,
+            @PathVariable Long id,
             @PathVariable String fileName
     ) {
-        imageService.deleteImage(productId, fileName);
+        imageService.deleteImage(id, fileName);
 
         return ResponseEntity.noContent().build();
     }

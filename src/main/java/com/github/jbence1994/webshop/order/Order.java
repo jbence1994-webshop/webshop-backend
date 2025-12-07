@@ -1,7 +1,7 @@
 package com.github.jbence1994.webshop.order;
 
 import com.github.jbence1994.webshop.checkout.CheckoutSession;
-import com.github.jbence1994.webshop.user.User;
+import com.github.jbence1994.webshop.user.EncryptedUser;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +40,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    private User customer;
+    private EncryptedUser customer;
 
     private BigDecimal totalPrice;
 
@@ -56,7 +56,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public static Order from(User customer, CheckoutSession checkoutSession) {
+    public static Order from(EncryptedUser customer, CheckoutSession checkoutSession) {
         var order = new Order();
 
         order.customer = customer;

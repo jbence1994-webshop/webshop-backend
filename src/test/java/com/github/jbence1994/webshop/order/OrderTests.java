@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import static com.github.jbence1994.webshop.checkout.CheckoutTestConstants.FREE_SHIPPING_THRESHOLD;
 import static com.github.jbence1994.webshop.order.OrderTestObject.createdOrder1;
 import static com.github.jbence1994.webshop.order.OrderTestObject.createdOrder2;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.ENCRYPTED_EMAIL_1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -18,7 +18,7 @@ public class OrderTests {
 
     private static Stream<Arguments> customerEmailParams() {
         return Stream.of(
-                Arguments.of(Named.of(EMAIL_1, EMAIL_1), true),
+                Arguments.of(Named.of(ENCRYPTED_EMAIL_1, ENCRYPTED_EMAIL_1), true),
                 Arguments.of(Named.of("example@gmail.com", "example@gmail.com"), false)
         );
     }

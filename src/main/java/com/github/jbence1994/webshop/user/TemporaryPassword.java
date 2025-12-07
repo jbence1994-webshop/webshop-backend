@@ -30,11 +30,11 @@ public class TemporaryPassword {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private EncryptedUser user;
 
     private LocalDateTime expirationDate;
 
-    public TemporaryPassword(String password, User user) {
+    public TemporaryPassword(String password, EncryptedUser user) {
         this.password = password;
         this.user = user;
         this.expirationDate = LocalDateTime.now().plusMinutes(15);

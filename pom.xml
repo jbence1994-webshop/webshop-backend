@@ -215,6 +215,7 @@
                 <configuration>
                     <excludes>
                         <exclude>com/github/jbence1994/webshop/**/*Config*</exclude>
+                        <exclude>com/github/jbence1994/webshop/**/*ManagerImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/**/*MapperImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/ai/*SystemPromptUtil*</exclude>
                         <exclude>com/github/jbence1994/webshop/checkout/StripePaymentGateway*</exclude>
@@ -223,6 +224,9 @@
                         <exclude>com/github/jbence1994/webshop/image/FileSystemUtils*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/ProductPhotoUrlBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/UserAvatarUrlBuilder*</exclude>
+                        <exclude>com/github/jbence1994/webshop/user/AesCryptoService*</exclude>
+                        <exclude>com/github/jbence1994/webshop/user/UserEncrypter*</exclude>
+                        <exclude>com/github/jbence1994/webshop/user/UserDecrypter*</exclude>
                         <exclude>com/github/jbence1994/webshop/Application*</exclude>
                     </excludes>
                 </configuration>
