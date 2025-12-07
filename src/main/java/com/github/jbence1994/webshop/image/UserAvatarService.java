@@ -1,7 +1,6 @@
 package com.github.jbence1994.webshop.image;
 
 import com.github.jbence1994.webshop.user.AesCryptoService;
-import com.github.jbence1994.webshop.user.UserEncrypter;
 import com.github.jbence1994.webshop.user.UserQueryService;
 import com.github.jbence1994.webshop.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ public class UserAvatarService implements ImageService {
     private final FileNameGenerator fileNameGenerator;
     private final UserQueryService userQueryService;
     private final AesCryptoService aesCryptoService;
-    private final UserEncrypter userEncrypter;
     private final UserService userService;
     private final FileUtils fileUtils;
 
@@ -26,7 +24,7 @@ public class UserAvatarService implements ImageService {
         try {
             fileExtensionValidator.validate(image);
 
-            var user = userQueryService.getDecryptedUser(userId);
+            var user = userQueryService.getEncryptedUser(userId);
 
             var avatarFileName = Optional.ofNullable(user.getAvatarFileName());
 
@@ -45,15 +43,10 @@ public class UserAvatarService implements ImageService {
                     image.getInputStream()
             );
 
-            user.setAvatarFileName(fileName);
+            var encryptedFileName = aesCryptoService.encrypt(fileName);
+            user.setAvatarFileName(encryptedFileName);
 
-            var encryptedAddress = userEncrypter.encrypt(user.getAddress(), aesCryptoService);
-            var encryptedUser = userEncrypter.encrypt(user, aesCryptoService);
-
-            encryptedAddress.setUser(encryptedUser);
-            encryptedUser.setAddress(encryptedAddress);
-
-            userService.updateUser(encryptedUser);
+            userService.updateUser(user);
 
             return fileName;
         } catch (FileUploadException exception) {

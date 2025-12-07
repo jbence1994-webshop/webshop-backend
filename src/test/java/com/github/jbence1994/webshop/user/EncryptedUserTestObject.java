@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
+import static com.github.jbence1994.webshop.image.ImageTestConstants.ENCRYPTED_AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
 import static com.github.jbence1994.webshop.user.EncryptedAddressTestObject.encryptedAddress;
 import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.ENCRYPTED_DATE_OF_BIRTH;
@@ -24,11 +24,11 @@ public final class EncryptedUserTestObject {
     }
 
     public static EncryptedUser encryptedUser1WithAvatar() {
-        return buildUser(1L, ENCRYPTED_EMAIL_1, AVATAR_FILE_NAME, Role.ADMIN, new ArrayList<>());
+        return buildUser(1L, ENCRYPTED_EMAIL_1, ENCRYPTED_AVATAR_FILE_NAME, Role.ADMIN, new ArrayList<>());
     }
 
     public static EncryptedUser encryptedUser1WithFavoriteProducts() {
-        return buildUser(1L, ENCRYPTED_EMAIL_1, AVATAR_FILE_NAME, Role.ADMIN, List.of(product1()));
+        return buildUser(1L, ENCRYPTED_EMAIL_1, ENCRYPTED_AVATAR_FILE_NAME, Role.ADMIN, List.of(product1()));
     }
 
     public static EncryptedUser encryptedUser2WithoutAvatar() {

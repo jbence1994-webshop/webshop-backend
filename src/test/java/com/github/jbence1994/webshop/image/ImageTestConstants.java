@@ -22,6 +22,7 @@ public interface ImageTestConstants {
     Long FILE_SIZE = 13_266L;
     List<String> ALLOWED_FILE_EXTENSIONS = List.of(JPG, JPEG, PNG, BMP);
     String PHOTO_FILE_NAME = "143a0db8-7c91-4573-8ad0-d41738af7580.jpg";
+    String ENCRYPTED_AVATAR_FILE_NAME = "/dIJz2X8t7VTut4vYM/dvvAYBaAiC5MTFJMxdU4zSnENraLmLaNuozb9FMA4b7ae";
     String AVATAR_FILE_NAME = "9f42a4ea-37ba-402e-b165-1f9b2ba13e60.jpg";
     String PHOTO_NOT_EXISTING_FILE_NAME = "143a0db8-7c91-4573-8ad0-d41738af7580.bmp";
     String PRODUCT_PHOTOS_DIRECTORY = "uploads/photos/products";
