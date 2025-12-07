@@ -58,7 +58,6 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // FIXME: Broken functionality: Decrypted e-mail cannot be compared to encrypted e-amil. Only user id is acceptable.
     @PostMapping("/forgot-password")
     public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         var sanitizedRequest = forgotPasswordRequestSanitizer.sanitize(request);

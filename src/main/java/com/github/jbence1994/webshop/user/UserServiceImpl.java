@@ -68,7 +68,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void forgotPassword(String email) {
-        var user = userQueryService.getUser(email);
+        var encryptedEmail = aesCryptoService.encrypt(email);
+
+        var user = userQueryService.getUser(encryptedEmail);
 
         var rawTemporaryPassword = temporaryPasswordGenerator.generate();
         var hashedTemporaryPassword = passwordManager.hash(rawTemporaryPassword);
@@ -78,7 +80,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(hashedTemporaryPassword);
 
         var emailContent = emailTemplateBuilder.buildForForgotPassword(
-                user.getFirstName(),
+                aesCryptoService.decrypt(user.getFirstName()),
                 rawTemporaryPassword,
                 Locale.ENGLISH
         );
