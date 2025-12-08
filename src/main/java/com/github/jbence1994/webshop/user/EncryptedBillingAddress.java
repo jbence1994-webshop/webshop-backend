@@ -17,12 +17,12 @@ import org.hibernate.annotations.GeneratedColumn;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "addresses")
+@Table(name = "billing_addresses")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Address {
+public class EncryptedBillingAddress {
 
     @Id
     private Long userId;
@@ -30,7 +30,7 @@ public class Address {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @MapsId
-    private User user;
+    private EncryptedUser user;
 
     private String addressLine;
 

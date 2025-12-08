@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
-import com.github.jbence1994.webshop.user.User;
+import com.github.jbence1994.webshop.user.EncryptedUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,11 +31,11 @@ public class ProductRating {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private EncryptedUser user;
 
     private Byte value;
 
-    public ProductRating(Product product, User user, Byte value) {
+    public ProductRating(Product product, EncryptedUser user, Byte value) {
         this.product = product;
         this.user = user;
         this.value = value;

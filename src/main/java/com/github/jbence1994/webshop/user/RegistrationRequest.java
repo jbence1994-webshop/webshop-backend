@@ -46,11 +46,38 @@ public record RegistrationRequest(
             String phoneNumber,
 
             @Valid
-            AddressDto address
+            BillingAddressDto billingAddress,
+
+            @Valid
+            ShippingAddressDto shippingAddress
     ) {
     }
 
-    public record AddressDto(
+    public record BillingAddressDto(
+
+            @NotNull(message = "Address line must be provided.")
+            @NotBlank(message = "Address line must be not empty.")
+            String addressLine,
+
+            @NotNull(message = "Municipality must be provided.")
+            @NotBlank(message = "Municipality must be not empty.")
+            String municipality,
+
+            @NotNull(message = "Province must be provided.")
+            @NotBlank(message = "Province must be not empty.")
+            String province,
+
+            @NotNull(message = "Postal code must be provided.")
+            @NotBlank(message = "Postal code must be not empty.")
+            String postalCode,
+
+            @NotNull(message = "Country must be provided.")
+            @NotBlank(message = "Country must be not empty.")
+            String country
+    ) {
+    }
+
+    public record ShippingAddressDto(
 
             @NotNull(message = "Address line must be provided.")
             @NotBlank(message = "Address line must be not empty.")

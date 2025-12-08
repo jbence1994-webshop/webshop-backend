@@ -7,11 +7,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserDto toDto(User user);
+    UserDto toDto(DecryptedUser user);
 
-    AddressDto toDto(Address address);
+    BillingAddressDto toDto(DecryptedBillingAddress address);
 
-    RegistrationResponse toRegistrationResponse(User user);
+    ShippingAddressDto toDto(DecryptedShippingAddress address);
 
     WishlistProductDto toDto(Product product);
 
@@ -21,12 +21,19 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "avatarFileName", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
-    User toEntity(RegistrationRequest.UserDto user);
+    DecryptedUser toEntity(RegistrationRequest.UserDto user);
 
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "country", expression = "java(address.country().toUpperCase())")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Address toEntity(RegistrationRequest.AddressDto address);
+    DecryptedBillingAddress toEntity(RegistrationRequest.BillingAddressDto address);
+
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "country", expression = "java(address.country().toUpperCase())")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    DecryptedShippingAddress toEntity(RegistrationRequest.ShippingAddressDto address);
 }
