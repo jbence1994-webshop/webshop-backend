@@ -15,7 +15,8 @@ import static com.github.jbence1994.webshop.product.ProductTestObject.product2;
 import static com.github.jbence1994.webshop.user.AddProductToWishlistRequestTestObject.addProductToWishlistRequest;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.changePasswordRequest;
 import static com.github.jbence1994.webshop.user.ChangePasswordRequestTestObject.notSanitizedChangePasswordRequest;
-import static com.github.jbence1994.webshop.user.DecryptedAddressTestObject.decryptedAddressAfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.DecryptedBillingAddressTestObject.decryptedBillingAddressAfterMappingFromDto;
+import static com.github.jbence1994.webshop.user.DecryptedShippingAddressTestObject.decryptedShippingAddressAfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1AfterMappingFromDto;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithoutAvatar;
 import static com.github.jbence1994.webshop.user.DeleteProductFromWishlistRequestTestObject.deleteProductFromWishlistRequest;
@@ -81,11 +82,16 @@ public class UserControllerTests {
         assertThat(result.lastName(), equalTo(userDto().lastName()));
         assertThat(result.dateOfBirth(), equalTo(userDto().dateOfBirth()));
         assertThat(result.phoneNumber(), equalTo(userDto().phoneNumber()));
-        assertThat(result.address().addressLine(), equalTo(userDto().address().addressLine()));
-        assertThat(result.address().municipality(), equalTo(userDto().address().municipality()));
-        assertThat(result.address().province(), equalTo(userDto().address().province()));
-        assertThat(result.address().postalCode(), equalTo(userDto().address().postalCode()));
-        assertThat(result.address().country(), equalTo(userDto().address().country()));
+        assertThat(result.billingAddress().addressLine(), equalTo(userDto().billingAddress().addressLine()));
+        assertThat(result.billingAddress().municipality(), equalTo(userDto().billingAddress().municipality()));
+        assertThat(result.billingAddress().province(), equalTo(userDto().billingAddress().province()));
+        assertThat(result.billingAddress().postalCode(), equalTo(userDto().billingAddress().postalCode()));
+        assertThat(result.billingAddress().country(), equalTo(userDto().billingAddress().country()));
+        assertThat(result.shippingAddress().addressLine(), equalTo(userDto().shippingAddress().addressLine()));
+        assertThat(result.shippingAddress().municipality(), equalTo(userDto().shippingAddress().municipality()));
+        assertThat(result.shippingAddress().province(), equalTo(userDto().shippingAddress().province()));
+        assertThat(result.shippingAddress().postalCode(), equalTo(userDto().shippingAddress().postalCode()));
+        assertThat(result.shippingAddress().country(), equalTo(userDto().shippingAddress().country()));
     }
 
     @Test
@@ -100,7 +106,8 @@ public class UserControllerTests {
     @Test
     public void registerUserTest() {
         when(registrationRequestSanitizer.sanitize(any())).thenReturn(registrationRequest());
-        when(userMapper.toEntity(any(RegistrationRequest.AddressDto.class))).thenReturn(decryptedAddressAfterMappingFromDto());
+        when(userMapper.toEntity(any(RegistrationRequest.BillingAddressDto.class))).thenReturn(decryptedBillingAddressAfterMappingFromDto());
+        when(userMapper.toEntity(any(RegistrationRequest.ShippingAddressDto.class))).thenReturn(decryptedShippingAddressAfterMappingFromDto());
         when(userMapper.toEntity(any(RegistrationRequest.UserDto.class))).thenReturn(decryptedUser1AfterMappingFromDto());
         doNothing().when(userService).registerUser(any());
 

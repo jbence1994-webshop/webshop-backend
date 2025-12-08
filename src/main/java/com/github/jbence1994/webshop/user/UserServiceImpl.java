@@ -33,11 +33,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(DecryptedUser user) {
-        var encryptedAddress = userEncrypter.encrypt(user.getAddress(), aesCryptoService);
+        var encryptedBillingAddress = userEncrypter.encrypt(user.getBillingAddress(), aesCryptoService);
+        var encryptedShippingAddress = userEncrypter.encrypt(user.getShippingAddress(), aesCryptoService);
         var encryptedUser = userEncrypter.encrypt(user, aesCryptoService);
 
-        encryptedAddress.setUser(encryptedUser);
-        encryptedUser.setAddress(encryptedAddress);
+        encryptedBillingAddress.setUser(encryptedUser);
+        encryptedShippingAddress.setUser(encryptedUser);
+        encryptedUser.setBillingAddress(encryptedBillingAddress);
+        encryptedUser.setShippingAddress(encryptedShippingAddress);
 
         if (userRepository.existsByEmail(encryptedUser.getEmail())) {
             throw new EmailAlreadyExistsException();

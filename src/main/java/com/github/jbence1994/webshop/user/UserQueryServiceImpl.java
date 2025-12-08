@@ -26,11 +26,14 @@ public class UserQueryServiceImpl implements UserQueryService {
     public DecryptedUser getDecryptedUser(Long id) {
         var encryptedUser = getEncryptedUser(id);
 
-        var decryptedAddress = userDecrypter.decrypt(encryptedUser.getAddress(), aesCryptoService);
+        var decryptedBillingAddress = userDecrypter.decrypt(encryptedUser.getBillingAddress(), aesCryptoService);
+        var decryptedShippingAddress = userDecrypter.decrypt(encryptedUser.getShippingAddress(), aesCryptoService);
         var decryptedUser = userDecrypter.decrypt(encryptedUser, aesCryptoService);
 
-        decryptedAddress.setUser(decryptedUser);
-        decryptedUser.setAddress(decryptedAddress);
+        decryptedBillingAddress.setUser(decryptedUser);
+        decryptedShippingAddress.setUser(decryptedUser);
+        decryptedUser.setBillingAddress(decryptedBillingAddress);
+        decryptedUser.setShippingAddress(decryptedShippingAddress);
 
         return decryptedUser;
     }

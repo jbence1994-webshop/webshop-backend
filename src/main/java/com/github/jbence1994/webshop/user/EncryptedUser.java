@@ -65,7 +65,10 @@ public class EncryptedUser {
     private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private EncryptedAddress address;
+    private EncryptedBillingAddress billingAddress;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private EncryptedShippingAddress shippingAddress;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

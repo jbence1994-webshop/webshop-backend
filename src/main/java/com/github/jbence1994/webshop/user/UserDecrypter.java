@@ -39,7 +39,11 @@ public interface UserDecrypter {
             expression = "java(user.getAvatarFileName() == null ? null : aesCryptoService.decrypt(user.getAvatarFileName()))"
     )
     @Mapping(
-            target = "address",
+            target = "billingAddress",
+            ignore = true
+    )
+    @Mapping(
+            target = "shippingAddress",
             ignore = true
     )
     DecryptedUser decrypt(EncryptedUser user, @Context AesCryptoService aesCryptoService);
@@ -73,5 +77,31 @@ public interface UserDecrypter {
             target = "country",
             expression = "java(aesCryptoService.decrypt(address.getCountry()))"
     )
-    DecryptedAddress decrypt(EncryptedAddress address, @Context AesCryptoService aesCryptoService);
+    DecryptedBillingAddress decrypt(EncryptedBillingAddress address, @Context AesCryptoService aesCryptoService);
+
+    @Mapping(
+            target = "user",
+            ignore = true
+    )
+    @Mapping(
+            target = "addressLine",
+            expression = "java(aesCryptoService.decrypt(address.getAddressLine()))"
+    )
+    @Mapping(
+            target = "municipality",
+            expression = "java(aesCryptoService.decrypt(address.getMunicipality()))"
+    )
+    @Mapping(
+            target = "province",
+            expression = "java(aesCryptoService.decrypt(address.getProvince()))"
+    )
+    @Mapping(
+            target = "postalCode",
+            expression = "java(aesCryptoService.decrypt(address.getPostalCode()))"
+    )
+    @Mapping(
+            target = "country",
+            expression = "java(aesCryptoService.decrypt(address.getCountry()))"
+    )
+    DecryptedShippingAddress decrypt(EncryptedShippingAddress address, @Context AesCryptoService aesCryptoService);
 }

@@ -23,7 +23,8 @@ import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_NEW_PASSWORD;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_OLD_PASSWORD;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithoutAvatar;
-import static com.github.jbence1994.webshop.user.EncryptedAddressTestObject.encryptedAddress;
+import static com.github.jbence1994.webshop.user.EncryptedBillingAddressTestObject.encryptedBillingAddress;
+import static com.github.jbence1994.webshop.user.EncryptedShippingAddressTestObject.encryptedShippingAddress;
 import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.ENCRYPTED_EMAIL_1;
 import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.HASHED_NEW_PASSWORD;
 import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.HASHED_PASSWORD;
@@ -92,7 +93,8 @@ public class UserServiceImplTests {
 
     @Test
     public void registerUserTest_HappyPath() {
-        when(userEncrypter.encrypt(any(DecryptedAddress.class), any())).thenReturn(encryptedAddress());
+        when(userEncrypter.encrypt(any(DecryptedBillingAddress.class), any())).thenReturn(encryptedBillingAddress());
+        when(userEncrypter.encrypt(any(DecryptedShippingAddress.class), any())).thenReturn(encryptedShippingAddress());
         when(userEncrypter.encrypt(any(DecryptedUser.class), any())).thenReturn(encryptedUser1WithoutAvatar());
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(passwordManager.hash(any())).thenReturn(HASHED_PASSWORD);
@@ -100,7 +102,8 @@ public class UserServiceImplTests {
 
         assertDoesNotThrow(() -> userService.registerUser(decryptedUser1WithoutAvatar()));
 
-        verify(userEncrypter, times(1)).encrypt(any(DecryptedAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedBillingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedShippingAddress.class), any());
         verify(userEncrypter, times(1)).encrypt(any(DecryptedUser.class), any());
         verify(userRepository, times(1)).existsByEmail(any());
         verify(passwordManager, times(1)).hash(any());
@@ -109,7 +112,8 @@ public class UserServiceImplTests {
 
     @Test
     public void registerUserTest_UnhappyPath_EmailAlreadyExistsException() {
-        when(userEncrypter.encrypt(any(DecryptedAddress.class), any())).thenReturn(encryptedAddress());
+        when(userEncrypter.encrypt(any(DecryptedBillingAddress.class), any())).thenReturn(encryptedBillingAddress());
+        when(userEncrypter.encrypt(any(DecryptedShippingAddress.class), any())).thenReturn(encryptedShippingAddress());
         when(userEncrypter.encrypt(any(DecryptedUser.class), any())).thenReturn(encryptedUser1WithoutAvatar());
         when(userRepository.existsByEmail(any())).thenReturn(true);
 
@@ -120,7 +124,8 @@ public class UserServiceImplTests {
 
         assertThat(result.getMessage(), equalTo("Email address is already in use."));
 
-        verify(userEncrypter, times(1)).encrypt(any(DecryptedAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedBillingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedShippingAddress.class), any());
         verify(userEncrypter, times(1)).encrypt(any(DecryptedUser.class), any());
         verify(userRepository, times(1)).existsByEmail(any());
         verify(userRepository, never()).existsByPhoneNumber(any());
@@ -130,7 +135,8 @@ public class UserServiceImplTests {
 
     @Test
     public void registerUserTest_UnhappyPath_PhoneNumberAlreadyExistsException() {
-        when(userEncrypter.encrypt(any(DecryptedAddress.class), any())).thenReturn(encryptedAddress());
+        when(userEncrypter.encrypt(any(DecryptedBillingAddress.class), any())).thenReturn(encryptedBillingAddress());
+        when(userEncrypter.encrypt(any(DecryptedShippingAddress.class), any())).thenReturn(encryptedShippingAddress());
         when(userEncrypter.encrypt(any(DecryptedUser.class), any())).thenReturn(encryptedUser1WithoutAvatar());
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(userRepository.existsByPhoneNumber(any())).thenReturn(true);
@@ -142,7 +148,8 @@ public class UserServiceImplTests {
 
         assertThat(result.getMessage(), equalTo("Phone number is already registered."));
 
-        verify(userEncrypter, times(1)).encrypt(any(DecryptedAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedBillingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedShippingAddress.class), any());
         verify(userEncrypter, times(1)).encrypt(any(DecryptedUser.class), any());
         verify(userRepository, times(1)).existsByEmail(any());
         verify(userRepository, times(1)).existsByPhoneNumber(any());

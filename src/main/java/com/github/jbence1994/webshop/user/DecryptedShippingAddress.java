@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DecryptedAddress {
+public class DecryptedShippingAddress {
     private Long userId;
     private DecryptedUser user;
     private String addressLine;

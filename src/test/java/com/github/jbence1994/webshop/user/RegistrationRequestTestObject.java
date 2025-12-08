@@ -70,7 +70,8 @@ public final class RegistrationRequestTestObject {
                     DECRYPTED_LAST_NAME,
                     DECRYPTED_DATE_OF_BIRTH,
                     DECRYPTED_PHONE_NUMBER,
-                    AddressDtoTestObject.addressDto()
+                    BillingAddressDtoTestObject.billingAddressDto(),
+                    ShippingAddressDtoTestObject.shippingAddressDto()
             );
         }
 
@@ -84,7 +85,8 @@ public final class RegistrationRequestTestObject {
                     " " + DECRYPTED_LAST_NAME + " ",
                     DECRYPTED_DATE_OF_BIRTH,
                     " " + DECRYPTED_PHONE_NUMBER + " ",
-                    AddressDtoTestObject.notSanitizedAddressDto()
+                    BillingAddressDtoTestObject.notSanitizedBillingAddressDto(),
+                    ShippingAddressDtoTestObject.notSanitizedShippingAddressDto()
             );
         }
 
@@ -98,14 +100,15 @@ public final class RegistrationRequestTestObject {
                     " " + DECRYPTED_LAST_NAME + " ",
                     DECRYPTED_DATE_OF_BIRTH,
                     " " + DECRYPTED_PHONE_NUMBER + " ",
-                    AddressDtoTestObject.notSanitizedAddressDto()
+                    BillingAddressDtoTestObject.notSanitizedBillingAddressDto(),
+                    ShippingAddressDtoTestObject.notSanitizedShippingAddressDto()
             );
         }
     }
 
-    private static final class AddressDtoTestObject {
-        public static RegistrationRequest.AddressDto addressDto() {
-            return new RegistrationRequest.AddressDto(
+    private static final class BillingAddressDtoTestObject {
+        public static RegistrationRequest.BillingAddressDto billingAddressDto() {
+            return new RegistrationRequest.BillingAddressDto(
                     DECRYPTED_ADDRESS_LINE,
                     DECRYPTED_MUNICIPALITY,
                     DECRYPTED_PROVINCE,
@@ -114,8 +117,30 @@ public final class RegistrationRequestTestObject {
             );
         }
 
-        public static RegistrationRequest.AddressDto notSanitizedAddressDto() {
-            return new RegistrationRequest.AddressDto(
+        public static RegistrationRequest.BillingAddressDto notSanitizedBillingAddressDto() {
+            return new RegistrationRequest.BillingAddressDto(
+                    " " + DECRYPTED_ADDRESS_LINE + " ",
+                    " " + DECRYPTED_MUNICIPALITY + " ",
+                    " " + DECRYPTED_PROVINCE + " ",
+                    " " + DECRYPTED_POSTAL_CODE + " ",
+                    " " + DECRYPTED_COUNTRY + " "
+            );
+        }
+    }
+
+    private static final class ShippingAddressDtoTestObject {
+        public static RegistrationRequest.ShippingAddressDto shippingAddressDto() {
+            return new RegistrationRequest.ShippingAddressDto(
+                    DECRYPTED_ADDRESS_LINE,
+                    DECRYPTED_MUNICIPALITY,
+                    DECRYPTED_PROVINCE,
+                    DECRYPTED_POSTAL_CODE,
+                    DECRYPTED_COUNTRY
+            );
+        }
+
+        public static RegistrationRequest.ShippingAddressDto notSanitizedShippingAddressDto() {
+            return new RegistrationRequest.ShippingAddressDto(
                     " " + DECRYPTED_ADDRESS_LINE + " ",
                     " " + DECRYPTED_MUNICIPALITY + " ",
                     " " + DECRYPTED_PROVINCE + " ",

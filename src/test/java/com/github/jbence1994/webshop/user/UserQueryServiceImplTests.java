@@ -9,7 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.github.jbence1994.webshop.user.DecryptedAddressTestObject.decryptedAddress;
+import static com.github.jbence1994.webshop.user.DecryptedBillingAddressTestObject.decryptedBillingAddress;
+import static com.github.jbence1994.webshop.user.DecryptedShippingAddressTestObject.decryptedShippingAddress;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_EMAIL_1;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithoutAvatar;
 import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithFavoriteProducts;
@@ -70,7 +71,8 @@ public class UserQueryServiceImplTests {
     @Test
     public void getDecryptedUserTest() {
         when(userRepository.findById(any())).thenReturn(Optional.of(encryptedUser1WithoutAvatar()));
-        when(userDecrypter.decrypt(any(EncryptedAddress.class), any())).thenReturn(decryptedAddress());
+        when(userDecrypter.decrypt(any(EncryptedBillingAddress.class), any())).thenReturn(decryptedBillingAddress());
+        when(userDecrypter.decrypt(any(EncryptedShippingAddress.class), any())).thenReturn(decryptedShippingAddress());
         when(userDecrypter.decrypt(any(EncryptedUser.class), any())).thenReturn(decryptedUser1WithoutAvatar());
 
         var result = assertDoesNotThrow(() -> userQueryService.getDecryptedUser(1L));

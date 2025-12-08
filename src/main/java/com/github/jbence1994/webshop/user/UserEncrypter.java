@@ -36,7 +36,11 @@ public interface UserEncrypter {
             expression = "java(user.getAvatarFileName() == null ? null : aesCryptoService.encrypt(user.getAvatarFileName()))"
     )
     @Mapping(
-            target = "address",
+            target = "billingAddress",
+            ignore = true
+    )
+    @Mapping(
+            target = "shippingAddress",
             ignore = true
     )
     EncryptedUser encrypt(DecryptedUser user, @Context AesCryptoService aesCryptoService);
@@ -65,5 +69,31 @@ public interface UserEncrypter {
             target = "country",
             expression = "java(aesCryptoService.encrypt(address.getCountry()))"
     )
-    EncryptedAddress encrypt(DecryptedAddress address, @Context AesCryptoService aesCryptoService);
+    EncryptedBillingAddress encrypt(DecryptedBillingAddress address, @Context AesCryptoService aesCryptoService);
+
+    @Mapping(
+            target = "user",
+            ignore = true
+    )
+    @Mapping(
+            target = "addressLine",
+            expression = "java(aesCryptoService.encrypt(address.getAddressLine()))"
+    )
+    @Mapping(
+            target = "municipality",
+            expression = "java(aesCryptoService.encrypt(address.getMunicipality()))"
+    )
+    @Mapping(
+            target = "province",
+            expression = "java(aesCryptoService.encrypt(address.getProvince()))"
+    )
+    @Mapping(
+            target = "postalCode",
+            expression = "java(aesCryptoService.encrypt(address.getPostalCode()))"
+    )
+    @Mapping(
+            target = "country",
+            expression = "java(aesCryptoService.encrypt(address.getCountry()))"
+    )
+    EncryptedShippingAddress encrypt(DecryptedShippingAddress address, @Context AesCryptoService aesCryptoService);
 }

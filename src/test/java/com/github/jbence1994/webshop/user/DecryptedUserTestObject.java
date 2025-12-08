@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.AVATAR_FILE_NAME;
-import static com.github.jbence1994.webshop.user.DecryptedAddressTestObject.decryptedAddress;
+import static com.github.jbence1994.webshop.user.DecryptedBillingAddressTestObject.decryptedBillingAddress;
+import static com.github.jbence1994.webshop.user.DecryptedShippingAddressTestObject.decryptedShippingAddress;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_DATE_OF_BIRTH;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_EMAIL_1;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_FIRST_NAME;
@@ -49,7 +50,8 @@ public final class DecryptedUserTestObject {
                 Role.ADMIN,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                decryptedAddress(),
+                decryptedBillingAddress(),
+                decryptedShippingAddress(),
                 favoriteProducts
         );
     }
