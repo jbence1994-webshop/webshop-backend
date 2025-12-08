@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS users
     updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS addresses
+CREATE TABLE IF NOT EXISTS billing_addresses
 (
     user_id      BIGINT       NOT NULL PRIMARY KEY,
     address_line VARCHAR(255) NOT NULL,
@@ -62,7 +62,23 @@ CREATE TABLE IF NOT EXISTS addresses
     country      VARCHAR(255) NOT NULL,
     created_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_addresses_users
+    CONSTRAINT fk_billing_addresses_users
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS shipping_addresses
+(
+    user_id      BIGINT       NOT NULL PRIMARY KEY,
+    address_line VARCHAR(255) NOT NULL,
+    municipality VARCHAR(255) NOT NULL,
+    province     VARCHAR(255) NOT NULL,
+    postal_code  VARCHAR(255) NOT NULL,
+    country      VARCHAR(255) NOT NULL,
+    created_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_shipping_addresses_users
         FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE

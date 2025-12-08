@@ -96,7 +96,11 @@ SET @userId := (SELECT id
                 FROM users
                 WHERE email = 'V/nEh90aynj36ndFSu1bnVEqCYFXA9wGXFe4kc1B0J4=');
 
-INSERT INTO addresses (user_id, address_line, municipality, province, postal_code, country)
+INSERT INTO billing_addresses (user_id, address_line, municipality, province, postal_code, country)
+VALUES (@userId, '1HVbsgosDYzFNNr0u/kZbzAPaJkK4GCePxJAefRki80=', 'YHiFqYj0PxUA5OsB/lj/Gw==',
+        'Ad8epZPng28rXaqMBeTXaB1uYgpBpDOcCJS7TI2q3NA=', '1t1tv1a3Tg0RMHotOGroAg==', 'zM8n9JxK+Y8bl7quNdl80g==');
+
+INSERT INTO shipping_addresses (user_id, address_line, municipality, province, postal_code, country)
 VALUES (@userId, '1HVbsgosDYzFNNr0u/kZbzAPaJkK4GCePxJAefRki80=', 'YHiFqYj0PxUA5OsB/lj/Gw==',
         'Ad8epZPng28rXaqMBeTXaB1uYgpBpDOcCJS7TI2q3NA=', '1t1tv1a3Tg0RMHotOGroAg==', 'zM8n9JxK+Y8bl7quNdl80g==');
 
