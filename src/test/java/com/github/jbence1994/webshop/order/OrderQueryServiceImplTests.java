@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.jbence1994.webshop.order.OrderTestObject.createdOrder1;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
-import static com.github.jbence1994.webshop.user.UserTestObject.user2WithoutAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser2WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -44,7 +44,7 @@ public class OrderQueryServiceImplTests {
 
     @BeforeEach
     public void setUp() {
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class OrderQueryServiceImplTests {
 
     @Test
     public void getOrderTest_UnhappyPath_AccessDeniedException() {
-        when(authService.getCurrentUser()).thenReturn(user2WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser2WithoutAvatar());
         when(orderRepository.findById(any())).thenReturn(Optional.of(createdOrder1()));
 
         var result = assertThrows(

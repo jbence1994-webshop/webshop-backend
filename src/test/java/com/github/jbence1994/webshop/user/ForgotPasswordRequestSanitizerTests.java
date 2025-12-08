@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_EMAIL_1;
 import static com.github.jbence1994.webshop.user.ForgotPasswordRequestTestObject.notSanitizedForgotPasswordRequest;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -20,6 +20,6 @@ public class ForgotPasswordRequestSanitizerTests {
     public void sanitizeTest() {
         var result = forgotPasswordRequestSanitizer.sanitize(notSanitizedForgotPasswordRequest());
 
-        assertThat(result.email(), equalTo(EMAIL_1));
+        assertThat(result.email(), equalTo(DECRYPTED_EMAIL_1));
     }
 }

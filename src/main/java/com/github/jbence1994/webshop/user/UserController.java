@@ -31,26 +31,27 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable Long id) {
-        var user = userQueryService.getUser(id);
+        var user = userQueryService.getDecryptedUser(id);
 
         return userMapper.toDto(user);
     }
 
     @PostMapping
-    public ResponseEntity<RegistrationResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
+    public ResponseEntity<Void> registerUser(@Valid @RequestBody RegistrationRequest request) {
         var sanitizedRequest = registrationRequestSanitizer.sanitize(request);
 
-        var address = userMapper.toEntity(sanitizedRequest.user().address());
+        var billingAddress = userMapper.toEntity(sanitizedRequest.user().billingAddress());
+        var shippingAddress = userMapper.toEntity(sanitizedRequest.user().shippingAddress());
         var user = userMapper.toEntity(sanitizedRequest.user());
 
-        address.setUser(user);
-        user.setAddress(address);
+        billingAddress.setUser(user);
+        shippingAddress.setUser(user);
+        user.setBillingAddress(billingAddress);
+        user.setShippingAddress(shippingAddress);
 
-        var registeredUser = userService.registerUser(user);
+        userService.registerUser(user);
 
-        var response = userMapper.toRegistrationResponse(registeredUser);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/change-password")

@@ -24,7 +24,7 @@
 
         <!-- Project dependency versions -->
         <log4j-layout-template-json.version>2.20.0</log4j-layout-template-json.version>
-        <spring-ai-starter-model-ollama.version>1.1.0</spring-ai-starter-model-ollama.version>
+        <spring-ai-starter-model-ollama.version>1.1.1</spring-ai-starter-model-ollama.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.8.14</springdoc-openapi-starter-webmvc-ui.version>
         <stripe-java.version>29.0.0</stripe-java.version>
         <spring-dotenv.version>4.0.0</spring-dotenv.version>
@@ -34,7 +34,7 @@
         <!-- Maven plugin versions -->
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
-        <flyway-maven-plugin.version>11.18.0</flyway-maven-plugin.version>
+        <flyway-maven-plugin.version>11.19.0</flyway-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <checkstyle.version>12.2.0</checkstyle.version>
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
@@ -231,14 +231,18 @@
                 <configuration>
                     <excludes>
                         <exclude>com/github/jbence1994/webshop/**/*Config*</exclude>
+                        <exclude>com/github/jbence1994/webshop/**/*ManagerImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/**/*MapperImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/ai/*SystemPromptUtil*</exclude>
                         <exclude>com/github/jbence1994/webshop/checkout/StripePaymentGateway*</exclude>
                         <exclude>com/github/jbence1994/webshop/common/EmailServiceImpl*</exclude>
                         <exclude>com/github/jbence1994/webshop/common/FreeMarkerEmailTemplateBuilder*</exclude>
-                        <exclude>com/github/jbence1994/webshop/image/FileSystemUtils*</exclude>
+                        <exclude>com/github/jbence1994/webshop/image/*FileSystemUtils*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/ProductPhotoUrlBuilder*</exclude>
                         <exclude>com/github/jbence1994/webshop/image/UserAvatarUrlBuilder*</exclude>
+                        <exclude>com/github/jbence1994/webshop/user/AesCryptoService*</exclude>
+                        <exclude>com/github/jbence1994/webshop/user/UserEncrypter*</exclude>
+                        <exclude>com/github/jbence1994/webshop/user/UserDecrypter*</exclude>
                         <exclude>com/github/jbence1994/webshop/Application*</exclude>
                     </excludes>
                 </configuration>

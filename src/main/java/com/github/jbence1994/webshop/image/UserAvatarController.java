@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/users/{userId}/avatar")
+@RequestMapping("/users/{id}/avatar")
 @Validated
 @Slf4j
 public class UserAvatarController {
@@ -38,21 +40,21 @@ public class UserAvatarController {
     }
 
     @PostMapping
-    public ResponseEntity<ImageResponse> uploadUserAvatar(
-            @PathVariable Long userId,
+    public ResponseEntity<Void> uploadUserAvatar(
+            @PathVariable Long id,
             @FileNotEmpty @RequestParam("file") MultipartFile file
     ) {
         var uploadImage = imageMapper.toImageUpload(file);
-        var uploadedImageFileName = imageService.uploadImage(userId, uploadImage);
+        imageService.uploadImage(id, uploadImage);
 
-        var url = imageUrlBuilder.buildUrl(uploadedImageFileName);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ImageResponse(uploadedImageFileName, url));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<?> getUserAvatar(@PathVariable Long userId) {
-        return userQueryService.getUser(userId).getAvatarFileName()
+    public ResponseEntity<?> getUserAvatar(@PathVariable Long id) {
+        var avatarFileName = Optional.ofNullable(userQueryService.getDecryptedUser(id).getAvatarFileName());
+
+        return avatarFileName
                 .map(userAvatar -> {
                     var url = imageUrlBuilder.buildUrl(userAvatar);
                     return ResponseEntity.ok(new ImageResponse(userAvatar, url));
@@ -62,10 +64,10 @@ public class UserAvatarController {
 
     @DeleteMapping("/{fileName}")
     public ResponseEntity<Void> deleteUserAvatar(
-            @PathVariable Long userId,
+            @PathVariable Long id,
             @PathVariable String fileName
     ) {
-        imageService.deleteImage(userId, fileName);
+        imageService.deleteImage(id, fileName);
 
         return ResponseEntity.noContent().build();
     }

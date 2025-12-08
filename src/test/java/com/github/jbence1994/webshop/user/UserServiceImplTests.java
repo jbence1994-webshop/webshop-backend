@@ -18,18 +18,22 @@ import java.util.Optional;
 
 import static com.github.jbence1994.webshop.common.EmailContentTestObject.emailContent;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_EMAIL_1;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_INVALID_OLD_PASSWORD;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_NEW_PASSWORD;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_OLD_PASSWORD;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestObject.decryptedUser1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedBillingAddressTestObject.encryptedBillingAddress;
+import static com.github.jbence1994.webshop.user.EncryptedShippingAddressTestObject.encryptedShippingAddress;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.ENCRYPTED_EMAIL_1;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.HASHED_NEW_PASSWORD;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.HASHED_PASSWORD;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithFavoriteProducts;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithoutAvatar;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.HASHED_TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.TEMPORARY_PASSWORD;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.expiredTemporaryPassword;
 import static com.github.jbence1994.webshop.user.TemporaryPasswordTestObject.notExpiredTemporaryPassword;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
-import static com.github.jbence1994.webshop.user.UserTestConstants.HASHED_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.INVALID_OLD_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_HASHED_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.NEW_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestConstants.OLD_PASSWORD;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithFavoriteProducts;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -65,10 +69,16 @@ public class UserServiceImplTests {
     private UserQueryService userQueryService;
 
     @Mock
+    private AesCryptoService aesCryptoService;
+
+    @Mock
     private PasswordManager passwordManager;
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserEncrypter userEncrypter;
 
     @Mock
     private EmailService emailService;
@@ -79,16 +89,22 @@ public class UserServiceImplTests {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private final User user = user1WithoutAvatar();
+    private final EncryptedUser user = encryptedUser1WithoutAvatar();
 
     @Test
     public void registerUserTest_HappyPath() {
+        when(userEncrypter.encrypt(any(DecryptedBillingAddress.class), any())).thenReturn(encryptedBillingAddress());
+        when(userEncrypter.encrypt(any(DecryptedShippingAddress.class), any())).thenReturn(encryptedShippingAddress());
+        when(userEncrypter.encrypt(any(DecryptedUser.class), any())).thenReturn(encryptedUser1WithoutAvatar());
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(passwordManager.hash(any())).thenReturn(HASHED_PASSWORD);
-        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
+        when(userRepository.save(any())).thenReturn(encryptedUser1WithoutAvatar());
 
-        assertDoesNotThrow(() -> userService.registerUser(user1WithoutAvatar()));
+        assertDoesNotThrow(() -> userService.registerUser(decryptedUser1WithoutAvatar()));
 
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedBillingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedShippingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedUser.class), any());
         verify(userRepository, times(1)).existsByEmail(any());
         verify(passwordManager, times(1)).hash(any());
         verify(userRepository, times(1)).save(any());
@@ -96,15 +112,21 @@ public class UserServiceImplTests {
 
     @Test
     public void registerUserTest_UnhappyPath_EmailAlreadyExistsException() {
+        when(userEncrypter.encrypt(any(DecryptedBillingAddress.class), any())).thenReturn(encryptedBillingAddress());
+        when(userEncrypter.encrypt(any(DecryptedShippingAddress.class), any())).thenReturn(encryptedShippingAddress());
+        when(userEncrypter.encrypt(any(DecryptedUser.class), any())).thenReturn(encryptedUser1WithoutAvatar());
         when(userRepository.existsByEmail(any())).thenReturn(true);
 
         var result = assertThrows(
                 EmailAlreadyExistsException.class,
-                () -> userService.registerUser(user1WithoutAvatar())
+                () -> userService.registerUser(decryptedUser1WithoutAvatar())
         );
 
-        assertThat(result.getMessage(), equalTo("Email address 'juhasz.bence.zsolt@gmail.com' is already in use. Please use a different."));
+        assertThat(result.getMessage(), equalTo("Email address is already in use."));
 
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedBillingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedShippingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedUser.class), any());
         verify(userRepository, times(1)).existsByEmail(any());
         verify(userRepository, never()).existsByPhoneNumber(any());
         verify(passwordManager, never()).hash(any());
@@ -113,16 +135,22 @@ public class UserServiceImplTests {
 
     @Test
     public void registerUserTest_UnhappyPath_PhoneNumberAlreadyExistsException() {
+        when(userEncrypter.encrypt(any(DecryptedBillingAddress.class), any())).thenReturn(encryptedBillingAddress());
+        when(userEncrypter.encrypt(any(DecryptedShippingAddress.class), any())).thenReturn(encryptedShippingAddress());
+        when(userEncrypter.encrypt(any(DecryptedUser.class), any())).thenReturn(encryptedUser1WithoutAvatar());
         when(userRepository.existsByEmail(any())).thenReturn(false);
         when(userRepository.existsByPhoneNumber(any())).thenReturn(true);
 
         var result = assertThrows(
                 PhoneNumberAlreadyExistsException.class,
-                () -> userService.registerUser(user1WithoutAvatar())
+                () -> userService.registerUser(decryptedUser1WithoutAvatar())
         );
 
-        assertThat(result.getMessage(), equalTo("Phone number '+36501323566' is already registered. Please use a different."));
+        assertThat(result.getMessage(), equalTo("Phone number is already registered."));
 
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedBillingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedShippingAddress.class), any());
+        verify(userEncrypter, times(1)).encrypt(any(DecryptedUser.class), any());
         verify(userRepository, times(1)).existsByEmail(any());
         verify(userRepository, times(1)).existsByPhoneNumber(any());
         verify(passwordManager, never()).hash(any());
@@ -131,12 +159,12 @@ public class UserServiceImplTests {
 
     @Test
     public void changePasswordTest_HappyPath() {
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(passwordManager.verify(any(), any())).thenReturn(true);
-        when(passwordManager.hash(any())).thenReturn(NEW_HASHED_PASSWORD);
-        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
+        when(passwordManager.hash(any())).thenReturn(HASHED_NEW_PASSWORD);
+        when(userRepository.save(any())).thenReturn(encryptedUser1WithoutAvatar());
 
-        assertDoesNotThrow(() -> userService.changePassword(OLD_PASSWORD, NEW_PASSWORD));
+        assertDoesNotThrow(() -> userService.changePassword(RAW_OLD_PASSWORD, RAW_NEW_PASSWORD));
 
         verify(authService, times(1)).getCurrentUser();
         verify(passwordManager, times(1)).verify(any(), any());
@@ -146,12 +174,12 @@ public class UserServiceImplTests {
 
     @Test
     public void changePasswordTest_UnhappyPath_AccessDeniedException() {
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(passwordManager.verify(any(), any())).thenReturn(false);
 
         var result = assertThrows(
                 AccessDeniedException.class,
-                () -> userService.changePassword(INVALID_OLD_PASSWORD, NEW_PASSWORD)
+                () -> userService.changePassword(RAW_INVALID_OLD_PASSWORD, RAW_NEW_PASSWORD)
         );
 
         assertThat(result.getMessage(), equalTo("Invalid old password."));
@@ -164,7 +192,8 @@ public class UserServiceImplTests {
 
     @Test
     public void forgotPasswordTest() {
-        when(userQueryService.getUser(anyString())).thenReturn(user1WithoutAvatar());
+        when(aesCryptoService.encrypt(any())).thenReturn(ENCRYPTED_EMAIL_1);
+        when(userQueryService.getUser(anyString())).thenReturn(encryptedUser1WithoutAvatar());
         when(temporaryPasswordGenerator.generate()).thenReturn(TEMPORARY_PASSWORD);
         when(passwordManager.hash(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
         when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
@@ -172,8 +201,9 @@ public class UserServiceImplTests {
         when(webshopEmailAddressConfig.username()).thenReturn("from@example.com");
         doNothing().when(emailService).sendEmail(any(), any(), any(), any());
 
-        assertDoesNotThrow(() -> userService.forgotPassword(EMAIL_1));
+        assertDoesNotThrow(() -> userService.forgotPassword(DECRYPTED_EMAIL_1));
 
+        verify(aesCryptoService, times(1)).encrypt(any());
         verify(userQueryService, times(1)).getUser(anyString());
         verify(temporaryPasswordGenerator, times(1)).generate();
         verify(passwordManager, times(1)).hash(any());
@@ -185,16 +215,16 @@ public class UserServiceImplTests {
 
     @Test
     public void resetPasswordTest_HappyPath() {
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword(), notExpiredTemporaryPassword()));
         when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
         doNothing().when(temporaryPasswordRepository).deleteAll(any());
         when(passwordManager.verify(any(), any())).thenReturn(true);
-        when(passwordManager.hash(any())).thenReturn(NEW_HASHED_PASSWORD);
-        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
+        when(passwordManager.hash(any())).thenReturn(HASHED_NEW_PASSWORD);
+        when(userRepository.save(any())).thenReturn(encryptedUser1WithoutAvatar());
         doNothing().when(temporaryPasswordRepository).delete(any());
 
-        assertDoesNotThrow(() -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD));
+        assertDoesNotThrow(() -> userService.resetPassword(TEMPORARY_PASSWORD, RAW_NEW_PASSWORD));
 
         verify(authService, times(1)).getCurrentUser();
         verify(temporaryPasswordRepository, times(1)).findAllByUserId(any());
@@ -208,7 +238,7 @@ public class UserServiceImplTests {
 
     @Test
     public void resetPasswordTest_UnhappyPath_AccessDeniedException() {
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword(), notExpiredTemporaryPassword()));
         when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(notExpiredTemporaryPassword()));
         doNothing().when(temporaryPasswordRepository).deleteAll(any());
@@ -216,7 +246,7 @@ public class UserServiceImplTests {
 
         var result = assertThrows(
                 AccessDeniedException.class,
-                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+                () -> userService.resetPassword(TEMPORARY_PASSWORD, RAW_NEW_PASSWORD)
         );
 
         assertThat(result.getMessage(), equalTo("Invalid temporary password."));
@@ -233,7 +263,7 @@ public class UserServiceImplTests {
 
     @Test
     public void resetPasswordTest_UnhappyPath_ExpiredTemporaryPasswordException() {
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(temporaryPasswordRepository.findAllByUserId(any())).thenReturn(List.of(expiredTemporaryPassword()));
         when(temporaryPasswordRepository.findTopByUserIdOrderByExpirationDateDesc(any())).thenReturn(Optional.of(expiredTemporaryPassword()));
         doNothing().when(temporaryPasswordRepository).deleteAll(any());
@@ -242,7 +272,7 @@ public class UserServiceImplTests {
 
         var result = assertThrows(
                 ExpiredTemporaryPasswordException.class,
-                () -> userService.resetPassword(TEMPORARY_PASSWORD, NEW_PASSWORD)
+                () -> userService.resetPassword(TEMPORARY_PASSWORD, RAW_NEW_PASSWORD)
         );
 
         assertThat(result.getMessage(), equalTo("Temporary password has expired."));
@@ -259,9 +289,9 @@ public class UserServiceImplTests {
 
     @Test
     public void updateUserTest() {
-        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
+        when(userRepository.save(any())).thenReturn(encryptedUser1WithoutAvatar());
 
-        assertDoesNotThrow(() -> userService.updateUser(user1WithoutAvatar()));
+        assertDoesNotThrow(() -> userService.updateUser(encryptedUser1WithoutAvatar()));
     }
 
     @Test
@@ -275,7 +305,7 @@ public class UserServiceImplTests {
     public void addProductToWishlistTest_HappyPath() {
         when(authService.getCurrentUser()).thenReturn(user);
         when(productQueryService.getProduct(any())).thenReturn(product1());
-        when(userRepository.save(any())).thenReturn(user1WithFavoriteProducts());
+        when(userRepository.save(any())).thenReturn(encryptedUser1WithFavoriteProducts());
 
         var result = userService.addProductToWishlist(1L);
 
@@ -308,7 +338,7 @@ public class UserServiceImplTests {
     @Test
     public void deleteProductFromWishlistTest() {
         when(authService.getCurrentUser()).thenReturn(user);
-        when(userRepository.save(any())).thenReturn(user1WithoutAvatar());
+        when(userRepository.save(any())).thenReturn(encryptedUser1WithoutAvatar());
 
         userService.deleteProductFromWishlist(1L);
 

@@ -12,21 +12,39 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class UserQueryServiceImpl implements UserQueryService {
+    private final AesCryptoService aesCryptoService;
     private final UserRepository userRepository;
+    private final UserDecrypter userDecrypter;
     private final AuthService authService;
 
     @Override
-    public User getUser(Long id) {
+    public EncryptedUser getEncryptedUser(Long id) {
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
-    public User getUser(String email) {
+    public DecryptedUser getDecryptedUser(Long id) {
+        var encryptedUser = getEncryptedUser(id);
+
+        var decryptedBillingAddress = userDecrypter.decrypt(encryptedUser.getBillingAddress(), aesCryptoService);
+        var decryptedShippingAddress = userDecrypter.decrypt(encryptedUser.getShippingAddress(), aesCryptoService);
+        var decryptedUser = userDecrypter.decrypt(encryptedUser, aesCryptoService);
+
+        decryptedBillingAddress.setUser(decryptedUser);
+        decryptedShippingAddress.setUser(decryptedUser);
+        decryptedUser.setBillingAddress(decryptedBillingAddress);
+        decryptedUser.setShippingAddress(decryptedShippingAddress);
+
+        return decryptedUser;
+    }
+
+    @Override
+    public EncryptedUser getUser(String email) {
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override

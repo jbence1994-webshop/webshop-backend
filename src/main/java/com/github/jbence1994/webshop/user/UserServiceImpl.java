@@ -24,29 +24,36 @@ public class UserServiceImpl implements UserService {
     private final EmailTemplateBuilder emailTemplateBuilder;
     private final ProductQueryService productQueryService;
     private final UserQueryService userQueryService;
+    private final AesCryptoService aesCryptoService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
+    private final UserEncrypter userEncrypter;
     private final EmailService emailService;
     private final AuthService authService;
 
     @Override
-    public User registerUser(User user) {
-        var email = user.getEmail();
-        var phoneNumber = user.getPhoneNumber();
+    public void registerUser(DecryptedUser user) {
+        var encryptedBillingAddress = userEncrypter.encrypt(user.getBillingAddress(), aesCryptoService);
+        var encryptedShippingAddress = userEncrypter.encrypt(user.getShippingAddress(), aesCryptoService);
+        var encryptedUser = userEncrypter.encrypt(user, aesCryptoService);
 
-        if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException(email);
+        encryptedBillingAddress.setUser(encryptedUser);
+        encryptedShippingAddress.setUser(encryptedUser);
+        encryptedUser.setBillingAddress(encryptedBillingAddress);
+        encryptedUser.setShippingAddress(encryptedShippingAddress);
+
+        if (userRepository.existsByEmail(encryptedUser.getEmail())) {
+            throw new EmailAlreadyExistsException();
         }
 
-        if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new PhoneNumberAlreadyExistsException(phoneNumber);
+        if (userRepository.existsByPhoneNumber(encryptedUser.getPhoneNumber())) {
+            throw new PhoneNumberAlreadyExistsException();
         }
 
-        user.setPassword(passwordManager.hash(user.getPassword()));
-        user.setRole(Role.USER);
-        userRepository.save(user);
+        encryptedUser.setPassword(passwordManager.hash(user.getPassword()));
+        encryptedUser.setRole(Role.USER);
 
-        return user;
+        userRepository.save(encryptedUser);
     }
 
     @Override
@@ -64,7 +71,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void forgotPassword(String email) {
-        var user = userQueryService.getUser(email);
+        var encryptedEmail = aesCryptoService.encrypt(email);
+
+        var user = userQueryService.getUser(encryptedEmail);
 
         var rawTemporaryPassword = temporaryPasswordGenerator.generate();
         var hashedTemporaryPassword = passwordManager.hash(rawTemporaryPassword);
@@ -74,7 +83,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(hashedTemporaryPassword);
 
         var emailContent = emailTemplateBuilder.buildForForgotPassword(
-                user.getFirstName(),
+                aesCryptoService.decrypt(user.getFirstName()),
                 rawTemporaryPassword,
                 Locale.ENGLISH
         );
@@ -117,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(EncryptedUser user) {
         userRepository.save(user);
     }
 
