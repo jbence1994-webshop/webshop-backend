@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.auth;
 
-import com.github.jbence1994.webshop.user.User;
+import com.github.jbence1994.webshop.user.EncryptedUser;
 import com.github.jbence1994.webshop.user.UserQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
-        var user = userQueryService.getUser(request.getEmail());
+        var user = userQueryService.getDecryptedUser(request.getEmail());
         var userIdentity = userIdentityMapper.toUserIdentity(user);
 
         var accessToken = jwtService.generateAccessToken(userIdentity);
@@ -44,14 +44,14 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialsException("Invalid refresh token.");
         }
 
-        var user = userQueryService.getUser(jwt.getUserId());
+        var user = userQueryService.getDecryptedUser(jwt.getUserId());
         var userIdentity = userIdentityMapper.toUserIdentity(user);
 
         return jwtService.generateAccessToken(userIdentity);
     }
 
     @Override
-    public User getCurrentUser() {
+    public EncryptedUser getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (
@@ -64,6 +64,6 @@ public class AuthServiceImpl implements AuthService {
 
         var userId = (Long) authentication.getPrincipal();
 
-        return userQueryService.getUser(userId);
+        return userQueryService.getEncryptedUser(userId);
     }
 }

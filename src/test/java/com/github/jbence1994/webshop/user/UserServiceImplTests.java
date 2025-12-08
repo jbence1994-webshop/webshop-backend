@@ -193,7 +193,7 @@ public class UserServiceImplTests {
     @Test
     public void forgotPasswordTest() {
         when(aesCryptoService.encrypt(any())).thenReturn(ENCRYPTED_EMAIL_1);
-        when(userQueryService.getUser(anyString())).thenReturn(encryptedUser1WithoutAvatar());
+        when(userQueryService.getEncryptedUser(anyString())).thenReturn(encryptedUser1WithoutAvatar());
         when(temporaryPasswordGenerator.generate()).thenReturn(TEMPORARY_PASSWORD);
         when(passwordManager.hash(any())).thenReturn(HASHED_TEMPORARY_PASSWORD);
         when(temporaryPasswordRepository.save(any())).thenReturn(notExpiredTemporaryPassword());
@@ -204,7 +204,7 @@ public class UserServiceImplTests {
         assertDoesNotThrow(() -> userService.forgotPassword(DECRYPTED_EMAIL_1));
 
         verify(aesCryptoService, times(1)).encrypt(any());
-        verify(userQueryService, times(1)).getUser(anyString());
+        verify(userQueryService, times(1)).getEncryptedUser(anyString());
         verify(temporaryPasswordGenerator, times(1)).generate();
         verify(passwordManager, times(1)).hash(any());
         verify(temporaryPasswordRepository, times(1)).save(any());
