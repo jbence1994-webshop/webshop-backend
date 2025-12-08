@@ -38,30 +38,30 @@ CREATE TABLE IF NOT EXISTS product_photos
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id               BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    email            VARCHAR(255) NOT NULL UNIQUE,
-    password         VARCHAR(255) NOT NULL,
-    first_name       VARCHAR(255) NOT NULL,
-    middle_name      VARCHAR(255),
-    last_name        VARCHAR(255) NOT NULL,
-    date_of_birth    VARCHAR(255) NOT NULL,
-    phone_number     VARCHAR(255) UNIQUE,
-    avatar_file_name VARCHAR(255) UNIQUE,
-    role             VARCHAR(25)  NOT NULL DEFAULT 'USER',
-    created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    id               BIGINT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    email            VARBINARY(255) NOT NULL UNIQUE,
+    password         VARBINARY(255) NOT NULL,
+    first_name       VARBINARY(255) NOT NULL,
+    middle_name      VARBINARY(255),
+    last_name        VARBINARY(255) NOT NULL,
+    date_of_birth    VARBINARY(255) NOT NULL,
+    phone_number     VARBINARY(255) UNIQUE,
+    avatar_file_name VARBINARY(255) UNIQUE,
+    role             VARCHAR(25)    NOT NULL DEFAULT 'USER',
+    created_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS billing_addresses
 (
-    user_id      BIGINT       NOT NULL PRIMARY KEY,
-    address_line VARCHAR(255) NOT NULL,
-    municipality VARCHAR(255) NOT NULL,
-    province     VARCHAR(255) NOT NULL,
-    postal_code  VARCHAR(255) NOT NULL,
-    country      VARCHAR(255) NOT NULL,
-    created_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    user_id      BIGINT         NOT NULL PRIMARY KEY,
+    address_line VARBINARY(255) NOT NULL,
+    municipality VARBINARY(255) NOT NULL,
+    province     VARBINARY(255) NOT NULL,
+    postal_code  VARBINARY(255) NOT NULL,
+    country      VARBINARY(255) NOT NULL,
+    created_at   DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_billing_addresses_users
         FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
@@ -70,14 +70,14 @@ CREATE TABLE IF NOT EXISTS billing_addresses
 
 CREATE TABLE IF NOT EXISTS shipping_addresses
 (
-    user_id      BIGINT       NOT NULL PRIMARY KEY,
-    address_line VARCHAR(255) NOT NULL,
-    municipality VARCHAR(255) NOT NULL,
-    province     VARCHAR(255) NOT NULL,
-    postal_code  VARCHAR(255) NOT NULL,
-    country      VARCHAR(255) NOT NULL,
-    created_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    user_id      BIGINT         NOT NULL PRIMARY KEY,
+    address_line VARBINARY(255) NOT NULL,
+    municipality VARBINARY(255) NOT NULL,
+    province     VARBINARY(255) NOT NULL,
+    postal_code  VARBINARY(255) NOT NULL,
+    country      VARBINARY(255) NOT NULL,
+    created_at   DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_shipping_addresses_users
         FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
