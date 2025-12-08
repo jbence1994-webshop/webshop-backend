@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.image;
 
 import com.github.jbence1994.webshop.user.UserQueryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/users/{id}/avatar")
 @Validated
+@Slf4j
 public class UserAvatarController {
     private final UserQueryService userQueryService;
     private final ImageUrlBuilder imageUrlBuilder;
