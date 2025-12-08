@@ -1,24 +1,26 @@
 package com.github.jbence1994.webshop.user;
 
-import static com.github.jbence1994.webshop.user.AddressDtoTestObject.addressDto;
-import static com.github.jbence1994.webshop.user.UserTestConstants.DATE_OF_BIRTH;
-import static com.github.jbence1994.webshop.user.UserTestConstants.EMAIL_1;
-import static com.github.jbence1994.webshop.user.UserTestConstants.FIRST_NAME;
-import static com.github.jbence1994.webshop.user.UserTestConstants.LAST_NAME;
-import static com.github.jbence1994.webshop.user.UserTestConstants.MIDDLE_NAME;
-import static com.github.jbence1994.webshop.user.UserTestConstants.PHONE_NUMBER;
+import static com.github.jbence1994.webshop.user.BillingAddressDtoTestObject.billingAddressDto;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_DATE_OF_BIRTH;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_EMAIL_1;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_FIRST_NAME;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_LAST_NAME;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_MIDDLE_NAME;
+import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.DECRYPTED_PHONE_NUMBER;
+import static com.github.jbence1994.webshop.user.ShippingAddressDtoTestObject.shippingAddressDto;
 
 public final class UserDtoTestObject {
     public static UserDto userDto() {
         return new UserDto(
                 1L,
-                EMAIL_1,
-                FIRST_NAME,
-                MIDDLE_NAME,
-                LAST_NAME,
-                DATE_OF_BIRTH,
-                PHONE_NUMBER,
-                addressDto()
+                DECRYPTED_EMAIL_1,
+                DECRYPTED_FIRST_NAME,
+                DECRYPTED_MIDDLE_NAME,
+                DECRYPTED_LAST_NAME,
+                DECRYPTED_DATE_OF_BIRTH,
+                DECRYPTED_PHONE_NUMBER,
+                billingAddressDto(),
+                shippingAddressDto()
         );
     }
 }

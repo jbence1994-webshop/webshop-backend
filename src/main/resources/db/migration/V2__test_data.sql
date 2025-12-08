@@ -88,15 +88,21 @@ VALUES ('Wireless Mouse', 49.99, 'piece', 'High quality wireless mouse perfect f
         @electronicsCategoryId);
 
 INSERT INTO users (email, password, first_name, middle_name, last_name, date_of_birth, phone_number, role)
-VALUES ('juhasz.bence.zsolt@gmail.com', '$2a$10$OnASmWOv6fF/voWlTQNfSOm20Fh4AaPgTDVTwPrMiF0FTjYEWzb6a', 'Bence',
-        'Zsolt', 'Juhász', '1994-03-27', '+36501323566', 'ADMIN');
+VALUES ('V/nEh90aynj36ndFSu1bnVEqCYFXA9wGXFe4kc1B0J4=', '$2a$10$PQiXunDpEwngtfEFIHj6f.4wTnHsCO3CUptWjA.bJKHzm4ifXgSku',
+        'Kcf6OhzMbOPOXZ4SiMgMpw==', '8kIyHqfqfiI9G+chFs7XMw==', 'MKgTXL/NfpcVbWB2e10q3A==',
+        'ZgrnbwN04011YdvZDk2eGA==', 'FINWfIjem/e60YBHPhHOGw==', 'ADMIN');
 
 SET @userId := (SELECT id
                 FROM users
-                WHERE email = 'juhasz.bence.zsolt@gmail.com');
+                WHERE email = 'V/nEh90aynj36ndFSu1bnVEqCYFXA9wGXFe4kc1B0J4=');
 
-INSERT INTO addresses (user_id, address_line, municipality, province, postal_code, country)
-VALUES (@userId, 'Balaton utca 2/B', 'Makó', 'Csongrád-Csanád', '6900', 'HUNGARY');
+INSERT INTO billing_addresses (user_id, address_line, municipality, province, postal_code, country)
+VALUES (@userId, '1HVbsgosDYzFNNr0u/kZbzAPaJkK4GCePxJAefRki80=', 'YHiFqYj0PxUA5OsB/lj/Gw==',
+        'Ad8epZPng28rXaqMBeTXaB1uYgpBpDOcCJS7TI2q3NA=', '1t1tv1a3Tg0RMHotOGroAg==', 'zM8n9JxK+Y8bl7quNdl80g==');
+
+INSERT INTO shipping_addresses (user_id, address_line, municipality, province, postal_code, country)
+VALUES (@userId, '1HVbsgosDYzFNNr0u/kZbzAPaJkK4GCePxJAefRki80=', 'YHiFqYj0PxUA5OsB/lj/Gw==',
+        'Ad8epZPng28rXaqMBeTXaB1uYgpBpDOcCJS7TI2q3NA=', '1t1tv1a3Tg0RMHotOGroAg==', 'zM8n9JxK+Y8bl7quNdl80g==');
 
 INSERT INTO coupons (code, type, value, description, expiration_date)
 VALUES ('WELCOME10', 'PERCENT_OFF', 0.10, '10% off welcome coupon', '9999-12-31 23:59:59'),

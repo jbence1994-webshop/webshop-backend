@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Component
-public class FileSystemUtils implements FileUtils {
+public class LocalFileSystemUtils implements FileUtils {
 
     @Override
     public void store(String path, String fileName, InputStream stream) {

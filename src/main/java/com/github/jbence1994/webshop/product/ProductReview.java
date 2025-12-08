@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.product;
 
-import com.github.jbence1994.webshop.user.User;
+import com.github.jbence1994.webshop.user.EncryptedUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,7 +35,7 @@ public class ProductReview {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private EncryptedUser user;
 
     private String text;
 
@@ -43,7 +43,7 @@ public class ProductReview {
     @GeneratedColumn("created_at")
     private LocalDateTime createdAt;
 
-    public ProductReview(Product product, User user, String text) {
+    public ProductReview(Product product, EncryptedUser user, String text) {
         this.product = product;
         this.user = user;
         this.text = text;

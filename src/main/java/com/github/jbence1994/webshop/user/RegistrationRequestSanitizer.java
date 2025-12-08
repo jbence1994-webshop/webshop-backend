@@ -19,17 +19,28 @@ public class RegistrationRequestSanitizer {
                 userDto.lastName().trim(),
                 userDto.dateOfBirth(),
                 userDto.phoneNumber().trim(),
-                sanitize(userDto.address())
+                sanitize(userDto.billingAddress()),
+                sanitize(userDto.shippingAddress())
         );
     }
 
-    private RegistrationRequest.AddressDto sanitize(RegistrationRequest.AddressDto addressDto) {
-        return new RegistrationRequest.AddressDto(
-                addressDto.addressLine().trim(),
-                addressDto.municipality().trim(),
-                addressDto.province().trim(),
-                addressDto.postalCode().trim(),
-                addressDto.country().trim()
+    private RegistrationRequest.BillingAddressDto sanitize(RegistrationRequest.BillingAddressDto billingAddressDto) {
+        return new RegistrationRequest.BillingAddressDto(
+                billingAddressDto.addressLine().trim(),
+                billingAddressDto.municipality().trim(),
+                billingAddressDto.province().trim(),
+                billingAddressDto.postalCode().trim(),
+                billingAddressDto.country().trim()
+        );
+    }
+
+    private RegistrationRequest.ShippingAddressDto sanitize(RegistrationRequest.ShippingAddressDto shippingAddressDto) {
+        return new RegistrationRequest.ShippingAddressDto(
+                shippingAddressDto.addressLine().trim(),
+                shippingAddressDto.municipality().trim(),
+                shippingAddressDto.province().trim(),
+                shippingAddressDto.postalCode().trim(),
+                shippingAddressDto.country().trim()
         );
     }
 }

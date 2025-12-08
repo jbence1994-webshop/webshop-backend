@@ -41,8 +41,8 @@ import static com.github.jbence1994.webshop.coupon.CouponTestConstants.COUPON_1_
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.fixedAmountExpiredCoupon;
 import static com.github.jbence1994.webshop.coupon.CouponTestObject.percentOffNotExpiredCoupon;
 import static com.github.jbence1994.webshop.order.OrderTestObject.createdOrder1;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithAvatar;
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -130,7 +130,7 @@ public class CheckoutServiceImplTests {
     public void applyCouponToCheckoutSessionTest_HappyPath() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(couponQueryService.hasUserRedeemedCoupon(any(), any())).thenReturn(false);
         when(checkoutRepository.save(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
 
@@ -182,7 +182,7 @@ public class CheckoutServiceImplTests {
     public void applyCouponToCheckoutSessionTest_UnhappyPath_CouponAlreadyRedeemedException() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
         when(couponQueryService.getCoupon(any())).thenReturn(percentOffNotExpiredCoupon());
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         when(couponQueryService.hasUserRedeemedCoupon(any(), any())).thenReturn(true);
 
         var result = assertThrows(
@@ -228,7 +228,7 @@ public class CheckoutServiceImplTests {
     @Test
     public void completeCheckoutSessionTest_HappyPath_WithAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSessionWithPercentOffTypeOfAppliedCoupon());
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         doNothing().when(orderService).createOrder(any());
         doNothing().when(couponService).redeemCoupon(any(), any(), any());
         when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
@@ -249,7 +249,7 @@ public class CheckoutServiceImplTests {
     @Test
     public void completeCheckoutSessionTest_HappyPath_WithoutAppliedCoupon() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
-        when(authService.getCurrentUser()).thenReturn(user1WithAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithAvatar());
         doNothing().when(orderService).createOrder(any());
         when(paymentGateway.createPaymentSession(any())).thenReturn(paymentSessionResponse());
 
@@ -329,7 +329,7 @@ public class CheckoutServiceImplTests {
     @Test
     public void completeCheckoutSessionTest_UnhappyPath_PaymentException() {
         when(checkoutQueryService.getCheckoutSession(any())).thenReturn(checkoutSession());
-        when(authService.getCurrentUser()).thenReturn(user1WithoutAvatar());
+        when(authService.getCurrentUser()).thenReturn(encryptedUser1WithoutAvatar());
         doNothing().when(orderService).createOrder(any());
         doThrow(new PaymentException("Payment exception.")).when(paymentGateway).createPaymentSession(any());
 

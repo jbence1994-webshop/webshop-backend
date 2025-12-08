@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.github.jbence1994.webshop.user.UserTestObject.user1WithoutAvatar;
+import static com.github.jbence1994.webshop.user.EncryptedUserTestObject.encryptedUser1WithoutAvatar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
@@ -31,16 +31,16 @@ public class FakeAuthServiceTests {
 
     @Test
     public void getCurrentUserTest() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user1WithoutAvatar()));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(encryptedUser1WithoutAvatar()));
 
         var result = assertDoesNotThrow(() -> authService.getCurrentUser());
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
-                hasProperty("id", equalTo(user1WithoutAvatar().getId())),
-                hasProperty("email", equalTo(user1WithoutAvatar().getEmail())),
-                hasProperty("password", equalTo(user1WithoutAvatar().getPassword())),
-                hasProperty("role", equalTo(user1WithoutAvatar().getRole()))
+                hasProperty("id", equalTo(encryptedUser1WithoutAvatar().getId())),
+                hasProperty("email", equalTo(encryptedUser1WithoutAvatar().getEmail())),
+                hasProperty("password", equalTo(encryptedUser1WithoutAvatar().getPassword())),
+                hasProperty("role", equalTo(encryptedUser1WithoutAvatar().getRole()))
         ));
     }
 }
