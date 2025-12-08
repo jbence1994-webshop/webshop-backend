@@ -8,13 +8,13 @@ import static com.github.jbence1994.webshop.user.EncryptedAddressTestConstants.E
 import static com.github.jbence1994.webshop.user.EncryptedAddressTestConstants.ENCRYPTED_POSTAL_CODE;
 import static com.github.jbence1994.webshop.user.EncryptedAddressTestConstants.ENCRYPTED_PROVINCE;
 
-public final class EncryptedAddressTestObject {
-    public static EncryptedAddress encryptedAddress() {
+public final class EncryptedShippingAddressTestObject {
+    public static EncryptedShippingAddress encryptedShippingAddress() {
         return buildAddress(LocalDateTime.now(), LocalDateTime.now());
     }
 
-    private static EncryptedAddress buildAddress(LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new EncryptedAddress(
+    private static EncryptedShippingAddress buildAddress(LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new EncryptedShippingAddress(
                 1L,
                 null,
                 ENCRYPTED_ADDRESS_LINE,

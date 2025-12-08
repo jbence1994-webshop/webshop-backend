@@ -9,7 +9,9 @@ public interface UserMapper {
 
     UserDto toDto(DecryptedUser user);
 
-    AddressDto toDto(DecryptedAddress address);
+    BillingAddressDto toDto(DecryptedBillingAddress address);
+
+    ShippingAddressDto toDto(DecryptedShippingAddress address);
 
     WishlistProductDto toDto(Product product);
 
@@ -26,5 +28,12 @@ public interface UserMapper {
     @Mapping(target = "country", expression = "java(address.country().toUpperCase())")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    DecryptedAddress toEntity(RegistrationRequest.AddressDto address);
+    DecryptedBillingAddress toEntity(RegistrationRequest.BillingAddressDto address);
+
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "country", expression = "java(address.country().toUpperCase())")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    DecryptedShippingAddress toEntity(RegistrationRequest.ShippingAddressDto address);
 }

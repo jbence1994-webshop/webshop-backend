@@ -6,9 +6,9 @@ import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.D
 import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_POSTAL_CODE;
 import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_PROVINCE;
 
-public final class AddressDtoTestObject {
-    public static AddressDto addressDto() {
-        return new AddressDto(
+public final class ShippingAddressDtoTestObject {
+    public static ShippingAddressDto shippingAddressDto() {
+        return new ShippingAddressDto(
                 DECRYPTED_ADDRESS_LINE,
                 DECRYPTED_MUNICIPALITY,
                 DECRYPTED_PROVINCE,

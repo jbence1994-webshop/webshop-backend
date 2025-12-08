@@ -42,11 +42,17 @@ public class RegistrationRequestSanitizerTests {
         assertThat(result.user().lastName(), equalTo(DECRYPTED_LAST_NAME));
         assertThat(result.user().phoneNumber(), equalTo(DECRYPTED_PHONE_NUMBER));
 
-        assertThat(result.user().address().addressLine(), equalTo(DECRYPTED_ADDRESS_LINE));
-        assertThat(result.user().address().municipality(), equalTo(DECRYPTED_MUNICIPALITY));
-        assertThat(result.user().address().province(), equalTo(DECRYPTED_PROVINCE));
-        assertThat(result.user().address().postalCode(), equalTo(DECRYPTED_POSTAL_CODE));
-        assertThat(result.user().address().country(), equalTo(DECRYPTED_COUNTRY));
+        assertThat(result.user().billingAddress().addressLine(), equalTo(DECRYPTED_ADDRESS_LINE));
+        assertThat(result.user().billingAddress().municipality(), equalTo(DECRYPTED_MUNICIPALITY));
+        assertThat(result.user().billingAddress().province(), equalTo(DECRYPTED_PROVINCE));
+        assertThat(result.user().billingAddress().postalCode(), equalTo(DECRYPTED_POSTAL_CODE));
+        assertThat(result.user().billingAddress().country(), equalTo(DECRYPTED_COUNTRY));
+
+        assertThat(result.user().shippingAddress().addressLine(), equalTo(DECRYPTED_ADDRESS_LINE));
+        assertThat(result.user().shippingAddress().municipality(), equalTo(DECRYPTED_MUNICIPALITY));
+        assertThat(result.user().shippingAddress().province(), equalTo(DECRYPTED_PROVINCE));
+        assertThat(result.user().shippingAddress().postalCode(), equalTo(DECRYPTED_POSTAL_CODE));
+        assertThat(result.user().shippingAddress().country(), equalTo(DECRYPTED_COUNTRY));
     }
 
     @Test
@@ -61,10 +67,16 @@ public class RegistrationRequestSanitizerTests {
         assertThat(result.user().lastName(), equalTo(DECRYPTED_LAST_NAME));
         assertThat(result.user().phoneNumber(), equalTo(DECRYPTED_PHONE_NUMBER));
 
-        assertThat(result.user().address().addressLine(), equalTo(DECRYPTED_ADDRESS_LINE));
-        assertThat(result.user().address().municipality(), equalTo(DECRYPTED_MUNICIPALITY));
-        assertThat(result.user().address().province(), equalTo(DECRYPTED_PROVINCE));
-        assertThat(result.user().address().postalCode(), equalTo(DECRYPTED_POSTAL_CODE));
-        assertThat(result.user().address().country(), equalTo(DECRYPTED_COUNTRY));
+        assertThat(result.user().billingAddress().addressLine(), equalTo(DECRYPTED_ADDRESS_LINE));
+        assertThat(result.user().billingAddress().municipality(), equalTo(DECRYPTED_MUNICIPALITY));
+        assertThat(result.user().billingAddress().province(), equalTo(DECRYPTED_PROVINCE));
+        assertThat(result.user().billingAddress().postalCode(), equalTo(DECRYPTED_POSTAL_CODE));
+        assertThat(result.user().billingAddress().country(), equalTo(DECRYPTED_COUNTRY));
+
+        assertThat(result.user().shippingAddress().addressLine(), equalTo(DECRYPTED_ADDRESS_LINE));
+        assertThat(result.user().shippingAddress().municipality(), equalTo(DECRYPTED_MUNICIPALITY));
+        assertThat(result.user().shippingAddress().province(), equalTo(DECRYPTED_PROVINCE));
+        assertThat(result.user().shippingAddress().postalCode(), equalTo(DECRYPTED_POSTAL_CODE));
+        assertThat(result.user().shippingAddress().country(), equalTo(DECRYPTED_COUNTRY));
     }
 }

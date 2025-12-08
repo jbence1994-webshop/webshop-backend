@@ -10,6 +10,7 @@ public record UserDto(
         String lastName,
         LocalDate dateOfBirth,
         String phoneNumber,
-        AddressDto address
+        BillingAddressDto billingAddress,
+        ShippingAddressDto shippingAddress
 ) {
 }

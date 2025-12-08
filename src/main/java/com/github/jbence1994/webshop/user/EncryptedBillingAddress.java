@@ -17,12 +17,12 @@ import org.hibernate.annotations.GeneratedColumn;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "addresses")
+@Table(name = "billing_addresses")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class EncryptedAddress {
+public class EncryptedBillingAddress {
 
     @Id
     private Long userId;

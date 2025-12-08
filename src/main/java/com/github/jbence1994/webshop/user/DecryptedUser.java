@@ -28,6 +28,7 @@ public class DecryptedUser {
     private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private DecryptedAddress address;
+    private DecryptedBillingAddress billingAddress;
+    private DecryptedShippingAddress shippingAddress;
     private List<Product> favoriteProducts = new ArrayList<>();
 }

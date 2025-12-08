@@ -8,7 +8,8 @@ import java.util.List;
 
 import static com.github.jbence1994.webshop.image.ImageTestConstants.ENCRYPTED_AVATAR_FILE_NAME;
 import static com.github.jbence1994.webshop.product.ProductTestObject.product1;
-import static com.github.jbence1994.webshop.user.EncryptedAddressTestObject.encryptedAddress;
+import static com.github.jbence1994.webshop.user.EncryptedBillingAddressTestObject.encryptedBillingAddress;
+import static com.github.jbence1994.webshop.user.EncryptedShippingAddressTestObject.encryptedShippingAddress;
 import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.ENCRYPTED_DATE_OF_BIRTH;
 import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.ENCRYPTED_EMAIL_1;
 import static com.github.jbence1994.webshop.user.EncryptedUserTestConstants.ENCRYPTED_EMAIL_2;
@@ -55,7 +56,8 @@ public final class EncryptedUserTestObject {
                 role,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                encryptedAddress(),
+                encryptedBillingAddress(),
+                encryptedShippingAddress(),
                 favoriteProducts
         );
     }

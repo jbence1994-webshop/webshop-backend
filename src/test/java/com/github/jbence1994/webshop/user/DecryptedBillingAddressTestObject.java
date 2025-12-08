@@ -8,17 +8,17 @@ import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.D
 import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_POSTAL_CODE;
 import static com.github.jbence1994.webshop.user.DecryptedAddressTestConstants.DECRYPTED_PROVINCE;
 
-public final class DecryptedAddressTestObject {
-    public static DecryptedAddress decryptedAddress() {
+public final class DecryptedBillingAddressTestObject {
+    public static DecryptedBillingAddress decryptedBillingAddress() {
         return buildAddress(1L, LocalDateTime.now(), LocalDateTime.now());
     }
 
-    public static DecryptedAddress decryptedAddressAfterMappingFromDto() {
+    public static DecryptedBillingAddress decryptedBillingAddressAfterMappingFromDto() {
         return buildAddress(null, null, null);
     }
 
-    private static DecryptedAddress buildAddress(Long userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return new DecryptedAddress(
+    private static DecryptedBillingAddress buildAddress(Long userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        return new DecryptedBillingAddress(
                 userId,
                 null,
                 DECRYPTED_ADDRESS_LINE,
