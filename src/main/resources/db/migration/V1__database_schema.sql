@@ -84,13 +84,13 @@ CREATE TABLE IF NOT EXISTS shipping_addresses
             ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS temporary_passwords
+CREATE TABLE IF NOT EXISTS recovery_codes
 (
-    id              BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    password        VARCHAR(255) NOT NULL,
-    user_id         BIGINT       NOT NULL,
-    expiration_date DATETIME     NOT NULL,
-    CONSTRAINT fk_temporary_passwords_users
+    id              BIGINT     NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id         BIGINT     NOT NULL,
+    code            VARCHAR(6) NOT NULL,
+    expiration_date DATETIME   NOT NULL,
+    CONSTRAINT fk_recovery_codes_users
         FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
