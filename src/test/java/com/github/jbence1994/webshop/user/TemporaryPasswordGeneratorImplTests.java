@@ -11,18 +11,18 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
 @ExtendWith(MockitoExtension.class)
-public class RecoveryCodeGeneratorImplTests {
+public class TemporaryPasswordGeneratorImplTests {
 
     @InjectMocks
-    private RecoveryCodeGeneratorImpl recoveryCodeGenerator;
+    private TemporaryPasswordGeneratorImpl temporaryPasswordGenerator;
 
     @Test
     public void generateTest_HappyPath() {
-        var result1 = recoveryCodeGenerator.generate();
-        var result2 = recoveryCodeGenerator.generate();
+        var result1 = temporaryPasswordGenerator.generate();
+        var result2 = temporaryPasswordGenerator.generate();
 
         assertThat(result1, not(nullValue()));
-        assertThat(result1.length(), equalTo(6));
+        assertThat(result1.length(), equalTo(43));
         assertThat(result1, not(equalTo(result2)));
     }
 }

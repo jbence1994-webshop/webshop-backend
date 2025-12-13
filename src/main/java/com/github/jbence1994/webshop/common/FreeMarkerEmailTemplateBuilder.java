@@ -16,7 +16,7 @@ public class FreeMarkerEmailTemplateBuilder implements EmailTemplateBuilder {
     private final MessageSource messageSource;
 
     @SneakyThrows
-    public EmailContent buildForForgotPassword(String firstName, String recoveryCode, Locale locale) {
+    public EmailContent buildForForgotPassword(String firstName, String temporaryPassword, Locale locale) {
         var subject = messageSource.getMessage("email.forgot-password.subject", new Object[]{webshopNameConfig.name()}, locale);
 
         var model = new HashMap<String, Object>();
@@ -24,7 +24,7 @@ public class FreeMarkerEmailTemplateBuilder implements EmailTemplateBuilder {
                 "firstName", messageSource.getMessage("email.forgot-password.firstName", new Object[]{firstName}, locale)
         );
         model.put(
-                "recoveryCode", recoveryCode
+                "temporaryPassword", temporaryPassword
         );
         model.put(
                 "webshopName", messageSource.getMessage("email.forgot-password.webshopName", new Object[]{webshopNameConfig.name()}, locale)

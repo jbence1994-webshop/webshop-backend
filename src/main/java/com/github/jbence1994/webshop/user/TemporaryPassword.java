@@ -15,18 +15,18 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "recovery_codes")
+@Table(name = "temporary_passwords")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class RecoveryCode {
+public class TemporaryPassword {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;
+    private String password;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -34,10 +34,10 @@ public class RecoveryCode {
 
     private LocalDateTime expirationDate;
 
-    public RecoveryCode(String code, EncryptedUser user) {
-        this.code = code;
+    public TemporaryPassword(String password, EncryptedUser user) {
+        this.password = password;
         this.user = user;
-        this.expirationDate = LocalDateTime.now().plusMinutes(10);
+        this.expirationDate = LocalDateTime.now().plusMinutes(15);
     }
 
     public boolean isExpired() {

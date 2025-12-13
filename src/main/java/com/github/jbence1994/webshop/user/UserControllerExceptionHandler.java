@@ -14,8 +14,8 @@ public class UserControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(exception = {InvalidRecoveryCodeException.class, ExpiredRecoveryCodeException.class})
-    public ResponseEntity<ErrorDto> handleInvalidRecoveryCodeOrExpiredRecoveryCodeException(RuntimeException exception) {
+    @ExceptionHandler(exception = {InvalidTemporaryPasswordException.class, ExpiredTemporaryPasswordException.class})
+    public ResponseEntity<ErrorDto> handleInvalidTemporaryPasswordOrExpiredTemporaryPasswordException(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
     }
 }

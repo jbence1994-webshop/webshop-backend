@@ -74,7 +74,7 @@ public class UserController {
     public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         var sanitizedRequest = resetPasswordRequestSanitizer.sanitize(request);
 
-        userService.resetPassword(sanitizedRequest.recoveryCode(), sanitizedRequest.newPassword());
+        userService.resetPassword(sanitizedRequest.temporaryPassword(), sanitizedRequest.newPassword());
 
         return ResponseEntity.noContent().build();
     }
