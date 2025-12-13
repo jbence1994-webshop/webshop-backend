@@ -9,7 +9,9 @@ public interface UserQueryService {
 
     DecryptedUser getDecryptedUser(Long id);
 
-    EncryptedUser getUser(String email);
+    EncryptedUser getEncryptedUser(String email);
+
+    DecryptedUser getDecryptedUser(String email);
 
     List<Product> getWishlist();
 }

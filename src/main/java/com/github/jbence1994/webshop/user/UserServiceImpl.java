@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     public void forgotPassword(String email) {
         var encryptedEmail = aesCryptoService.encrypt(email);
 
-        var user = userQueryService.getUser(encryptedEmail);
+        var user = userQueryService.getEncryptedUser(encryptedEmail);
 
         var rawTemporaryPassword = temporaryPasswordGenerator.generate();
         var hashedTemporaryPassword = passwordManager.hash(rawTemporaryPassword);

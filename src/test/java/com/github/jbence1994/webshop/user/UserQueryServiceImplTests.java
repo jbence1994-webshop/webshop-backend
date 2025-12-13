@@ -90,7 +90,7 @@ public class UserQueryServiceImplTests {
     public void getUserTest_HappyPath() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(encryptedUser1WithoutAvatar()));
 
-        var result = assertDoesNotThrow(() -> userQueryService.getUser(DECRYPTED_EMAIL_1));
+        var result = assertDoesNotThrow(() -> userQueryService.getEncryptedUser(DECRYPTED_EMAIL_1));
 
         assertThat(result, not(nullValue()));
         assertThat(result, allOf(
@@ -107,7 +107,7 @@ public class UserQueryServiceImplTests {
 
         var result = assertThrows(
                 UserNotFoundException.class,
-                () -> userQueryService.getUser(DECRYPTED_EMAIL_1)
+                () -> userQueryService.getEncryptedUser(DECRYPTED_EMAIL_1)
         );
 
         assertThat(result.getMessage(), equalTo("No user was found."));
