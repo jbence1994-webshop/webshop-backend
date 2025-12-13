@@ -18,9 +18,9 @@ import java.util.Locale;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final TemporaryPasswordRepository temporaryPasswordRepository;
-    private final TemporaryPasswordGenerator temporaryPasswordGenerator;
     private final WebshopEmailAddressConfig webshopEmailAddressConfig;
+    private final RecoveryCodeRepository recoveryCodeRepository;
+    private final RecoveryCodeGenerator recoveryCodeGenerator;
     private final EmailTemplateBuilder emailTemplateBuilder;
     private final ProductQueryService productQueryService;
     private final UserQueryService userQueryService;
@@ -75,16 +75,13 @@ public class UserServiceImpl implements UserService {
 
         var user = userQueryService.getUser(encryptedEmail);
 
-        var rawTemporaryPassword = temporaryPasswordGenerator.generate();
-        var hashedTemporaryPassword = passwordManager.hash(rawTemporaryPassword);
+        var code = recoveryCodeGenerator.generate();
 
-        temporaryPasswordRepository.save(new TemporaryPassword(hashedTemporaryPassword, user));
-
-        user.setPassword(hashedTemporaryPassword);
+        recoveryCodeRepository.save(new RecoveryCode(user, code));
 
         var emailContent = emailTemplateBuilder.buildForForgotPassword(
                 aesCryptoService.decrypt(user.getFirstName()),
-                rawTemporaryPassword,
+                code,
                 Locale.ENGLISH
         );
         emailService.sendEmail(
@@ -96,33 +93,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String temporaryPassword, String newPassword) {
+    public void resetPassword(String recoveryCode, String newPassword) {
         var user = authService.getCurrentUser();
 
-        var temporaryPasswords = temporaryPasswordRepository.findAllByUserId(user.getId());
+        var recoveryCodes = recoveryCodeRepository.findAllByUserId(user.getId());
 
-        var latestTemporaryPassword = temporaryPasswordRepository
+        var latestRecoveryCode = recoveryCodeRepository
                 .findTopByUserIdOrderByExpirationDateDesc(user.getId())
-                .orElseThrow(InvalidTemporaryPasswordException::new);
+                .orElseThrow(InvalidRecoveryCodeException::new);
 
-        var temporaryPasswordsWithoutLatest = new ArrayList<>(temporaryPasswords);
-        temporaryPasswordsWithoutLatest.removeIf(tempPassword -> tempPassword.getId().equals(latestTemporaryPassword.getId()));
+        var recoveryCodesWithoutLatest = new ArrayList<>(recoveryCodes);
+        recoveryCodesWithoutLatest.removeIf(code -> code.getId().equals(latestRecoveryCode.getId()));
 
-        temporaryPasswordRepository.deleteAll(temporaryPasswordsWithoutLatest);
+        recoveryCodeRepository.deleteAll(recoveryCodesWithoutLatest);
 
-        if (!passwordManager.verify(temporaryPassword, user.getPassword())) {
-            throw new AccessDeniedException("Invalid temporary password.");
+        if (!recoveryCode.equals(latestRecoveryCode.getCode())) {
+            throw new AccessDeniedException("Invalid recovery code.");
         }
 
-        if (latestTemporaryPassword.isExpired()) {
-            temporaryPasswordRepository.delete(latestTemporaryPassword);
-            throw new ExpiredTemporaryPasswordException();
+        if (latestRecoveryCode.isExpired()) {
+            recoveryCodeRepository.delete(latestRecoveryCode);
+            throw new ExpiredRecoveryCodeException();
         }
 
         user.setPassword(passwordManager.hash(newPassword));
         userRepository.save(user);
 
-        temporaryPasswordRepository.delete(latestTemporaryPassword);
+        recoveryCodeRepository.delete(latestRecoveryCode);
     }
 
     @Override
