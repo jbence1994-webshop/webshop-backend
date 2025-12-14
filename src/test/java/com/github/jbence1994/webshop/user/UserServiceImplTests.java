@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.CryptoService;
 import com.github.jbence1994.webshop.common.EmailService;
 import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
@@ -69,13 +70,13 @@ public class UserServiceImplTests {
     private UserQueryService userQueryService;
 
     @Mock
-    private AesCryptoService aesCryptoService;
-
-    @Mock
     private PasswordManager passwordManager;
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private CryptoService cryptoService;
 
     @Mock
     private UserEncrypter userEncrypter;
@@ -192,7 +193,7 @@ public class UserServiceImplTests {
 
     @Test
     public void forgotPasswordTest() {
-        when(aesCryptoService.encrypt(any())).thenReturn(ENCRYPTED_EMAIL_1);
+        when(cryptoService.encrypt(any())).thenReturn(ENCRYPTED_EMAIL_1);
         when(userQueryService.getUser(anyString())).thenReturn(encryptedUser1WithoutAvatar());
         when(recoveryCodeGenerator.generate()).thenReturn(RECOVERY_CODE);
         when(recoveryCodeRepository.save(any())).thenReturn(notExpiredRecoveryCode());
@@ -202,7 +203,7 @@ public class UserServiceImplTests {
 
         assertDoesNotThrow(() -> userService.forgotPassword(DECRYPTED_EMAIL_1));
 
-        verify(aesCryptoService, times(1)).encrypt(any());
+        verify(cryptoService, times(1)).encrypt(any());
         verify(userQueryService, times(1)).getUser(anyString());
         verify(recoveryCodeGenerator, times(1)).generate();
         verify(recoveryCodeRepository, times(1)).save(any());

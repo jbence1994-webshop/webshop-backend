@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.common.CryptoService;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,31 +10,31 @@ public interface UserEncrypter {
 
     @Mapping(
             target = "email",
-            expression = "java(aesCryptoService.encrypt(user.getEmail()))"
+            expression = "java(cryptoService.encrypt(user.getEmail()))"
     )
     @Mapping(
             target = "firstName",
-            expression = "java(aesCryptoService.encrypt(user.getFirstName()))"
+            expression = "java(cryptoService.encrypt(user.getFirstName()))"
     )
     @Mapping(
             target = "middleName",
-            expression = "java(user.getMiddleName() == null ? null : aesCryptoService.encrypt(user.getMiddleName()))"
+            expression = "java(user.getMiddleName() == null ? null : cryptoService.encrypt(user.getMiddleName()))"
     )
     @Mapping(
             target = "lastName",
-            expression = "java(aesCryptoService.encrypt(user.getLastName()))"
+            expression = "java(cryptoService.encrypt(user.getLastName()))"
     )
     @Mapping(
             target = "dateOfBirth",
-            expression = "java(aesCryptoService.encrypt(user.getDateOfBirth().toString()))"
+            expression = "java(cryptoService.encrypt(user.getDateOfBirth().toString()))"
     )
     @Mapping(
             target = "phoneNumber",
-            expression = "java(aesCryptoService.encrypt(user.getPhoneNumber()))"
+            expression = "java(cryptoService.encrypt(user.getPhoneNumber()))"
     )
     @Mapping(
             target = "avatarFileName",
-            expression = "java(user.getAvatarFileName() == null ? null : aesCryptoService.encrypt(user.getAvatarFileName()))"
+            expression = "java(user.getAvatarFileName() == null ? null : cryptoService.encrypt(user.getAvatarFileName()))"
     )
     @Mapping(
             target = "billingAddress",
@@ -43,7 +44,7 @@ public interface UserEncrypter {
             target = "shippingAddress",
             ignore = true
     )
-    EncryptedUser encrypt(DecryptedUser user, @Context AesCryptoService aesCryptoService);
+    EncryptedUser encrypt(DecryptedUser user, @Context CryptoService cryptoService);
 
     @Mapping(
             target = "user",
@@ -51,25 +52,25 @@ public interface UserEncrypter {
     )
     @Mapping(
             target = "addressLine",
-            expression = "java(aesCryptoService.encrypt(address.getAddressLine()))"
+            expression = "java(cryptoService.encrypt(address.getAddressLine()))"
     )
     @Mapping(
             target = "municipality",
-            expression = "java(aesCryptoService.encrypt(address.getMunicipality()))"
+            expression = "java(cryptoService.encrypt(address.getMunicipality()))"
     )
     @Mapping(
             target = "province",
-            expression = "java(aesCryptoService.encrypt(address.getProvince()))"
+            expression = "java(cryptoService.encrypt(address.getProvince()))"
     )
     @Mapping(
             target = "postalCode",
-            expression = "java(aesCryptoService.encrypt(address.getPostalCode()))"
+            expression = "java(cryptoService.encrypt(address.getPostalCode()))"
     )
     @Mapping(
             target = "country",
-            expression = "java(aesCryptoService.encrypt(address.getCountry()))"
+            expression = "java(cryptoService.encrypt(address.getCountry()))"
     )
-    EncryptedBillingAddress encrypt(DecryptedBillingAddress address, @Context AesCryptoService aesCryptoService);
+    EncryptedBillingAddress encrypt(DecryptedBillingAddress address, @Context CryptoService cryptoService);
 
     @Mapping(
             target = "user",
@@ -77,23 +78,23 @@ public interface UserEncrypter {
     )
     @Mapping(
             target = "addressLine",
-            expression = "java(aesCryptoService.encrypt(address.getAddressLine()))"
+            expression = "java(cryptoService.encrypt(address.getAddressLine()))"
     )
     @Mapping(
             target = "municipality",
-            expression = "java(aesCryptoService.encrypt(address.getMunicipality()))"
+            expression = "java(cryptoService.encrypt(address.getMunicipality()))"
     )
     @Mapping(
             target = "province",
-            expression = "java(aesCryptoService.encrypt(address.getProvince()))"
+            expression = "java(cryptoService.encrypt(address.getProvince()))"
     )
     @Mapping(
             target = "postalCode",
-            expression = "java(aesCryptoService.encrypt(address.getPostalCode()))"
+            expression = "java(cryptoService.encrypt(address.getPostalCode()))"
     )
     @Mapping(
             target = "country",
-            expression = "java(aesCryptoService.encrypt(address.getCountry()))"
+            expression = "java(cryptoService.encrypt(address.getCountry()))"
     )
-    EncryptedShippingAddress encrypt(DecryptedShippingAddress address, @Context AesCryptoService aesCryptoService);
+    EncryptedShippingAddress encrypt(DecryptedShippingAddress address, @Context CryptoService cryptoService);
 }

@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.CryptoService;
 import com.github.jbence1994.webshop.common.EmailService;
 import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
@@ -24,18 +25,18 @@ public class UserServiceImpl implements UserService {
     private final EmailTemplateBuilder emailTemplateBuilder;
     private final ProductQueryService productQueryService;
     private final UserQueryService userQueryService;
-    private final AesCryptoService aesCryptoService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
+    private final CryptoService cryptoService;
     private final UserEncrypter userEncrypter;
     private final EmailService emailService;
     private final AuthService authService;
 
     @Override
     public void registerUser(DecryptedUser user) {
-        var encryptedBillingAddress = userEncrypter.encrypt(user.getBillingAddress(), aesCryptoService);
-        var encryptedShippingAddress = userEncrypter.encrypt(user.getShippingAddress(), aesCryptoService);
-        var encryptedUser = userEncrypter.encrypt(user, aesCryptoService);
+        var encryptedBillingAddress = userEncrypter.encrypt(user.getBillingAddress(), cryptoService);
+        var encryptedShippingAddress = userEncrypter.encrypt(user.getShippingAddress(), cryptoService);
+        var encryptedUser = userEncrypter.encrypt(user, cryptoService);
 
         encryptedBillingAddress.setUser(encryptedUser);
         encryptedShippingAddress.setUser(encryptedUser);
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void forgotPassword(String email) {
-        var encryptedEmail = aesCryptoService.encrypt(email);
+        var encryptedEmail = cryptoService.encrypt(email);
 
         var user = userQueryService.getUser(encryptedEmail);
 
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
         recoveryCodeRepository.save(new RecoveryCode(user, code));
 
         var emailContent = emailTemplateBuilder.buildForForgotPassword(
-                aesCryptoService.decrypt(user.getFirstName()),
+                cryptoService.decrypt(user.getFirstName()),
                 code,
                 Locale.ENGLISH
         );
