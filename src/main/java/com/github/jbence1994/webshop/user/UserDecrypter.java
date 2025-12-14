@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.common.CryptoService;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,19 +13,19 @@ public interface UserDecrypter {
 
     @Mapping(
             target = "email",
-            expression = "java(aesCryptoService.decrypt(user.getEmail()))"
+            expression = "java(cryptoService.decrypt(user.getEmail()))"
     )
     @Mapping(
             target = "firstName",
-            expression = "java(aesCryptoService.decrypt(user.getFirstName()))"
+            expression = "java(cryptoService.decrypt(user.getFirstName()))"
     )
     @Mapping(
             target = "middleName",
-            expression = "java(user.getMiddleName() == null ? null : aesCryptoService.decrypt(user.getMiddleName()))"
+            expression = "java(user.getMiddleName() == null ? null : cryptoService.decrypt(user.getMiddleName()))"
     )
     @Mapping(
             target = "lastName",
-            expression = "java(aesCryptoService.decrypt(user.getLastName()))"
+            expression = "java(cryptoService.decrypt(user.getLastName()))"
     )
     @Mapping(
             target = "dateOfBirth",
@@ -32,11 +33,11 @@ public interface UserDecrypter {
     )
     @Mapping(
             target = "phoneNumber",
-            expression = "java(aesCryptoService.decrypt(user.getPhoneNumber()))"
+            expression = "java(cryptoService.decrypt(user.getPhoneNumber()))"
     )
     @Mapping(
             target = "avatarFileName",
-            expression = "java(user.getAvatarFileName() == null ? null : aesCryptoService.decrypt(user.getAvatarFileName()))"
+            expression = "java(user.getAvatarFileName() == null ? null : cryptoService.decrypt(user.getAvatarFileName()))"
     )
     @Mapping(
             target = "billingAddress",
@@ -46,11 +47,11 @@ public interface UserDecrypter {
             target = "shippingAddress",
             ignore = true
     )
-    DecryptedUser decrypt(EncryptedUser user, @Context AesCryptoService aesCryptoService);
+    DecryptedUser decrypt(EncryptedUser user, @Context CryptoService cryptoService);
 
     @Named("decryptDateOfBirth")
-    default LocalDate decryptDateOfBirth(String dateOfBirth, @Context AesCryptoService aesEncryptionService) {
-        return LocalDate.parse(aesEncryptionService.decrypt(dateOfBirth));
+    default LocalDate decryptDateOfBirth(String dateOfBirth, @Context CryptoService cryptoService) {
+        return LocalDate.parse(cryptoService.decrypt(dateOfBirth));
     }
 
     @Mapping(
@@ -59,25 +60,25 @@ public interface UserDecrypter {
     )
     @Mapping(
             target = "addressLine",
-            expression = "java(aesCryptoService.decrypt(address.getAddressLine()))"
+            expression = "java(cryptoService.decrypt(address.getAddressLine()))"
     )
     @Mapping(
             target = "municipality",
-            expression = "java(aesCryptoService.decrypt(address.getMunicipality()))"
+            expression = "java(cryptoService.decrypt(address.getMunicipality()))"
     )
     @Mapping(
             target = "province",
-            expression = "java(aesCryptoService.decrypt(address.getProvince()))"
+            expression = "java(cryptoService.decrypt(address.getProvince()))"
     )
     @Mapping(
             target = "postalCode",
-            expression = "java(aesCryptoService.decrypt(address.getPostalCode()))"
+            expression = "java(cryptoService.decrypt(address.getPostalCode()))"
     )
     @Mapping(
             target = "country",
-            expression = "java(aesCryptoService.decrypt(address.getCountry()))"
+            expression = "java(cryptoService.decrypt(address.getCountry()))"
     )
-    DecryptedBillingAddress decrypt(EncryptedBillingAddress address, @Context AesCryptoService aesCryptoService);
+    DecryptedBillingAddress decrypt(EncryptedBillingAddress address, @Context CryptoService cryptoService);
 
     @Mapping(
             target = "user",
@@ -85,23 +86,23 @@ public interface UserDecrypter {
     )
     @Mapping(
             target = "addressLine",
-            expression = "java(aesCryptoService.decrypt(address.getAddressLine()))"
+            expression = "java(cryptoService.decrypt(address.getAddressLine()))"
     )
     @Mapping(
             target = "municipality",
-            expression = "java(aesCryptoService.decrypt(address.getMunicipality()))"
+            expression = "java(cryptoService.decrypt(address.getMunicipality()))"
     )
     @Mapping(
             target = "province",
-            expression = "java(aesCryptoService.decrypt(address.getProvince()))"
+            expression = "java(cryptoService.decrypt(address.getProvince()))"
     )
     @Mapping(
             target = "postalCode",
-            expression = "java(aesCryptoService.decrypt(address.getPostalCode()))"
+            expression = "java(cryptoService.decrypt(address.getPostalCode()))"
     )
     @Mapping(
             target = "country",
-            expression = "java(aesCryptoService.decrypt(address.getCountry()))"
+            expression = "java(cryptoService.decrypt(address.getCountry()))"
     )
-    DecryptedShippingAddress decrypt(EncryptedShippingAddress address, @Context AesCryptoService aesCryptoService);
+    DecryptedShippingAddress decrypt(EncryptedShippingAddress address, @Context CryptoService cryptoService);
 }

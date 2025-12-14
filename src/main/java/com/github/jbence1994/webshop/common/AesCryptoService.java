@@ -1,4 +1,4 @@
-package com.github.jbence1994.webshop.user;
+package com.github.jbence1994.webshop.common;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
 @Service
-public class AesCryptoService {
+public class AesCryptoService implements CryptoService {
 
     @Value("${webshop.encryption.aes-secret-key}")
     private String aesSecretKey;

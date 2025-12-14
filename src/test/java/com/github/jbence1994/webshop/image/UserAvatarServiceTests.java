@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.image;
 
-import com.github.jbence1994.webshop.user.AesCryptoService;
+import com.github.jbence1994.webshop.common.CryptoService;
 import com.github.jbence1994.webshop.user.DecryptedUser;
 import com.github.jbence1994.webshop.user.EncryptedUser;
 import com.github.jbence1994.webshop.user.UserQueryService;
@@ -51,10 +51,10 @@ public class UserAvatarServiceTests {
     private FileNameGenerator fileNameGenerator;
 
     @Mock
-    private AesCryptoService aesCryptoService;
+    private UserQueryService userQueryService;
 
     @Mock
-    private UserQueryService userQueryService;
+    private CryptoService cryptoService;
 
     @Mock
     private UserService userService;
@@ -82,7 +82,7 @@ public class UserAvatarServiceTests {
         when(fileNameGenerator.generate(any())).thenReturn(AVATAR_FILE_NAME);
         when(imageUploadsConfig.userAvatarDirectory()).thenReturn(USER_AVATAR_DIRECTORY);
         doNothing().when(fileUtils).store(any(), any(), any());
-        when(aesCryptoService.encrypt(any())).thenReturn(ENCRYPTED_AVATAR_FILE_NAME);
+        when(cryptoService.encrypt(any())).thenReturn(ENCRYPTED_AVATAR_FILE_NAME);
         doNothing().when(encryptedUserWithoutAvatar).setAvatarFileName(any());
         doNothing().when(userService).updateUser(any());
 
@@ -93,7 +93,7 @@ public class UserAvatarServiceTests {
         verify(fileExtensionValidator, times(1)).validate(any());
         verify(userQueryService, times(1)).getEncryptedUser(anyLong());
         verify(fileUtils, never()).remove(any(), any());
-        verify(aesCryptoService, times(1)).encrypt(any());
+        verify(cryptoService, times(1)).encrypt(any());
         verify(fileNameGenerator, times(1)).generate(any());
         verify(imageUploadsConfig, times(1)).userAvatarDirectory();
         verify(image, times(1)).getInputStream();
@@ -110,7 +110,7 @@ public class UserAvatarServiceTests {
         when(imageUploadsConfig.userAvatarDirectory()).thenReturn(USER_AVATAR_DIRECTORY);
         doNothing().when(fileUtils).remove(any(), any());
         doNothing().when(fileUtils).store(any(), any(), any());
-        when(aesCryptoService.encrypt(any())).thenReturn(ENCRYPTED_AVATAR_FILE_NAME);
+        when(cryptoService.encrypt(any())).thenReturn(ENCRYPTED_AVATAR_FILE_NAME);
         doNothing().when(encryptedUserWithAvatar).setAvatarFileName(any());
         doNothing().when(userService).updateUser(any());
 
