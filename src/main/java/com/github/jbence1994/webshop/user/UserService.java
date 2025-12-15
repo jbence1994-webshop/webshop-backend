@@ -9,7 +9,7 @@ public interface UserService {
 
     void forgotPassword(String email);
 
-    void resetPassword(String temporaryPassword, String newPassword);
+    void resetPassword(String recoveryCode, String newPassword);
 
     void updateUser(EncryptedUser user);
 
