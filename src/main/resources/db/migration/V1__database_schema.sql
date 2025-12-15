@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS users
     date_of_birth    VARBINARY(255) NOT NULL,
     phone_number     VARBINARY(255) UNIQUE,
     avatar_file_name VARBINARY(255) UNIQUE,
+    loyalty_points   INT UNSIGNED   NOT NULL DEFAULT 0,
     role             VARCHAR(25)    NOT NULL DEFAULT 'USER',
     created_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

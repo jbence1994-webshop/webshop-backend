@@ -47,6 +47,7 @@ public final class DecryptedUserTestObject {
                 DECRYPTED_DATE_OF_BIRTH,
                 DECRYPTED_PHONE_NUMBER,
                 avatarFileName,
+                0,
                 Role.ADMIN,
                 LocalDateTime.now(),
                 LocalDateTime.now(),

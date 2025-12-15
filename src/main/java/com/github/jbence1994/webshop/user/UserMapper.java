@@ -20,6 +20,7 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "avatarFileName", ignore = true)
+    @Mapping(target = "loyaltyPoints", ignore = true)
     @Mapping(target = "favoriteProducts", ignore = true)
     DecryptedUser toEntity(RegistrationRequest.UserDto user);
 
