@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.CryptoService;
 import com.github.jbence1994.webshop.product.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class UserQueryServiceImpl implements UserQueryService {
-    private final AesCryptoService aesCryptoService;
     private final UserRepository userRepository;
+    private final CryptoService cryptoService;
     private final UserDecrypter userDecrypter;
     private final AuthService authService;
 
@@ -28,9 +29,9 @@ public class UserQueryServiceImpl implements UserQueryService {
     public DecryptedUser getDecryptedUser(Long id) {
         var encryptedUser = getEncryptedUser(id);
 
-        var decryptedBillingAddress = userDecrypter.decrypt(encryptedUser.getBillingAddress(), aesCryptoService);
-        var decryptedShippingAddress = userDecrypter.decrypt(encryptedUser.getShippingAddress(), aesCryptoService);
-        var decryptedUser = userDecrypter.decrypt(encryptedUser, aesCryptoService);
+        var decryptedBillingAddress = userDecrypter.decrypt(encryptedUser.getBillingAddress(), cryptoService);
+        var decryptedShippingAddress = userDecrypter.decrypt(encryptedUser.getShippingAddress(), cryptoService);
+        var decryptedUser = userDecrypter.decrypt(encryptedUser, cryptoService);
 
         decryptedBillingAddress.setUser(decryptedUser);
         decryptedShippingAddress.setUser(decryptedUser);
