@@ -3,7 +3,7 @@ package com.github.jbence1994.webshop.user;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_CONFIRM_NEW_PASSWORD;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_INVALID_CONFIRM_NEW_PASSWORD;
 import static com.github.jbence1994.webshop.user.DecryptedUserTestConstants.RAW_NEW_PASSWORD;
-import static com.github.jbence1994.webshop.user.TemporaryPasswordTestConstants.TEMPORARY_PASSWORD;
+import static com.github.jbence1994.webshop.user.RecoveryCodeTestConstants.RECOVERY_CODE;
 
 public final class ResetPasswordRequestTestObject {
     public static ResetPasswordRequest resetPasswordRequest() {
@@ -38,6 +38,6 @@ public final class ResetPasswordRequestTestObject {
     }
 
     private static ResetPasswordRequest buildResetPasswordRequest(String newPassword, String confirmNewPassword) {
-        return new ResetPasswordRequest(TEMPORARY_PASSWORD, newPassword, confirmNewPassword);
+        return new ResetPasswordRequest(RECOVERY_CODE, newPassword, confirmNewPassword);
     }
 }

@@ -1,6 +1,7 @@
 package com.github.jbence1994.webshop.user;
 
 import com.github.jbence1994.webshop.auth.AuthService;
+import com.github.jbence1994.webshop.common.CryptoService;
 import com.github.jbence1994.webshop.common.EmailService;
 import com.github.jbence1994.webshop.common.EmailTemplateBuilder;
 import com.github.jbence1994.webshop.common.WebshopEmailAddressConfig;
@@ -18,24 +19,24 @@ import java.util.Locale;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final TemporaryPasswordRepository temporaryPasswordRepository;
-    private final TemporaryPasswordGenerator temporaryPasswordGenerator;
     private final WebshopEmailAddressConfig webshopEmailAddressConfig;
+    private final RecoveryCodeRepository recoveryCodeRepository;
+    private final RecoveryCodeGenerator recoveryCodeGenerator;
     private final EmailTemplateBuilder emailTemplateBuilder;
     private final ProductQueryService productQueryService;
     private final UserQueryService userQueryService;
-    private final AesCryptoService aesCryptoService;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
+    private final CryptoService cryptoService;
     private final UserEncrypter userEncrypter;
     private final EmailService emailService;
     private final AuthService authService;
 
     @Override
     public void registerUser(DecryptedUser user) {
-        var encryptedBillingAddress = userEncrypter.encrypt(user.getBillingAddress(), aesCryptoService);
-        var encryptedShippingAddress = userEncrypter.encrypt(user.getShippingAddress(), aesCryptoService);
-        var encryptedUser = userEncrypter.encrypt(user, aesCryptoService);
+        var encryptedBillingAddress = userEncrypter.encrypt(user.getBillingAddress(), cryptoService);
+        var encryptedShippingAddress = userEncrypter.encrypt(user.getShippingAddress(), cryptoService);
+        var encryptedUser = userEncrypter.encrypt(user, cryptoService);
 
         encryptedBillingAddress.setUser(encryptedUser);
         encryptedShippingAddress.setUser(encryptedUser);
@@ -71,20 +72,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void forgotPassword(String email) {
-        var encryptedEmail = aesCryptoService.encrypt(email);
+        var encryptedEmail = cryptoService.encrypt(email);
 
         var user = userQueryService.getEncryptedUser(encryptedEmail);
 
-        var rawTemporaryPassword = temporaryPasswordGenerator.generate();
-        var hashedTemporaryPassword = passwordManager.hash(rawTemporaryPassword);
+        var code = recoveryCodeGenerator.generate();
 
-        temporaryPasswordRepository.save(new TemporaryPassword(hashedTemporaryPassword, user));
-
-        user.setPassword(hashedTemporaryPassword);
+        recoveryCodeRepository.save(new RecoveryCode(user, code));
 
         var emailContent = emailTemplateBuilder.buildForForgotPassword(
-                aesCryptoService.decrypt(user.getFirstName()),
-                rawTemporaryPassword,
+                cryptoService.decrypt(user.getFirstName()),
+                code,
                 Locale.ENGLISH
         );
         emailService.sendEmail(
@@ -96,33 +94,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String temporaryPassword, String newPassword) {
+    public void resetPassword(String recoveryCode, String newPassword) {
         var user = authService.getCurrentUser();
 
-        var temporaryPasswords = temporaryPasswordRepository.findAllByUserId(user.getId());
+        var recoveryCodes = recoveryCodeRepository.findAllByUserId(user.getId());
 
-        var latestTemporaryPassword = temporaryPasswordRepository
+        var latestRecoveryCode = recoveryCodeRepository
                 .findTopByUserIdOrderByExpirationDateDesc(user.getId())
-                .orElseThrow(InvalidTemporaryPasswordException::new);
+                .orElseThrow(InvalidRecoveryCodeException::new);
 
-        var temporaryPasswordsWithoutLatest = new ArrayList<>(temporaryPasswords);
-        temporaryPasswordsWithoutLatest.removeIf(tempPassword -> tempPassword.getId().equals(latestTemporaryPassword.getId()));
+        var recoveryCodesWithoutLatest = new ArrayList<>(recoveryCodes);
+        recoveryCodesWithoutLatest.removeIf(code -> code.getId().equals(latestRecoveryCode.getId()));
 
-        temporaryPasswordRepository.deleteAll(temporaryPasswordsWithoutLatest);
+        recoveryCodeRepository.deleteAll(recoveryCodesWithoutLatest);
 
-        if (!passwordManager.verify(temporaryPassword, user.getPassword())) {
-            throw new AccessDeniedException("Invalid temporary password.");
+        if (!recoveryCode.equals(latestRecoveryCode.getCode())) {
+            throw new AccessDeniedException("Invalid recovery code.");
         }
 
-        if (latestTemporaryPassword.isExpired()) {
-            temporaryPasswordRepository.delete(latestTemporaryPassword);
-            throw new ExpiredTemporaryPasswordException();
+        if (latestRecoveryCode.isExpired()) {
+            recoveryCodeRepository.delete(latestRecoveryCode);
+            throw new ExpiredRecoveryCodeException();
         }
 
         user.setPassword(passwordManager.hash(newPassword));
         userRepository.save(user);
 
-        temporaryPasswordRepository.delete(latestTemporaryPassword);
+        recoveryCodeRepository.delete(latestRecoveryCode);
     }
 
     @Override
