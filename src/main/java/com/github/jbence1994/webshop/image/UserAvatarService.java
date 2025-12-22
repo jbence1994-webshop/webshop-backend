@@ -1,6 +1,6 @@
 package com.github.jbence1994.webshop.image;
 
-import com.github.jbence1994.webshop.user.AesCryptoService;
+import com.github.jbence1994.webshop.common.CryptoService;
 import com.github.jbence1994.webshop.user.UserQueryService;
 import com.github.jbence1994.webshop.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class UserAvatarService implements ImageService {
     private final ImageUploadsConfig imageUploadsConfig;
     private final FileNameGenerator fileNameGenerator;
     private final UserQueryService userQueryService;
-    private final AesCryptoService aesCryptoService;
+    private final CryptoService cryptoService;
     private final UserService userService;
     private final FileUtils fileUtils;
 
@@ -43,7 +43,7 @@ public class UserAvatarService implements ImageService {
                     image.getInputStream()
             );
 
-            var encryptedFileName = aesCryptoService.encrypt(fileName);
+            var encryptedFileName = cryptoService.encrypt(fileName);
             user.setAvatarFileName(encryptedFileName);
 
             userService.updateUser(user);
