@@ -39,6 +39,7 @@ import static com.github.jbence1994.webshop.common.ObjectErrorTestObject.objectE
 import static com.github.jbence1994.webshop.image.ImageTestConstants.JPEG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
@@ -89,7 +90,7 @@ public class GlobalExceptionHandlerTests {
 
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
         assertThat(result.getBody(), not(nullValue()));
-        assertThat(result.getBody().error(), equalTo("Ollama currently unavailable."));
+        assertThat(result.getBody().error(), is(nullValue()));
     }
 
     @Test
