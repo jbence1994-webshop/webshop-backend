@@ -40,10 +40,17 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public EncryptedUser getUser(String email) {
+    public EncryptedUser getEncryptedUser(String email) {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public DecryptedUser getDecryptedUser(String email) {
+        var encryptedUser = getEncryptedUser(email);
+
+        return getDecryptedUser(encryptedUser.getId());
     }
 
     @Override

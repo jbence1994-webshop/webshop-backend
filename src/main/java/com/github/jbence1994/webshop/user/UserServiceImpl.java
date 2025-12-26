@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public void forgotPassword(String email) {
         var encryptedEmail = cryptoService.encrypt(email);
 
-        var user = userQueryService.getUser(encryptedEmail);
+        var user = userQueryService.getEncryptedUser(encryptedEmail);
 
         var code = recoveryCodeGenerator.generate();
 
