@@ -25,6 +25,7 @@ public class DecryptedUser {
     private LocalDate dateOfBirth;
     private String phoneNumber;
     private String avatarFileName;
+    private int loyaltyPoints;
     private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

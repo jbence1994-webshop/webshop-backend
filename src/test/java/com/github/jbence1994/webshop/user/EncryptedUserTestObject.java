@@ -53,6 +53,7 @@ public final class EncryptedUserTestObject {
                 ENCRYPTED_DATE_OF_BIRTH,
                 ENCRYPTED_PHONE_NUMBER,
                 avatarFileName,
+                0,
                 role,
                 LocalDateTime.now(),
                 LocalDateTime.now(),

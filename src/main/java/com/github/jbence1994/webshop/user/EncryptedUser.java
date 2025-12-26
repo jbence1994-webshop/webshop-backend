@@ -1,5 +1,6 @@
 package com.github.jbence1994.webshop.user;
 
+import com.github.jbence1994.webshop.loyalty.MembershipTier;
 import com.github.jbence1994.webshop.product.Product;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -53,6 +54,8 @@ public class EncryptedUser {
 
     private String avatarFileName;
 
+    private int loyaltyPoints;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -77,6 +80,18 @@ public class EncryptedUser {
             inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
     )
     private List<Product> favoriteProducts = new ArrayList<>();
+
+    public void earnLoyaltyPoints(int value) {
+        this.loyaltyPoints += value;
+    }
+
+    public void burnLoyaltyPoints(int value) {
+        this.loyaltyPoints -= value;
+    }
+
+    public MembershipTier getMembershipTier() {
+        return MembershipTier.fromPoints(loyaltyPoints);
+    }
 
     public void addFavoriteProduct(Product product) {
         favoriteProducts.add(product);
