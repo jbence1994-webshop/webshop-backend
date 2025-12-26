@@ -2,6 +2,7 @@ package com.github.jbence1994.webshop.checkout;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/checkout")
 @RequiredArgsConstructor
+@Slf4j
 public class CheckoutController {
     private final ApplyCouponToCheckoutSessionRequestSanitizer applyCouponToCheckoutSessionRequestSanitizer;
     private final CheckoutService checkoutService;

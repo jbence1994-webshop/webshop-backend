@@ -1,12 +1,14 @@
 package com.github.jbence1994.webshop.cart;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CartQueryServiceImpl implements CartQueryService {
     private final CartRepository cartRepository;
 
